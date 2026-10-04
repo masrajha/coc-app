@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Player Comparison · CoC Clan Command Center</title>
+  <link rel="stylesheet" href="/player.css">
+  <link rel="stylesheet" href="/compare.css">
+  <script src="/compare-model.js" defer></script>
+  <script src="/compare.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a id="backLink" class="back-link" href="/">← Kembali ke klan</a>
+      <span class="brand">CoC <span>Player Comparison</span></span>
+      <a class="header-profile-link" href="/player.html">Profil pemain</a>
+    </div>
+  </header>
+
+  <main class="page compare-page">
+    <div class="section-head compare-heading"><div><div class="eyebrow">DUA PEMAIN</div><h1>Bandingkan pemain</h1><p>Level, progres, dan cakupan data pada satu layar.</p></div></div>
+    <form id="compareForm" class="compare-form">
+      <div class="pick-player">
+        <label for="player1">Pemain A</label>
+        <input id="player1" name="player1" placeholder="Tag pemain A" autocomplete="off" spellcheck="false">
+        <select id="member1" aria-label="Pilih pemain A dari anggota klan"><option value="">Pilih dari anggota klan</option></select>
+      </div>
+      <button id="swapPlayers" class="swap-button" type="button" aria-label="Tukar pemain" title="Tukar pemain">⇄</button>
+      <div class="pick-player">
+        <label for="player2">Pemain B</label>
+        <input id="player2" name="player2" placeholder="Tag pemain B" autocomplete="off" spellcheck="false">
+        <select id="member2" aria-label="Pilih pemain B dari anggota klan"><option value="">Pilih dari anggota klan</option></select>
+      </div>
+      <button class="compare-button" type="submit">Bandingkan</button>
+    </form>
+    <p id="clanPickerNote" class="picker-note" role="status"></p>
+
+    <div class="players-grid">
+      <section class="player-slot" aria-label="Pemain A"><div id="status1" class="slot-status" role="status">Masukkan tag pemain A.</div><div id="card1"></div></section>
+      <section class="player-slot" aria-label="Pemain B"><div id="status2" class="slot-status" role="status">Masukkan tag pemain B.</div><div id="card2"></div></section>
+    </div>
+
+    <div id="comparisonContent" hidden>
+      <div id="compareNotice" class="compare-notice"></div>
+      <nav class="tabs compare-tabs" aria-label="Bagian perbandingan">
+        <button type="button" data-tab="progress" aria-selected="true">Progres</button>
+        <button type="button" data-tab="army" aria-selected="false">Army</button>
+        <button type="button" data-tab="war" aria-selected="false">War/CWL</button>
+        <button type="button" data-tab="activity" aria-selected="false">Aktivitas</button>
+      </nav>
+      <section id="progress" class="panel compare-panel">
+        <div class="section-head"><div><div class="eyebrow">PROGRES PASUKAN DAN HERO</div><h2>Skor & kategori</h2></div></div>
+        <p class="section-note">Skor hanya mencakup item yang memiliki batas level. Ini bukan persentase maksimal seluruh akun.</p>
+        <div id="scoreComparison" class="score-comparison"></div>
+        <div id="categoryComparison" class="comparison-list"></div>
+        <h3>Selisih level terbesar</h3><p class="section-note">Hanya item yang ada pada kedua profil, dengan TH dan batas level API yang sama. Selisih level bukan ukuran kekuatan serangan.</p>
+        <div id="levelDifferences" class="difference-list"></div>
+      </section>
+      <section id="army" class="panel compare-panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">LEVEL AKTUAL</div><h2>Matriks Army</h2></div><span id="armyCount"></span></div>
+        <p class="section-note">Item disejajarkan berdasarkan kategori dan nama. Penanda ★ menunjukkan level mentah lebih tinggi, = menunjukkan level sama. Pada TH berbeda, penanda tidak menyatakan kekuatan akun.</p>
+        <div class="army-filter"><label for="armyCategory">Kategori</label><select id="armyCategory"><option value="all">Semua kategori</option></select></div>
+        <div id="armyComparison" class="army-comparison"></div>
+      </section>
+      <section id="war" class="panel compare-panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">ARSIP PERANG</div><h2>Performa War/CWL</h2></div><label class="war-period-label" for="warPeriod">Periode <select id="warPeriod"><option value="cwl-current">CWL bulan ini</option><option value="30d">30 hari</option><option value="90d">90 hari</option><option value="all">Semua arsip</option></select></label></div>
+        <p id="warNote" class="section-note">Memuat arsip perang…</p>
+        <div id="warSummary" class="war-summary-grid"></div>
+        <div id="warCharts" class="war-charts"></div>
+      </section>
+      <section id="activity" class="panel compare-panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">SNAPSHOT ANGGOTA</div><h2>Tren aktivitas</h2></div><span id="activityCount"></span></div>
+        <p id="activityNote" class="section-note"></p>
+        <div id="activityChart" class="activity-chart"></div>
+        <div id="donationTable" class="donation-table"></div>
+        <div class="export-actions"><button id="exportCsv" type="button" disabled>Ekspor CSV</button><button id="exportPng" type="button" disabled>Ekspor PNG</button></div>
+      </section>
+      <section id="comparisonResume" class="panel resume-card" aria-labelledby="resumeTitle">
+        <div class="eyebrow">RINGKASAN</div><h2 id="resumeTitle">Resume perbandingan</h2>
+        <div id="resumeText"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="footer">Data profil berasal dari API Clash of Clans. Ikon item dari <a href="https://clashofclans.fandom.com/wiki/Clash_of_Clans_Wiki" target="_blank" rel="noopener noreferrer">Clash of Clans Wiki</a>.<br>Dikembangkan oleh Amerta Buana #28P08PG0G</footer>
+</body>
+</html>

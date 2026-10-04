@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profil Pemain · CoC Clan Command Center</title>
+  <link rel="stylesheet" href="/player.css">
+  <script src="/player.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a id="backLink" class="back-link" href="/">← Kembali ke klan</a>
+      <span class="brand">CoC <span>Player Profile</span></span>
+      <a id="compareLink" class="back-link" href="/compare.html">Bandingkan</a>
+      <form id="playerSearch" class="search-form">
+        <label class="sr-only" for="playerTag">Player tag</label>
+        <input id="playerTag" name="tag" placeholder="Cari player tag" autocomplete="off" spellcheck="false">
+        <button type="submit">Cari</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="page">
+    <div id="status" class="status" role="status">Masukkan player tag untuk membuka profil.</div>
+    <div id="profile" hidden>
+      <section class="profile-head">
+        <div class="identity">
+          <img id="clanBadge" class="clan-badge" alt="" hidden>
+          <div>
+            <div class="eyebrow">PLAYER PROFILE</div>
+            <h1 id="playerName"></h1>
+            <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag"></button><span id="clanName"></span><span id="role"></span></div>
+          </div>
+        </div>
+        <div id="updated" class="updated"></div>
+      </section>
+
+      <section class="stats" aria-label="Ringkasan pemain">
+        <div><span>Town Hall</span><strong id="townHall">—</strong></div>
+        <div><span>Builder Hall</span><strong id="builderHall">—</strong></div>
+        <div><span>XP</span><strong id="exp">—</strong></div>
+        <div><span>Trofi</span><strong id="trophies">—</strong></div>
+        <div><span>War Stars</span><strong id="warStars">—</strong></div>
+        <div><span>Donasi</span><strong id="donations">—</strong></div>
+      </section>
+
+      <nav class="tabs" aria-label="Bagian profil">
+        <button type="button" data-tab="army" aria-selected="true">Army</button><button type="button" data-tab="progress" aria-selected="false">Progres</button><button type="button" data-tab="performance" aria-selected="false">Performa War/CWL</button>
+      </nav>
+
+      <section id="army" class="panel">
+        <div class="section-head"><div><div class="eyebrow">KOMPOSISI AKUN</div><h2>Army</h2></div><span id="armyCount"></span></div>
+        <p class="section-note">Angka pada ikon adalah level pemain. Pilih item untuk melihat rinciannya.</p>
+        <div id="armySections"></div>
+      </section>
+
+      <section id="progress" class="panel progress-panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">AUDIT AKUN</div><h2>Progres & Rushed Check</h2></div></div>
+        <div class="progress-summary"><div><span>Skor pasukan & hero</span><strong id="score">—</strong></div><div><span>Status</span><strong id="rushed">—</strong></div><div><span>Cakupan</span><strong id="coverage">—</strong></div></div>
+        <div id="progressNotice" class="notice"></div>
+        <div id="categoryProgress" class="category-progress"></div>
+        <ul id="reasons" class="reasons"></ul>
+        <h3>Prioritas upgrade</h3><div id="upgradePriorities" class="priority-list"></div>
+        <div id="builderProgress" class="notice"></div>
+      </section>
+      <section id="performance" class="panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">ARSIP PERANG</div><h2>Performa War/CWL</h2></div></div>
+        <p id="performanceNote" class="section-note">Memuat arsip perang...</p>
+        <div id="performanceSummary" class="performance-summary"></div>
+        <div id="performanceChart" class="performance-chart"></div>
+        <h3>Riwayat perang</h3><div id="performanceWars" class="war-history"></div>
+        <h3>Tren aktivitas</h3><div id="snapshotTrend" class="snapshot-trend"></div>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="itemDialog" aria-labelledby="itemTitle">
+    <div class="dialog-head"><h2 id="itemTitle"></h2><button id="closeDialog" type="button" aria-label="Tutup">×</button></div>
+    <div class="dialog-body"><div id="detailIcon" class="detail-icon"></div><dl id="itemDetails"></dl><a id="wikiLink" target="_blank" rel="noopener noreferrer">Lihat artikel di Clash of Clans Wiki ↗</a></div>
+  </dialog>
+
+  <footer class="footer">Ikon item ditautkan dari <a href="https://clashofclans.fandom.com/wiki/Clash_of_Clans_Wiki" target="_blank" rel="noopener noreferrer">Clash of Clans Wiki</a>. Konten ini tidak berafiliasi dengan Supercell.<br>Dikembangkan oleh Amerta Buana #28P08PG0G</footer>
+</body>
+</html>

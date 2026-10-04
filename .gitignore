@@ -1,0 +1,5 @@
+.env
+node_modules/
+.chrome-icon-test/
+data/snapshots/*.json
+contoh-profile-player.mhtml

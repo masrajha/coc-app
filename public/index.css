@@ -1,0 +1,63 @@
+:root{color-scheme:dark}
+body.dashboard{margin:0;background:#0e1219;color:#e8edf5;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.dashboard *{box-sizing:border-box}
+.dashboard button,.dashboard input{font-family:inherit}
+.dashboard button,.dashboard a{outline-offset:3px}
+.dashboard header{background:#101620ed;border-color:#263241;backdrop-filter:blur(10px)}
+.dashboard header>div,.dashboard main,.dashboard footer{max-width:1320px}
+.dashboard header .bg-slate-900{background:#263e5d;color:#cfe4ff}
+.dashboard main>div>section.bg-white,.dashboard #statusMessage{background:#181f28;border-color:#283645;border-radius:10px}
+.dashboard main>div>section.bg-white{overflow:hidden}
+.dashboard .bg-white{background:#181f28}
+.dashboard .bg-slate-50{background:#202c3a}
+.dashboard .bg-slate-100{background:#253343}
+.dashboard .bg-slate-900{background:#263e5d}
+.dashboard .border-slate-200{border-color:#304053}
+.dashboard .border-slate-300{border-color:#40536b}
+.dashboard .divide-slate-200>:not([hidden])~:not([hidden]){border-color:#304053}
+.dashboard .text-slate-500{color:#9aacbf}
+.dashboard .text-slate-600{color:#b5c6db}
+.dashboard .text-slate-700{color:#d2deeb}
+.dashboard .text-slate-900{color:#e8edf5}
+.dashboard .text-blue-700{color:#8eb9ff}
+.dashboard .text-rose-700{color:#ffa4b2}
+.dashboard .text-amber-700{color:#ffcf8b}
+.dashboard .text-emerald-700{color:#75d8ba}
+.dashboard .bg-blue-50{background:#1b3656}
+.dashboard .bg-amber-50{background:#4b3925}
+.dashboard .bg-emerald-50{background:#1c4138}
+.dashboard .bg-rose-50{background:#4d2d37}
+.dashboard .border-emerald-200{border-color:#337863}
+.dashboard .border-amber-200{border-color:#85643a}
+.dashboard .border-rose-200{border-color:#89505d}
+.dashboard .bg-blue-600{background:#2d68db}
+.dashboard .border-blue-600{border-color:#2d68db}
+.dashboard .hover\:bg-blue-700:hover{background:#3c78eb}
+.dashboard .hover\:bg-slate-50:hover{background:#28384b}
+.dashboard .hover\:text-blue-900:hover{color:#c5ddff}
+.dashboard #clanTagInput{background:#111b27;border-color:#40536b;color:#e8edf5}
+.dashboard #clanTagInput::placeholder{color:#8398ae}
+.dashboard #clanTagInput:focus{border-color:#67a5ff;box-shadow:0 0 0 2px #2d68db55;outline:0}
+.dashboard header a,.dashboard #healthCsvLink,.dashboard #performancePager button,.dashboard .roster-filter,.dashboard #warRounds button{border-radius:7px}
+.dashboard header a:hover,.dashboard #healthCsvLink:hover,.dashboard #performancePager button:hover,.dashboard .roster-filter:hover{background:#27384b}
+.dashboard #searchButton:hover,.dashboard #warRounds button.bg-blue-600:hover{background:#3c78eb}
+.dashboard .roster-filter.bg-blue-600:hover{background:#3c78eb}
+.dashboard table{color:#e8edf5}
+.dashboard table thead{background:#202c3a;color:#a9bad0}
+.dashboard table tbody.bg-white{background:#18212c}
+.dashboard table tbody tr:hover{background:#26384b}
+.dashboard table th,.dashboard table td{border-color:#304053}
+.dashboard table a{color:#8eb9ff}
+.dashboard table a:hover{color:#c5ddff}
+.dashboard #warContent>div:first-child>div{border-color:#304053}
+.dashboard aside>section{background:#121923;border-color:#324152;border-radius:8px}
+.dashboard #performanceChart>div{background:#1b2734;border-color:#34475d;border-radius:8px}
+.dashboard #performanceChart .bg-slate-100{background:#2c3e52}
+.dashboard #warRoster .bg-emerald-50,.dashboard #healthTable .bg-emerald-50{color:#75d8ba}
+.dashboard #warRoster .bg-amber-50,.dashboard #healthTable .bg-amber-50{color:#ffcf8b}
+.dashboard footer{border-top:1px solid #263241;color:#8293a6}
+.dashboard ::selection{background:#2d68db;color:white}
+.dashboard ::-webkit-scrollbar{width:10px;height:10px}
+.dashboard ::-webkit-scrollbar-track{background:#15202c}
+.dashboard ::-webkit-scrollbar-thumb{background:#43576d;border-radius:10px}
+@media(max-width:640px){.dashboard main{padding:13px 10px 30px}.dashboard header>div{padding:11px 10px}.dashboard footer{padding:12px 10px}}
