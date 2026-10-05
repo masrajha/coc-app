@@ -20,6 +20,7 @@ $checks = [
     '/player.css' => [200, 'text/css'],
     '/api/clan/INVALID' => [400, 'application/json'],
     '/api/player/INVALID/profile' => [400, 'application/json'],
+    '/api/player-icon?name=Giant%20Arrow&section=invalid' => [400, ''],
     '/api/clan/2GPP802UU/health' => [200, 'application/json'],
     '/api/clan/2GPP802UU/health.csv' => [200, 'text/csv']
 ];

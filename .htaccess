@@ -7,6 +7,13 @@ RewriteEngine On
 </FilesMatch>
 RewriteRule ^(src|vendor|data|test|tests|scripts)(/|$) - [F,L,NC]
 
-# Route requests through the PHP front controller; static assets are served from public/.
+# Don't rewrite the front controller, real files, or directories. This is
+# important on LiteSpeed/cPanel, where rewriting an existing index.php back to
+# itself can trigger HTTP 508 (Loop Detected). Use the widely supported L flag.
 RewriteRule ^index\.php$ - [L]
-RewriteRule ^ index.php [QSA,L]
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route app pages and /api/* URLs through the PHP front controller.
+RewriteRule ^ index.php [L,QSA]
