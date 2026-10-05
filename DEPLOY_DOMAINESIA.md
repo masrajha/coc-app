@@ -30,4 +30,13 @@ Daftarkan **IP koneksi keluar server** pada API key di [Clash of Clans Developer
 
 Buka `https://coc.domainanda.com/`, lalu uji pencarian klan, perang/CWL, halaman profil dan perbandingan, serta laporan aktivitas. Jika API mengembalikan 403, periksa token dan IP keluar yang didaftarkan; jika terjadi 500, periksa error log PHP dan izin tulis `DATA_DIR`. Setelah mengubah kode atau `composer.json`/`composer.lock`, unggah perubahan dan jalankan Composer kembali bila dependensi berubah.
 
-Ikon profil mengambil gambar dari Clash of Clans Wiki/Fandom bila server mengizinkan koneksi keluar HTTPS. Ikon dari sumber eksternal bisa tidak tampil bila layanan tersebut menolak permintaan.
+## 5. Siapkan ikon profil untuk hosting
+
+Pergantian backend ke PHP saja tidak menyelesaikan ikon yang gagal jika IP hosting tidak dapat mengambil gambar Fandom. Endpoint ikon sekarang mengutamakan file lokal dan cache; permintaan web tidak mencoba banyak unduhan Fandom secara serentak. Untuk menyediakan ikon secara stabil:
+
+1. Pada komputer lokal yang dapat memuat ikon, pastikan `.env` memiliki `COC_API_TOKEN` yang valid untuk IP lokal.
+2. Jalankan `php scripts/prepare-icons.php 2R92VJG0U`. Tag pemain lain dapat ditambahkan untuk mengisi ikon item yang berbeda. Proses ini membaca profil pemain, lalu menyimpan gambar yang berhasil ke `public/icons/`.
+3. Unggah **seluruh isi** `public/icons/` ke folder `public/icons/` di document root hosting. Unggah juga `src/App.php`, lalu refresh halaman profil dengan cache browser dibersihkan. Ikon tersedia lewat URL `/public/icons/<hash>.webp` (atau ekstensi gambar lain) sebagai file statis.
+4. Jika keluaran perintah masih mencatat ikon gagal, cek nama item dan jaringan komputer lokal. Ulangi perintah setelah koneksi pulih; file yang berhasil sebelumnya akan dilewati.
+
+`ICON_REMOTE_FETCH` tidak perlu diaktifkan di hosting. Bila disetel ke `1`, backend PHP kembali mencoba mengunduh ikon yang belum tersimpan saat menerima permintaan web; hal ini dapat membebani shared hosting.

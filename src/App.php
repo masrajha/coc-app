@@ -254,10 +254,21 @@ final class App
     private function iconCandidates(string $name, string $section): array
     {
         $files = $this->iconFiles($name, $section); $urls = [];
+        $local = $this->localIcon($name, $section);
+        if ($local !== null) $urls[] = $local['url'];
         foreach ($files as $file) { $hash = md5($file); $urls[] = 'https://static.wikia.nocookie.net/clashofclans/images/' . $hash[0] . '/' . substr($hash,0,2) . '/' . rawurlencode($file) . '/revision/latest/scale-to-width-down/100'; $urls[] = 'https://clashofclans.fandom.com/wiki/Special:FilePath/' . rawurlencode($file) . '?width=96'; }
-        if ($section === 'heroes' && $name === 'Royal Champion') array_unshift($urls, 'https://static.wikia.nocookie.net/clashofclans/images/8/8e/Avatar_Hero_Royal_Champion.png/revision/latest/scale-to-width-down/100?cb=20200913051659');
-        if ($section === 'heroEquipment' && $name === 'Barbarian Puppet') array_unshift($urls, 'https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430');
+        if ($section === 'heroes' && $name === 'Royal Champion') array_splice($urls, $local === null ? 0 : 1, 0, ['https://static.wikia.nocookie.net/clashofclans/images/8/8e/Avatar_Hero_Royal_Champion.png/revision/latest/scale-to-width-down/100?cb=20200913051659']);
+        if ($section === 'heroEquipment' && $name === 'Barbarian Puppet') array_splice($urls, $local === null ? 0 : 1, 0, ['https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430']);
         return array_values(array_unique($urls));
+    }
+    private function localIcon(string $name, string $section): ?array
+    {
+        $base = dirname(__DIR__) . '/public/icons/' . hash('sha256', $section . ':' . $name);
+        foreach (['png' => 'image/png', 'webp' => 'image/webp', 'jpg' => 'image/jpeg', 'gif' => 'image/gif'] as $extension => $type) {
+            $path = $base . '.' . $extension;
+            if (is_file($path) && filesize($path) > 0 && filesize($path) <= 400000) return ['path' => $path, 'type' => $type, 'url' => '/public/icons/' . basename($path)];
+        }
+        return null;
     }
     private function playerItem(array $item): array
     {
@@ -370,8 +381,13 @@ final class App
     private function playerIcon(ServerRequestInterface $req,ResponseInterface $res):ResponseInterface
     {
         $q=$req->getQueryParams();$name=(string)($q['name']??'');$section=(string)($q['section']??'');if(!preg_match("/^[\\w .&'-]{1,70}$/u",$name)||!in_array($section,self::SECTIONS,true))return $this->empty($res,400);
+        $local=$this->localIcon($name,$section);
+        if($local!==null){$bytes=file_get_contents($local['path']);if($bytes!==false){$res->getBody()->write($bytes);return $res->withHeader('Content-Type',$local['type'])->withHeader('Cache-Control','public, max-age=86400');}}
         $key=$section.':'.$name;$path='icons/'.hash('sha256',$key).'.json';$saved=$this->readJson($path,[]);$types=['image/png','image/webp','image/jpeg','image/gif'];
         if(isset($saved['type'],$saved['body'])&&in_array($saved['type'],$types,true)){$bytes=base64_decode($saved['body'],true);if($bytes!==false&&strlen($bytes)<=400000){$res->getBody()->write($bytes);return $res->withHeader('Content-Type',$saved['type'])->withHeader('Cache-Control','public, max-age=86400');}}
+        // Web requests must not launch several outbound Fandom lookups per icon.
+        // Cache warming is done from the CLI; opt in to remote fetches on web requests only if needed.
+        if(PHP_SAPI!=='cli'&&$this->env('ICON_REMOTE_FETCH')!=='1')return $this->empty($res,404);
         $files=$this->iconFiles($name,$section);$urls=$this->iconCandidates($name,$section);$body=null;$mime=null;
         foreach($urls as $url){if(!str_starts_with($url,'https://static.wikia.nocookie.net/'))continue;try{$r=$this->http->get($url,['timeout'=>6,'http_errors'=>false,'headers'=>['Accept'=>'image/*']]);$ct=strtolower(trim(explode(';',$r->getHeaderLine('Content-Type'))[0]));$b=(string)$r->getBody();if($r->getStatusCode()===200&&in_array($ct,$types,true)&&strlen($b)<=400000){$body=$b;$mime=$ct;break;}}catch(\Throwable){}}
         if($body===null){try{$r=$this->http->get('https://clashofclans.fandom.com/api.php',['timeout'=>8,'query'=>['action'=>'query','prop'=>'imageinfo','iiprop'=>'url','format'=>'json','formatversion'=>2,'titles'=>implode('|',array_map(static fn($f)=>'File:'.$f,$files))]]);$json=json_decode((string)$r->getBody(),true);foreach($json['query']['pages']??[] as $page)if(isset($page['imageinfo'][0]['url'])&&str_starts_with($page['imageinfo'][0]['url'],'https://static.wikia.nocookie.net/')){$r=$this->http->get($page['imageinfo'][0]['url'],['timeout'=>6,'http_errors'=>false]);$ct=strtolower(trim(explode(';',$r->getHeaderLine('Content-Type'))[0]));$b=(string)$r->getBody();if($r->getStatusCode()===200&&in_array($ct,$types,true)&&strlen($b)<=400000){$body=$b;$mime=$ct;break;}}}catch(\Throwable){}}
