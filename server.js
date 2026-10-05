@@ -7,7 +7,7 @@ const { createHash } = require('crypto');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 42918;
 const API_BASE = 'https://api.clashofclans.com/v1';
 const CACHE_TTL_MS = 2 * 60 * 1000;
 const API_TIMEOUT_MS = Number(process.env.COC_API_TIMEOUT_MS || 20000);
@@ -19,7 +19,11 @@ const iconCache = new Map();
 const pendingIcons = new Map();
 const pendingWarWrites = new Map();
 const WIKI_ICON_TTL_MS = 24 * 60 * 60 * 1000;
-const WIKI_ICON_MISS_TTL_MS = 10 * 60 * 1000;
+const WIKI_ICON_MISS_TTL_MS = 60 * 1000;
+const ICON_FETCH_LIMIT = 2;
+const ICON_FETCH_QUEUE_LIMIT = 8;
+let activeIconFetches = 0;
+const iconFetchQueue = [];
 const ROYAL_CHAMPION_ICON = 'https://static.wikia.nocookie.net/clashofclans/images/8/8e/Avatar_Hero_Royal_Champion.png/revision/latest/scale-to-width-down/100?cb=20200913051659';
 const VERIFIED_EQUIPMENT_ICONS = {
     'Barbarian Puppet': 'https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430'
@@ -78,7 +82,7 @@ const TH_MAX_LEVELS = {
 };
 
 app.use(cors());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 function normalizeTag(value) {
     const tag = String(value || '').trim().replace(/^#/, '').toUpperCase();
@@ -331,6 +335,55 @@ function staticWikiIconUrl(file) {
     return `https://static.wikia.nocookie.net/clashofclans/images/${hash[0]}/${hash.slice(0, 2)}/${encodeURIComponent(file)}/revision/latest/scale-to-width-down/100`;
 }
 
+function wikiIconCandidates(name, section) {
+    const verified = section === 'heroes' && name === 'Royal Champion' ? ROYAL_CHAMPION_ICON :
+        section === 'heroEquipment' ? VERIFIED_EQUIPMENT_ICONS[name] : null;
+    const files = wikiIconFiles(name, section);
+    return [...new Set([
+        verified,
+        ...files.map(staticWikiIconUrl),
+        ...files.map(file => `https://clashofclans.fandom.com/wiki/Special:FilePath/${encodeURIComponent(file)}?width=96`)
+    ].filter(Boolean))];
+}
+
+function iconDiskPath(key) {
+    return path.join(DATA_DIR, 'icons', `${createHash('sha256').update(key).digest('hex')}.json`);
+}
+
+async function readSavedIcon(key) {
+    try {
+        const saved = JSON.parse(await fs.readFile(iconDiskPath(key), 'utf8'));
+        if (!['image/png', 'image/webp', 'image/jpeg', 'image/gif'].includes(saved.type) ||
+            typeof saved.body !== 'string' || saved.body.length > 550000) return null;
+        const body = Buffer.from(saved.body, 'base64');
+        return body.length && body.length <= 400000 ? { body, type: saved.type } : null;
+    } catch (error) {
+        if (error.code === 'ENOENT' || error instanceof SyntaxError) return null;
+        throw error;
+    }
+}
+
+async function saveIcon(key, image) {
+    const target = iconDiskPath(key);
+    await fs.mkdir(path.dirname(target), { recursive: true });
+    await fs.writeFile(target, JSON.stringify({ type: image.type, body: image.body.toString('base64') }));
+}
+
+function limitedIconFetch(task) {
+    return new Promise((resolve, reject) => {
+        const run = () => {
+            activeIconFetches += 1;
+            Promise.resolve().then(task).then(resolve, reject).finally(() => {
+                activeIconFetches -= 1;
+                iconFetchQueue.shift()?.();
+            });
+        };
+        if (activeIconFetches < ICON_FETCH_LIMIT) run();
+        else if (iconFetchQueue.length >= ICON_FETCH_QUEUE_LIMIT) resolve(null);
+        else iconFetchQueue.push(run);
+    });
+}
+
 async function downloadWikiIcon(imageUrl) {
     const parsed = new URL(imageUrl);
     if (parsed.protocol !== 'https:' || parsed.hostname !== 'static.wikia.nocookie.net') return null;
@@ -344,6 +397,13 @@ async function fetchWikiIcon(name, section) {
     let imageUrl = section === 'heroes' && name === 'Royal Champion' ? ROYAL_CHAMPION_ICON :
         section === 'heroEquipment' ? VERIFIED_EQUIPMENT_ICONS[name] || null : null;
     const files = wikiIconFiles(name, section);
+    const directUrls = [...new Set([imageUrl, ...files.map(staticWikiIconUrl)].filter(Boolean))];
+    for (const url of directUrls) {
+        try {
+            const image = await downloadWikiIcon(url);
+            if (image) return image;
+        } catch { /* Coba URL berikutnya. */ }
+    }
     if (!imageUrl) {
       try {
         const response = await axios.get('https://clashofclans.fandom.com/api.php', {
@@ -380,14 +440,13 @@ async function fetchWikiIcon(name, section) {
                 imageUrl = detail.data?.query?.pages?.[0]?.imageinfo?.[0]?.url || null;
             }
         }
-      } catch { /* Berkas statis dicoba di bawah bila API wiki gagal. */ }
+      } catch { /* URL statis sudah dicoba; ikon dapat tetap tidak tersedia. */ }
     }
-    const urls = [...new Set([imageUrl, ...files.map(staticWikiIconUrl)].filter(Boolean))];
-    for (const url of urls) {
+    if (imageUrl && !directUrls.includes(imageUrl)) {
         try {
-            const image = await downloadWikiIcon(url);
+            const image = await downloadWikiIcon(imageUrl);
             if (image) return image;
-        } catch { /* Coba nama berkas berikutnya. */ }
+        } catch { /* Ikon tidak tersedia dari sumber wiki. */ }
     }
     return null;
 }
@@ -406,7 +465,13 @@ app.get('/api/player-icon', async (req, res) => {
     }
     try {
         if (!pendingIcons.has(key)) {
-            const request = fetchWikiIcon(name, section).then(image => {
+            const request = (async () => {
+                const saved = await readSavedIcon(key);
+                if (saved) return saved;
+                const image = await limitedIconFetch(() => fetchWikiIcon(name, section));
+                if (image) await saveIcon(key, image);
+                return image;
+            })().then(image => {
                 iconCache.set(key, { image, expiresAt: Date.now() + (image ? WIKI_ICON_TTL_MS : WIKI_ICON_MISS_TTL_MS) });
                 return image;
             }).finally(() => pendingIcons.delete(key));
@@ -605,6 +670,9 @@ function buildPlayerProfile(player, lastUpdated) {
     }
     for (const spell of player.spells || []) {
         army[spell.village === 'builderBase' ? 'builderBase' : 'spells'].push(playerItem(spell));
+    }
+    for (const [section, items] of Object.entries(army)) {
+        for (const item of items) item.iconUrls = wikiIconCandidates(item.name, section);
     }
     return {
         player: {

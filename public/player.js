@@ -27,7 +27,8 @@ const VERIFIED_WIKI_ICONS = {
   'Hero Equipment:Barbarian Puppet': 'https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430'
 };
 
-function wikiIconCandidates(name, section) {
+function wikiIconCandidates(item, section) {
+  const name = item.name;
   const base = name.replaceAll(' ', '_');
   const files = section === 'Heroes' || (section === 'Builder Base' && /^Battle (Machine|Copter)$/.test(name))
     ? [`Avatar_Hero_${base}.png`, `${base}_Icon.png`]
@@ -39,7 +40,7 @@ function wikiIconCandidates(name, section) {
   const candidates = files.map(file => `https://clashofclans.fandom.com/wiki/Special:FilePath/${encodeURIComponent(file)}?width=96`);
   const verified = VERIFIED_WIKI_ICONS[`${section}:${name}`];
   const local = `/api/player-icon?${new URLSearchParams({ name, section: SECTION_KEY_BY_TITLE[section] || section })}`;
-  return verified ? [local, verified, ...candidates] : [local, ...candidates];
+  return [...new Set([...(item.iconUrls || []), verified, ...candidates, local].filter(Boolean))];
 }
 
 function makeIcon(item, section) {
@@ -49,7 +50,7 @@ function makeIcon(item, section) {
   fallback.className = 'icon-fallback';
   fallback.textContent = item.name.split(/\s+/).map(part => part[0]).slice(0, 2).join('').toUpperCase();
   box.appendChild(fallback);
-  const candidates = wikiIconCandidates(item.name, section);
+  const candidates = wikiIconCandidates(item, section);
   const img = document.createElement('img');
   img.alt = '';
   img.loading = 'lazy';

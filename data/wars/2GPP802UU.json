@@ -195,7 +195,7 @@
           ]
         }
       ],
-      "updatedAt": "2026-10-04T17:55:43.826Z"
+      "updatedAt": "2026-10-05T03:10:56.443Z"
     },
     {
       "id": "CWL:20261003T120034.000Z:#20JQUCLR",
@@ -391,7 +391,7 @@
           ]
         }
       ],
-      "updatedAt": "2026-10-04T17:55:44.136Z"
+      "updatedAt": "2026-10-05T03:10:56.764Z"
     },
     {
       "id": "CWL:20261004T120117.000Z:#QGYY8PRJ",
@@ -458,7 +458,13 @@
           "tag": "#22JG9UJCR",
           "name": "RAIZEN 雷禅",
           "townhallLevel": 18,
-          "attacks": []
+          "attacks": [
+            {
+              "defenderTag": "#PVRG8CYQU",
+              "stars": 3,
+              "destructionPercentage": 100
+            }
+          ]
         },
         {
           "tag": "#PGQULCUQ9",
@@ -476,7 +482,13 @@
           "tag": "#28P08PG0G",
           "name": "Amerta Buana",
           "townhallLevel": 18,
-          "attacks": []
+          "attacks": [
+            {
+              "defenderTag": "#8LYR9G002",
+              "stars": 3,
+              "destructionPercentage": 100
+            }
+          ]
         },
         {
           "tag": "#Q0Q2GJCQC",
@@ -494,7 +506,13 @@
           "tag": "#22PC0Q009",
           "name": "Kyuraa",
           "townhallLevel": 18,
-          "attacks": []
+          "attacks": [
+            {
+              "defenderTag": "#8U20UVV0P",
+              "stars": 3,
+              "destructionPercentage": 100
+            }
+          ]
         },
         {
           "tag": "#92GQCPJL9",
@@ -563,7 +581,7 @@
           ]
         }
       ],
-      "updatedAt": "2026-10-04T17:55:43.495Z"
+      "updatedAt": "2026-10-05T03:10:56.122Z"
     },
     {
       "id": "CWL:20261005T120123.000Z:#PJ20G29L",
@@ -669,7 +687,7 @@
           "attacks": []
         }
       ],
-      "updatedAt": "2026-10-04T17:55:42.386Z"
+      "updatedAt": "2026-10-05T03:10:55.074Z"
     }
   ]
 }

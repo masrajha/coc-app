@@ -1,5 +1,7 @@
-.env
+.env*
+!.env-example
 node_modules/
 .chrome-icon-test/
 data/snapshots/*.json
+data/icons/
 contoh-profile-player.mhtml

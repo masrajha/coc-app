@@ -148,9 +148,17 @@ function armyIcon(item, section) {
   const image = document.createElement('img');
   image.alt = '';
   image.loading = 'lazy';
-  image.src = `/api/player-icon?${new URLSearchParams({ name: item.name, section })}`;
+  image.referrerPolicy = 'no-referrer';
+  const candidates = [...new Set([...(item.iconUrls || []),
+    `/api/player-icon?${new URLSearchParams({ name: item.name, section })}`])];
+  let index = 0;
   image.addEventListener('load', () => fallback.remove());
-  image.addEventListener('error', () => image.remove());
+  image.addEventListener('error', () => {
+    index += 1;
+    if (index < candidates.length) image.src = candidates[index];
+    else image.remove();
+  });
+  image.src = candidates[0];
   wrapper.append(fallback, image);
   const name = document.createElement('span');
   name.appendChild(document.createTextNode(item.name));

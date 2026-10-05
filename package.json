@@ -2,6 +2,11 @@
   "name": "coc-tracker",
   "version": "1.0.0",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "icons:prepare": "node scripts/prepare-icons.js"
+  },
   "dependencies": {
     "axios": "^1.6.8",
     "cors": "^2.8.5",

@@ -1,6 +1,11 @@
-const test = require('node:test');
+const { test, after } = require('node:test');
 const assert = require('node:assert/strict');
 const axios = require('axios');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+process.env.DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'coc-icons-test-'));
+after(() => fs.rmSync(process.env.DATA_DIR, { recursive: true, force: true }));
 const app = require('../server');
 
 test('profil memuat level semua kelompok Army dan halaman pemain terpisah', async () => {
@@ -26,6 +31,8 @@ test('profil memuat level semua kelompok Army dan halaman pemain terpisah', asyn
         assert.equal(response.status, 200);
         const profile = await response.json();
         assert.equal(profile.army.heroes[0].level, 110);
+        assert.match(profile.army.heroes[0].iconUrls[0], /static\.wikia\.nocookie\.net\/clashofclans\/images/);
+        assert.match(profile.army.heroEquipment[0].iconUrls[0], /Rage_Vial\.png/);
         assert.equal(profile.army.heroEquipment[0].equipmentHero, 'Barbarian King');
         assert.deepEqual(profile.army.heroEquipment.slice(1, 9).map(item => item.equipmentHero),
             ['Barbarian King', 'Archer Queen', 'Archer Queen', 'Grand Warden', 'Minion Prince', 'Royal Champion', 'Dragon Duke', 'Dragon Duke']);
@@ -69,7 +76,36 @@ test('ikon wiki diproksikan sebagai gambar dan disimpan dalam cache', async () =
     }
 });
 
-test('ikon Hero Equipment mencari berkas dengan nama item', async () => {
+test('ikon tersimpan di disk sehingga tidak perlu diunduh ulang setelah restart', async () => {
+    const original = axios.get;
+    let calls = 0;
+    axios.get = async () => {
+        calls += 1;
+        return { data: Buffer.from([137, 80, 78, 71]), headers: { 'content-type': 'image/png' } };
+    };
+    const first = app.listen(0);
+    try {
+        const response = await fetch(`http://127.0.0.1:${first.address().port}/api/player-icon?name=Barbarian%20King&section=heroes`);
+        assert.equal(response.status, 200);
+        assert.equal(calls, 1);
+    } finally {
+        first.close();
+    }
+    delete require.cache[require.resolve('../server')];
+    const restartedApp = require('../server');
+    axios.get = async () => { throw new Error('Ikon semestinya dibaca dari disk'); };
+    const second = restartedApp.listen(0);
+    try {
+        const response = await fetch(`http://127.0.0.1:${second.address().port}/api/player-icon?name=Barbarian%20King&section=heroes`);
+        assert.equal(response.status, 200);
+        assert.equal(calls, 1);
+    } finally {
+        second.close();
+        axios.get = original;
+    }
+});
+
+test('ikon Hero Equipment mencari lewat API wiki setelah URL statis gagal', async () => {
     const original = axios.get;
     const requested = [];
     axios.get = async (url, options) => {
@@ -79,14 +115,16 @@ test('ikon Hero Equipment mencari berkas dengan nama item', async () => {
                 { title: 'File:Rage Vial.png', imageinfo: [{ url: 'https://static.wikia.nocookie.net/clashofclans/images/example/Rage_Vial.png' }] }
             ] } } };
         }
+        if (!url.includes('/images/example/')) throw new Error('Berkas statis tidak tersedia');
         return { data: Buffer.from([137, 80, 78, 71]), headers: { 'content-type': 'image/png' } };
     };
     const server = app.listen(0);
     try {
         const response = await fetch(`http://127.0.0.1:${server.address().port}/api/player-icon?name=Rage%20Vial&section=heroEquipment`);
         assert.equal(response.status, 200);
-        assert.match(requested[0].options.params.titles, /File:Rage_Vial\.png/);
-        assert.equal(requested.length, 2);
+        assert.match(requested[0].url, /Rage_Vial\.png/);
+        assert.match(requested.find(entry => entry.url.endsWith('/api.php')).options.params.titles, /File:Rage_Vial\.png/);
+        assert.match(requested.at(-1).url, /\/images\/example\/Rage_Vial\.png/);
     } finally {
         server.close();
         axios.get = original;
@@ -112,7 +150,7 @@ test('Barbarian Puppet memakai URL gambar yang diberikan', async () => {
     }
 });
 
-test('ikon equipment memakai jalur gambar statis bila API wiki gagal', async () => {
+test('ikon equipment memakai jalur gambar statis tanpa memanggil API wiki', async () => {
     const original = axios.get;
     const urls = [];
     axios.get = async url => {
@@ -124,7 +162,8 @@ test('ikon equipment memakai jalur gambar statis bila API wiki gagal', async () 
     try {
         const response = await fetch(`http://127.0.0.1:${server.address().port}/api/player-icon?name=Rage%20Gem&section=heroEquipment`);
         assert.equal(response.status, 200);
-        assert.match(urls[1], /static\.wikia\.nocookie\.net\/clashofclans\/images\/[a-f0-9]\/\w\w\/Rage_Gem\.png/);
+        assert.match(urls[0], /static\.wikia\.nocookie\.net\/clashofclans\/images\/[a-f0-9]\/\w\w\/Rage_Gem\.png/);
+        assert.equal(urls.length, 1);
     } finally {
         server.close();
         axios.get = original;
