@@ -1,7 +1,9 @@
 .env*
 !.env-example
 node_modules/
+vendor/
+.phpunit.cache/
 .chrome-icon-test/
-data/snapshots/*.json
-data/icons/
+data/
+!data/.gitkeep
 contoh-profile-player.mhtml

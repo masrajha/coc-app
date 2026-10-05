@@ -1,7 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const model = require('../public/compare-model');
-const app = require('../server');
 
 function profile(tag, th, complete = true) {
   return { player: { tag, townHallLevel: th }, progress: {
@@ -109,21 +110,18 @@ test('resume menyebut batas data dan tidak mengubah arsip gagal menjadi nol sera
   assert.ok(lines.some(line => line.includes('Sampel serangan terbatas')));
 });
 
-test('halaman perbandingan disajikan terpisah dan skrip model tersedia', async () => {
-  const server = app.listen(0);
-  try {
-    const base = `http://127.0.0.1:${server.address().port}`;
-    const response = await fetch(`${base}/compare.html?player1=2R92VJG0U&player2=2GPP802UU`);
-    const html = await response.text();
-    assert.equal(response.status, 200);
-    assert.match(html, /id="player1"/);
-    assert.match(html, /id="player2"/);
-    assert.match(html, /compare-model\.js/);
-    assert.match(html, /data-tab="war"/);
-    assert.match(html, /data-tab="activity"/);
-    assert.match(html, /id="comparisonResume"/);
-    assert.equal((await fetch(`${base}/compare.js`)).status, 200);
-    assert.match(await (await fetch(`${base}/player.html`)).text(), /id="compareLink"/);
-    assert.match(await (await fetch(`${base}/`)).text(), /id="comparePlayersLink"/);
-  } finally { server.close(); }
+test('halaman perbandingan dan profil tetap ada di frontend PHP', () => {
+  const publicDir = path.join(__dirname, '..', 'public');
+  const html = fs.readFileSync(path.join(publicDir, 'compare.html'), 'utf8');
+  const profile = fs.readFileSync(path.join(publicDir, 'player.html'), 'utf8');
+  const home = fs.readFileSync(path.join(publicDir, 'index.html'), 'utf8');
+  assert.match(html, /id="player1"/);
+  assert.match(html, /id="player2"/);
+  assert.match(html, /compare-model\.js/);
+  assert.match(html, /data-tab="war"/);
+  assert.match(html, /data-tab="activity"/);
+  assert.match(html, /id="comparisonResume"/);
+  assert.ok(fs.existsSync(path.join(publicDir, 'compare.js')));
+  assert.match(profile, /id="compareLink"/);
+  assert.match(home, /id="comparePlayersLink"/);
 });

@@ -1,0 +1,12 @@
+Options -Indexes
+RewriteEngine On
+
+# Keep source, dependency manifests, environment files and stored data private.
+<FilesMatch "^(\.env.*|composer\.(json|lock)|package(-lock)?\.json|server\.js)$">
+    Require all denied
+</FilesMatch>
+RewriteRule ^(src|vendor|data|test|tests|scripts)(/|$) - [F,L,NC]
+
+# Route requests through the PHP front controller; static assets are served from public/.
+RewriteRule ^index\.php$ - [L]
+RewriteRule ^ index.php [QSA,L]

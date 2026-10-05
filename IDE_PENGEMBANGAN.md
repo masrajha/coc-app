@@ -60,7 +60,7 @@ Tabel batas level harus diberi versi dan tanggal pembaruan. Ketika update game m
 
 ## Rancangan teknis untuk proyek ini
 
-1. Pertahankan Express sebagai backend dan token API hanya di `.env`. Pindahkan panggilan API ke satu modul layanan yang menangani normalisasi tag, cache, timeout, dan kesalahan `403`/`404`/`429`.
+1. Backend aplikasi kini memakai PHP 8.2+, Slim, Guzzle, dan Composer; API token hanya di environment server atau `.env` privat. Pertahankan satu lapisan layanan untuk normalisasi tag, cache, timeout, serta kesalahan `403`/`404`/`429`.
 2. Tambahkan endpoint khusus seperti `/api/clan/:tag/war`, `/api/clan/:tag/cwl`, `/api/clan/:tag/health`, dan `/api/player/:tag/progress` agar halaman tidak perlu memahami bentuk respons API eksternal.
 3. Tambahkan database ringan seperti SQLite untuk snapshot anggota, arsip serangan perang, dan versi tabel batas level. Jadwalkan pengambilan data harian serta pengambilan perang lebih sering saat aktif.
 4. Pecah `public/index.html` menjadi tampilan/skrip modular ketika modul kedua mulai dibuat. Gunakan `textContent` atau pembuatan elemen DOM untuk nama pemain dan data eksternal, bukan interpolasi langsung ke `innerHTML`.

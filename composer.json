@@ -1,0 +1,21 @@
+{
+  "name": "coc-tracker/clan-command-center",
+  "description": "CoC Clan Command Center PHP backend",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.2",
+    "guzzlehttp/guzzle": "^7.9",
+    "slim/psr7": "^1.7",
+    "slim/slim": "^4.15",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "CocTracker\\": "src/"
+    }
+  },
+  "scripts": {
+    "test": "php tests/smoke.php"
+  }
+}
