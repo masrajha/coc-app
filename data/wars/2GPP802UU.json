@@ -195,7 +195,7 @@
                     ]
                 }
             ],
-            "updatedAt": "2026-10-05T05:53:22+00:00"
+            "updatedAt": "2026-10-05T23:13:43+00:00"
         },
         {
             "id": "CWL:20261003T120034.000Z:#20JQUCLR",
@@ -391,13 +391,13 @@
                     ]
                 }
             ],
-            "updatedAt": "2026-10-05T05:53:23+00:00"
+            "updatedAt": "2026-10-05T23:13:43+00:00"
         },
         {
             "id": "CWL:20261004T120117.000Z:#QGYY8PRJ",
             "type": "CWL",
             "round": 3,
-            "state": "inWar",
+            "state": "warEnded",
             "startTime": "20261004T120117.000Z",
             "endTime": "20261005T120117.000Z",
             "opponent": {
@@ -542,7 +542,13 @@
                     "tag": "#QCQV2P89P",
                     "name": "Smile Fighters",
                     "townhallLevel": 18,
-                    "attacks": []
+                    "attacks": [
+                        {
+                            "defenderTag": "#2VY9PYLYQ",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
                 },
                 {
                     "tag": "#YCY0C0Y0L",
@@ -581,18 +587,190 @@
                     ]
                 }
             ],
-            "updatedAt": "2026-10-05T05:53:21+00:00"
+            "updatedAt": "2026-10-05T23:15:22+00:00"
         },
         {
             "id": "CWL:20261005T120123.000Z:#PJ20G29L",
             "type": "CWL",
             "round": 4,
-            "state": "preparation",
+            "state": "inWar",
             "startTime": "20261005T120123.000Z",
             "endTime": "20261006T120123.000Z",
             "opponent": {
                 "tag": "#PJ20G29L",
                 "name": "Thai War Zone"
+            },
+            "attacksPerMember": 1,
+            "members": [
+                {
+                    "tag": "#VQR0Y0YR",
+                    "name": "MUGEN 無限",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#9V99P0JGY",
+                            "stars": 2,
+                            "destructionPercentage": 64
+                        }
+                    ]
+                },
+                {
+                    "tag": "#Q2YYJ9G00",
+                    "name": "∆~MINATO~∆™",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#YUVV2QYJC",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#2GCY2JUGC",
+                    "name": "Dyah lembu tal",
+                    "townhallLevel": 18,
+                    "attacks": []
+                },
+                {
+                    "tag": "#YGLCJV2PL",
+                    "name": "Prince_Yoani",
+                    "townhallLevel": 17,
+                    "attacks": [
+                        {
+                            "defenderTag": "#Y90C9JUCJ",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#22JG9UJCR",
+                    "name": "RAIZEN 雷禅",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#GQYRRUGLU",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#PGQULCUQ9",
+                    "name": "#Mad_Dog#",
+                    "townhallLevel": 17,
+                    "attacks": [
+                        {
+                            "defenderTag": "#G9V8JUYJ8",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#28P08PG0G",
+                    "name": "Amerta Buana",
+                    "townhallLevel": 18,
+                    "attacks": []
+                },
+                {
+                    "tag": "#Q0Q2GJCQC",
+                    "name": "Jose24",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#QUYU8C8VP",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#22PC0Q009",
+                    "name": "Kyuraa",
+                    "townhallLevel": 18,
+                    "attacks": []
+                },
+                {
+                    "tag": "#92GQCPJL9",
+                    "name": "bondurant",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#J9PJUPVC",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#YGYJJ0C9J",
+                    "name": "bekecot_saltauu",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#89CJY28C2",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#QCQV2P89P",
+                    "name": "Smile Fighters",
+                    "townhallLevel": 18,
+                    "attacks": []
+                },
+                {
+                    "tag": "#YCY0C0Y0L",
+                    "name": "lightheaven",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#GP9C0L992",
+                            "stars": 2,
+                            "destructionPercentage": 81
+                        }
+                    ]
+                },
+                {
+                    "tag": "#2R92VJG0U",
+                    "name": "Yoani'Zord_ID",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#P0YJPP2C",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                },
+                {
+                    "tag": "#QRLLQ0PC0",
+                    "name": "ONCE",
+                    "townhallLevel": 18,
+                    "attacks": [
+                        {
+                            "defenderTag": "#CUC9G8GJ",
+                            "stars": 3,
+                            "destructionPercentage": 100
+                        }
+                    ]
+                }
+            ],
+            "updatedAt": "2026-10-05T23:15:20+00:00"
+        },
+        {
+            "id": "CWL:20261006T121341.000Z:#LLVJYLJP",
+            "type": "CWL",
+            "round": 5,
+            "state": "preparation",
+            "startTime": "20261006T121341.000Z",
+            "endTime": "20261007T121341.000Z",
+            "opponent": {
+                "tag": "#LLVJYLJP",
+                "name": "Fighters"
             },
             "attacksPerMember": 1,
             "members": [
@@ -687,7 +865,7 @@
                     "attacks": []
                 }
             ],
-            "updatedAt": "2026-10-05T05:53:20+00:00"
+            "updatedAt": "2026-10-05T23:15:20+00:00"
         }
     ]
 }

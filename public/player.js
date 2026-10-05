@@ -67,6 +67,10 @@ function makeIcon(item, section) {
   box.appendChild(img);
   const level = document.createElement('span');
   level.className = 'level';
+  const isMaxLevel = Number.isFinite(Number(item.level)) &&
+    Number.isFinite(Number(item.maxLevel)) && Number(item.maxLevel) > 0 &&
+    Number(item.level) >= Number(item.maxLevel);
+  if (isMaxLevel) level.classList.add('max-level');
   level.textContent = item.level ?? '—';
   box.appendChild(level);
   return box;
