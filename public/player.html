@@ -32,7 +32,7 @@
           <img id="clanBadge" class="clan-badge" alt="" hidden>
           <div>
             <div class="eyebrow">PLAYER PROFILE</div>
-            <h1 id="playerName"></h1>
+            <div class="player-name-row"><h1 id="playerName"></h1><div id="playerLeagueBadge" class="player-league-badge" hidden></div></div>
             <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag"></button><span id="clanName"></span><span id="role"></span></div>
             <div id="leagueRankSummary" class="league-rank-summary">Peringkat grup liga belum tersedia.</div>
           </div>
@@ -78,8 +78,10 @@
       </section>
       </div>
       <aside class="league-sidebar panel" aria-labelledby="leagueSidebarTitle">
-        <div id="leagueSidebarEyebrow" class="eyebrow">RANKED LEAGUE</div>
-        <h2 id="leagueSidebarTitle">Peringkat grup liga</h2>
+        <div class="league-sidebar-heading">
+          <div><div id="leagueSidebarEyebrow" class="eyebrow">RANKED LEAGUE</div><h2 id="leagueSidebarTitle">Peringkat grup liga</h2></div>
+          <div id="sidebarLeagueBadge" class="sidebar-league-badge" hidden></div>
+        </div>
         <label class="league-session-label" for="leagueSession">Sesi liga</label>
         <select id="leagueSession" aria-label="Pilih sesi liga"></select>
         <p id="leagueStatus" class="section-note" role="status">Memuat sesi liga...</p>

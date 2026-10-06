@@ -10,7 +10,52 @@
 
   function element(id) { return document.getElementById(id); }
   function setText(id, value) { element(id).textContent = value; }
-  function setLeagueTitle(tier) { setText('leagueSidebarEyebrow', tier ? `RANKED LEAGUE (${tier})` : 'RANKED LEAGUE'); }
+  const leagueIcons = [
+    ['legend', 'legend'], ['electro', 'electro-dragon'], ['titan', 'electro-titan'],
+    ['dragon', 'dragon'], ['pekka', 'pekka'], ['p.e.k.k.a', 'pekka'],
+    ['golem', 'golem'], ['witch', 'witch'], ['valkyrie', 'valkyrie'],
+    ['wizard', 'wizard'], ['archer', 'archer'], ['barbarian', 'barbarian'], ['skeleton', 'skeleton']
+  ];
+
+  function leagueBadge(tier) {
+    const name = String(tier || '').trim();
+    const family = leagueIcons.find(([keyword]) => name.toLowerCase().includes(keyword))?.[1];
+    if (!family) return null;
+    const roman = name.match(/\b(III|II|I)\s*$/i);
+    const numeric = name.match(/\b(\d+)\s*$/);
+    const level = roman ? roman[1].toUpperCase() : numeric ? ['I', 'III', 'II'][Number(numeric[1]) % 3] : null;
+    const badge = document.createElement('span');
+    badge.className = 'league-icon';
+    const image = document.createElement('img');
+    image.src = `/league-${family}.png`;
+    image.alt = '';
+    image.width = 52;
+    image.height = 52;
+    badge.appendChild(image);
+    if (level) {
+      const number = document.createElement('span');
+      number.className = 'league-icon-level';
+      number.textContent = level;
+      badge.appendChild(number);
+    }
+    return badge;
+  }
+
+  function setLeagueBadge(id, tier) {
+    const target = element(id);
+    target.replaceChildren();
+    const badge = leagueBadge(tier);
+    target.hidden = !badge;
+    if (!badge) return;
+    target.appendChild(badge);
+    target.setAttribute('aria-label', `Liga ${tier}`);
+    target.title = `Liga ${tier}`;
+  }
+
+  function setLeagueTitle(tier) {
+    setText('leagueSidebarEyebrow', tier ? `RANKED LEAGUE (${tier})` : 'RANKED LEAGUE');
+    setLeagueBadge('sidebarLeagueBadge', tier);
+  }
 
   const tooltip = document.createElement('div');
   tooltip.className = 'league-battle-tooltip';
@@ -182,6 +227,7 @@
     hideBattle();
     state.battleCache.clear();
     setLeagueTitle(null);
+    setLeagueBadge('playerLeagueBadge', player.leagueTier?.name);
     state.request++;
     state.playerTag = normalizeTag(player.tag);
     state.members = [];

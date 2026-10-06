@@ -82,6 +82,8 @@ $checks = [
     '/player.css' => [200, 'text/css'],
     '/player-league.css' => [200, 'text/css'],
     '/player-league.js' => [200, 'text/javascript'],
+    '/league-legend.png' => [200, 'image/png'],
+    '/league-electro-dragon.png' => [200, 'image/png'],
     '/rankings.js' => [200, 'text/javascript'],
     '/api/clan/INVALID' => [400, 'application/json'],
     '/api/clan/2GPP802UU/summary' => [200, 'application/json'],
@@ -112,7 +114,7 @@ try {
     }
     $home = (string)$app->handle($factory->createServerRequest('GET', '/'))->getBody();
     $playerPage = (string)$app->handle($factory->createServerRequest('GET', '/player.html'))->getBody();
-    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', '/player-league.js'] as $marker) {
+    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', '/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }
     foreach (['rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation'] as $marker) {
