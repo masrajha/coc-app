@@ -1,6 +1,6 @@
 (function () {
   const PAGE_SIZE = 25;
-  const state = { playerTag: null, members: [], page: 0, request: 0, battleCache: new Map(), hoverTimer: null, hoverKey: null };
+  const state = { playerTag: null, members: [], page: 0, request: 0, battleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null };
   const clanTag = normalizeTag(new URLSearchParams(location.search).get('clan'));
 
   function normalizeTag(value) {
@@ -62,17 +62,31 @@
   tooltip.setAttribute('role', 'tooltip');
   tooltip.hidden = true;
   document.body.appendChild(tooltip);
+  tooltip.addEventListener('mouseenter', () => {
+    if (state.pinned) clearTimeout(state.hoverTimer);
+  });
 
   function positionTooltip(anchor) {
     const rect = anchor.getBoundingClientRect();
+    if (state.pinned && window.matchMedia('(max-width: 700px)').matches) {
+      tooltip.style.left = '12px';
+      tooltip.style.top = 'auto';
+      return;
+    }
     const left = Math.max(8, Math.min(Math.max(8, rect.left - 275), window.innerWidth - 292));
     tooltip.style.left = `${left}px`;
     tooltip.style.top = `${rect.top > 160 ? rect.top - 150 : rect.bottom + 8}px`;
   }
 
-  function hideBattle() {
+  function hideBattle(force = false) {
+    if (state.pinned && !force) return;
     clearTimeout(state.hoverTimer);
     state.hoverKey = null;
+    state.pinned = false;
+    state.trigger?.setAttribute('aria-expanded', 'false');
+    state.trigger = null;
+    tooltip.classList.remove('is-pinned');
+    tooltip.setAttribute('role', 'tooltip');
     tooltip.hidden = true;
   }
 
@@ -88,6 +102,15 @@
       return line;
     };
     tooltip.replaceChildren();
+    if (state.pinned) {
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'league-tooltip-close';
+      close.setAttribute('aria-label', 'Tutup detail pertempuran');
+      close.textContent = '×';
+      close.addEventListener('click', () => hideBattle(true));
+      tooltip.appendChild(close);
+    }
     const heading = document.createElement('b');
     heading.textContent = `Battle details: ${name}`;
     tooltip.append(heading,
@@ -99,15 +122,35 @@
     tooltip.append(note);
   }
 
-  function showBattle(member, row) {
+  function showBattle(member, row, pinned = false, trigger = null) {
     clearTimeout(state.hoverTimer);
     const tag = normalizeTag(member.tag);
     if (!tag) return;
     const session = element('leagueSession').value;
     const key = `${session}:${tag}`;
     state.hoverKey = key;
+    state.pinned = pinned;
+    state.trigger?.setAttribute('aria-expanded', 'false');
+    state.trigger = pinned ? trigger : null;
+    state.trigger?.setAttribute('aria-expanded', 'true');
+    tooltip.classList.toggle('is-pinned', pinned);
+    tooltip.setAttribute('role', pinned ? 'dialog' : 'tooltip');
+    if (pinned) tooltip.setAttribute('aria-label', `Battle details: ${member.name || member.tag}`);
+    else tooltip.removeAttribute('aria-label');
     tooltip.replaceChildren();
-    tooltip.textContent = 'Memuat detail pertempuran…';
+    if (pinned) {
+      const close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'league-tooltip-close';
+      close.setAttribute('aria-label', 'Tutup detail pertempuran');
+      close.textContent = '×';
+      close.addEventListener('click', () => hideBattle(true));
+      tooltip.appendChild(close);
+    }
+    const loading = document.createElement('span');
+    loading.className = 'league-tooltip-loading';
+    loading.textContent = 'Memuat detail pertempuran…';
+    tooltip.appendChild(loading);
     tooltip.hidden = false;
     positionTooltip(row);
     state.hoverTimer = setTimeout(async () => {
@@ -124,7 +167,10 @@
         renderBattle(member.name || member.tag, data);
         positionTooltip(row);
       } catch (error) {
-        if (state.hoverKey === key) tooltip.textContent = error.message;
+        if (state.hoverKey === key) {
+          tooltip.querySelector('.league-tooltip-loading')?.remove();
+          tooltip.appendChild(document.createTextNode(error.message));
+        }
       }
     }, 180);
   }
@@ -169,9 +215,26 @@
       attacks.title = 'Jumlah serangan: menang + kalah';
       defenses.title = 'Jumlah pertahanan: menang + kalah';
       activity.append(attacks, defenses);
+      const info = document.createElement('button');
+      info.type = 'button';
+      info.className = 'league-battle-info';
+      info.textContent = 'i';
+      info.setAttribute('aria-label', `Detail pertempuran ${member.name || member.tag || 'pemain'}`);
+      info.setAttribute('aria-haspopup', 'dialog');
+      info.setAttribute('aria-expanded', 'false');
+      info.title = 'Tampilkan detail pertempuran';
+      info.addEventListener('click', event => {
+        event.stopPropagation();
+        const key = `${element('leagueSession').value}:${normalizeTag(member.tag)}`;
+        if (state.pinned && state.hoverKey === key) hideBattle(true);
+        else showBattle(member, row, true, info);
+      });
+      activity.appendChild(info);
       row.append(rank, identity, trophies, activity);
       row.tabIndex = 0;
-      row.addEventListener('mouseenter', () => showBattle(member, row));
+      row.addEventListener('mouseenter', () => {
+        if (window.matchMedia('(hover: hover)').matches) showBattle(member, row);
+      });
       row.addEventListener('mouseleave', hideBattle);
       row.addEventListener('focusin', () => showBattle(member, row));
       row.addEventListener('focusout', hideBattle);
@@ -184,7 +247,7 @@
   }
 
   async function loadSession(sessionId) {
-    hideBattle();
+    hideBattle(true);
     setLeagueTitle(null);
     const request = ++state.request;
     const status = element('leagueStatus');
@@ -224,7 +287,7 @@
   }
 
   function initialize(player) {
-    hideBattle();
+    hideBattle(true);
     state.battleCache.clear();
     setLeagueTitle(null);
     setLeagueBadge('playerLeagueBadge', player.leagueTier?.name);
@@ -266,6 +329,9 @@
   });
   element('leagueNext').addEventListener('click', () => {
     if ((state.page + 1) * PAGE_SIZE < state.members.length) { state.page++; renderPage(); }
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && state.pinned) hideBattle(true);
   });
   window.PlayerLeague = { initialize };
 })();

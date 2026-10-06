@@ -35,14 +35,19 @@
 .league-member-identity a:hover{text-decoration:underline}
 .league-member-identity small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8fa3bc;font-size:10px}
 .league-member-trophies{font-variant-numeric:tabular-nums;color:#dceaff}
-.league-member-activity{grid-column:2/-1;display:flex;gap:12px;color:#a9bdd7;font-size:10px;font-variant-numeric:tabular-nums}
+.league-member-activity{grid-column:2/-1;display:flex;align-items:center;gap:12px;color:#a9bdd7;font-size:10px;font-variant-numeric:tabular-nums}
+.league-battle-info{display:none;width:23px;height:23px;margin-left:auto;padding:0;border:1px solid #58779c;border-radius:50%;background:#1a2c41;color:#d5e7ff;font-size:13px;font-weight:900;line-height:21px;text-align:center;cursor:pointer;touch-action:manipulation}
+.league-battle-info:hover,.league-battle-info:focus-visible{border-color:#9bc4ff;background:#294b70;outline:2px solid #79afff55}
 .league-pagination{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;color:#a9bbd2;font-size:12px}
 .league-pagination button{border:1px solid #405573;border-radius:6px;background:#202d3e;color:#d8e8ff;padding:6px 11px;cursor:pointer}
 .league-pagination button:disabled{opacity:.45;cursor:default}
 .league-battle-tooltip{position:fixed;z-index:1000;width:284px;box-sizing:border-box;padding:11px 12px;border:1px solid #688cc2;border-radius:9px;background:#0d1827;box-shadow:0 12px 32px #0009;color:#e8f1ff;font-size:11px;pointer-events:none}
+.league-battle-tooltip.is-pinned{pointer-events:auto;padding-top:34px}
+.league-tooltip-close{position:absolute;top:5px;right:7px;width:25px;height:25px;padding:0;border:1px solid #45617f;border-radius:6px;background:#17283a;color:#e7f1ff;font-size:19px;line-height:21px;cursor:pointer}
 .league-battle-tooltip[hidden]{display:none}
 .league-battle-tooltip b{display:block;padding-bottom:7px;border-bottom:1px solid #304257;font-size:12px}
 .league-battle-tooltip div{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
 .league-battle-tooltip strong{white-space:nowrap;color:#fff;font-variant-numeric:tabular-nums}
 .league-battle-tooltip small{display:block;margin-top:9px;color:#9fb2ca;line-height:1.35}
 @media(max-width:1100px){.profile-layout{grid-template-columns:1fr}.league-sidebar{position:static;max-height:none}.league-members{max-height:460px}}
+@media(hover:none),(max-width:700px){.league-battle-info{display:inline-grid;place-items:center}.league-battle-tooltip.is-pinned{left:12px!important;right:12px;width:auto;top:auto!important;bottom:12px;padding:38px 13px 13px;max-height:min(55vh,300px);overflow:auto;box-shadow:0 16px 48px #000c}.league-battle-tooltip.is-pinned b{padding-right:28px}}

@@ -147,6 +147,14 @@ try {
     foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', '/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }
+    $leagueScript = (string)$app->handle($factory->createServerRequest('GET', '/player-league.js'))->getBody();
+    foreach (["className = 'league-battle-info'", 'showBattle(member, row, true, info)', "aria-haspopup', 'dialog'", "event.key === 'Escape'", 'state.pinned'] as $marker) {
+        if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Popup detail pertempuran belum mendukung interaksi tap: ' . $marker);
+    }
+    $leagueStyles = (string)$app->handle($factory->createServerRequest('GET', '/player-league.css'))->getBody();
+    if (!str_contains($leagueStyles, '@media(hover:none)') || !str_contains($leagueStyles, '.league-battle-info{display:inline-grid')) {
+        throw new RuntimeException('Ikon popup tidak diaktifkan untuk perangkat layar sentuh.');
+    }
     foreach (['rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Homepage kehilangan kontrol leaderboard: ' . $marker);
     }
