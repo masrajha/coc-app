@@ -485,7 +485,7 @@
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-slate-50';
                 const best = `${target.bestStars || 0}b / ${formatPercent(target.bestDestruction)}%`;
-                const note = target.bestStars >= 3 ? 'Clear' : target.attacksReceived ? 'Masih bisa ditambah' : 'Belum disentuh';
+                const note = target.bestStars >= 3 ? 'Clear' : target.attacksReceived ? 'Remaining' : 'Belum disentuh';
                 addCell(row, target.mapPosition);
                 addPlayerLinkCell(row, target);
                 addCell(row, target.townhallLevel);
