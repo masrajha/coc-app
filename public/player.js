@@ -5,7 +5,7 @@ const SECTION_ORDER = [
 ];
 const SECTION_KEY_BY_TITLE = Object.fromEntries(SECTION_ORDER.map(([key, title]) => [title, key]));
 const params = new URLSearchParams(location.search);
-const clanTag = normalizeTag(params.get('clan'));
+let clanTag = normalizeTag(params.get('clan'));
 const backLink = document.getElementById('backLink');
 if (clanTag) backLink.href = `/?clan=${encodeURIComponent(clanTag)}`;
 
@@ -275,6 +275,9 @@ async function loadPerformance(player) {
 
 function renderProfile(data) {
   const player = data.player;
+  const playerClanTag = normalizeTag(player.clan?.tag);
+  if (!clanTag && playerClanTag) clanTag = playerClanTag;
+  if (clanTag) backLink.href = `/?clan=${encodeURIComponent(clanTag)}`;
   const compareParams = new URLSearchParams({ player1: normalizeTag(player.tag) });
   const compareClan = clanTag || normalizeTag(player.clan?.tag);
   if (compareClan) compareParams.set('clan', compareClan);
@@ -282,7 +285,17 @@ function renderProfile(data) {
   document.title = `${player.name} · Profil Pemain`;
   setText('playerName', player.name);
   setText('copyTag', player.tag);
-  setText('clanName', player.clan?.name || 'Tanpa klan');
+  const clanName = document.getElementById('clanName');
+  clanName.replaceChildren();
+  if (playerClanTag && player.clan?.name) {
+    const clanLink = document.createElement('a');
+    clanLink.href = `/?clan=${encodeURIComponent(playerClanTag)}`;
+    clanLink.textContent = player.clan.name;
+    clanLink.title = `Buka clan ${player.clan.name}`;
+    clanName.appendChild(clanLink);
+  } else {
+    clanName.textContent = 'Tanpa klan';
+  }
   setText('role', player.role || '');
   setText('townHall', player.townHallLevel);
   setText('builderHall', player.builderHallLevel);

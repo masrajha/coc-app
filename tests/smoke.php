@@ -45,6 +45,7 @@ file_put_contents($iconPath, $iconBytes);
 $playerPath = '/players/%232GPP802UU';
 $seedApiCache($playerPath, [
     'tag' => '#2GPP802UU', 'name' => 'Test', 'townHallLevel' => 18,
+    'clan' => ['tag' => '#9RU089PG', 'name' => 'Test Clan'],
     'leagueTier' => ['id' => 105000035, 'name' => 'Legend II'],
     'currentLeagueGroupTag' => '#8URPQL0', 'currentLeagueSeasonId' => 1791176400,
     'previousLeagueGroupTag' => '#8U89LYJ', 'previousLeagueSeasonId' => 1790571600,
@@ -128,6 +129,14 @@ try {
             throw new RuntimeException('URL asset tidak memiliki versi konten yang benar: ' . $assetFile);
         }
     }
+    $playerScript = (string)$app->handle($factory->createServerRequest('GET', '/player.js'))->getBody();
+    foreach ([
+        'if (!clanTag && playerClanTag) clanTag = playerClanTag;',
+        'backLink.href = `/?clan=${encodeURIComponent(clanTag)}`',
+        'clanLink.href = `/?clan=${encodeURIComponent(playerClanTag)}`'
+    ] as $marker) {
+        if (!str_contains($playerScript, $marker)) throw new RuntimeException('Navigasi profil tidak menggunakan tag clan dari data pemain.');
+    }
     $htmlResponse = $app->handle($factory->createServerRequest('GET', '/'));
     $assetResponse = $app->handle($factory->createServerRequest('GET', '/index.css'));
     if (!str_contains($htmlResponse->getHeaderLine('Cache-Control'), 'no-cache')
@@ -178,6 +187,7 @@ try {
     if ($profileResponse->getStatusCode() !== 200 || ($profile['army']['heroes'][0]['iconUrls'][0] ?? null) !== '/public/icons/' . basename($iconPath)) {
         throw new RuntimeException('Profil tidak memprioritaskan ikon lokal.');
     }
+    if (($profile['player']['clan']['tag'] ?? null) !== '#9RU089PG') throw new RuntimeException('Profil API kehilangan tag clan pemain.');
     if (($profile['player']['leagueTier']['name'] ?? null) !== 'Legend II' || count($profile['player']['leagueSessions'] ?? []) !== 2) {
         throw new RuntimeException('Sesi grup liga tidak tersedia pada profil.');
     }
