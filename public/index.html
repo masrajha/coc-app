@@ -6,17 +6,20 @@
     <title>CoC Clan Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/index.css">
+    <script src="/rankings.js" defer></script>
 </head>
 <body class="dashboard">
     <header class="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div class="max-w-7xl mx-auto px-4 py-3">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div class="flex items-center gap-3">
+                    <a href="/" class="home-brand" aria-label="Kembali ke home">
                     <div class="h-9 w-9 rounded bg-slate-900 text-white grid place-items-center text-sm font-bold">CW</div>
                     <div>
                         <h1 class="text-lg font-bold leading-5">CoC Clan Command Center</h1>
-                        <p class="text-xs text-slate-500">War, CWL, roster, dan performa pemain dalam satu layar.</p>
+                        <p class="text-xs text-slate-500">Leaderboard global dan command center klan.</p>
                     </div>
+                    </a>
                 </div>
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <a href="/player.html" class="rounded border border-slate-300 px-3 py-2 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50">Cari pemain</a>
@@ -31,6 +34,39 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-4">
+        <section id="rankingsPanel" class="rankings-panel" aria-labelledby="rankingsTitle">
+            <div class="rankings-heading">
+                <div>
+                    <p class="rankings-eyebrow">LEADERBOARD RESMI</p>
+                    <h2 id="rankingsTitle">Peringkat global</h2>
+                    <p class="rankings-description">Lihat pemain dan klan teratas berdasarkan trofi dan poin klan.</p>
+                </div>
+                <div class="ranking-location-control">
+                    <label for="rankingLocation">Lokasi</label>
+                    <select id="rankingLocation" aria-label="Pilih lokasi ranking">
+                        <option value="global">Global</option>
+                    </select>
+                    <button id="refreshRankings" type="button" title="Muat ulang ranking" aria-label="Muat ulang ranking">↻</button>
+                </div>
+            </div>
+            <div class="ranking-tabs" role="tablist" aria-label="Kategori ranking">
+                <button type="button" class="ranking-tab active" id="rankingPlayersTab" role="tab" aria-selected="true" data-ranking="players">Pemain · Home Village</button>
+                <button type="button" class="ranking-tab" id="rankingClansTab" role="tab" aria-selected="false" data-ranking="clans">Klan · Poin klan</button>
+            </div>
+            <div class="ranking-summary">
+                <strong id="rankingCaption">Top pemain Home Village</strong>
+                <span id="rankingUpdated">Memuat ranking…</span>
+            </div>
+            <p id="rankingStatus" class="ranking-status" role="status" aria-live="polite">Mengambil leaderboard global…</p>
+            <div class="ranking-table-wrap" id="rankingTableWrap" hidden>
+                <table class="ranking-table">
+                    <thead id="rankingHead"></thead>
+                    <tbody id="rankingRows"></tbody>
+                </table>
+            </div>
+            <p class="ranking-footnote">Data ranking diambil dari API Clash of Clans dan dapat berubah. Peringkat War/CWL tidak termasuk di leaderboard ini.</p>
+        </section>
+
         <div id="statusMessage" class="hidden rounded border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600">Loading...</div>
 
         <div id="clanResult" class="hidden space-y-4">
@@ -795,6 +831,7 @@
 
         const initialClan = new URLSearchParams(location.search).get('clan');
         if (initialClan) {
+            document.getElementById('rankingsPanel').hidden = true;
             document.getElementById('clanTagInput').value = initialClan;
             searchClan();
         }

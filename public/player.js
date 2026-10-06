@@ -297,6 +297,7 @@ function renderProfile(data) {
   if (badgeUrl) badge.src = badgeUrl;
   renderArmy(data.army);
   renderProgress(data.progress);
+  PlayerLeague.initialize(player);
   loadPerformance(player);
   document.getElementById('profile').hidden = false;
   document.getElementById('status').hidden = true;

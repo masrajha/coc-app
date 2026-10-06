@@ -55,14 +55,18 @@ final class App
         $app->addRoutingMiddleware();
         $app->addErrorMiddleware(false, true, true);
         $app->options('/{routes:.*}', fn($request, $response) => $response);
+        $app->get('/api/rankings/locations', fn($req, $res) => $self->rankingLocations($res));
+        $app->get('/api/rankings/{type}', fn($req, $res, $args) => $self->rankings($req, $res, $args['type']));
         $app->get('/api/clan/{tag}/war', fn($req, $res, $args) => $self->war($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/performance', fn($req, $res, $args) => $self->cwlPerformance($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/health.csv', fn($req, $res, $args) => $self->healthCsv($res, $args['tag']));
         $app->get('/api/clan/{tag}/health', fn($req, $res, $args) => $self->health($res, $args['tag']));
+        $app->get('/api/clan/{tag}/summary', fn($req, $res, $args) => $self->clanSummary($res, $args['tag']));
         $app->get('/api/clan/{tag}', fn($req, $res, $args) => $self->clan($res, $args['tag']));
         $app->get('/api/player-icon', fn($req, $res) => $self->playerIcon($req, $res));
         $app->get('/api/player/{tag}/progress', fn($req, $res, $args) => $self->playerProgress($res, $args['tag']));
         $app->get('/api/player/{tag}/profile', fn($req, $res, $args) => $self->playerProfile($res, $args['tag']));
+        $app->get('/api/player/{tag}/league-group', fn($req, $res, $args) => $self->playerLeagueGroup($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html'));
         $app->get('/{path:.*}', fn($req, $res, $args) => $self->staticFile($res, $args['path'] ?? ''));
@@ -320,13 +324,147 @@ final class App
         foreach($army as $section=>&$items)foreach($items as &$item)$item['iconUrls']=$this->iconCandidates($item['name'],$section);unset($items,$item);
         $fields=['tag','name','townHallLevel','builderHallLevel','expLevel','trophies','bestTrophies','builderBaseTrophies','warStars','donations','donationsReceived','role'];$player=[];foreach($fields as $f)$player[$f]=$p[$f]??null;
         $player['league']=isset($p['league'])?['name'=>$p['league']['name']??null,'iconUrls'=>$p['league']['iconUrls']??null]:null;
+        $player['leagueTier']=isset($p['leagueTier'])?['id'=>$p['leagueTier']['id']??null,'name'=>$p['leagueTier']['name']??null]:null;
+        $player['leagueSessions']=$this->leagueSessions($p);
         $player['clan']=isset($p['clan'])?['tag'=>$p['clan']['tag']??null,'name'=>$p['clan']['name']??null,'badgeUrls'=>$p['clan']['badgeUrls']??null]:null;
         return ['player'=>$player,'army'=>$army,'progress'=>$this->progress($p),'lastUpdated'=>$updated];
     }
 
     private function clan(ResponseInterface $res,string $raw):ResponseInterface{$tag=$this->normalizeTag($raw);if(!$tag)return $this->tagError($res,'Tag klan tidak valid.');try{$e=$this->upstream('/clans/'.rawurlencode('#'.$tag));$snapshot=$this->saveSnapshot($tag,$e['data']);$data=$e['data'];$data['snapshotDate']=$snapshot['date'];return $this->respond($res,$data);}catch(\Throwable $e){return $this->failure($res,$e);}}
+
+    private function clanSummary(ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag klan tidak valid.');
+        try {
+            $entry = $this->upstream('/clans/' . rawurlencode('#' . $tag));
+            $clan = $entry['data'];
+            return $this->respond($res, [
+                'tag' => $clan['tag'] ?? '#' . $tag,
+                'name' => $clan['name'] ?? null,
+                'location' => $clan['location'] ?? null,
+                'lastUpdated' => $entry['lastUpdated']
+            ]);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
+
+    private function rankingLocations(ResponseInterface $res): ResponseInterface
+    {
+        try {
+            $items = [];
+            $cursor = null;
+            $lastUpdated = gmdate('c');
+            $seenCursors = [];
+            for ($page = 0; $page < 20; $page++) {
+                $path = '/locations?limit=100' . ($cursor ? '&after=' . rawurlencode($cursor) : '');
+                $entry = $this->upstream($path);
+                if ($page === 0) $lastUpdated = $entry['lastUpdated'];
+                foreach ($entry['data']['items'] ?? [] as $location) {
+                    if (isset($location['id'])) $items[(string)$location['id']] = $location;
+                }
+                $next = $entry['data']['paging']['cursors']['after'] ?? null;
+                if (!is_string($next) || $next === '' || isset($seenCursors[$next])) break;
+                $seenCursors[$next] = true;
+                $cursor = $next;
+            }
+            return $this->respond($res, ['items' => array_values($items), 'paging' => null, 'lastUpdated' => $lastUpdated]);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
+
+    private function rankings(ServerRequestInterface $req, ResponseInterface $res, string $type): ResponseInterface
+    {
+        if (!in_array($type, ['players', 'clans'], true)) return $this->tagError($res, 'Jenis ranking tidak valid.');
+        $query = $req->getQueryParams();
+        $location = $query['location'] ?? 'global';
+        if (!is_string($location) || !preg_match('/^(?:global|[A-Za-z0-9_-]{1,32})$/', $location)) {
+            return $this->tagError($res, 'Lokasi ranking tidak valid.');
+        }
+        $limitInput = $query['limit'] ?? '25';
+        if (!is_string($limitInput) || !ctype_digit($limitInput)) return $this->tagError($res, 'Jumlah ranking tidak valid.');
+        $limit = min(50, max(1, (int)$limitInput));
+        $endpoint = '/locations/' . rawurlencode($location) . '/rankings/' . $type . '?limit=' . $limit;
+        try {
+            $entry = $this->upstream($endpoint);
+            return $this->respond($res, [
+                'type' => $type,
+                'location' => $location,
+                'items' => $entry['data']['items'] ?? [],
+                'paging' => $entry['data']['paging'] ?? null,
+                'lastUpdated' => $entry['lastUpdated']
+            ]);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
+
     private function playerProgress(ResponseInterface $res,string $raw):ResponseInterface{$path=$this->playerPath($raw);if(!$path)return $this->tagError($res,'Tag pemain tidak valid.');try{$e=$this->upstream($path);$data=$this->progress($e['data']);$data['lastUpdated']=$e['lastUpdated'];return $this->respond($res,$data);}catch(\Throwable $e){return $this->failure($res,$e);}}
     private function playerProfile(ResponseInterface $res,string $raw):ResponseInterface{$path=$this->playerPath($raw);if(!$path)return $this->tagError($res,'Tag pemain tidak valid.');try{$e=$this->upstream($path);return $this->respond($res,$this->profile($e['data'],$e['lastUpdated']));}catch(\Throwable $e){return $this->failure($res,$e);}}
+
+    private function leagueSessions(array $player): array
+    {
+        $sessions = [];
+        foreach (['current' => 'Saat ini', 'previous' => 'Sesi terakhir'] as $key => $label) {
+            $group = $player[$key . 'LeagueGroupTag'] ?? null;
+            $season = $player[$key . 'LeagueSeasonId'] ?? null;
+            if (!is_string($group) || $group === '#0' || $this->normalizeTag($group) === null || !is_numeric($season) || (int)$season <= 0) continue;
+            $sessions[] = ['id' => $key, 'label' => $label, 'groupTag' => $group, 'seasonId' => (int)$season];
+        }
+        return $sessions;
+    }
+
+    private function playerLeagueGroup(ServerRequestInterface $req, ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag pemain tidak valid.');
+        $sessionId = $req->getQueryParams()['session'] ?? 'current';
+        if (!in_array($sessionId, ['current', 'previous'], true)) return $this->tagError($res, 'Sesi liga tidak valid.');
+        try {
+            $profile = $this->upstream('/players/' . rawurlencode('#' . $tag));
+            $sessions = $this->leagueSessions($profile['data']);
+            $session = null;
+            foreach ($sessions as $candidate) if ($candidate['id'] === $sessionId) { $session = $candidate; break; }
+            if ($session === null) return $this->respond($res, ['error' => 'Pemain tidak memiliki grup pada sesi liga ini.'], 404);
+            $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
+            $group = $this->upstream($path);
+            $members = [];
+            foreach ($group['data']['members'] ?? [] as $member) {
+                $members[] = [
+                    'tag' => $member['playerTag'] ?? null,
+                    'name' => $member['playerName'] ?? null,
+                    'clanTag' => $member['clanTag'] ?? null,
+                    'clanName' => $member['clanName'] ?? null,
+                    'trophies' => $member['leagueTrophies'] ?? null,
+                    'attackWins' => $member['attackWinCount'] ?? null,
+                    'attackLosses' => $member['attackLoseCount'] ?? null,
+                    'defenseWins' => $member['defenseWinCount'] ?? null,
+                    'defenseLosses' => $member['defenseLoseCount'] ?? null
+                ];
+            }
+            usort($members, static fn($a, $b) => (int)$b['trophies'] <=> (int)$a['trophies']);
+            foreach ($members as $index => &$member) $member['rank'] = $index + 1;
+            unset($member);
+            $playerRank = null;
+            foreach ($members as $member) if (strtoupper((string)$member['tag']) === '#' . $tag) { $playerRank = $member['rank']; break; }
+            return $this->respond($res, [
+                'playerTag' => '#' . $tag,
+                'session' => $session,
+                'leagueTier' => $sessionId === 'current' ? ($profile['data']['leagueTier']['name'] ?? null) : null,
+                'playerRank' => $playerRank,
+                'totalMembers' => count($members),
+                'members' => $members,
+                'lastUpdated' => $group['lastUpdated']
+            ]);
+        } catch (UpstreamFailure $e) {
+            if ($e->status === 404) return $this->respond($res, ['error' => 'Data grup liga untuk sesi ini tidak tersedia.'], 404);
+            return $this->failure($res, $e);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
 
     private function archivePath(string $tag): string { return 'wars/' . $tag . '.json'; }
     private function wars(string $tag): array { $data=$this->readJson($this->archivePath($tag));return is_array($data['wars']??null)?$data['wars']:[]; }

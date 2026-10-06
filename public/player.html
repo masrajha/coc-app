@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Profil Pemain · CoC Clan Command Center</title>
   <link rel="stylesheet" href="/player.css">
+  <link rel="stylesheet" href="/player-league.css">
+  <script src="/player-league.js" defer></script>
   <script src="/player.js" defer></script>
 </head>
 <body>
@@ -23,7 +25,8 @@
 
   <main class="page">
     <div id="status" class="status" role="status">Masukkan player tag untuk membuka profil.</div>
-    <div id="profile" hidden>
+    <div id="profile" class="profile-layout" hidden>
+      <div class="profile-main">
       <section class="profile-head">
         <div class="identity">
           <img id="clanBadge" class="clan-badge" alt="" hidden>
@@ -31,6 +34,7 @@
             <div class="eyebrow">PLAYER PROFILE</div>
             <h1 id="playerName"></h1>
             <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag"></button><span id="clanName"></span><span id="role"></span></div>
+            <div id="leagueRankSummary" class="league-rank-summary">Peringkat grup liga belum tersedia.</div>
           </div>
         </div>
         <div id="updated" class="updated"></div>
@@ -72,6 +76,22 @@
         <h3>Riwayat perang</h3><div id="performanceWars" class="war-history"></div>
         <h3>Tren aktivitas</h3><div id="snapshotTrend" class="snapshot-trend"></div>
       </section>
+      </div>
+      <aside class="league-sidebar panel" aria-labelledby="leagueSidebarTitle">
+        <div class="eyebrow">RANKED LEAGUE</div>
+        <h2 id="leagueSidebarTitle">Peringkat grup liga</h2>
+        <label class="league-session-label" for="leagueSession">Sesi liga</label>
+        <select id="leagueSession" aria-label="Pilih sesi liga"></select>
+        <p id="leagueStatus" class="section-note" role="status">Memuat sesi liga...</p>
+        <div id="leaguePlayerRank" class="league-player-rank" hidden></div>
+        <div class="league-list-heading"><span>Anggota grup</span><span id="leagueMemberCount"></span></div>
+        <ol id="leagueMembers" class="league-members"></ol>
+        <div class="league-pagination">
+          <button id="leaguePrev" type="button" disabled>Prev</button>
+          <span id="leaguePageInfo">—</span>
+          <button id="leagueNext" type="button" disabled>Next</button>
+        </div>
+      </aside>
     </div>
   </main>
 
