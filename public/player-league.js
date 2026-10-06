@@ -259,7 +259,7 @@
     element('leaguePlayerRank').hidden = true;
     try {
       const response = await fetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}`);
-      const data = await response.json();
+      const data = await response.json().catch(() => ({ error: 'Server tidak mengembalikan data grup liga. Coba lagi nanti.' }));
       if (request !== state.request) return;
       if (!response.ok) throw new Error(data.error || 'Peringkat grup tidak dapat dimuat.');
       state.members = Array.isArray(data.members) ? data.members : [];
@@ -278,7 +278,12 @@
       const description = document.createElement('span');
       description.textContent = `${label} · ${data.totalMembers} anggota grup`;
       card.append(rank, description);
-      status.hidden = true;
+      if (data.stale) {
+        const updated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('id-ID') : 'sebelumnya';
+        status.textContent = `Menampilkan data grup tersimpan dari ${updated}; API sedang tidak merespons.`;
+      } else {
+        status.hidden = true;
+      }
     } catch (error) {
       if (request !== state.request) return;
       status.textContent = error.message;

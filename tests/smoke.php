@@ -48,13 +48,24 @@ $seedApiCache('/locations/global/rankings/players?limit=25', ['items' => [
 $seedApiCache('/clans/%232GPP802UU', [
     'tag' => '#2GPP802UU', 'name' => 'Top Clan', 'location' => ['id' => 32000000, 'name' => 'Indonesia', 'isCountry' => true]
 ]);
-$seedApiCache('/clans/%239RU089PG/currentwar/leaguegroup', ['state' => 'inWar', 'rounds' => [
+$seedApiCache('/clans/%239RU089PG', ['tag' => '#9RU089PG', 'name' => 'Home', 'warLeague' => ['name' => 'Master League I']]);
+$seedApiCache('/clans/%239RU089PG/currentwar/leaguegroup', ['state' => 'inWar', 'season' => '2026-10', 'clans' => [
+    ['tag' => '#9RU089PG', 'name' => 'Home'], ['tag' => '#2GPP802UU', 'name' => 'Away']
+], 'rounds' => [
     ['warTags' => ['#WARROUND1']], ['warTags' => ['#WARROUND2']], ['warTags' => ['#WARROUND3']]
 ]]);
+$seedApiCache('/clanwarleagues/wars/%23WARROUND1', [
+    'state' => 'warEnded', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 10, 'destructionPercentage' => 90],
+    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'stars' => 8, 'destructionPercentage' => 80]
+]);
 $seedApiCache('/clanwarleagues/wars/%23WARROUND2', [
     'state' => 'inWar', 'teamSize' => 1, 'startTime' => '20261006T000000.000Z', 'endTime' => '20261007T000000.000Z',
-    'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'members' => []],
-    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'members' => []]
+    'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 7, 'destructionPercentage' => 70, 'members' => []],
+    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'stars' => 9, 'destructionPercentage' => 88, 'members' => []]
+]);
+$seedApiCache('/clanwarleagues/wars/%23WARROUND3', [
+    'state' => 'preparation', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 12, 'destructionPercentage' => 95],
+    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'stars' => 6, 'destructionPercentage' => 60]
 ]);
 $seedApiCache('/locations/global/rankings/clans?limit=25', ['items' => [
     ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'rank' => 1, 'clanLevel' => 20, 'members' => 50, 'clanPoints' => 50000]
@@ -105,6 +116,8 @@ $checks = [
     '/player.css' => [200, 'text/css'],
     '/player-league.css' => [200, 'text/css'],
     '/player-league.js' => [200, 'text/javascript'],
+    '/donation.css' => [200, 'text/css'],
+    '/donation.js' => [200, 'text/javascript'],
     '/league-legend.png' => [200, 'image/png'],
     '/league-electro-dragon.png' => [200, 'image/png'],
     '/rankings.js' => [200, 'text/javascript'],
@@ -125,7 +138,8 @@ $checks = [
     '/api/rankings/players?location=bad%2Fpath' => [400, 'application/json'],
     '/api/clan/2GPP802UU/health' => [200, 'application/json'],
     '/api/clan/2GPP802UU/health.csv' => [200, 'text/csv'],
-    '/api/clan/9RU089PG/war?round=2' => [200, 'application/json']
+    '/api/clan/9RU089PG/war?round=2' => [200, 'application/json'],
+    '/api/clan/9RU089PG/cwl/standings' => [200, 'application/json']
 ];
 
 try {
@@ -144,12 +158,20 @@ try {
         "showWarStatus('Memuat data perang...', true)",
         'const isSelected = choice.value === selectedRound',
         "setAttribute('aria-pressed', String(isSelected))",
-        "setAttribute('aria-current', 'true')"
+        "setAttribute('aria-current', 'true')",
+        'cwlStandingsSection',
+        'cwl/standings',
+        'Peringkat CWL'
     ] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Navigasi CWL tidak mempertahankan konten atau highlight round terpilih.');
     }
     $playerPage = (string)$app->handle($factory->createServerRequest('GET', '/player.html'))->getBody();
     $comparePage = (string)$app->handle($factory->createServerRequest('GET', '/compare.html'))->getBody();
+    foreach ([$home, $playerPage, $comparePage] as $page) {
+        foreach (['/donation.css', '/donation.js', 'Dukung pengembangan'] as $marker) {
+            if (!str_contains($page, $marker)) throw new RuntimeException('Kontrol donasi belum tersedia di seluruh halaman.');
+        }
+    }
     foreach ([
         [$home, '/index.css', 'public/index.css'],
         [$home, '/rankings.js', 'public/rankings.js'],
@@ -238,6 +260,12 @@ try {
     if (($selectedWar['round'] ?? null) !== 2 || ($selectedWar['availableRounds'] ?? null) !== [1, 2, 3] || ($selectedWar['type'] ?? null) !== 'CWL') {
         throw new RuntimeException('Daftar round CWL hilang dari respons saat round tertentu dipilih.');
     }
+    $standings = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/9RU089PG/cwl/standings'))->getBody(), true);
+    if (($standings['league'] ?? null) !== 'Master League I' || ($standings['standings'][0]['tag'] ?? null) !== '#9RU089PG'
+        || ($standings['standings'][0]['stars'] ?? null) !== 29 || ($standings['standings'][0]['destruction'] ?? null) != 255
+        || ($standings['standings'][0]['rank'] ?? null) !== 1 || ($standings['standings'][1]['rank'] ?? null) !== 2) {
+        throw new RuntimeException('Peringkat CWL tidak menghitung akumulasi bintang dan destruksi dengan benar.');
+    }
     $icon = $app->handle($factory->createServerRequest('GET', '/api/player-icon?name=Test%20Icon&section=heroes'));
     if ($icon->getStatusCode() !== 200 || $icon->getHeaderLine('Content-Type') !== 'image/png' || (string)$icon->getBody() !== $iconBytes) {
         throw new RuntimeException('Ikon lokal tidak disajikan dengan benar.');
@@ -286,6 +314,27 @@ try {
         || !in_array('#2GPP802UU', $warHistory['archiveClans'], true)
         || !in_array('#9RU089PG', $warHistory['archiveClans'], true)) {
         throw new RuntimeException('Riwayat War/CWL tidak dikumpulkan dari arsip lintas clan.');
+    }
+    $source = (new ReflectionClass(App::class))->newInstanceWithoutConstructor();
+    $sourceType = new ReflectionClass(App::class);
+    $sourceType->getProperty('dataDir')->setValue($source, $dataDir);
+    $sourceType->getProperty('cache')->setValue($source, []);
+    $path = '/leaguegroup/%238YGL882/1790571600?playerTag=%23YJPRUUPUG';
+    file_put_contents($cacheDir . '/' . hash('sha256', $path) . '.json', json_encode([
+        'expires' => time() - 1, 'entry' => ['data' => ['members' => [['playerTag' => '#YJPRUUPUG']]], 'lastUpdated' => '2026-10-05T00:00:00Z']
+    ]));
+    $timeout = new GuzzleHttp\Exception\ConnectException('Operation timed out', new GuzzleHttp\Psr7\Request('GET', 'https://api.clashofclans.com/v1' . $path));
+    $mock = new GuzzleHttp\Handler\MockHandler([$timeout]);
+    $sourceType->getProperty('http')->setValue($source, new GuzzleHttp\Client(['handler' => GuzzleHttp\HandlerStack::create($mock)]));
+    $originalToken = $_ENV['COC_API_TOKEN'] ?? null;
+    $_ENV['COC_API_TOKEN'] = 'smoke-test-token';
+    try {
+        $stale = $sourceType->getMethod('upstream')->invoke($source, $path, 100, 0, 30 * 86400, true);
+        if (($stale['stale'] ?? false) !== true || ($stale['data']['members'][0]['playerTag'] ?? null) !== '#YJPRUUPUG') {
+            throw new RuntimeException('Data grup tersimpan tidak digunakan saat API timeout.');
+        }
+    } finally {
+        if ($originalToken === null) unset($_ENV['COC_API_TOKEN']); else $_ENV['COC_API_TOKEN'] = $originalToken;
     }
     echo 'PHP smoke tests passed (' . (count($checks) + 6) . " routes).\n";
 } finally {

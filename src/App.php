@@ -58,6 +58,7 @@ final class App
         $app->get('/api/rankings/locations', fn($req, $res) => $self->rankingLocations($res));
         $app->get('/api/rankings/{type}', fn($req, $res, $args) => $self->rankings($req, $res, $args['type']));
         $app->get('/api/clan/{tag}/war', fn($req, $res, $args) => $self->war($req, $res, $args['tag']));
+        $app->get('/api/clan/{tag}/cwl/standings', fn($req, $res, $args) => $self->cwlStandings($res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/performance', fn($req, $res, $args) => $self->cwlPerformance($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/health.csv', fn($req, $res, $args) => $self->healthCsv($res, $args['tag']));
         $app->get('/api/clan/{tag}/health', fn($req, $res, $args) => $self->health($res, $args['tag']));
@@ -95,30 +96,34 @@ final class App
 
     private function tagError(ResponseInterface $res, string $message): ResponseInterface { return $this->respond($res, ['error' => $message], 400); }
 
-    private function upstream(string $path): array
+    private function upstream(string $path, ?int $timeoutMs = null, ?int $retriesOverride = null, ?int $ttlSeconds = null, bool $staleOnFailure = false): array
     {
         $now = time();
+        $ttl = $ttlSeconds ?? self::CACHE_TTL;
         if (isset($this->cache[$path]) && $this->cache[$path]['expires'] > $now) return $this->cache[$path]['entry'];
         $cacheFile = 'cache/' . hash('sha256', $path) . '.json';
         $diskCache = $this->readJson($cacheFile, []);
+        $staleEntry = isset($diskCache['entry']['data']) ? $diskCache['entry'] : null;
         if (($diskCache['expires'] ?? 0) > $now && isset($diskCache['entry']['data'])) {
             $this->cache[$path] = ['entry' => $diskCache['entry'], 'expires' => $diskCache['expires']];
             return $diskCache['entry'];
         }
         $token = (string)$this->env('COC_API_TOKEN');
         if ($token === '') throw new \RuntimeException('Token API belum diatur.');
-        $retries = max(0, (int)($this->env('COC_API_RETRIES') ?: 1));
+        $retries = $retriesOverride ?? max(0, (int)($this->env('COC_API_RETRIES') ?: 1));
         $last = null;
-        for ($attempt = 0; $attempt <= $retries; $attempt++) {
+        try { for ($attempt = 0; $attempt <= $retries; $attempt++) {
             try {
-                $response = $this->http->get(self::API_BASE . $path, ['headers' => ['Authorization' => 'Bearer ' . $token, 'Accept' => 'application/json']]);
+                $options = ['headers' => ['Authorization' => 'Bearer ' . $token, 'Accept' => 'application/json']];
+                if ($timeoutMs !== null) $options['timeout'] = $timeoutMs / 1000;
+                $response = $this->http->get(self::API_BASE . $path, $options);
                 $status = $response->getStatusCode();
                 $body = (string)$response->getBody();
                 if ($status >= 200 && $status < 300) {
                     $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
                     $entry = ['data' => $data, 'lastUpdated' => gmdate('c')];
-                    $this->cache[$path] = ['entry' => $entry, 'expires' => $now + self::CACHE_TTL];
-                    $this->writeJson($cacheFile, ['entry' => $entry, 'expires' => $now + self::CACHE_TTL]);
+                    $this->cache[$path] = ['entry' => $entry, 'expires' => $now + $ttl];
+                    $this->writeJson($cacheFile, ['entry' => $entry, 'expires' => $now + $ttl]);
                     return $entry;
                 }
                 $last = new UpstreamFailure($status, null, $body);
@@ -129,6 +134,13 @@ final class App
             }
         }
         throw $last ?? new \RuntimeException('Upstream request failed');
+        } catch (UpstreamFailure $e) {
+            if ($staleOnFailure && $staleEntry !== null && ($e->status === 0 || in_array($e->status, [502, 503, 504], true))) {
+                $staleEntry['stale'] = true;
+                return $staleEntry;
+            }
+            throw $e;
+        }
     }
 
     private function failure(ResponseInterface $res, \Throwable $e, bool $war = false): ResponseInterface
@@ -460,13 +472,14 @@ final class App
         $sessionId = $req->getQueryParams()['session'] ?? 'current';
         if (!in_array($sessionId, ['current', 'previous'], true)) return $this->tagError($res, 'Sesi liga tidak valid.');
         try {
-            $profile = $this->upstream('/players/' . rawurlencode('#' . $tag));
+            $profile = $this->upstream('/players/' . rawurlencode('#' . $tag), 6000, 0);
             $sessions = $this->leagueSessions($profile['data']);
             $session = null;
             foreach ($sessions as $candidate) if ($candidate['id'] === $sessionId) { $session = $candidate; break; }
             if ($session === null) return $this->respond($res, ['error' => 'Pemain tidak memiliki grup pada sesi liga ini.'], 404);
             $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
-            $group = $this->upstream($path);
+            $previous = $sessionId === 'previous';
+            $group = $this->upstream($path, 18000, 0, $previous ? 30 * 86400 : null, $previous);
             if (($req->getQueryParams()['detail'] ?? null) === 'battle') {
                 $memberTag = $this->normalizeTag((string)($req->getQueryParams()['memberTag'] ?? ''));
                 if (!$memberTag) return $this->tagError($res, 'Tag anggota tidak valid.');
@@ -477,7 +490,7 @@ final class App
                 if (!$battleMember) return $this->respond($res, ['error' => 'Pemain tidak ada dalam grup liga ini.'], 404);
                 if ($memberTag !== $tag) {
                     $detailPath = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $memberTag);
-                    $group = $this->upstream($detailPath);
+                    $group = $this->upstream($detailPath, 18000, 0, $previous ? 30 * 86400 : null, $previous);
                 }
                 $averages = [];
                 foreach (['attack' => 'attackLogs', 'defense' => 'defenseLogs'] as $side => $key) {
@@ -517,7 +530,8 @@ final class App
                     ],
                     'attack' => $averages['attack'],
                     'defense' => $averages['defense'],
-                    'lastUpdated' => $group['lastUpdated']
+                    'lastUpdated' => $group['lastUpdated'],
+                    'stale' => $group['stale'] ?? false
                 ]);
             }
             $members = [];
@@ -548,10 +562,14 @@ final class App
                 'playerRank' => $playerRank,
                 'totalMembers' => count($members),
                 'members' => $members,
-                'lastUpdated' => $group['lastUpdated']
+                'lastUpdated' => $group['lastUpdated'],
+                'stale' => $group['stale'] ?? false
             ]);
         } catch (UpstreamFailure $e) {
             if ($e->status === 404) return $this->respond($res, ['error' => 'Data grup liga untuk sesi ini tidak tersedia.'], 404);
+            if ($e->status === 504 || ($e->status === 0 && str_contains(strtolower($e->getPrevious()?->getMessage() ?? ''), 'timed out'))) {
+                return $this->respond($res, ['error' => 'API Clash of Clans tidak merespons untuk grup liga sesi ini. Profil pemain tersedia; coba lagi nanti.'], 504);
+            }
             return $this->failure($res, $e);
         } catch (\Throwable $e) {
             return $this->failure($res, $e);
@@ -638,6 +656,62 @@ final class App
         $preparation=null;for($i=count($rounds)-1;$i>=0;$i--){$war=$this->roundWars($path,$rounds[$i],$i+1,$clan);if(!$war)continue;$war['availableRounds']=$available;if(($war['data']['state']??'')==='inWar')return $war;if(($war['data']['state']??'')==='preparation'&&!$preparation)$preparation=$war;if(($war['data']['state']??'')==='warEnded')return $preparation??$war;}return $preparation??['data'=>['state'=>'cwlWaiting'],'lastUpdated'=>$group['lastUpdated'],'availableRounds'=>$available];
     }
     private function side(array $data,string $tag,bool $cwl):array{$own='#'.$tag;$reverse=$cwl&&strtoupper($data['opponent']['tag']??'')===$own;return [$reverse?($data['opponent']??[]):($data['clan']??[]),$reverse?($data['clan']??[]):($data['opponent']??[])];}
+    private function cwlStandings(ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag klan tidak valid.');
+        $path = '/clans/' . rawurlencode('#' . $tag);
+        try {
+            $group = $this->fetchCwlGroup($path);
+            if (!$group || ($group['data']['state'] ?? '') === 'notInWar') {
+                return $this->respond($res, ['type' => 'CWL', 'available' => false, 'standings' => [], 'lastUpdated' => $group['lastUpdated'] ?? gmdate('c')]);
+            }
+            $clanProfile = $this->upstream($path);
+            $standings = [];
+            foreach ($group['data']['clans'] ?? [] as $clan) {
+                $clanTag = strtoupper((string)($clan['tag'] ?? ''));
+                if ($clanTag === '') continue;
+                $standings[$clanTag] = ['tag' => $clan['tag'], 'name' => $clan['name'] ?? $clan['tag'], 'badgeUrls' => $clan['badgeUrls'] ?? null, 'stars' => 0, 'destruction' => 0, 'wars' => 0];
+            }
+            $loadedRounds = []; $seenWars = [];
+            foreach ($group['data']['rounds'] ?? [] as $roundIndex => $round) {
+                $roundHasWar = false;
+                foreach ($round['warTags'] ?? [] as $warTag) {
+                    if (!is_string($warTag) || $warTag === '' || $warTag === '#0' || isset($seenWars[$warTag])) continue;
+                    $seenWars[$warTag] = true;
+                    try { $entry = $this->upstream('/clanwarleagues/wars/' . rawurlencode($warTag)); }
+                    catch (UpstreamFailure $e) { if ($e->status === 404) continue; throw $e; }
+                    $data = $entry['data'];
+                    if (!isset($data['clan'], $data['opponent'])) continue;
+                    $roundHasWar = true;
+                    foreach ([$data['clan'], $data['opponent']] as $warClan) {
+                        $clanTag = strtoupper((string)($warClan['tag'] ?? ''));
+                        if ($clanTag === '') continue;
+                        if (!isset($standings[$clanTag])) $standings[$clanTag] = ['tag' => $warClan['tag'], 'name' => $warClan['name'] ?? $warClan['tag'], 'badgeUrls' => $warClan['badgeUrls'] ?? null, 'stars' => 0, 'destruction' => 0, 'wars' => 0];
+                        $standings[$clanTag]['name'] = $warClan['name'] ?? $standings[$clanTag]['name'];
+                        $standings[$clanTag]['badgeUrls'] = $warClan['badgeUrls'] ?? $standings[$clanTag]['badgeUrls'];
+                        $standings[$clanTag]['stars'] += (int)($warClan['stars'] ?? 0);
+                        $standings[$clanTag]['destruction'] += (float)($warClan['destructionPercentage'] ?? 0);
+                        $standings[$clanTag]['wars']++;
+                    }
+                }
+                if ($roundHasWar) $loadedRounds[] = $roundIndex + 1;
+            }
+            $rows = array_values($standings);
+            usort($rows, static fn($a, $b) => $b['stars'] <=> $a['stars'] ?: $b['destruction'] <=> $a['destruction'] ?: strcasecmp($a['name'], $b['name']));
+            $lastScore = null; $rank = 0;
+            foreach ($rows as $index => &$row) {
+                $row['destruction'] = round($row['destruction'], 2);
+                $score = $row['stars'] . ':' . $row['destruction'];
+                if ($score !== $lastScore) $rank = $index + 1;
+                $row['rank'] = $rank;
+                $row['isCurrentClan'] = strtoupper((string)$row['tag']) === '#' . $tag;
+                $lastScore = $score;
+            }
+            unset($row);
+            return $this->respond($res, ['type' => 'CWL', 'available' => true, 'season' => $group['data']['season'] ?? null, 'league' => $clanProfile['data']['warLeague']['name'] ?? null, 'state' => $group['data']['state'] ?? null, 'loadedRounds' => $loadedRounds, 'roundCount' => count($group['data']['rounds'] ?? []), 'standings' => $rows, 'lastUpdated' => $group['lastUpdated']]);
+        } catch (\Throwable $e) { return $this->failure($res, $e, true); }
+    }
     private function war(ServerRequestInterface $req,ResponseInterface $res,string $raw):ResponseInterface
     {
         $tag=$this->normalizeTag($raw);if(!$tag)return $this->tagError($res,'Tag klan tidak valid.');$q=$req->getQueryParams();$selected=null;if(array_key_exists('round',$q)){if(!is_numeric($q['round'])||floor((float)$q['round'])!=(float)$q['round']||(int)$q['round']<1)return $this->tagError($res,'Nomor putaran tidak valid.');$selected=(int)$q['round'];}
