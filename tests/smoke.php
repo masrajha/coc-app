@@ -52,12 +52,16 @@ $seedApiCache($playerPath, [
 ]);
 $currentMembers = [];
 for ($rank = 1; $rank <= 60; $rank++) {
-    $currentMembers[] = ['playerTag' => $rank === 30 ? '#2GPP802UU' : '#2P' . $rank,
+    $currentMembers[] = ['playerTag' => $rank === 30 ? '#2GPP802UU' : ($rank === 1 ? '#2R92VJG0U' : '#2P' . $rank),
         'playerName' => 'Player ' . $rank, 'clanTag' => '#2GPP802UU', 'clanName' => 'Test Clan',
         'leagueTrophies' => 7000 - $rank, 'attackWinCount' => 4, 'attackLoseCount' => 1,
         'defenseWinCount' => 3, 'defenseLoseCount' => 2];
 }
-$seedApiCache('/leaguegroup/%238URPQL0/1791176400?playerTag=%232GPP802UU', ['members' => array_reverse($currentMembers)]);
+$seedApiCache('/leaguegroup/%238URPQL0/1791176400?playerTag=%232GPP802UU', ['members' => array_reverse($currentMembers),
+    'attackLogs' => [['stars' => 3, 'destructionPercentage' => 100], ['stars' => 2, 'destructionPercentage' => 80]],
+    'defenseLogs' => [['stars' => 2, 'destructionPercentage' => 70]]]);
+$seedApiCache('/leaguegroup/%238URPQL0/1791176400?playerTag=%232R92VJG0U', ['members' => $currentMembers,
+    'attackLogs' => [], 'defenseLogs' => [['stars' => 3, 'destructionPercentage' => 90]]]);
 $seedApiCache('/leaguegroup/%238U89LYJ/1790571600?playerTag=%232GPP802UU', ['members' => [
     ['playerTag' => '#2GPP802UU', 'playerName' => 'Test', 'leagueTrophies' => 6200]
 ]]);
@@ -158,6 +162,16 @@ try {
     if (($group['playerRank'] ?? null) !== 30 || ($group['totalMembers'] ?? null) !== 60 || ($group['members'][0]['rank'] ?? null) !== 1
         || ($group['members'][0]['attackCount'] ?? null) !== 5 || ($group['members'][0]['defenseCount'] ?? null) !== 5) {
         throw new RuntimeException('Peringkat grup sesi saat ini tidak dihitung dengan benar.');
+    }
+    $battle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=current&detail=battle&memberTag=2GPP802UU'))->getBody(), true);
+    if (($battle['attack']['starsAverage'] ?? null) !== 2.5 || ($battle['attack']['destructionAverage'] ?? null) != 90
+        || ($battle['defense']['destructionAverage'] ?? null) != 70) {
+        throw new RuntimeException('Rata-rata detail pertempuran tidak dihitung dengan benar.');
+    }
+    $otherBattle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=current&detail=battle&memberTag=2R92VJG0U'))->getBody(), true);
+    if (($otherBattle['attack']['sampleSize'] ?? null) !== 0 || !array_key_exists('starsAverage', $otherBattle['attack'])
+        || $otherBattle['attack']['starsAverage'] !== null || ($otherBattle['defense']['destructionAverage'] ?? null) != 90) {
+        throw new RuntimeException('Detail pemain lain atau riwayat kosong tidak ditangani dengan benar.');
     }
     $previous = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=previous'))->getBody(), true);
     if (($previous['playerRank'] ?? null) !== 1 || ($previous['session']['id'] ?? null) !== 'previous') {

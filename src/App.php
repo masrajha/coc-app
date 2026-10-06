@@ -430,6 +430,31 @@ final class App
             if ($session === null) return $this->respond($res, ['error' => 'Pemain tidak memiliki grup pada sesi liga ini.'], 404);
             $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
             $group = $this->upstream($path);
+            if (($req->getQueryParams()['detail'] ?? null) === 'battle') {
+                $memberTag = $this->normalizeTag((string)($req->getQueryParams()['memberTag'] ?? ''));
+                if (!$memberTag) return $this->tagError($res, 'Tag anggota tidak valid.');
+                $found = false;
+                foreach ($group['data']['members'] ?? [] as $member) {
+                    if (strtoupper((string)($member['playerTag'] ?? '')) === '#' . $memberTag) { $found = true; break; }
+                }
+                if (!$found) return $this->respond($res, ['error' => 'Pemain tidak ada dalam grup liga ini.'], 404);
+                if ($memberTag !== $tag) {
+                    $detailPath = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $memberTag);
+                    $group = $this->upstream($detailPath);
+                }
+                $averages = [];
+                foreach (['attack' => 'attackLogs', 'defense' => 'defenseLogs'] as $side => $key) {
+                    $logs = is_array($group['data'][$key] ?? null) ? array_values(array_filter($group['data'][$key], 'is_array')) : [];
+                    $stars = array_values(array_filter($logs, static fn($log) => is_numeric($log['stars'] ?? null)));
+                    $destruction = array_values(array_filter($logs, static fn($log) => is_numeric($log['destructionPercentage'] ?? null)));
+                    $averages[$side] = [
+                        'sampleSize' => count($logs),
+                        'starsAverage' => $stars ? round(array_sum(array_column($stars, 'stars')) / count($stars), 2) : null,
+                        'destructionAverage' => $destruction ? round(array_sum(array_column($destruction, 'destructionPercentage')) / count($destruction), 2) : null
+                    ];
+                }
+                return $this->respond($res, ['playerTag' => '#' . $memberTag, 'attack' => $averages['attack'], 'defense' => $averages['defense'], 'lastUpdated' => $group['lastUpdated']]);
+            }
             $members = [];
             foreach ($group['data']['members'] ?? [] as $member) {
                 $members[] = [

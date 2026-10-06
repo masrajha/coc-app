@@ -1,6 +1,6 @@
 (function () {
   const PAGE_SIZE = 25;
-  const state = { playerTag: null, members: [], page: 0, request: 0 };
+  const state = { playerTag: null, members: [], page: 0, request: 0, battleCache: new Map(), hoverTimer: null, hoverKey: null };
   const clanTag = normalizeTag(new URLSearchParams(location.search).get('clan'));
 
   function normalizeTag(value) {
@@ -10,6 +10,78 @@
 
   function element(id) { return document.getElementById(id); }
   function setText(id, value) { element(id).textContent = value; }
+
+  const tooltip = document.createElement('div');
+  tooltip.className = 'league-battle-tooltip';
+  tooltip.setAttribute('role', 'tooltip');
+  tooltip.hidden = true;
+  document.body.appendChild(tooltip);
+
+  function positionTooltip(anchor) {
+    const rect = anchor.getBoundingClientRect();
+    const left = Math.max(8, Math.min(Math.max(8, rect.left - 275), window.innerWidth - 292));
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${rect.top > 160 ? rect.top - 150 : rect.bottom + 8}px`;
+  }
+
+  function hideBattle() {
+    clearTimeout(state.hoverTimer);
+    state.hoverKey = null;
+    tooltip.hidden = true;
+  }
+
+  function renderBattle(name, data) {
+    const metric = (label, value, unit, count) => {
+      const line = document.createElement('div');
+      const caption = document.createElement('span');
+      caption.textContent = label;
+      const number = document.createElement('strong');
+      number.textContent = value === null || value === undefined ? 'Belum tersedia' : `${Number(value).toLocaleString('id-ID', { maximumFractionDigits: 2 })}${unit}`;
+      if (count) number.title = `Dihitung dari ${count} riwayat`;
+      line.append(caption, number);
+      return line;
+    };
+    tooltip.replaceChildren();
+    const heading = document.createElement('b');
+    heading.textContent = `Battle details: ${name}`;
+    tooltip.append(heading,
+      metric('Rata-rata bintang / serangan', data.attack?.starsAverage, '', data.attack?.sampleSize),
+      metric('Rata-rata destruksi / serangan', data.attack?.destructionAverage, '%', data.attack?.sampleSize),
+      metric('Rata-rata destruksi / pertahanan', data.defense?.destructionAverage, '%', data.defense?.sampleSize));
+    const note = document.createElement('small');
+    note.textContent = `Berdasarkan riwayat tersedia: ${data.attack?.sampleSize ?? 0} serangan, ${data.defense?.sampleSize ?? 0} pertahanan.`;
+    tooltip.append(note);
+  }
+
+  function showBattle(member, row) {
+    clearTimeout(state.hoverTimer);
+    const tag = normalizeTag(member.tag);
+    if (!tag) return;
+    const session = element('leagueSession').value;
+    const key = `${session}:${tag}`;
+    state.hoverKey = key;
+    tooltip.replaceChildren();
+    tooltip.textContent = 'Memuat detail pertempuran…';
+    tooltip.hidden = false;
+    positionTooltip(row);
+    state.hoverTimer = setTimeout(async () => {
+      try {
+        let data = state.battleCache.get(key);
+        if (!data) {
+          const url = `/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(session)}&detail=battle&memberTag=${encodeURIComponent(tag)}`;
+          const response = await fetch(url);
+          data = await response.json();
+          if (!response.ok) throw new Error(data.error || 'Detail tidak tersedia.');
+          state.battleCache.set(key, data);
+        }
+        if (state.hoverKey !== key) return;
+        renderBattle(member.name || member.tag, data);
+        positionTooltip(row);
+      } catch (error) {
+        if (state.hoverKey === key) tooltip.textContent = error.message;
+      }
+    }, 180);
+  }
 
   function renderPage() {
     const list = element('leagueMembers');
@@ -52,6 +124,11 @@
       defenses.title = 'Jumlah pertahanan: menang + kalah';
       activity.append(attacks, defenses);
       row.append(rank, identity, trophies, activity);
+      row.tabIndex = 0;
+      row.addEventListener('mouseenter', () => showBattle(member, row));
+      row.addEventListener('mouseleave', hideBattle);
+      row.addEventListener('focusin', () => showBattle(member, row));
+      row.addEventListener('focusout', hideBattle);
       list.appendChild(row);
     }
     setText('leagueMemberCount', `${state.members.length} pemain`);
@@ -61,6 +138,7 @@
   }
 
   async function loadSession(sessionId) {
+    hideBattle();
     const request = ++state.request;
     const status = element('leagueStatus');
     status.hidden = false;
@@ -98,6 +176,8 @@
   }
 
   function initialize(player) {
+    hideBattle();
+    state.battleCache.clear();
     state.request++;
     state.playerTag = normalizeTag(player.tag);
     state.members = [];

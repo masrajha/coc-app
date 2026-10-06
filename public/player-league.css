@@ -16,6 +16,7 @@
 .league-members{list-style:none;margin:0;padding:0;min-height:0;overflow-y:auto;display:grid;gap:4px;scrollbar-color:#516780 #17212e}
 .league-member{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:4px 7px;align-items:center;padding:7px 8px;border:1px solid #2e3d4e;border-radius:7px;background:#121b26;font-size:12px}
 .league-member.is-current{border-color:#73a8ff;background:#233c61;box-shadow:inset 3px 0 #6ea9ff}
+.league-member:hover,.league-member:focus-visible{border-color:#80a9e9;outline:none}
 .league-member-rank{color:#93abd0;font-weight:800}
 .league-member-identity{display:flex;flex-direction:column;min-width:0;gap:2px}
 .league-member-identity a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none;font-weight:700;color:#e7f0ff}
@@ -26,4 +27,10 @@
 .league-pagination{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;color:#a9bbd2;font-size:12px}
 .league-pagination button{border:1px solid #405573;border-radius:6px;background:#202d3e;color:#d8e8ff;padding:6px 11px;cursor:pointer}
 .league-pagination button:disabled{opacity:.45;cursor:default}
+.league-battle-tooltip{position:fixed;z-index:1000;width:284px;box-sizing:border-box;padding:11px 12px;border:1px solid #688cc2;border-radius:9px;background:#0d1827;box-shadow:0 12px 32px #0009;color:#e8f1ff;font-size:11px;pointer-events:none}
+.league-battle-tooltip[hidden]{display:none}
+.league-battle-tooltip b{display:block;padding-bottom:7px;border-bottom:1px solid #304257;font-size:12px}
+.league-battle-tooltip div{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
+.league-battle-tooltip strong{white-space:nowrap;color:#fff;font-variant-numeric:tabular-nums}
+.league-battle-tooltip small{display:block;margin-top:9px;color:#9fb2ca;line-height:1.35}
 @media(max-width:1100px){.profile-layout{grid-template-columns:1fr}.league-sidebar{position:static;max-height:none}.league-members{max-height:460px}}
