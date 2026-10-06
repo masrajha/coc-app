@@ -14,26 +14,71 @@
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div class="flex items-center gap-3">
                     <a href="/" class="home-brand" aria-label="Kembali ke home">
-                    <div class="h-9 w-9 rounded bg-slate-900 text-white grid place-items-center text-sm font-bold">CW</div>
-                    <div>
-                        <h1 class="text-lg font-bold leading-5">CoC Clan Command Center</h1>
-                        <p class="text-xs text-slate-500">Leaderboard global dan command center klan.</p>
-                    </div>
+                        <div class="h-9 w-9 rounded bg-slate-900 text-white grid place-items-center text-sm font-bold">CW</div>
+                        <div>
+                            <h1 class="text-lg font-bold leading-5">CoC Clan Command Center</h1>
+                            <p class="text-xs text-slate-500">Leaderboard global dan command center klan.</p>
+                        </div>
                     </a>
                 </div>
-                <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <a href="/player.html" class="rounded border border-slate-300 px-3 py-2 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50">Cari pemain</a>
-                    <a id="comparePlayersLink" href="/compare.html" class="rounded border border-slate-300 px-3 py-2 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50">Bandingkan</a>
-                    <input type="text" id="clanTagInput" placeholder="Clan tag, contoh 2GPP802UU"
-                        class="w-full sm:w-72 rounded border border-slate-300 px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="searchButton" onclick="searchClan()"
-                        class="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60">Cari</button>
+                <div class="home-header-links">
+                    <a href="/player.html">Cari pemain</a>
+                    <a id="comparePlayersLink" href="/compare.html">Bandingkan</a>
                 </div>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-4">
+        <section id="landingPanel" class="landing-panel" aria-labelledby="landingTitle">
+            <div class="landing-copy">
+                <p class="landing-eyebrow">CLASH OF CLANS · CLAN COMMAND CENTER</p>
+                <h2 id="landingTitle">Semua intel clan dan pemain,<br><span>dalam satu tempat.</span></h2>
+                <p class="landing-description">Cari clan, buka profil pemain, atau bandingkan dua pemain untuk melihat progres, Ranked League, dan performa mereka.</p>
+            </div>
+
+            <section class="quick-search" aria-label="Pencarian clan dan pemain">
+                <div class="quick-search-tabs" role="tablist" aria-label="Pilih tujuan">
+                    <button type="button" class="quick-search-tab active" id="homeClanTab" role="tab" aria-selected="true" aria-controls="homeClanPanel" data-home-mode="clan">Clan</button>
+                    <button type="button" class="quick-search-tab" id="homePlayerTab" role="tab" aria-selected="false" aria-controls="homePlayerPanel" data-home-mode="player">Player</button>
+                    <button type="button" class="quick-search-tab" id="homeCompareTab" role="tab" aria-selected="false" aria-controls="homeComparePanel" data-home-mode="compare">Compare Player</button>
+                </div>
+                <form id="homeClanPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeClanTab">
+                    <label for="clanTagInput">Clan tag</label>
+                    <div class="quick-search-input-row">
+                        <input type="text" id="clanTagInput" placeholder="Contoh: #2GPP802UU" autocomplete="off" spellcheck="false" aria-describedby="clanTagHint">
+                        <button id="searchButton" type="submit">Buka Clan <span aria-hidden="true">→</span></button>
+                    </div>
+                    <small id="clanTagHint">Masukkan tag clan untuk membuka dashboard, perang, dan aktivitas.</small>
+                </form>
+                <form id="homePlayerPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homePlayerTab" hidden>
+                    <label for="playerTagInput">Player tag</label>
+                    <div class="quick-search-input-row">
+                        <input type="text" id="playerTagInput" placeholder="Contoh: #PYQYQL28G" autocomplete="off" spellcheck="false">
+                        <button type="submit">Buka Profil <span aria-hidden="true">→</span></button>
+                    </div>
+                    <small>Buka Army, progres, Ranked League, dan performa pemain.</small>
+                </form>
+                <form id="homeComparePanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeCompareTab" hidden>
+                    <div class="compare-search-fields">
+                        <div><label for="comparePlayerOne">Player 1</label><input type="text" id="comparePlayerOne" placeholder="Tag pemain pertama" autocomplete="off" spellcheck="false"></div>
+                        <div><label for="comparePlayerTwo">Player 2</label><input type="text" id="comparePlayerTwo" placeholder="Tag pemain kedua" autocomplete="off" spellcheck="false"></div>
+                    </div>
+                    <div class="quick-search-submit-row"><small>Bandingkan progres, Army, dan performa War/CWL.</small><button type="submit">Bandingkan <span aria-hidden="true">→</span></button></div>
+                </form>
+            </section>
+
+            <section class="feature-overview" aria-label="Fitur website">
+                <p class="feature-intro">CoC Clan Command Center membantu melihat ranking global, memantau clan dan perang, membuka profil pemain, membandingkan progres dan performa, serta memantau Ranked League pemain.</p>
+                <div class="feature-grid">
+                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">⚔</span><div><h3>Clan &amp; War</h3><p>Roster perang, CWL, dan aktivitas anggota.</p></div></article>
+                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">♟</span><div><h3>Player Profile</h3><p>Army, progres akun, dan riwayat performa.</p></div></article>
+                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">🏆</span><div><h3>Ranked League</h3><p>Peringkat grup, sesi liga, dan statistik battle.</p></div></article>
+                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">⇄</span><div><h3>Compare Player</h3><p>Bandingkan progres dan performa dua pemain.</p></div></article>
+                </div>
+            </section>
+        </section>
+
         <section id="rankingsPanel" class="rankings-panel" aria-labelledby="rankingsTitle">
             <div class="rankings-heading">
                 <div>
@@ -832,8 +877,50 @@
             renderPerformancePage();
         });
 
+        function normalizeHomeTag(value) {
+            const tag = String(value || '').trim().replace(/^#/, '').toUpperCase();
+            return /^[0289PYLQGRJCUV]{3,15}$/.test(tag) ? tag : null;
+        }
+
+        document.querySelectorAll('.quick-search-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.quick-search-tab').forEach(button => {
+                    const selected = button === tab;
+                    button.classList.toggle('active', selected);
+                    button.setAttribute('aria-selected', String(selected));
+                });
+                document.querySelectorAll('.quick-search-form').forEach(form => {
+                    form.hidden = form.id !== tab.getAttribute('aria-controls');
+                });
+            });
+        });
+
+        document.getElementById('homeClanPanel').addEventListener('submit', event => {
+            event.preventDefault();
+            const tag = normalizeHomeTag(document.getElementById('clanTagInput').value);
+            if (!tag) return alert('Masukkan Clan Tag yang valid.');
+            location.href = `/?clan=${encodeURIComponent(tag)}`;
+        });
+
+        document.getElementById('homePlayerPanel').addEventListener('submit', event => {
+            event.preventDefault();
+            const tag = normalizeHomeTag(document.getElementById('playerTagInput').value);
+            if (!tag) return alert('Masukkan Player Tag yang valid.');
+            location.href = `/player.html?tag=${encodeURIComponent(tag)}`;
+        });
+
+        document.getElementById('homeComparePanel').addEventListener('submit', event => {
+            event.preventDefault();
+            const first = normalizeHomeTag(document.getElementById('comparePlayerOne').value);
+            const second = normalizeHomeTag(document.getElementById('comparePlayerTwo').value);
+            if (!first || !second) return alert('Masukkan dua Player Tag yang valid untuk dibandingkan.');
+            const query = new URLSearchParams({ player1: first, player2: second });
+            location.href = `/compare.html?${query}`;
+        });
+
         const initialClan = new URLSearchParams(location.search).get('clan');
         if (initialClan) {
+            document.getElementById('landingPanel').hidden = true;
             document.getElementById('rankingsPanel').hidden = true;
             document.getElementById('clanTagInput').value = initialClan;
             searchClan();

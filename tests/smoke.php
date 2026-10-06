@@ -173,8 +173,11 @@ try {
     if (!str_contains($leagueStyles, '@media(hover:none)') || !str_contains($leagueStyles, '.league-battle-info{display:inline-grid')) {
         throw new RuntimeException('Ikon popup tidak diaktifkan untuk perangkat layar sentuh.');
     }
-    foreach (['rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation'] as $marker) {
+    foreach (['landingPanel', 'homeClanTab', 'homePlayerTab', 'homeCompareTab', 'clanTagInput', 'playerTagInput', 'comparePlayerOne', 'comparePlayerTwo', 'searchButton', 'rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Homepage kehilangan kontrol leaderboard: ' . $marker);
+    }
+    foreach (["location.href = `/?clan=", "location.href = `/player.html?tag=", "location.href = `/compare.html?"] as $marker) {
+        if (!str_contains($home, $marker)) throw new RuntimeException('Form pencarian home tidak mengarah ke halaman tujuan yang tersedia.');
     }
     if (!str_contains($home, 'href="/" class="home-brand"') || !str_contains($home, 'aria-label="Kembali ke home"')) {
         throw new RuntimeException('Navigasi kembali ke home tidak tersedia di header.');
@@ -186,7 +189,7 @@ try {
     if (str_contains($rankingScript, 'townhall-cell') || str_contains($rankingScript, "'Town Hall'")) {
         throw new RuntimeException('Kolom Town Hall seharusnya tidak lagi ada di leaderboard.');
     }
-    if (!preg_match('/const initialClan = new URLSearchParams\(location\.search\)\.get\([\'\"]clan[\'\"]\);[\s\S]*?if \(initialClan\) \{\s*document\.getElementById\([\'\"]rankingsPanel[\'\"]\)\.hidden = true;/', $home)) {
+    if (!preg_match('/const initialClan = new URLSearchParams\(location\.search\)\.get\([\'\"]clan[\'\"]\);[\s\S]*?if \(initialClan\) \{\s*document\.getElementById\([\'\"]landingPanel[\'\"]\)\.hidden = true;\s*document\.getElementById\([\'\"]rankingsPanel[\'\"]\)\.hidden = true;/', $home)) {
         throw new RuntimeException('Leaderboard tidak disembunyikan saat URL memiliki parameter clan.');
     }
     $locations = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/rankings/locations'))->getBody(), true);
