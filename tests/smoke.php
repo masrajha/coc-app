@@ -55,13 +55,13 @@ $seedApiCache('/clans/%239RU089PG/currentwar/leaguegroup', ['state' => 'inWar', 
     ['warTags' => ['#WARROUND1']], ['warTags' => ['#WARROUND2']], ['warTags' => ['#WARROUND3']]
 ]]);
 $seedApiCache('/clanwarleagues/wars/%23WARROUND1', [
-    'state' => 'warEnded', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 10, 'destructionPercentage' => 90],
-    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'stars' => 8, 'destructionPercentage' => 80]
+    'state' => 'warEnded', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 10, 'destructionPercentage' => 90, 'members' => [['attacks' => [['destructionPercentage' => 90]]]]],
+    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'stars' => 8, 'destructionPercentage' => 80, 'members' => [['attacks' => [['destructionPercentage' => 80]]]]]
 ]);
 $seedApiCache('/clanwarleagues/wars/%23WARROUND2', [
     'state' => 'inWar', 'teamSize' => 1, 'startTime' => '20261006T000000.000Z', 'endTime' => '20261007T000000.000Z',
-    'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 7, 'destructionPercentage' => 70, 'members' => []],
-    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'stars' => 9, 'destructionPercentage' => 88, 'members' => []]
+    'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 7, 'destructionPercentage' => 70, 'members' => [['attacks' => [['destructionPercentage' => 70]]]]],
+    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'stars' => 9, 'destructionPercentage' => 88, 'members' => [['attacks' => [['destructionPercentage' => 88]]]]]
 ]);
 $seedApiCache('/clanwarleagues/wars/%23WARROUND3', [
     'state' => 'preparation', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'stars' => 12, 'destructionPercentage' => 95],
@@ -262,7 +262,7 @@ try {
     }
     $standings = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/9RU089PG/cwl/standings'))->getBody(), true);
     if (($standings['league'] ?? null) !== 'Master League I' || ($standings['standings'][0]['tag'] ?? null) !== '#9RU089PG'
-        || ($standings['standings'][0]['stars'] ?? null) !== 29 || ($standings['standings'][0]['destruction'] ?? null) != 255
+        || ($standings['standings'][0]['stars'] ?? null) !== 27 || ($standings['standings'][0]['destruction'] ?? null) != 160
         || ($standings['standings'][0]['rank'] ?? null) !== 1 || ($standings['standings'][1]['rank'] ?? null) !== 2) {
         throw new RuntimeException('Peringkat CWL tidak menghitung akumulasi bintang dan destruksi dengan benar.');
     }

@@ -683,15 +683,29 @@ final class App
                     catch (UpstreamFailure $e) { if ($e->status === 404) continue; throw $e; }
                     $data = $entry['data'];
                     if (!isset($data['clan'], $data['opponent'])) continue;
+                    if (!in_array($data['state'] ?? '', ['inWar', 'warEnded'], true)) continue;
                     $roundHasWar = true;
-                    foreach ([$data['clan'], $data['opponent']] as $warClan) {
+                    $clanStars = (int)($data['clan']['stars'] ?? 0);
+                    $opponentStars = (int)($data['opponent']['stars'] ?? 0);
+                    $clanDestruction = (float)($data['clan']['destructionPercentage'] ?? 0);
+                    $opponentDestruction = (float)($data['opponent']['destructionPercentage'] ?? 0);
+                    foreach (['clan', 'opponent'] as $side) {
+                        $warClan = $data[$side];
                         $clanTag = strtoupper((string)($warClan['tag'] ?? ''));
                         if ($clanTag === '') continue;
                         if (!isset($standings[$clanTag])) $standings[$clanTag] = ['tag' => $warClan['tag'], 'name' => $warClan['name'] ?? $warClan['tag'], 'badgeUrls' => $warClan['badgeUrls'] ?? null, 'stars' => 0, 'destruction' => 0, 'wars' => 0];
                         $standings[$clanTag]['name'] = $warClan['name'] ?? $standings[$clanTag]['name'];
                         $standings[$clanTag]['badgeUrls'] = $warClan['badgeUrls'] ?? $standings[$clanTag]['badgeUrls'];
                         $standings[$clanTag]['stars'] += (int)($warClan['stars'] ?? 0);
-                        $standings[$clanTag]['destruction'] += (float)($warClan['destructionPercentage'] ?? 0);
+                        $attackDestruction = 0;
+                        foreach ($warClan['members'] ?? [] as $member) foreach ($member['attacks'] ?? [] as $attack) $attackDestruction += (float)($attack['destructionPercentage'] ?? 0);
+                        $standings[$clanTag]['destruction'] += $attackDestruction;
+                        if (($data['state'] ?? '') === 'warEnded') {
+                            $won = $side === 'clan'
+                                ? ($clanStars > $opponentStars || ($clanStars === $opponentStars && $clanDestruction > $opponentDestruction))
+                                : ($opponentStars > $clanStars || ($opponentStars === $clanStars && $opponentDestruction > $clanDestruction));
+                            if ($won) $standings[$clanTag]['stars'] += 10;
+                        }
                         $standings[$clanTag]['wars']++;
                     }
                 }
