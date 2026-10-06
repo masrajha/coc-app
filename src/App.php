@@ -66,6 +66,7 @@ final class App
         $app->get('/api/player-icon', fn($req, $res) => $self->playerIcon($req, $res));
         $app->get('/api/player/{tag}/progress', fn($req, $res, $args) => $self->playerProgress($res, $args['tag']));
         $app->get('/api/player/{tag}/profile', fn($req, $res, $args) => $self->playerProfile($res, $args['tag']));
+        $app->get('/api/player/{tag}/war-history', fn($req, $res, $args) => $self->playerWarHistory($res, $args['tag']));
         $app->get('/api/player/{tag}/league-group', fn($req, $res, $args) => $self->playerLeagueGroup($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html'));
@@ -469,11 +470,11 @@ final class App
             if (($req->getQueryParams()['detail'] ?? null) === 'battle') {
                 $memberTag = $this->normalizeTag((string)($req->getQueryParams()['memberTag'] ?? ''));
                 if (!$memberTag) return $this->tagError($res, 'Tag anggota tidak valid.');
-                $found = false;
+                $battleMember = null;
                 foreach ($group['data']['members'] ?? [] as $member) {
-                    if (strtoupper((string)($member['playerTag'] ?? '')) === '#' . $memberTag) { $found = true; break; }
+                    if (strtoupper((string)($member['playerTag'] ?? '')) === '#' . $memberTag) { $battleMember = $member; break; }
                 }
-                if (!$found) return $this->respond($res, ['error' => 'Pemain tidak ada dalam grup liga ini.'], 404);
+                if (!$battleMember) return $this->respond($res, ['error' => 'Pemain tidak ada dalam grup liga ini.'], 404);
                 if ($memberTag !== $tag) {
                     $detailPath = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $memberTag);
                     $group = $this->upstream($detailPath);
@@ -489,7 +490,35 @@ final class App
                         'destructionAverage' => $destruction ? round(array_sum(array_column($destruction, 'destructionPercentage')) / count($destruction), 2) : null
                     ];
                 }
-                return $this->respond($res, ['playerTag' => '#' . $memberTag, 'attack' => $averages['attack'], 'defense' => $averages['defense'], 'lastUpdated' => $group['lastUpdated']]);
+                $rankedMembers = $group['data']['members'] ?? [];
+                usort($rankedMembers, static fn($a, $b) => (int)($b['leagueTrophies'] ?? 0) <=> (int)($a['leagueTrophies'] ?? 0));
+                $memberRank = null;
+                foreach ($rankedMembers as $index => $member) {
+                    if (strtoupper((string)($member['playerTag'] ?? '')) === '#' . $memberTag) { $memberRank = $index + 1; $battleMember = $member; break; }
+                }
+                $attackWins = isset($battleMember['attackWinCount']) ? (int)$battleMember['attackWinCount'] : null;
+                $attackLosses = isset($battleMember['attackLoseCount']) ? (int)$battleMember['attackLoseCount'] : null;
+                $defenseWins = isset($battleMember['defenseWinCount']) ? (int)$battleMember['defenseWinCount'] : null;
+                $defenseLosses = isset($battleMember['defenseLoseCount']) ? (int)$battleMember['defenseLoseCount'] : null;
+                return $this->respond($res, [
+                    'playerTag' => '#' . $memberTag,
+                    'session' => $session,
+                    'leagueTier' => $sessionId === 'current' ? ($profile['data']['leagueTier']['name'] ?? null) : null,
+                    'playerRank' => $memberRank,
+                    'totalMembers' => count($rankedMembers),
+                    'player' => [
+                        'trophies' => $battleMember['leagueTrophies'] ?? null,
+                        'attackWins' => $attackWins,
+                        'attackLosses' => $attackLosses,
+                        'attackCount' => $attackWins !== null && $attackLosses !== null ? $attackWins + $attackLosses : null,
+                        'defenseWins' => $defenseWins,
+                        'defenseLosses' => $defenseLosses,
+                        'defenseCount' => $defenseWins !== null && $defenseLosses !== null ? $defenseWins + $defenseLosses : null
+                    ],
+                    'attack' => $averages['attack'],
+                    'defense' => $averages['defense'],
+                    'lastUpdated' => $group['lastUpdated']
+                ]);
             }
             $members = [];
             foreach ($group['data']['members'] ?? [] as $member) {
@@ -536,15 +565,64 @@ final class App
     {
         $d=$entry['data'];if(!$d||in_array($d['state']??'', ['notInWar','cwlWaiting'],true))return;$own='#'.$tag;$reversed=strtoupper($d['opponent']['tag']??'')===$own;$clan=$reversed?($d['opponent']??[]):($d['clan']??[]);$opp=$reversed?($d['clan']??[]):($d['opponent']??[]);if(strtoupper($clan['tag']??'')!==$own)return;
         $id=$type.':'.($d['startTime']??$d['endTime']??$entry['warTag']??$round).':'.($opp['tag']??'unknown');$members=[];foreach($clan['members']??[] as $m){$att=[];foreach($m['attacks']??[] as $a)$att[]=['defenderTag'=>$a['defenderTag']??null,'stars'=>$a['stars']??0,'destructionPercentage'=>$a['destructionPercentage']??0];$members[]=['tag'=>$m['tag']??null,'name'=>$m['name']??null,'townhallLevel'=>$m['townhallLevel']??null,'attacks'=>$att];}
-        $list=$this->wars($tag);$record=['id'=>$id,'type'=>$type,'round'=>$round,'state'=>$d['state']??null,'startTime'=>$d['startTime']??null,'endTime'=>$d['endTime']??null,'opponent'=>['tag'=>$opp['tag']??null,'name'=>$opp['name']??null],'attacksPerMember'=>$d['attacksPerMember']??($type==='CWL'?1:2),'members'=>$members,'updatedAt'=>$entry['lastUpdated']??gmdate('c')];$found=false;foreach($list as &$old)if(($old['id']??null)===$id){$old=$record;$found=true;break;}unset($old);if(!$found)$list[]=$record;usort($list,static fn($a,$b)=>strcmp($a['startTime']??$a['updatedAt']??'', $b['startTime']??$b['updatedAt']??''));$this->writeWars($tag,array_slice($list,-120));
+        $list=$this->wars($tag);$record=['id'=>$id,'clanTag'=>$clan['tag']??'#'.$tag,'clanName'=>$clan['name']??null,'type'=>$type,'round'=>$round,'state'=>$d['state']??null,'startTime'=>$d['startTime']??null,'endTime'=>$d['endTime']??null,'opponent'=>['tag'=>$opp['tag']??null,'name'=>$opp['name']??null],'attacksPerMember'=>$d['attacksPerMember']??($type==='CWL'?1:2),'members'=>$members,'updatedAt'=>$entry['lastUpdated']??gmdate('c')];$found=false;foreach($list as &$old)if(($old['id']??null)===$id){$old=$record;$found=true;break;}unset($old);if(!$found)$list[]=$record;usort($list,static fn($a,$b)=>strcmp($a['startTime']??$a['updatedAt']??'', $b['startTime']??$b['updatedAt']??''));$this->writeWars($tag,array_slice($list,-120));
     }
-    private function playerWarReport(string $player,string $clan):array
+    private function playerWarReport(string $player,string $clan,?array $allWars=null,?array $allSnapshots=null):array
     {
-        $wars=$this->wars($clan);$snapshots=$this->snapshots($clan);$rows=[];foreach($wars as $w){$member=null;foreach($w['members']??[] as $m)if(strtoupper($m['tag']??'')==='#'.$player){$member=$m;break;}if(!$member)continue;$att=$member['attacks']??[];$stars=array_sum(array_column($att,'stars'));$dest=array_sum(array_column($att,'destructionPercentage'));$rows[]=['id'=>$w['id'],'type'=>$w['type'],'round'=>$w['round']??null,'state'=>$w['state'],'startTime'=>$w['startTime']??null,'endTime'=>$w['endTime']??null,'opponent'=>$w['opponent']??null,'quota'=>$w['attacksPerMember'],'attacks'=>$att,'stars'=>$stars,'destructionAverage'=>count($att)?round($dest/count($att),2):0,'missed'=>($w['state']==='warEnded'&&count($att)<$w['attacksPerMember'])];}
+        $wars=$allWars??$this->wars($clan);$snapshots=$allSnapshots??$this->snapshots($clan);$rows=[];foreach($wars as $w){$member=null;foreach($w['members']??[] as $m)if(strtoupper($m['tag']??'')==='#'.$player){$member=$m;break;}if(!$member)continue;$att=$member['attacks']??[];$stars=array_sum(array_column($att,'stars'));$dest=array_sum(array_column($att,'destructionPercentage'));$rows[]=['id'=>$w['id'],'type'=>$w['type'],'round'=>$w['round']??null,'state'=>$w['state'],'startTime'=>$w['startTime']??null,'endTime'=>$w['endTime']??null,'opponent'=>$w['opponent']??null,'clanTag'=>$w['clanTag']??'#'.$clan,'clanName'=>$w['clanName']??null,'quota'=>$w['attacksPerMember'],'rostered'=>true,'attacks'=>$att,'stars'=>$stars,'destructionAverage'=>count($att)?round($dest/count($att),2):0,'missed'=>($w['state']==='warEnded'&&count($att)<$w['attacksPerMember'])];}
         usort($rows,static fn($a,$b)=>strcmp($b['startTime']??$b['endTime']??'', $a['startTime']??$a['endTime']??''));$attacks=[];foreach($rows as $r)$attacks=array_merge($attacks,$r['attacks']);$trend=[];foreach($snapshots as $s)foreach($s['members']??[] as $m)if(strtoupper($m['tag']??'')==='#'.$player){$trend[]=['date'=>$s['date'],'trophies'=>$m['trophies'],'donations'=>$m['donations'],'donationsReceived'=>$m['donationsReceived']];break;}
         $stars=array_sum(array_column($attacks,'stars'));$destruction=array_sum(array_column($attacks,'destructionPercentage'));return ['playerTag'=>'#'.$player,'clanTag'=>'#'.$clan,'wars'=>$rows,'summary'=>['wars'=>count($rows),'attacks'=>count($attacks),'stars'=>$stars,'starsPerAttack'=>count($attacks)?round($stars/count($attacks),2):null,'destructionAverage'=>count($attacks)?round($destruction/count($attacks),2):null,'missed'=>count(array_filter($rows,static fn($r)=>$r['missed']))],'trend'=>count($trend)>=2?$trend:[],'trendAvailable'=>count($trend)>=2,'note'=>'Arsip perang dimulai ketika aplikasi mengambil data perang. Perang lama yang belum pernah diambil tidak tersedia.'];
     }
     private function playerPerformance(ServerRequestInterface $req,ResponseInterface $res,string $raw):ResponseInterface{$player=$this->normalizeTag($raw);$query=$req->getQueryParams();$clan=$this->normalizeTag($query['clan']??'');if(!$player||!$clan)return $this->tagError($res,'Tag pemain dan klan harus valid.');try{return $this->respond($res,$this->playerWarReport($player,$clan));}catch(\Throwable $e){return $this->failure($res,$e);}}
+
+    private function playerWarHistory(ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $player = $this->normalizeTag($raw);
+        if (!$player) return $this->tagError($res, 'Tag pemain tidak valid.');
+        try {
+            $wars = [];
+            foreach (glob($this->file('wars/*.json')) ?: [] as $archivePath) {
+                $clan = $this->normalizeTag(pathinfo($archivePath, PATHINFO_FILENAME));
+                if (!$clan) continue;
+                foreach ($this->wars($clan) as $war) {
+                    $memberFound = false;
+                    foreach ($war['members'] ?? [] as $member) {
+                        if (strtoupper((string)($member['tag'] ?? '')) === '#' . $player) { $memberFound = true; break; }
+                    }
+                    if (!$memberFound) continue;
+                    $war['id'] = $clan . ':' . ($war['id'] ?? 'unknown');
+                    $war['clanTag'] = $war['clanTag'] ?? '#' . $clan;
+                    $wars[] = $war;
+                }
+            }
+
+            $snapshotsByDate = [];
+            foreach (glob($this->file('snapshots/*.json')) ?: [] as $snapshotPath) {
+                $clan = $this->normalizeTag(pathinfo($snapshotPath, PATHINFO_FILENAME));
+                if (!$clan) continue;
+                foreach ($this->snapshots($clan) as $snapshot) {
+                    foreach ($snapshot['members'] ?? [] as $member) {
+                        if (strtoupper((string)($member['tag'] ?? '')) !== '#' . $player) continue;
+                        $date = $snapshot['date'] ?? null;
+                        if (!$date) continue;
+                        if (!isset($snapshotsByDate[$date]) || strcmp((string)($snapshot['capturedAt'] ?? ''), (string)($snapshotsByDate[$date]['capturedAt'] ?? '')) > 0) {
+                            $snapshotsByDate[$date] = ['date' => $date, 'trophies' => $member['trophies'] ?? null,
+                                'donations' => $member['donations'] ?? null, 'donationsReceived' => $member['donationsReceived'] ?? null,
+                                'capturedAt' => $snapshot['capturedAt'] ?? null];
+                        }
+                        break;
+                    }
+                }
+            }
+            ksort($snapshotsByDate);
+            $report = $this->playerWarReport($player, 'unknown', $wars, ['trend' => array_values($snapshotsByDate)]);
+            $report['archiveClans'] = array_values(array_unique(array_filter(array_column($report['wars'], 'clanTag'))));
+            $report['note'] = 'Riwayat digabungkan dari arsip clan yang pernah direkam aplikasi. Perang yang belum pernah diambil tidak tersedia; ketiadaan arsip bukan berarti pemain tidak masuk roster atau melewatkan serangan.';
+            return $this->respond($res, $report);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
 
     private function fetchCwlGroup(string $path):?array{try{return $this->upstream($path.'/currentwar/leaguegroup');}catch(UpstreamFailure $e){if($e->status===404)return null;throw $e;}}
     private function roundWars(string $path,array $round,int $number,string $clan):?array

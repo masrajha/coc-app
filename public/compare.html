@@ -47,6 +47,7 @@
         <button type="button" data-tab="progress" aria-selected="true">Progres</button>
         <button type="button" data-tab="army" aria-selected="false">Army</button>
         <button type="button" data-tab="war" aria-selected="false">War/CWL</button>
+        <button type="button" data-tab="league" aria-selected="false">Ranked League</button>
         <button type="button" data-tab="activity" aria-selected="false">Aktivitas</button>
       </nav>
       <section id="progress" class="panel compare-panel">
@@ -68,6 +69,12 @@
         <p id="warNote" class="section-note">Memuat arsip perang…</p>
         <div id="warSummary" class="war-summary-grid"></div>
         <div id="warCharts" class="war-charts"></div>
+      </section>
+      <section id="league" class="panel compare-panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2>Performa liga</h2></div></div>
+        <p class="section-note">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
+        <div id="leagueComparisonNote" class="league-comparison-note"></div>
+        <div id="leagueComparisonGrid" class="league-comparison-grid"></div>
       </section>
       <section id="activity" class="panel compare-panel" hidden>
         <div class="section-head"><div><div class="eyebrow">SNAPSHOT ANGGOTA</div><h2>Tren aktivitas</h2></div><span id="activityCount"></span></div>

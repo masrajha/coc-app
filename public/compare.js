@@ -3,10 +3,12 @@ const params = new URLSearchParams(location.search);
 const clanTag = normalizeTag(params.get('clan'));
 const profiles = { left: null, right: null };
 const performances = { left: null, right: null };
+const leaguePerformance = { left: null, right: null };
 let performanceErrors = [];
 let sharedTrend = [];
 let displayedWars = [];
 let rosterTag = null;
+const leagueRequestId = { left: 0, right: 0 };
 
 function normalizeTag(value) {
   const tag = String(value || '').trim().replace(/^#/, '').toUpperCase();
@@ -222,7 +224,7 @@ function sideName(side) { return profiles[side]?.player?.name || (side === 'left
 
 function warStatusLabel(war) {
   const status = model.warStatus(war);
-  if (status === 'notRoster') return 'Tidak masuk roster';
+  if (status === 'notRoster') return 'Tidak ada arsip cocok · status roster tidak diketahui';
   if (status === 'missed') return 'Kuota terlewat';
   if (status === 'partialMissed') return 'Sebagian kuota terlewat';
   if (status === 'pending') return war.state === 'preparation' ? 'Persiapan' : 'Belum menyerang';
@@ -245,10 +247,12 @@ function warSide(row, side) {
 
 function renderWar() {
   const period = document.getElementById('warPeriod').value;
+  const leftWars = model.filterWars(performances.left?.wars || [], period);
+  const rightWars = model.filterWars(performances.right?.wars || [], period);
   displayedWars = model.combineWars(performances.left, performances.right, period);
   const note = document.getElementById('warNote');
-  const archiveCount = (performances.left?.wars?.length || 0) + (performances.right?.wars?.length || 0);
-  note.textContent = `${displayedWars.length} perang pada periode ini. Angka berasal dari perang yang pernah diambil aplikasi; perang lama di luar arsip tidak dihitung.${performanceErrors.length ? ` ${performanceErrors.join(' ')}` : ''}`;
+  const archiveCount = leftWars.length + rightWars.length;
+  note.textContent = `${leftWars.length} arsip untuk ${sideName('left')} dan ${rightWars.length} arsip untuk ${sideName('right')} pada periode ini. Riwayat diambil secara independen dari arsip clan masing-masing pemain. Ketiadaan arsip tidak berarti tidak masuk roster atau melewatkan serangan.${performanceErrors.length ? ` ${performanceErrors.join(' ')}` : ''}`;
   const summaries = document.getElementById('warSummary');
   summaries.replaceChildren();
   for (const type of ['CWL', 'War']) {
@@ -262,8 +266,10 @@ function renderWar() {
         player.appendChild(textNode('span', 'Arsip belum tersedia.'));
         pair.appendChild(player); continue;
       }
-      const sum = model.warSummary(displayedWars, side, type);
-      player.appendChild(textNode('span', `${sum.wars} roster · ${sum.attacks} serangan · ${sum.stars} bintang`));
+      const sideWars = side === 'left' ? leftWars : rightWars;
+      const sideRows = sideWars.map(war => ({ type: war.type, [side]: war }));
+      const sum = model.warSummary(sideRows, side, type);
+      player.appendChild(textNode('span', `${sum.wars} arsip saat masuk roster · ${sum.attacks} serangan · ${sum.stars} bintang`));
       player.appendChild(textNode('span', `${formatNumber(sum.starsPerAttack)} bintang/serangan · ${formatPercent(sum.destructionAverage)} destruksi`));
       player.appendChild(textNode('span', `${sum.missedQuota} kuota terlewat pada perang selesai`));
       if (sum.wars && sum.limitedSample) player.appendChild(textNode('small', 'Sampel terbatas (<5 serangan)', 'sample-badge'));
@@ -273,21 +279,155 @@ function renderWar() {
   }
   const charts = document.getElementById('warCharts');
   charts.replaceChildren();
-  if (!displayedWars.length) {
-    charts.appendChild(textNode('p', archiveCount ? 'Tidak ada perang pada periode ini.' : 'Belum ada arsip perang untuk kedua pemain.', 'empty-section'));
+  if (!archiveCount) {
+    charts.appendChild(textNode('p', 'Belum ada arsip perang untuk kedua pemain pada periode ini. Ini bukan indikator bahwa pemain tidak masuk roster atau melewatkan serangan.', 'empty-section'));
     return;
   }
-  const key = textNode('div', '', 'war-key');
-  key.append(textNode('span', sideName('left')), textNode('span', sideName('right')));
-  charts.appendChild(key);
-  for (const row of displayedWars) {
-    const card = textNode('div', '', 'war-chart-card');
-    const head = textNode('div', '', 'war-chart-head');
-    const round = row.type === 'CWL' ? `Putaran ${row.round || '—'}` : 'War klasik';
-    head.append(textNode('b', `${round} · ${row.opponent?.name || 'Musuh'}`), textNode('small', `${warDate(row.startTime || row.endTime)} · ${row.state || '—'}`));
-    card.append(head, warSide(row, 'left'), warSide(row, 'right'));
-    charts.appendChild(card);
+  for (const [side, wars] of [['left', leftWars], ['right', rightWars]]) {
+    const history = textNode('section', '', `war-player-history ${side}`);
+    const heading = textNode('div', '', 'war-player-history-heading');
+    heading.append(textNode('h3', sideName(side)), textNode('span', `${wars.length} arsip`));
+    history.appendChild(heading);
+    if (!performances[side]) {
+      history.appendChild(textNode('p', 'Arsip riwayat pemain tidak dapat dimuat.', 'empty-section'));
+    } else if (!wars.length) {
+      history.appendChild(textNode('p', 'Belum ada riwayat yang direkam untuk pemain ini pada periode terpilih. Status roster tidak diketahui.', 'empty-section'));
+    } else {
+      const clans = [...new Set(wars.map(war => war.clanName || war.clanTag).filter(Boolean))];
+      if (clans.length) history.appendChild(textNode('p', `Arsip clan: ${clans.join(' · ')}`, 'war-history-clans'));
+      const list = textNode('div', '', 'war-player-history-list');
+      for (const war of wars) {
+        const card = textNode('article', '', 'war-chart-card');
+        const head = textNode('div', '', 'war-chart-head');
+        const round = war.type === 'CWL' ? `CWL · Putaran ${war.round || '—'}` : 'War klasik';
+        head.append(textNode('b', `${round} · ${war.opponent?.name || 'Musuh'}`), textNode('small', `${warDate(war.startTime || war.endTime)} · ${war.state || '—'}`));
+        const row = textNode('div', '', 'war-own-result');
+        const status = war.state === 'warEnded'
+          ? war.missed ? 'Kuota terlewat' : `${war.attacks?.length || 0} serangan selesai`
+          : war.attacks?.length ? `${war.attacks.length}/${war.quota || '—'} serangan` : (war.state === 'preparation' ? 'Persiapan · belum menyerang' : 'Belum menyerang');
+        row.append(textNode('strong', `${war.stars ?? 0}★`), textNode('span', `${war.attacks?.length || 0}/${war.quota || '—'} serangan · ${war.attacks?.length ? `${formatPercent(war.destructionAverage)}% destruksi` : status}`), textNode('small', status));
+        card.append(head, row);
+        list.appendChild(card);
+      }
+      history.appendChild(list);
+    }
+    charts.appendChild(history);
   }
+}
+
+function leagueMetric(label, value, detail = '') {
+  const box = textNode('div', '', 'league-metric');
+  box.append(textNode('span', label), textNode('strong', value == null ? 'Tidak tersedia' : String(value)));
+  if (detail) box.appendChild(textNode('small', detail));
+  return box;
+}
+
+function renderLeagueSide(side, data, error = null) {
+  const root = document.getElementById(`leagueResult${side}`);
+  root.replaceChildren();
+  if (error) {
+    root.appendChild(textNode('p', error, 'empty-section'));
+    return;
+  }
+  if (!data) {
+    root.appendChild(textNode('p', 'Memuat data Ranked League…', 'empty-section'));
+    return;
+  }
+  const badge = textNode('div', data.leagueTier || 'Tier liga tidak tersedia', 'league-tier-label');
+  const sessionName = data.session?.label || 'Sesi tidak diketahui';
+  const date = Number(data.session?.seasonId) > 0
+    ? new Date(Number(data.session.seasonId) * 1000).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }) : '';
+  const meta = textNode('p', `${sessionName}${date ? ` · ${date}` : ''} · ${data.totalMembers ?? 0} pemain dalam grup`, 'league-session-meta');
+  const rank = textNode('div', '', 'league-rank-highlight');
+  rank.append(textNode('strong', data.playerRank ? `#${data.playerRank}` : '—'), textNode('span', 'Peringkat grup berdasarkan trofi liga'));
+  const player = data.player || {};
+  const grid = textNode('div', '', 'league-stat-grid');
+  grid.append(
+    leagueMetric('Trofi liga', formatNumber(player.trophies)),
+    leagueMetric('Peringkat grup', data.playerRank ? `#${data.playerRank} / ${data.totalMembers}` : null),
+    leagueMetric('Serangan', player.attackCount == null ? null : player.attackCount, `${player.attackWins ?? '—'} menang · ${player.attackLosses ?? '—'} kalah`),
+    leagueMetric('Bintang / serangan', formatNumber(data.attack?.starsAverage), `${data.attack?.sampleSize ?? 0} log serangan`),
+    leagueMetric('Destruksi serangan', formatPercent(data.attack?.destructionAverage), `${data.attack?.sampleSize ?? 0} log serangan`),
+    leagueMetric('Pertahanan', player.defenseCount == null ? null : player.defenseCount, `${player.defenseWins ?? '—'} menang · ${player.defenseLosses ?? '—'} kalah`),
+    leagueMetric('Bintang lawan / pertahanan', formatNumber(data.defense?.starsAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`),
+    leagueMetric('Destruksi saat bertahan', formatPercent(data.defense?.destructionAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`)
+  );
+  root.append(badge, meta, rank, grid);
+}
+
+function renderLeagueComparisonNote() {
+  const left = leaguePerformance.left;
+  const right = leaguePerformance.right;
+  const note = document.getElementById('leagueComparisonNote');
+  if (!left || !right) {
+    note.textContent = 'Peringkat grup tiap pemain ditampilkan terpisah. Grup berbeda tidak membentuk satu leaderboard bersama.';
+    return;
+  }
+  const leftSeason = left.session?.seasonId;
+  const rightSeason = right.session?.seasonId;
+  note.textContent = leftSeason && rightSeason && String(leftSeason) === String(rightSeason)
+    ? 'Keduanya memiliki data pada season yang sama. Posisi tetap dihitung dalam grup masing-masing; bandingkan metrik battle bersama jumlah log.'
+    : 'Sesi/season kedua pemain berbeda atau tidak lengkap. Angka ditampilkan per pemain dan tidak dianggap sebagai perbandingan dalam satu grup.';
+}
+
+async function loadLeagueSide(side, sessionId, requestId) {
+  const profile = profiles[side];
+  if (!profile || !sessionId) {
+    leaguePerformance[side] = null;
+    renderLeagueSide(side, null, 'Tidak ada sesi Ranked League yang tersedia untuk pemain ini.');
+    renderLeagueComparisonNote();
+    return;
+  }
+  renderLeagueSide(side, null);
+  try {
+    const tag = normalizeTag(profile.player.tag);
+    const response = await fetch(`/api/player/${encodeURIComponent(tag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=battle&memberTag=${encodeURIComponent(tag)}`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Data sesi Ranked League tidak tersedia.');
+    if (requestId !== leagueRequestId[side]) return;
+    leaguePerformance[side] = data;
+    renderLeagueSide(side, data);
+  } catch (error) {
+    if (requestId !== leagueRequestId[side]) return;
+    leaguePerformance[side] = null;
+    renderLeagueSide(side, null, error.message);
+  }
+  renderLeagueComparisonNote();
+}
+
+function initializeLeagueComparison() {
+  const root = document.getElementById('leagueComparisonGrid');
+  root.replaceChildren();
+  leaguePerformance.left = null;
+  leaguePerformance.right = null;
+  for (const side of ['left', 'right']) {
+    const requestId = ++leagueRequestId[side];
+    const profile = profiles[side];
+    const card = textNode('section', '', `league-player-card ${side}`);
+    const head = textNode('div', '', 'league-player-card-head');
+    head.append(textNode('h3', sideName(side)));
+    const select = document.createElement('select');
+    select.id = `leagueSession${side}`;
+    select.setAttribute('aria-label', `Pilih sesi Ranked League ${sideName(side)}`);
+    const sessions = profile?.player?.leagueSessions || [];
+    if (!sessions.length) select.add(new Option('Sesi tidak tersedia', ''));
+    else {
+      for (const session of sessions) {
+        const date = Number(session.seasonId) > 0 ? new Date(Number(session.seasonId) * 1000).toLocaleDateString('id-ID', { month: 'short', year: 'numeric' }) : '';
+        select.add(new Option(`${session.label}${date ? ` · ${date}` : ''}`, session.id));
+      }
+      select.value = sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
+    }
+    select.disabled = !sessions.length;
+    head.appendChild(select);
+    const result = textNode('div', '', 'league-result');
+    result.id = `leagueResult${side}`;
+    card.append(head, result);
+    root.appendChild(card);
+    select.addEventListener('change', () => loadLeagueSide(side, select.value, ++leagueRequestId[side]));
+    loadLeagueSide(side, select.value, requestId);
+  }
+  renderLeagueComparisonNote();
 }
 
 function svgNode(tag, attributes = {}) {
@@ -368,22 +508,17 @@ function renderResume() {
 }
 
 async function fetchPerformance(tag, context) {
-  const response = await fetch(`/api/player/${encodeURIComponent(tag)}/performance?clan=${encodeURIComponent(context)}`);
+  const response = await fetch(`/api/player/${encodeURIComponent(tag)}/war-history`);
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Arsip pemain tidak dapat dimuat.');
   return data;
 }
 
 async function loadPerformances() {
-  const context = clanTag || rosterTag;
-  if (!context) {
-    performanceErrors = ['Tag klan belum tersedia untuk membaca arsip.'];
-    renderComparison(); return;
-  }
   async function readBoth() {
     const results = await Promise.allSettled(['left', 'right'].map(async side => {
       if (!profiles[side]) return null;
-      return fetchPerformance(normalizeTag(profiles[side].player.tag), context);
+      return fetchPerformance(normalizeTag(profiles[side].player.tag));
     }));
     performanceErrors = [];
     ['left', 'right'].forEach((side, index) => {
@@ -395,10 +530,15 @@ async function loadPerformances() {
   await readBoth();
   if (!profiles.left || !profiles.right) return;
   try {
-    const response = await fetch(`/api/clan/${encodeURIComponent(context)}/war`);
-    if (!response.ok) return;
-    const war = await response.json();
-    if (war.type === 'CWL') await fetch(`/api/clan/${encodeURIComponent(context)}/cwl/performance`);
+    const tags = [...new Set([profiles.left, profiles.right]
+      .map(profile => normalizeTag(profile?.player?.clan?.tag))
+      .filter(Boolean))];
+    await Promise.allSettled(tags.map(async tag => {
+      const response = await fetch(`/api/clan/${encodeURIComponent(tag)}/war`);
+      if (!response.ok) return;
+      const war = await response.json();
+      if (war.type === 'CWL') await fetch(`/api/clan/${encodeURIComponent(tag)}/cwl/performance`);
+    }));
     await readBoth();
   } catch { /* Arsip lama tetap ditampilkan saat pembaruan API gagal. */ }
 }
@@ -507,6 +647,7 @@ async function loadProfiles() {
   await Promise.allSettled(tasks);
   if (!rosterTag) loadRoster(normalizeTag(profiles.left?.player.clan?.tag || profiles.right?.player.clan?.tag));
   renderComparison();
+  initializeLeagueComparison();
   await loadPerformances();
 }
 
@@ -563,7 +704,7 @@ document.getElementById('exportCsv').addEventListener('click', exportCsv);
 document.getElementById('exportPng').addEventListener('click', exportPng);
 for (const button of document.querySelectorAll('.compare-tabs button')) button.addEventListener('click', () => {
   for (const tab of document.querySelectorAll('.compare-tabs button')) tab.setAttribute('aria-selected', String(tab === button));
-  for (const section of ['progress', 'army', 'war', 'activity']) document.getElementById(section).hidden = section !== button.dataset.tab;
+  for (const section of ['progress', 'army', 'war', 'league', 'activity']) document.getElementById(section).hidden = section !== button.dataset.tab;
 });
 for (const [key, label] of model.sections) document.getElementById('armyCategory').add(new Option(label, key));
 if (clanTag) { document.getElementById('backLink').href = `/?clan=${encodeURIComponent(clanTag)}`; loadRoster(clanTag); }

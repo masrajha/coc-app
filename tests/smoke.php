@@ -10,6 +10,20 @@ use Slim\Psr7\Factory\ServerRequestFactory;
 $dataDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'coc-php-smoke-' . bin2hex(random_bytes(4));
 $_ENV['DATA_DIR'] = $dataDir;
 putenv('DATA_DIR=' . $dataDir);
+$warDir = $dataDir . '/wars';
+mkdir($warDir, 0775, true);
+file_put_contents($warDir . '/2GPP802UU.json', json_encode(['clanTag' => '#2GPP802UU', 'wars' => [[
+    'id' => 'War:20261001:OTHER1', 'type' => 'War', 'state' => 'warEnded',
+    'startTime' => '20261001T000000.000Z', 'endTime' => '20261002T000000.000Z',
+    'opponent' => ['tag' => '#OTHER1', 'name' => 'Musuh Satu'], 'attacksPerMember' => 2,
+    'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'attacks' => [['stars' => 3, 'destructionPercentage' => 100]]]]
+]]]));
+file_put_contents($warDir . '/9RU089PG.json', json_encode(['clanTag' => '#9RU089PG', 'wars' => [[
+    'id' => 'CWL:20261003:OTHER2', 'type' => 'CWL', 'round' => 2, 'state' => 'warEnded',
+    'startTime' => '20261003T000000.000Z', 'endTime' => '20261004T000000.000Z',
+    'opponent' => ['tag' => '#OTHER2', 'name' => 'Musuh Dua'], 'attacksPerMember' => 1,
+    'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'attacks' => [['stars' => 2, 'destructionPercentage' => 88]]]]
+]]]));
 $app = App::create();
 $factory = new ServerRequestFactory();
 $cacheDir = $dataDir . '/cache';
@@ -98,6 +112,8 @@ $checks = [
     '/api/clan/2GPP802UU/summary' => [200, 'application/json'],
     '/api/clan/INVALID/summary' => [400, 'application/json'],
     '/api/player/INVALID/profile' => [400, 'application/json'],
+    '/api/player/2GPP802UU/war-history' => [200, 'application/json'],
+    '/api/player/INVALID/war-history' => [400, 'application/json'],
     '/api/player/INVALID/league-group' => [400, 'application/json'],
     '/api/player/2GPP802UU/league-group?session=invalid' => [400, 'application/json'],
     '/api/player/2R92VJG0U/league-group?session=current' => [404, 'application/json'],
@@ -146,6 +162,17 @@ try {
         if (!str_contains($pageHtml, $assetUrl . '?v=' . $version)) {
             throw new RuntimeException('URL asset tidak memiliki versi konten yang benar: ' . $assetFile);
         }
+    }
+    foreach (['data-tab="league"', 'leagueComparisonGrid', 'Performa liga'] as $marker) {
+        if (!str_contains($comparePage, $marker)) throw new RuntimeException('Panel perbandingan Ranked League tidak tersedia: ' . $marker);
+    }
+    $compareScript = (string)$app->handle($factory->createServerRequest('GET', '/compare.js'))->getBody();
+    foreach (['/war-history', 'leagueTier', 'attackWins', 'defenseWins', 'Bintang / serangan', 'Ketiadaan arsip tidak berarti', 'leagueSession${side}', 'leagueResult${side}'] as $marker) {
+        if (!str_contains($compareScript, $marker)) throw new RuntimeException('Perbandingan War/Ranked League tidak lengkap: ' . $marker);
+    }
+    $compareStyles = (string)$app->handle($factory->createServerRequest('GET', '/compare.css'))->getBody();
+    if (!str_contains($compareStyles, '.league-comparison-grid') || !str_contains($compareStyles, '.war-player-history')) {
+        throw new RuntimeException('Style panel comparison War/Ranked League tidak tersedia.');
     }
     $playerScript = (string)$app->handle($factory->createServerRequest('GET', '/player.js'))->getBody();
     foreach ([
@@ -234,6 +261,10 @@ try {
         || ($battle['defense']['destructionAverage'] ?? null) != 70) {
         throw new RuntimeException('Rata-rata detail pertempuran tidak dihitung dengan benar.');
     }
+    if (($battle['leagueTier'] ?? null) !== 'Legend II' || ($battle['playerRank'] ?? null) !== 30
+        || ($battle['player']['attackCount'] ?? null) !== 5 || ($battle['player']['defenseCount'] ?? null) !== 5) {
+        throw new RuntimeException('Detail Ranked League tidak menyertakan liga, rank, dan jumlah battle.');
+    }
     $otherBattle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=current&detail=battle&memberTag=2R92VJG0U'))->getBody(), true);
     if (($otherBattle['attack']['sampleSize'] ?? null) !== 0 || !array_key_exists('starsAverage', $otherBattle['attack'])
         || $otherBattle['attack']['starsAverage'] !== null || ($otherBattle['defense']['destructionAverage'] ?? null) != 90) {
@@ -249,6 +280,13 @@ try {
     }
     $previousOnlyGroup = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2R92VJG0U/league-group?session=previous'))->getBody(), true);
     if (($previousOnlyGroup['playerRank'] ?? null) !== 1) throw new RuntimeException('Sesi terakhir pemain tanpa grup saat ini gagal dimuat.');
+    $warHistory = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/war-history'))->getBody(), true);
+    if (($warHistory['summary']['wars'] ?? null) !== 2 || ($warHistory['summary']['attacks'] ?? null) !== 2
+        || count($warHistory['archiveClans'] ?? []) !== 2
+        || !in_array('#2GPP802UU', $warHistory['archiveClans'], true)
+        || !in_array('#9RU089PG', $warHistory['archiveClans'], true)) {
+        throw new RuntimeException('Riwayat War/CWL tidak dikumpulkan dari arsip lintas clan.');
+    }
     echo 'PHP smoke tests passed (' . (count($checks) + 6) . " routes).\n";
 } finally {
     @unlink($iconPath);
