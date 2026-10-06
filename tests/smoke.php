@@ -114,6 +114,27 @@ try {
     }
     $home = (string)$app->handle($factory->createServerRequest('GET', '/'))->getBody();
     $playerPage = (string)$app->handle($factory->createServerRequest('GET', '/player.html'))->getBody();
+    $comparePage = (string)$app->handle($factory->createServerRequest('GET', '/compare.html'))->getBody();
+    foreach ([
+        [$home, '/index.css', 'public/index.css'],
+        [$home, '/rankings.js', 'public/rankings.js'],
+        [$playerPage, '/player.css', 'public/player.css'],
+        [$playerPage, '/player-league.js', 'public/player-league.js'],
+        [$comparePage, '/compare.css', 'public/compare.css'],
+        [$comparePage, '/compare.js', 'public/compare.js']
+    ] as [$pageHtml, $assetUrl, $assetFile]) {
+        $version = substr(hash_file('sha256', dirname(__DIR__) . '/' . $assetFile), 0, 16);
+        if (!str_contains($pageHtml, $assetUrl . '?v=' . $version)) {
+            throw new RuntimeException('URL asset tidak memiliki versi konten yang benar: ' . $assetFile);
+        }
+    }
+    $htmlResponse = $app->handle($factory->createServerRequest('GET', '/'));
+    $assetResponse = $app->handle($factory->createServerRequest('GET', '/index.css'));
+    if (!str_contains($htmlResponse->getHeaderLine('Cache-Control'), 'no-cache')
+        || !str_contains($assetResponse->getHeaderLine('Cache-Control'), 'immutable')
+        || $assetResponse->getHeaderLine('ETag') === '') {
+        throw new RuntimeException('Header cache HTML/CSS tidak mendukung asset versioning.');
+    }
     foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', '/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }

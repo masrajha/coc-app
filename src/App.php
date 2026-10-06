@@ -230,7 +230,9 @@ final class App
         $path = realpath(__DIR__ . '/../public/' . $safe);
         $root = realpath(__DIR__ . '/../public');
         if (!$path || !$root || !str_starts_with($path, $root . DIRECTORY_SEPARATOR) || !is_file($path)) return $res->withStatus(404);
-        $mime = match (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $content = (string)file_get_contents($path);
+        $mime = match ($extension) {
             'css' => 'text/css; charset=utf-8',
             'js' => 'text/javascript; charset=utf-8',
             'html' => 'text/html; charset=utf-8',
@@ -241,8 +243,42 @@ final class App
             'webp' => 'image/webp',
             default => mime_content_type($path) ?: 'application/octet-stream'
         };
-        $res->getBody()->write((string)file_get_contents($path));
-        return $res->withHeader('Content-Type', $mime)->withHeader('X-Content-Type-Options', 'nosniff');
+        if ($extension === 'html') $content = $this->versionHtmlAssets($content, $root);
+        $res->getBody()->write($content);
+        $response = $res->withHeader('Content-Type', $mime)->withHeader('X-Content-Type-Options', 'nosniff');
+        if ($extension === 'html') {
+            return $response->withHeader('Cache-Control', 'no-cache, must-revalidate');
+        }
+        if (in_array($extension, ['css', 'js'], true)) {
+            $etag = '"' . hash('sha256', $content) . '"';
+            return $response->withHeader('Cache-Control', 'public, max-age=31536000, immutable')
+                ->withHeader('ETag', $etag)
+                ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT');
+        }
+        return $response;
+    }
+
+    private function versionHtmlAssets(string $html, string $publicRoot): string
+    {
+        return preg_replace_callback("~\\b(src|href)(\\s*=\\s*)([\"'])(.*?)\\3~i", function (array $match) use ($publicRoot): string {
+            $url = $match[4];
+            if (preg_match('/^(?:[a-z][a-z0-9+.-]*:|\\/\\/|#)/i', $url)) return $match[0];
+            $parts = parse_url($url);
+            $assetPath = $parts['path'] ?? '';
+            $extension = strtolower(pathinfo($assetPath, PATHINFO_EXTENSION));
+            if (!in_array($extension, ['css', 'js'], true)) return $match[0];
+            $relativePath = ltrim(rawurldecode($assetPath), '/');
+            if ($relativePath === '' || str_contains($relativePath, '..')) return $match[0];
+            $file = realpath($publicRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relativePath));
+            if (!$file || !str_starts_with($file, $publicRoot . DIRECTORY_SEPARATOR) || !is_file($file)) return $match[0];
+            $version = substr(hash_file('sha256', $file), 0, 16);
+            $query = $parts['query'] ?? '';
+            $query = preg_replace('/(?:^|&)v=[^&]*/', '', $query);
+            $query = trim($query, '&');
+            $query .= ($query === '' ? '' : '&') . 'v=' . $version;
+            $newUrl = $assetPath . '?' . $query . (isset($parts['fragment']) ? '#' . $parts['fragment'] : '');
+            return $match[1] . $match[2] . $match[3] . $newUrl . $match[3];
+        }, $html) ?? $html;
     }
 
     private function playerPath(string $tag): ?string { $clean = $this->normalizeTag($tag); return $clean ? '/players/' . rawurlencode('#' . $clean) : null; }
