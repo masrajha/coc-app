@@ -10,6 +10,7 @@
 
   function element(id) { return document.getElementById(id); }
   function setText(id, value) { element(id).textContent = value; }
+  function setLeagueTitle(tier) { setText('leagueSidebarEyebrow', tier ? `RANKED LEAGUE (${tier})` : 'RANKED LEAGUE'); }
 
   const tooltip = document.createElement('div');
   tooltip.className = 'league-battle-tooltip';
@@ -139,6 +140,7 @@
 
   async function loadSession(sessionId) {
     hideBattle();
+    setLeagueTitle(null);
     const request = ++state.request;
     const status = element('leagueStatus');
     status.hidden = false;
@@ -156,6 +158,7 @@
       state.page = data.playerRank ? Math.floor((data.playerRank - 1) / PAGE_SIZE) : 0;
       renderPage();
       const label = data.session.id === 'current' ? 'Sesi saat ini' : 'Sesi terakhir';
+      setLeagueTitle(data.leagueTier);
       const tier = data.leagueTier ? `${data.leagueTier} · ` : '';
       const rankText = data.playerRank ? `#${data.playerRank} dari ${data.totalMembers}` : 'Posisi tidak tersedia';
       setText('leagueRankSummary', `${tier}${label} · ${rankText}`);
@@ -178,6 +181,7 @@
   function initialize(player) {
     hideBattle();
     state.battleCache.clear();
+    setLeagueTitle(null);
     state.request++;
     state.playerTag = normalizeTag(player.tag);
     state.members = [];

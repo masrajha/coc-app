@@ -112,7 +112,7 @@ try {
     }
     $home = (string)$app->handle($factory->createServerRequest('GET', '/'))->getBody();
     $playerPage = (string)$app->handle($factory->createServerRequest('GET', '/player.html'))->getBody();
-    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', '/player-league.js'] as $marker) {
+    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', '/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }
     foreach (['rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation'] as $marker) {
