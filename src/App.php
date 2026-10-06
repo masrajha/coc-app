@@ -441,7 +441,9 @@ final class App
                     'attackWins' => $member['attackWinCount'] ?? null,
                     'attackLosses' => $member['attackLoseCount'] ?? null,
                     'defenseWins' => $member['defenseWinCount'] ?? null,
-                    'defenseLosses' => $member['defenseLoseCount'] ?? null
+                    'defenseLosses' => $member['defenseLoseCount'] ?? null,
+                    'attackCount' => isset($member['attackWinCount'], $member['attackLoseCount']) ? (int)$member['attackWinCount'] + (int)$member['attackLoseCount'] : null,
+                    'defenseCount' => isset($member['defenseWinCount'], $member['defenseLoseCount']) ? (int)$member['defenseWinCount'] + (int)$member['defenseLoseCount'] : null
                 ];
             }
             usort($members, static fn($a, $b) => (int)$b['trophies'] <=> (int)$a['trophies']);

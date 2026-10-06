@@ -155,7 +155,8 @@ try {
         throw new RuntimeException('Sesi grup liga tidak tersedia pada profil.');
     }
     $group = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=current'))->getBody(), true);
-    if (($group['playerRank'] ?? null) !== 30 || ($group['totalMembers'] ?? null) !== 60 || ($group['members'][0]['rank'] ?? null) !== 1) {
+    if (($group['playerRank'] ?? null) !== 30 || ($group['totalMembers'] ?? null) !== 60 || ($group['members'][0]['rank'] ?? null) !== 1
+        || ($group['members'][0]['attackCount'] ?? null) !== 5 || ($group['members'][0]['defenseCount'] ?? null) !== 5) {
         throw new RuntimeException('Peringkat grup sesi saat ini tidak dihitung dengan benar.');
     }
     $previous = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=previous'))->getBody(), true);

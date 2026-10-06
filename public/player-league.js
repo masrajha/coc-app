@@ -40,7 +40,18 @@
       trophies.className = 'league-member-trophies';
       trophies.textContent = Number(member.trophies || 0).toLocaleString('id-ID');
       trophies.title = 'Trofi liga';
-      row.append(rank, identity, trophies);
+      const activity = document.createElement('span');
+      activity.className = 'league-member-activity';
+      const attacks = document.createElement('span');
+      const defenses = document.createElement('span');
+      const attackCount = Number.isFinite(Number(member.attackCount)) && member.attackCount !== null ? Number(member.attackCount) : null;
+      const defenseCount = Number.isFinite(Number(member.defenseCount)) && member.defenseCount !== null ? Number(member.defenseCount) : null;
+      attacks.textContent = `Attacks ${attackCount ?? '—'}`;
+      defenses.textContent = `Defenses ${defenseCount ?? '—'}`;
+      attacks.title = 'Jumlah serangan: menang + kalah';
+      defenses.title = 'Jumlah pertahanan: menang + kalah';
+      activity.append(attacks, defenses);
+      row.append(rank, identity, trophies, activity);
       list.appendChild(row);
     }
     setText('leagueMemberCount', `${state.members.length} pemain`);
