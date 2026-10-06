@@ -349,10 +349,10 @@
             return new Date(Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5], +match[6]));
         }
 
-        function showWarStatus(message) {
+        function showWarStatus(message, preserveContent = false) {
             setText('warStatus', message);
             document.getElementById('warStatus').classList.remove('hidden');
-            document.getElementById('warContent').classList.add('hidden');
+            if (!preserveContent) document.getElementById('warContent').classList.add('hidden');
         }
 
         function renderRounds(rounds) {
@@ -368,13 +368,16 @@
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.textContent = choice.label;
-                button.className = choice.value === selectedRound
+                    const isSelected = choice.value === selectedRound;
+                    button.className = isSelected
                     ? 'rounded bg-blue-600 px-3 py-1.5 text-xs font-bold text-white'
                     : 'rounded border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50';
+                    button.setAttribute('aria-pressed', String(isSelected));
+                    if (isSelected) button.setAttribute('aria-current', 'true');
                 button.addEventListener('click', () => {
                     selectedRound = choice.value;
                     renderRounds(rounds);
-                    showWarStatus('Memuat data perang...');
+                    showWarStatus('Memuat data perang...', true);
                     loadWar(activeTag);
                 });
                 nav.appendChild(button);

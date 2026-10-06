@@ -556,7 +556,7 @@ final class App
     private function cwlWar(string $path,string $clan,?int $selected):?array
     {
         $group=$this->fetchCwlGroup($path);if(!$group||($group['data']['state']??'')==='notInWar')return null;$rounds=$group['data']['rounds']??[];if($selected!==null&&$selected>count($rounds))return ['invalidRound'=>true];$available=[];foreach($rounds as $i=>$r)if(array_filter($r['warTags']??[],static fn($t)=>$t&&$t!=='#0'))$available[]=$i+1;
-        if($selected!==null){return $this->roundWars($path,$rounds[$selected-1],$selected,$clan)??['data'=>['state'=>'cwlWaiting'],'lastUpdated'=>$group['lastUpdated'],'availableRounds'=>$available,'round'=>$selected];}
+        if($selected!==null){$war=$this->roundWars($path,$rounds[$selected-1],$selected,$clan);if($war){$war['availableRounds']=$available;return $war;}return ['data'=>['state'=>'cwlWaiting'],'lastUpdated'=>$group['lastUpdated'],'availableRounds'=>$available,'round'=>$selected];}
         $preparation=null;for($i=count($rounds)-1;$i>=0;$i--){$war=$this->roundWars($path,$rounds[$i],$i+1,$clan);if(!$war)continue;$war['availableRounds']=$available;if(($war['data']['state']??'')==='inWar')return $war;if(($war['data']['state']??'')==='preparation'&&!$preparation)$preparation=$war;if(($war['data']['state']??'')==='warEnded')return $preparation??$war;}return $preparation??['data'=>['state'=>'cwlWaiting'],'lastUpdated'=>$group['lastUpdated'],'availableRounds'=>$available];
     }
     private function side(array $data,string $tag,bool $cwl):array{$own='#'.$tag;$reverse=$cwl&&strtoupper($data['opponent']['tag']??'')===$own;return [$reverse?($data['opponent']??[]):($data['clan']??[]),$reverse?($data['clan']??[]):($data['opponent']??[])];}

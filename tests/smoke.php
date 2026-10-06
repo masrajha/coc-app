@@ -34,6 +34,14 @@ $seedApiCache('/locations/global/rankings/players?limit=25', ['items' => [
 $seedApiCache('/clans/%232GPP802UU', [
     'tag' => '#2GPP802UU', 'name' => 'Top Clan', 'location' => ['id' => 32000000, 'name' => 'Indonesia', 'isCountry' => true]
 ]);
+$seedApiCache('/clans/%239RU089PG/currentwar/leaguegroup', ['state' => 'inWar', 'rounds' => [
+    ['warTags' => ['#WARROUND1']], ['warTags' => ['#WARROUND2']], ['warTags' => ['#WARROUND3']]
+]]);
+$seedApiCache('/clanwarleagues/wars/%23WARROUND2', [
+    'state' => 'inWar', 'teamSize' => 1, 'startTime' => '20261006T000000.000Z', 'endTime' => '20261007T000000.000Z',
+    'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'members' => []],
+    'opponent' => ['tag' => '#2GPP802UU', 'name' => 'Away', 'members' => []]
+]);
 $seedApiCache('/locations/global/rankings/clans?limit=25', ['items' => [
     ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'rank' => 1, 'clanLevel' => 20, 'members' => 50, 'clanPoints' => 50000]
 ]]);
@@ -100,7 +108,8 @@ $checks = [
     '/api/rankings/unknown' => [400, 'application/json'],
     '/api/rankings/players?location=bad%2Fpath' => [400, 'application/json'],
     '/api/clan/2GPP802UU/health' => [200, 'application/json'],
-    '/api/clan/2GPP802UU/health.csv' => [200, 'text/csv']
+    '/api/clan/2GPP802UU/health.csv' => [200, 'text/csv'],
+    '/api/clan/9RU089PG/war?round=2' => [200, 'application/json']
 ];
 
 try {
@@ -114,6 +123,15 @@ try {
         }
     }
     $home = (string)$app->handle($factory->createServerRequest('GET', '/'))->getBody();
+    foreach ([
+        'preserveContent = false',
+        "showWarStatus('Memuat data perang...', true)",
+        'const isSelected = choice.value === selectedRound',
+        "setAttribute('aria-pressed', String(isSelected))",
+        "setAttribute('aria-current', 'true')"
+    ] as $marker) {
+        if (!str_contains($home, $marker)) throw new RuntimeException('Navigasi CWL tidak mempertahankan konten atau highlight round terpilih.');
+    }
     $playerPage = (string)$app->handle($factory->createServerRequest('GET', '/player.html'))->getBody();
     $comparePage = (string)$app->handle($factory->createServerRequest('GET', '/compare.html'))->getBody();
     foreach ([
@@ -186,6 +204,10 @@ try {
     if (($playerRanking['items'][0]['leagueTier']['name'] ?? null) !== 'Legend I') throw new RuntimeException('League tier API tidak diteruskan pada ranking pemain.');
     $clanSummary = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/summary'))->getBody(), true);
     if (($clanSummary['location']['name'] ?? null) !== 'Indonesia') throw new RuntimeException('Negara klan tidak tersedia untuk kolom lokasi pemain.');
+    $selectedWar = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/9RU089PG/war?round=2'))->getBody(), true);
+    if (($selectedWar['round'] ?? null) !== 2 || ($selectedWar['availableRounds'] ?? null) !== [1, 2, 3] || ($selectedWar['type'] ?? null) !== 'CWL') {
+        throw new RuntimeException('Daftar round CWL hilang dari respons saat round tertentu dipilih.');
+    }
     $icon = $app->handle($factory->createServerRequest('GET', '/api/player-icon?name=Test%20Icon&section=heroes'));
     if ($icon->getStatusCode() !== 200 || $icon->getHeaderLine('Content-Type') !== 'image/png' || (string)$icon->getBody() !== $iconBytes) {
         throw new RuntimeException('Ikon lokal tidak disajikan dengan benar.');
