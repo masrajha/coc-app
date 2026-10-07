@@ -15,8 +15,8 @@ mkdir($warDir, 0775, true);
 $snapshotDir = $dataDir . '/snapshots';
 mkdir($snapshotDir, 0775, true);
 file_put_contents($snapshotDir . '/2GPP802UU.json', json_encode(['clanTag' => '#2GPP802UU', 'snapshots' => [
-    ['date' => '2026-10-05', 'capturedAt' => '2026-10-05T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50]],
-    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50]],
+    ['date' => '2026-10-05', 'capturedAt' => '2026-10-05T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50], 'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'trophies' => 6000, 'donations' => 1, 'donationsReceived' => 1, 'leagueTier' => ['name' => 'Legend II']]]],
+    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50], 'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'trophies' => 6000, 'donations' => 2, 'donationsReceived' => 1, 'leagueTier' => ['name' => 'Legend II']]]],
 ]]));
 file_put_contents($snapshotDir . '/9RU089PG.json', json_encode(['clanTag' => '#9RU089PG', 'snapshots' => [
     ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T01:00:00Z', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'level' => 18, 'members' => 42]],
@@ -192,7 +192,7 @@ try {
             if (!str_contains($page, $marker)) throw new RuntimeException('Kontrol donasi belum tersedia di seluruh halaman.');
         }
     }
-    foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular'] as $marker) {
+    foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
     }
     foreach ([
@@ -243,6 +243,9 @@ try {
     foreach (["className = 'league-battle-info'", 'showBattle(member, row, true, info)', "aria-haspopup', 'dialog'", "event.key === 'Escape'", 'state.pinned'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Popup detail pertempuran belum mendukung interaksi tap: ' . $marker);
     }
+    if (!str_contains($leagueScript, "family === 'legend' ? roman?.[1].toUpperCase() || null : numeric?.[1] || null")) {
+        throw new RuntimeException('Label badge liga harus memakai Romawi hanya untuk Legend dan angka untuk liga lain.');
+    }
     $leagueStyles = (string)$app->handle($factory->createServerRequest('GET', '/player-league.css'))->getBody();
     if (!str_contains($leagueStyles, '@media(hover:none)') || !str_contains($leagueStyles, '.league-battle-info{display:inline-grid')) {
         throw new RuntimeException('Ikon popup tidak diaktifkan untuk perangkat layar sentuh.');
@@ -285,6 +288,8 @@ try {
     if (($playerRanking['items'][0]['leagueTier']['name'] ?? null) !== 'Legend I') throw new RuntimeException('League tier API tidak diteruskan pada ranking pemain.');
     $clanSummary = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/summary'))->getBody(), true);
     if (($clanSummary['location']['name'] ?? null) !== 'Indonesia') throw new RuntimeException('Negara klan tidak tersedia untuk kolom lokasi pemain.');
+    $health = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/health'))->getBody(), true);
+    if (($health['members'][0]['leagueTier']['name'] ?? null) !== 'Legend II') throw new RuntimeException('League tier anggota tidak diteruskan ke laporan aktivitas.');
     $selectedWar = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/9RU089PG/war?round=2'))->getBody(), true);
     if (($selectedWar['round'] ?? null) !== 2 || ($selectedWar['availableRounds'] ?? null) !== [1, 2, 3] || ($selectedWar['type'] ?? null) !== 'CWL') {
         throw new RuntimeException('Daftar round CWL hilang dari respons saat round tertentu dipilih.');

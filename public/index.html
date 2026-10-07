@@ -304,7 +304,7 @@
             <section class="rounded border border-slate-200 bg-white">
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h2 class="text-lg font-bold leading-6">Activity Auditor</h2>
+                        <h2 class="text-lg font-bold leading-6">Anggota Klan</h2>
                         <p id="healthMeta" class="mt-1 text-sm text-slate-500">Snapshot harian dan tren aktivitas anggota.</p>
                     </div>
                     <a id="healthCsvLink" href="#" class="hidden rounded border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Export CSV</a>
@@ -331,13 +331,13 @@
                         <table class="w-full text-left text-xs">
                             <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                 <tr>
-                                    <th class="px-3 py-2">Anggota</th>
-                                    <th class="px-3 py-2">Role</th>
-                                    <th class="px-3 py-2">Trofi</th>
-                                    <th class="px-3 py-2">Delta 7h</th>
-                                    <th class="px-3 py-2">Donasi</th>
-                                    <th class="px-3 py-2">Rasio</th>
-                                    <th class="px-3 py-2">Status</th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="name">Anggota</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="role">Role</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="trophies">Trofi</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="delta">Delta 7h</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="donations">Donasi</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="ratio">Rasio</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="status">Status</button></th>
                                 </tr>
                             </thead>
                             <tbody id="healthTable" class="divide-y divide-slate-200 bg-white"></tbody>
@@ -361,6 +361,8 @@
         let performancePlayers = [];
         let performancePage = 1;
         let performanceScopeLabel = 'War aktif';
+        let healthMembers = [];
+        let healthSort = { key: null, direction: 'asc' };
 
         function setText(id, value) {
             document.getElementById(id).textContent = value ?? '-';
@@ -385,7 +387,37 @@
             return `/compare.html?${params}`;
         }
 
-        function addPlayerLinkCell(row, player, className = 'px-3 py-2 font-semibold') {
+        const memberLeagueIcons = [
+            ['legend', 'legend'], ['electro', 'electro-dragon'], ['titan', 'electro-titan'], ['dragon', 'dragon'],
+            ['pekka', 'pekka'], ['p.e.k.k.a', 'pekka'], ['golem', 'golem'], ['witch', 'witch'],
+            ['valkyrie', 'valkyrie'], ['wizard', 'wizard'], ['archer', 'archer'], ['barbarian', 'barbarian'], ['skeleton', 'skeleton']
+        ];
+
+        function memberLeagueBadge(tier) {
+            const name = String(tier || '').trim();
+            const family = memberLeagueIcons.find(([keyword]) => name.toLowerCase().includes(keyword))?.[1];
+            if (!family) return null;
+            const roman = name.match(/\b(III|II|I)\s*$/i);
+            const numeric = name.match(/\b(\d+)\s*$/);
+            const level = family === 'legend' ? roman?.[1].toUpperCase() || null : numeric?.[1] || null;
+            const badge = document.createElement('span');
+            badge.className = 'member-league-badge';
+            badge.title = name;
+            badge.setAttribute('aria-label', `Liga ${name}`);
+            const icon = document.createElement('img');
+            icon.src = `/league-${family}.png`;
+            icon.alt = '';
+            badge.appendChild(icon);
+            if (level) {
+                const marker = document.createElement('span');
+                marker.className = 'member-league-level';
+                marker.textContent = level;
+                badge.appendChild(marker);
+            }
+            return badge;
+        }
+
+        function addPlayerLinkCell(row, player, className = 'px-3 py-2 font-semibold', showLeagueBadge = false) {
             const cell = document.createElement('td');
             cell.className = className;
             if (player?.tag) {
@@ -394,6 +426,10 @@
                 link.className = 'text-left font-semibold text-blue-700 hover:text-blue-900 hover:underline';
                 link.textContent = player.name || player.tag;
                 link.title = `Profil ${player.name || player.tag}`;
+                if (showLeagueBadge) {
+                    const badge = memberLeagueBadge(player.leagueTier?.name);
+                    if (badge) cell.appendChild(badge);
+                }
                 cell.appendChild(link);
                 const compare = document.createElement('a');
                 compare.href = playerComparisonUrl(player.tag);
@@ -811,8 +847,59 @@
             }
         }
 
+        function healthSortValue(member, key) {
+            if (key === 'name' || key === 'role') return String(member[key] || '').toLocaleLowerCase('id-ID');
+            if (key === 'delta') return member.trophyDelta7;
+            if (key === 'donations') return Number(member.donations || 0);
+            if (key === 'ratio') return member.donationRatio;
+            if (key === 'status') return member.status === 'stable' ? 0 : 1;
+            return Number(member.trophies || 0);
+        }
+
+        function sortedHealthMembers() {
+            if (!healthSort.key) return healthMembers;
+            const { key, direction } = healthSort;
+            const multiplier = direction === 'asc' ? 1 : -1;
+            return [...healthMembers].sort((a, b) => {
+                const first = healthSortValue(a, key);
+                const second = healthSortValue(b, key);
+                if (first === null || first === undefined) return 1;
+                if (second === null || second === undefined) return -1;
+                const result = typeof first === 'string' ? first.localeCompare(second, 'id') : first - second;
+                return result * multiplier || String(a.name || '').localeCompare(String(b.name || ''), 'id');
+            });
+        }
+
+        function updateHealthSortHeaders() {
+            document.querySelectorAll('.health-sort').forEach(button => {
+                const active = button.dataset.healthSort === healthSort.key;
+                const direction = active ? healthSort.direction : null;
+                button.parentElement.setAttribute('aria-sort', direction === 'asc' ? 'ascending' : direction === 'desc' ? 'descending' : 'none');
+                button.classList.toggle('active', active);
+                button.dataset.direction = direction || '';
+            });
+        }
+
+        function renderHealthRows() {
+            const tbody = document.getElementById('healthTable');
+            tbody.replaceChildren();
+            for (const member of sortedHealthMembers()) {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-slate-50';
+                addPlayerLinkCell(row, member, 'px-3 py-2 font-semibold health-member-name', true);
+                addCell(row, member.role);
+                addCell(row, member.trophies);
+                addCell(row, member.trophyDelta7 === null ? '-' : member.trophyDelta7);
+                addCell(row, `${member.donations} / ${member.donationsReceived}`);
+                addCell(row, member.donationRatio === null ? '-' : member.donationRatio);
+                addBadgeCell(row, member.flags.length ? member.flags.join(', ') : 'Stabil', member.flags.length ? 'pending' : 'done');
+                tbody.appendChild(row);
+            }
+            updateHealthSortHeaders();
+        }
+
         function renderHealth(report) {
-            setText('healthMeta', `Dibuat: ${new Date(report.generatedAt).toLocaleString('id-ID')}`);
+            setText('healthMeta', `Diakses: ${new Date(report.generatedAt).toLocaleString('id-ID')}`);
             setText('healthSnapshotCount', `${report.snapshots} snapshot`);
             setText('healthLatest', report.latestSnapshot ? `Terbaru: ${report.latestSnapshot}` : 'Belum ada snapshot');
             setText('healthReviewCount', `${report.summary.review} dari ${report.members.length} anggota`);
@@ -822,20 +909,8 @@
             csvLink.href = `/api/clan/${encodeURIComponent(activeTag)}/health.csv`;
             csvLink.classList.remove('hidden');
 
-            const tbody = document.getElementById('healthTable');
-            tbody.replaceChildren();
-            for (const member of report.members) {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50';
-                addPlayerLinkCell(row, member);
-                addCell(row, member.role);
-                addCell(row, member.trophies);
-                addCell(row, member.trophyDelta7 === null ? '-' : member.trophyDelta7);
-                addCell(row, `${member.donations} / ${member.donationsReceived}`);
-                addCell(row, member.donationRatio === null ? '-' : member.donationRatio);
-                addBadgeCell(row, member.flags.length ? member.flags.join(', ') : 'Stabil', member.flags.length ? 'pending' : 'done');
-                tbody.appendChild(row);
-            }
+            healthMembers = Array.isArray(report.members) ? report.members : [];
+            renderHealthRows();
         }
 
         async function loadHealth(tag) {
@@ -995,6 +1070,15 @@
                 });
                 button.className = 'roster-filter rounded border border-blue-600 bg-blue-600 px-2 py-1 text-xs font-semibold text-white';
                 if (latestWarData) renderRoster(latestWarData);
+            });
+        });
+
+        document.querySelectorAll('.health-sort').forEach(button => {
+            button.addEventListener('click', () => {
+                const key = button.dataset.healthSort;
+                const isSame = healthSort.key === key;
+                healthSort = { key, direction: isSame && healthSort.direction === 'asc' ? 'desc' : 'asc' };
+                renderHealthRows();
             });
         });
 

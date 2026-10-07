@@ -7,11 +7,11 @@
 .player-name-row h1{min-width:0;margin:2px 0 4px}
 .player-league-badge{display:flex;align-items:center;flex:none}
 .player-league-badge .league-icon{width:40px;height:40px}
-.player-league-badge .league-icon-level{right:-1px;bottom:-1px;min-width:13px;padding:0 2px;font-size:8px}
+.player-league-badge .league-icon-level{right:-2px;bottom:-1px;min-width:17px;padding:0 2px;font-size:8px}
 .player-league-badge[hidden],.sidebar-league-badge[hidden]{display:none}
 .league-icon{position:relative;display:inline-flex;width:52px;height:52px;flex:none;align-items:center;justify-content:center}
 .league-icon img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px #0008)}
-.league-icon-level{position:absolute;right:0;bottom:0;min-width:17px;padding:1px 3px;border:1px solid #e9c372;border-radius:4px;background:linear-gradient(#49321a,#24180e);color:#fff4cc;text-align:center;font-size:10px;font-weight:900;line-height:1.2;text-shadow:0 1px #000}
+.league-icon-level{position:absolute;right:0;bottom:0;min-width:19px;padding:1px 3px;border:1px solid #e9c372;border-radius:4px;background:linear-gradient(#49321a,#24180e);color:#fff4cc;text-align:center;font-size:10px;font-weight:900;line-height:1.2;text-shadow:0 1px #000}
 .league-sidebar-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .sidebar-league-badge .league-icon{width:54px;height:54px}
 .league-sidebar{position:sticky;top:78px;max-height:calc(100vh - 94px);display:flex;flex-direction:column;min-width:0;margin-bottom:0;padding:16px}

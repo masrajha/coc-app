@@ -23,7 +23,7 @@
     if (!family) return null;
     const roman = name.match(/\b(III|II|I)\s*$/i);
     const numeric = name.match(/\b(\d+)\s*$/);
-    const level = roman ? roman[1].toUpperCase() : numeric ? ['I', 'III', 'II'][Number(numeric[1]) % 3] : null;
+    const level = family === 'legend' ? roman?.[1].toUpperCase() || null : numeric?.[1] || null;
     const badge = document.createElement('span');
     badge.className = 'league-icon';
     const image = document.createElement('img');
