@@ -315,11 +315,37 @@ function renderWar() {
   }
 }
 
-function leagueMetric(label, value, detail = '') {
+function leagueMetric(label, value, detail = '', mark = '') {
   const box = textNode('div', '', 'league-metric');
-  box.append(textNode('span', label), textNode('strong', value == null ? 'Tidak tersedia' : String(value)));
+  const number = textNode('strong', value == null ? 'Tidak tersedia' : String(value));
+  if (mark === 'higher') number.appendChild(textNode('span', '★', 'league-mark higher-mark'));
+  else if (mark === 'equal') number.appendChild(textNode('span', '=', 'league-mark equal-mark'));
+  box.append(textNode('span', label), number);
   if (detail) box.appendChild(textNode('small', detail));
   return box;
+}
+
+function sameLeagueSeason() {
+  const left = leaguePerformance.left;
+  const right = leaguePerformance.right;
+  const leftSeason = left?.session?.seasonId;
+  const rightSeason = right?.session?.seasonId;
+  return Boolean(left && right && leftSeason != null && rightSeason != null
+    && String(leftSeason) === String(rightSeason));
+}
+
+function leagueMetricMark(side, key, value, lowerIsBetter = false) {
+  if (!sameLeagueSeason() || value === null || value === undefined || !Number.isFinite(Number(value))) return '';
+  const other = leaguePerformance[side === 'left' ? 'right' : 'left'];
+  const otherValue = key === 'rank' ? other?.playerRank
+    : key === 'attackStars' ? other?.attack?.starsAverage
+      : key === 'attackDestruction' ? other?.attack?.destructionAverage
+        : key === 'defenseStars' ? other?.defense?.starsAverage
+          : other?.defense?.destructionAverage;
+  if (otherValue === null || otherValue === undefined || !Number.isFinite(Number(otherValue))) return '';
+  if (Number(value) === Number(otherValue)) return 'equal';
+  const better = lowerIsBetter ? Number(value) < Number(otherValue) : Number(value) > Number(otherValue);
+  return better ? 'higher' : '';
 }
 
 function renderLeagueSide(side, data, error = null) {
@@ -344,13 +370,13 @@ function renderLeagueSide(side, data, error = null) {
   const grid = textNode('div', '', 'league-stat-grid');
   grid.append(
     leagueMetric('Trofi liga', formatNumber(player.trophies)),
-    leagueMetric('Peringkat grup', data.playerRank ? `#${data.playerRank} / ${data.totalMembers}` : null),
+    leagueMetric('Peringkat grup', data.playerRank ? `#${data.playerRank} / ${data.totalMembers}` : null, '', leagueMetricMark(side, 'rank', data.playerRank, true)),
     leagueMetric('Serangan', player.attackCount == null ? null : player.attackCount, `${player.attackWins ?? '—'} menang · ${player.attackLosses ?? '—'} kalah`),
-    leagueMetric('Bintang / serangan', formatNumber(data.attack?.starsAverage), `${data.attack?.sampleSize ?? 0} log serangan`),
-    leagueMetric('Destruksi serangan', formatPercent(data.attack?.destructionAverage), `${data.attack?.sampleSize ?? 0} log serangan`),
+    leagueMetric('Bintang / serangan', formatNumber(data.attack?.starsAverage), `${data.attack?.sampleSize ?? 0} log serangan`, leagueMetricMark(side, 'attackStars', data.attack?.starsAverage)),
+    leagueMetric('Destruksi serangan', formatPercent(data.attack?.destructionAverage), `${data.attack?.sampleSize ?? 0} log serangan`, leagueMetricMark(side, 'attackDestruction', data.attack?.destructionAverage)),
     leagueMetric('Pertahanan', player.defenseCount == null ? null : player.defenseCount, `${player.defenseWins ?? '—'} menang · ${player.defenseLosses ?? '—'} kalah`),
-    leagueMetric('Bintang lawan / pertahanan', formatNumber(data.defense?.starsAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`),
-    leagueMetric('Destruksi saat bertahan', formatPercent(data.defense?.destructionAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`)
+    leagueMetric('Bintang lawan / pertahanan', formatNumber(data.defense?.starsAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`, leagueMetricMark(side, 'defenseStars', data.defense?.starsAverage, true)),
+    leagueMetric('Destruksi saat bertahan', formatPercent(data.defense?.destructionAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`, leagueMetricMark(side, 'defenseDestruction', data.defense?.destructionAverage, true))
   );
   root.append(badge, meta, rank, grid);
 }
@@ -363,11 +389,21 @@ function renderLeagueComparisonNote() {
     note.textContent = 'Peringkat grup tiap pemain ditampilkan terpisah. Grup berbeda tidak membentuk satu leaderboard bersama.';
     return;
   }
-  const leftSeason = left.session?.seasonId;
-  const rightSeason = right.session?.seasonId;
-  note.textContent = leftSeason && rightSeason && String(leftSeason) === String(rightSeason)
-    ? 'Keduanya memiliki data pada season yang sama. Posisi tetap dihitung dalam grup masing-masing; bandingkan metrik battle bersama jumlah log.'
-    : 'Sesi/season kedua pemain berbeda atau tidak lengkap. Angka ditampilkan per pemain dan tidak dianggap sebagai perbandingan dalam satu grup.';
+  const tiersDiffer = left.leagueTier && right.leagueTier && left.leagueTier !== right.leagueTier;
+  const groupsDiffer = left.session?.groupTag && right.session?.groupTag
+    && String(left.session.groupTag).toUpperCase() !== String(right.session.groupTag).toUpperCase();
+  const leagueNotice = tiersDiffer ? `Level liga berbeda: ${left.leagueTier} dan ${right.leagueTier}. ` : '';
+  const groupNotice = groupsDiffer ? 'Kedua pemain berada di grup yang berbeda. ' : '';
+  note.textContent = sameLeagueSeason()
+    ? `${leagueNotice}${groupNotice}Keduanya mengikuti musim Ranked League yang sama. Tanda ★ menunjukkan nilai unggul, sedangkan = menunjukkan nilai sama untuk metrik yang dibandingkan.`
+    : `${leagueNotice}Musim Ranked League kedua pemain berbeda atau tidak lengkap. Angka ditampilkan per pemain tanpa tanda keunggulan.`;
+}
+
+function refreshLeagueComparison() {
+  for (const side of ['left', 'right']) {
+    if (leaguePerformance[side]) renderLeagueSide(side, leaguePerformance[side]);
+  }
+  renderLeagueComparisonNote();
 }
 
 async function loadLeagueSide(side, sessionId, requestId) {
@@ -386,7 +422,7 @@ async function loadLeagueSide(side, sessionId, requestId) {
     if (!response.ok) throw new Error(data.error || 'Data sesi Ranked League tidak tersedia.');
     if (requestId !== leagueRequestId[side]) return;
     leaguePerformance[side] = data;
-    renderLeagueSide(side, data);
+    refreshLeagueComparison();
   } catch (error) {
     if (requestId !== leagueRequestId[side]) return;
     leaguePerformance[side] = null;

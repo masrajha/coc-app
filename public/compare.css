@@ -61,6 +61,6 @@
 .league-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
 .league-metric{display:grid;gap:4px;min-width:0;padding:9px;border:1px solid #2d4054;border-radius:7px;background:#15212e}
 .league-metric>span{color:#95abc2;font-size:10px}
-.league-metric>strong{overflow-wrap:anywhere;color:#e6effb;font-size:14px;font-variant-numeric:tabular-nums}
+.league-metric>strong{display:flex;align-items:center;gap:5px;overflow-wrap:anywhere;color:#e6effb;font-size:14px;font-variant-numeric:tabular-nums}.league-mark{display:inline-grid;place-items:center;min-width:18px;height:18px;border-radius:5px;font-size:11px;font-weight:900}.league-metric .higher-mark{color:#052c20;background:#51ddb1}.league-metric .equal-mark{color:#c4d2e4;background:#33465b}
 .league-metric>small{color:#91a5bb;font-size:9px;line-height:1.35}
 @media(max-width:760px){.league-comparison-grid{grid-template-columns:1fr}.war-own-result{grid-template-columns:40px minmax(0,1fr)}.war-own-result small{grid-column:2;text-align:left}.league-player-card-head select{max-width:65%}}
