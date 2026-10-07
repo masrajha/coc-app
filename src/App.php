@@ -57,6 +57,7 @@ final class App
         $app->options('/{routes:.*}', fn($request, $response) => $response);
         $app->get('/api/rankings/locations', fn($req, $res) => $self->rankingLocations($res));
         $app->get('/api/rankings/{type}', fn($req, $res, $args) => $self->rankings($req, $res, $args['type']));
+        $app->get('/api/clans/popular', fn($req, $res) => $self->popularClans($res));
         $app->get('/api/clan/{tag}/war', fn($req, $res, $args) => $self->war($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/standings', fn($req, $res, $args) => $self->cwlStandings($res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/performance', fn($req, $res, $args) => $self->cwlPerformance($req, $res, $args['tag']));
@@ -148,7 +149,7 @@ final class App
         if ($e instanceof LocalDataFailure) return $this->respond($res, ['error' => 'Arsip data lokal tidak dapat dibaca. Periksa berkas di folder data/wars.'], 500);
         $status = $e instanceof UpstreamFailure ? ($e->status ?: ($e->getPrevious()?->getMessage() && str_contains(strtolower($e->getPrevious()->getMessage()), 'timed out') ? 504 : 502)) : 502;
         $messages = [
-            403 => $war ? 'Data perang tidak tersedia. Periksa akses API dan pengaturan privasi war log klan.' : 'Akses API ditolak. Periksa token dan alamat IP yang didaftarkan.',
+            403 => $war ? 'Data perang tidak tersedia untuk klan ini.' : 'Akses API ditolak. Periksa token dan alamat IP yang didaftarkan.',
             404 => $war ? 'Data perang tidak tersedia untuk klan ini.' : 'Klan tidak ditemukan.',
             429 => 'Batas permintaan API tercapai. Coba lagi sebentar.',
             504 => 'API Clash of Clans tidak merespons tepat waktu. Coba lagi sebentar; jika terus terjadi, periksa koneksi server, token, dan IP yang didaftarkan di developer.clashofclans.com.'
@@ -178,6 +179,39 @@ final class App
         if ($atomic && !rename($target, $path)) { @unlink($target); throw new LocalDataFailure('Unable to replace archive'); }
     }
     private function snapshots(string $tag): array { $saved = $this->readJson('snapshots/' . $tag . '.json'); return $saved['snapshots'] ?? []; }
+
+    private function popularClans(ResponseInterface $res): ResponseInterface
+    {
+        try {
+            $rows = [];
+            foreach (glob($this->file('snapshots/*.json')) ?: [] as $path) {
+                $tag = $this->normalizeTag(pathinfo($path, PATHINFO_FILENAME));
+                if (!$tag) continue;
+                $snapshots = $this->snapshots($tag);
+                if (!$snapshots) continue;
+
+                usort($snapshots, static fn(array $a, array $b): int => strcmp((string)($b['capturedAt'] ?? $b['date'] ?? ''), (string)($a['capturedAt'] ?? $a['date'] ?? '')));
+                $latest = $snapshots[0];
+                $clan = is_array($latest['clan'] ?? null) ? $latest['clan'] : [];
+                $rows[] = [
+                    'tag' => '#' . $tag,
+                    'name' => $clan['name'] ?? ('#' . $tag),
+                    'level' => $clan['level'] ?? null,
+                    'points' => $clan['points'] ?? null,
+                    'members' => $clan['members'] ?? null,
+                    'snapshotCount' => count($snapshots),
+                    'lastCapturedAt' => $latest['capturedAt'] ?? null,
+                ];
+            }
+            usort($rows, static fn(array $a, array $b): int => $b['snapshotCount'] <=> $a['snapshotCount']
+                ?: strcmp((string)($b['lastCapturedAt'] ?? ''), (string)($a['lastCapturedAt'] ?? ''))
+                ?: strcasecmp((string)$a['name'], (string)$b['name']));
+            return $this->respond($res, ['items' => array_slice($rows, 0, 3), 'generatedAt' => gmdate('c')]);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
+
     private function saveSnapshot(string $tag, array $clan): array
     {
         $snapshots = $this->snapshots($tag);

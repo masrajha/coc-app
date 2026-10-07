@@ -275,6 +275,7 @@ async function loadPerformance(player) {
 
 function renderProfile(data) {
   const player = data.player;
+  window.RecentlyOpened?.player({ tag: player.tag, name: player.name, meta: player.townHallLevel ? `TH ${player.townHallLevel}` : '' });
   const playerClanTag = normalizeTag(player.clan?.tag);
   if (!clanTag && playerClanTag) clanTag = playerClanTag;
   if (clanTag) backLink.href = `/?clan=${encodeURIComponent(clanTag)}`;

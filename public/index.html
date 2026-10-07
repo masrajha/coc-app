@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/index.css">
     <link rel="stylesheet" href="/donation.css">
     <script src="/rankings.js" defer></script>
+    <script src="/recent.js" defer></script>
     <script src="/donation.js" defer></script>
 </head>
 <body class="dashboard">
@@ -33,10 +34,12 @@
 
     <main class="max-w-7xl mx-auto px-4 py-4">
         <section id="landingPanel" class="landing-panel" aria-labelledby="landingTitle">
+            <div class="landing-layout">
+                <div class="landing-main">
             <div class="landing-copy">
-                <p class="landing-eyebrow">CLASH OF CLANS · CLAN COMMAND CENTER</p>
-                <h2 id="landingTitle">Semua intel clan dan pemain,<br><span>dalam satu tempat.</span></h2>
-                <p class="landing-description">Cari clan, buka profil pemain, atau bandingkan dua pemain untuk melihat progres, Ranked League, dan performa mereka.</p>
+                <p class="landing-eyebrow">CLAN COMMAND CENTER</p>
+                <h2 id="landingTitle">Pantau clan, war, dan progres pemain.</h2>
+                <p class="landing-description">Masukkan tag clan untuk membuka war aktif, standings CWL, aktivitas anggota, dan performa pemain.</p>
             </div>
 
             <section class="quick-search" aria-label="Pencarian clan dan pemain">
@@ -70,14 +73,20 @@
                 </form>
             </section>
 
-            <section class="feature-overview" aria-label="Fitur website">
-                <p class="feature-intro">CoC Clan Command Center membantu melihat ranking global, memantau clan dan perang, membuka profil pemain, membandingkan progres dan performa, serta memantau Ranked League pemain.</p>
-                <div class="feature-grid">
-                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">⚔</span><div><h3>Clan &amp; War</h3><p>Roster perang, CWL, dan aktivitas anggota.</p></div></article>
-                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">♟</span><div><h3>Player Profile</h3><p>Army, progres akun, dan riwayat performa.</p></div></article>
-                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">🏆</span><div><h3>Ranked League</h3><p>Peringkat grup, sesi liga, dan statistik battle.</p></div></article>
-                    <article class="feature-item"><span class="feature-icon" aria-hidden="true">⇄</span><div><h3>Compare Player</h3><p>Bandingkan progres dan performa dua pemain.</p></div></article>
                 </div>
+                <aside class="landing-sidebar" aria-label="Riwayat dan clan populer">
+            <section class="recent-overview" aria-label="Terakhir dibuka">
+                <div class="recent-panel"><div class="recent-heading"><h3>Clan terakhir dibuka</h3><span>Maks. 5 clan</span></div><ol id="recentClans" class="recent-list"><li class="recent-empty">Belum ada clan yang dibuka di browser ini.</li></ol></div>
+                <div class="recent-panel"><div class="recent-heading"><h3>Pemain terakhir dibuka</h3><span>Maks. 5 pemain</span></div><ol id="recentPlayers" class="recent-list"><li class="recent-empty">Belum ada profil pemain yang dibuka di browser ini.</li></ol></div>
+                <div class="recent-panel"><div class="recent-heading"><h3>Clan populer</h3><span>Arsip snapshot</span></div><ol id="popularClans" class="recent-list"><li class="recent-empty">Memuat clan dari arsip...</li></ol></div>
+            </section>
+                </aside>
+            </div>
+
+            <section class="access-overview" aria-label="Akses cepat">
+                <a href="/player.html" class="access-item"><span class="access-index">01</span><span><strong>Cari pemain</strong><small>Audit akun, Army, dan performa.</small></span><b aria-hidden="true">→</b></a>
+                <a href="/compare.html" class="access-item"><span class="access-index">02</span><span><strong>Bandingkan pemain</strong><small>Lihat selisih progres dan kekuatan akun.</small></span><b aria-hidden="true">→</b></a>
+                <a href="#rankingsPanel" class="access-item"><span class="access-index">03</span><span><strong>Leaderboard</strong><small>Lihat ranking pemain dan clan.</small></span><b aria-hidden="true">→</b></a>
             </section>
         </section>
 
@@ -129,9 +138,12 @@
                         </div>
                         <p id="clanDesc" class="mt-1 line-clamp-2 text-sm text-slate-500"></p>
                     </div>
-                    <div class="text-xs text-slate-500 lg:text-right">
-                        <p id="warUpdated"></p>
-                        <p>Penyegaran otomatis tiap 2 menit</p>
+                    <div class="clan-actions text-xs text-slate-500 lg:text-right">
+                        <div>
+                            <p id="warUpdated"></p>
+                            <p>Penyegaran otomatis tiap 2 menit</p>
+                        </div>
+                        <a id="joinClanLink" class="join-clan-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Buka profil clan di Clash of Clans">Join Clan <span aria-hidden="true">↗</span></a>
                     </div>
                 </div>
             </section>
@@ -184,7 +196,7 @@
                                         <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Peringkat CWL</h3>
                                         <p id="cwlStandingsMeta" class="mt-0.5 text-xs text-slate-500"></p>
                                     </div>
-                                    <span id="cwlStandingsLeague" class="rounded bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-800"></span>
+                                    <span id="cwlStandingsLeague" class="cwl-league-badge" aria-live="polite"></span>
                                 </div>
                                 <div class="max-h-[360px] overflow-auto rounded border border-slate-200">
                                     <table class="w-full text-left text-xs">
@@ -500,7 +512,35 @@
             document.getElementById('cwlStandingsSection').classList.add('hidden');
             document.getElementById('cwlStandingsTable').replaceChildren();
             setText('cwlStandingsMeta', '');
-            setText('cwlStandingsLeague', '');
+            renderCwlLeagueBadge('');
+        }
+
+        const cwlLeagueIcons = {
+            'Bronze League III': '/cwl-bronze-3.png', 'Bronze League II': '/cwl-bronze-2.png', 'Bronze League I': '/cwl-bronze-1.png',
+            'Silver League III': '/cwl-silver-3.png', 'Silver League II': '/cwl-silver-2.png', 'Silver League I': '/cwl-silver-1.png',
+            'Gold League III': '/cwl-gold-3.png', 'Gold League II': '/cwl-gold-2.png', 'Gold League I': '/cwl-gold-1.png',
+            'Crystal League III': '/cwl-crystal-3.png', 'Crystal League II': '/cwl-crystal-2.png', 'Crystal League I': '/cwl-crystal-1.png',
+            'Master League III': '/cwl-master-3.png', 'Master League II': '/cwl-master-2.png', 'Master League I': '/cwl-master-1.png',
+            'Champion League III': '/cwl-champion-3.png', 'Champion League II': '/cwl-champion-2.png', 'Champion League I': '/cwl-champion-1.png',
+            'Titan League III': '/cwl-titan-3.png', 'Titan League II': '/cwl-titan-2.png', 'Titan League I': '/cwl-titan-1.png',
+            'Legend League': '/cwl-legend.png'
+        };
+
+        function renderCwlLeagueBadge(league) {
+            const badge = document.getElementById('cwlStandingsLeague');
+            badge.replaceChildren();
+            if (!league) return;
+            const iconPath = cwlLeagueIcons[league];
+            if (iconPath) {
+                const icon = document.createElement('img');
+                icon.className = 'cwl-league-icon';
+                icon.src = iconPath;
+                icon.alt = '';
+                badge.appendChild(icon);
+            }
+            const label = document.createElement('span');
+            label.textContent = league;
+            badge.appendChild(label);
         }
 
         function renderCwlStandings(data) {
@@ -513,7 +553,7 @@
             }
             const rounds = data.loadedRounds?.length ? `Data R${data.loadedRounds.join(', R')}` : 'Belum ada war yang tersedia';
             setText('cwlStandingsMeta', `${rounds} dari ${data.roundCount || 0} ronde`);
-            setText('cwlStandingsLeague', data.league || 'CWL');
+            renderCwlLeagueBadge(data.league || 'CWL');
             for (const clan of data.standings) {
                 const row = document.createElement('tr');
                 row.className = clan.isCurrentClan ? 'bg-blue-700 font-semibold text-white' : 'hover:bg-slate-50';
@@ -925,7 +965,9 @@
                 document.getElementById('clanLevel').textContent = data.clanLevel;
                 document.getElementById('clanPoints').textContent = data.clanPoints;
                 document.getElementById('clanMembersCount').textContent = data.members;
+                document.getElementById('joinClanLink').href = `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${encodeURIComponent(cleanTag)}`;
                 document.getElementById('comparePlayersLink').href = `/compare.html?clan=${encodeURIComponent(cleanTag)}`;
+                window.RecentlyOpened?.clan({ tag: cleanTag, name: data.name, badgeUrl: data.badgeUrls?.small || data.badgeUrls?.medium || data.badgeUrls?.large, meta: `Level ${data.clanLevel || '-'}` });
 
                 statusMsg.classList.add('hidden');
                 resultDiv.classList.remove('hidden');
@@ -970,6 +1012,87 @@
             const tag = String(value || '').trim().replace(/^#/, '').toUpperCase();
             return /^[0289PYLQGRJCUV]{3,15}$/.test(tag) ? tag : null;
         }
+
+        function renderRecentList(id, type) {
+            const list = document.getElementById(id);
+            const entries = window.RecentlyOpened?.list(type) || [];
+            list.replaceChildren();
+            if (!entries.length) {
+                const empty = document.createElement('li');
+                empty.className = 'recent-empty';
+                empty.textContent = type === 'clan' ? 'Belum ada clan yang dibuka di browser ini.' : 'Belum ada profil pemain yang dibuka di browser ini.';
+                list.appendChild(empty);
+                return;
+            }
+            for (const entry of entries) {
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                link.className = 'recent-item';
+                link.href = type === 'clan' ? `/?clan=${encodeURIComponent(entry.tag)}` : `/player.html?tag=${encodeURIComponent(entry.tag)}`;
+                if (type === 'clan' && entry.badgeUrl) {
+                    const image = document.createElement('img');
+                    image.className = 'recent-avatar'; image.src = entry.badgeUrl; image.alt = '';
+                    link.appendChild(image);
+                } else {
+                    const avatar = document.createElement('span');
+                    avatar.className = 'recent-avatar'; avatar.textContent = type === 'clan' ? 'CL' : 'PL';
+                    link.appendChild(avatar);
+                }
+                const copy = document.createElement('span');
+                copy.className = 'recent-copy';
+                const name = document.createElement('strong'); name.textContent = entry.name || `#${entry.tag}`;
+                const meta = document.createElement('small'); meta.textContent = `#${entry.tag}${entry.meta ? ` · ${entry.meta}` : ''}`;
+                copy.append(name, meta); link.appendChild(copy); item.appendChild(link); list.appendChild(item);
+            }
+        }
+
+        function renderRecent() { renderRecentList('recentClans', 'clan'); renderRecentList('recentPlayers', 'player'); }
+
+        function renderPopularClans(items) {
+            const list = document.getElementById('popularClans');
+            list.replaceChildren();
+            if (!items.length) {
+                const empty = document.createElement('li');
+                empty.className = 'recent-empty';
+                empty.textContent = 'Belum ada snapshot clan yang dapat ditampilkan.';
+                list.appendChild(empty);
+                return;
+            }
+            for (const clan of items) {
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                link.className = 'recent-item';
+                link.href = `/?clan=${encodeURIComponent(String(clan.tag || '').replace(/^#/, ''))}`;
+                const avatar = document.createElement('span');
+                avatar.className = 'recent-avatar'; avatar.textContent = 'CL';
+                const copy = document.createElement('span'); copy.className = 'recent-copy';
+                const name = document.createElement('strong'); name.textContent = clan.name || clan.tag;
+                const meta = document.createElement('small');
+                const count = Number(clan.snapshotCount || 0);
+                const members = Number.isFinite(Number(clan.members)) ? ` · ${clan.members} anggota` : '';
+                meta.textContent = `${count} snapshot${members}`;
+                copy.append(name, meta); link.append(avatar, copy); item.appendChild(link); list.appendChild(item);
+            }
+        }
+
+        async function loadPopularClans() {
+            const list = document.getElementById('popularClans');
+            try {
+                const response = await fetch('/api/clans/popular');
+                if (!response.ok) throw new Error('Tidak dapat membaca arsip snapshot.');
+                const data = await response.json();
+                renderPopularClans(Array.isArray(data.items) ? data.items : []);
+            } catch (error) {
+                list.replaceChildren();
+                const failed = document.createElement('li');
+                failed.className = 'recent-empty';
+                failed.textContent = 'Arsip snapshot belum dapat dimuat.';
+                list.appendChild(failed);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { renderRecent(); loadPopularClans(); });
+        window.addEventListener('coc-recent-updated', renderRecent);
 
         document.querySelectorAll('.quick-search-tab').forEach(tab => {
             tab.addEventListener('click', () => {

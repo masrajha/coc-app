@@ -640,6 +640,7 @@ async function loadProfiles() {
     showStatus(side, `Memuat ${label}...`);
     try {
       const data = await fetchProfile(tag);
+      window.RecentlyOpened?.player({ tag: data.player.tag, name: data.player.name, meta: data.player.townHallLevel ? `TH ${data.player.townHallLevel}` : '' });
       profiles[side] = data;
       renderCard(side, data);
     } catch (error) { showStatus(side, error.message, true); }

@@ -12,6 +12,15 @@ $_ENV['DATA_DIR'] = $dataDir;
 putenv('DATA_DIR=' . $dataDir);
 $warDir = $dataDir . '/wars';
 mkdir($warDir, 0775, true);
+$snapshotDir = $dataDir . '/snapshots';
+mkdir($snapshotDir, 0775, true);
+file_put_contents($snapshotDir . '/2GPP802UU.json', json_encode(['clanTag' => '#2GPP802UU', 'snapshots' => [
+    ['date' => '2026-10-05', 'capturedAt' => '2026-10-05T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50]],
+    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50]],
+]]));
+file_put_contents($snapshotDir . '/9RU089PG.json', json_encode(['clanTag' => '#9RU089PG', 'snapshots' => [
+    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T01:00:00Z', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'level' => 18, 'members' => 42]],
+]]));
 file_put_contents($warDir . '/2GPP802UU.json', json_encode(['clanTag' => '#2GPP802UU', 'wars' => [[
     'id' => 'War:20261001:OTHER1', 'type' => 'War', 'state' => 'warEnded',
     'startTime' => '20261001T000000.000Z', 'endTime' => '20261002T000000.000Z',
@@ -118,6 +127,9 @@ $checks = [
     '/player-league.js' => [200, 'text/javascript'],
     '/donation.css' => [200, 'text/css'],
     '/donation.js' => [200, 'text/javascript'],
+    '/recent.js' => [200, 'text/javascript'],
+    '/cwl-master-1.png' => [200, 'image/png'],
+    '/cwl-legend.png' => [200, 'image/png'],
     '/league-legend.png' => [200, 'image/png'],
     '/league-electro-dragon.png' => [200, 'image/png'],
     '/rankings.js' => [200, 'text/javascript'],
@@ -136,6 +148,7 @@ $checks = [
     '/api/rankings/clans?location=global&limit=25' => [200, 'application/json'],
     '/api/rankings/unknown' => [400, 'application/json'],
     '/api/rankings/players?location=bad%2Fpath' => [400, 'application/json'],
+    '/api/clans/popular' => [200, 'application/json'],
     '/api/clan/2GPP802UU/health' => [200, 'application/json'],
     '/api/clan/2GPP802UU/health.csv' => [200, 'text/csv'],
     '/api/clan/9RU089PG/war?round=2' => [200, 'application/json'],
@@ -161,7 +174,9 @@ try {
         "setAttribute('aria-current', 'true')",
         'cwlStandingsSection',
         'cwl/standings',
-        'Peringkat CWL'
+        'Peringkat CWL',
+        'cwlLeagueIcons',
+        'cwl-master-1.png'
     ] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Navigasi CWL tidak mempertahankan konten atau highlight round terpilih.');
     }
@@ -171,6 +186,9 @@ try {
         foreach (['/donation.css', '/donation.js', 'Dukung pengembangan'] as $marker) {
             if (!str_contains($page, $marker)) throw new RuntimeException('Kontrol donasi belum tersedia di seluruh halaman.');
         }
+    }
+    foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular'] as $marker) {
+        if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
     }
     foreach ([
         [$home, '/index.css', 'public/index.css'],
@@ -222,7 +240,7 @@ try {
     if (!str_contains($leagueStyles, '@media(hover:none)') || !str_contains($leagueStyles, '.league-battle-info{display:inline-grid')) {
         throw new RuntimeException('Ikon popup tidak diaktifkan untuk perangkat layar sentuh.');
     }
-    foreach (['landingPanel', 'homeClanTab', 'homePlayerTab', 'homeCompareTab', 'clanTagInput', 'playerTagInput', 'comparePlayerOne', 'comparePlayerTwo', 'searchButton', 'rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation'] as $marker) {
+    foreach (['landingPanel', 'homeClanTab', 'homePlayerTab', 'homeCompareTab', 'clanTagInput', 'playerTagInput', 'comparePlayerOne', 'comparePlayerTwo', 'searchButton', 'rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation', 'joinClanLink', 'OpenClanProfile', 'Join Clan'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Homepage kehilangan kontrol leaderboard: ' . $marker);
     }
     foreach (["location.href = `/?clan=", "location.href = `/player.html?tag=", "location.href = `/compare.html?"] as $marker) {
@@ -251,6 +269,10 @@ try {
         if (($ranking['items'][0]['name'] ?? null) !== $expectedName || ($ranking['location'] ?? null) !== 'global') {
             throw new RuntimeException('Leaderboard ' . $type . ' tidak dipetakan dengan benar.');
         }
+    }
+    $popularClans = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clans/popular'))->getBody(), true);
+    if (($popularClans['items'][0]['tag'] ?? null) !== '#2GPP802UU' || ($popularClans['items'][0]['snapshotCount'] ?? null) !== 2) {
+        throw new RuntimeException('Clan populer tidak diurutkan berdasarkan jumlah snapshot.');
     }
     $playerRanking = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/rankings/players?location=global&limit=25'))->getBody(), true);
     if (($playerRanking['items'][0]['leagueTier']['name'] ?? null) !== 'Legend I') throw new RuntimeException('League tier API tidak diteruskan pada ranking pemain.');
