@@ -60,6 +60,43 @@
     return left.level > right.level ? { left: 'higher', right: 'lower' } : { left: 'lower', right: 'higher' };
   }
 
+  function itemProgress(item) {
+    const level = Number(item?.level);
+    const maxLevel = Number(item?.progressMaxLevel);
+    return Number.isFinite(level) && Number.isFinite(maxLevel) && maxLevel > 0
+      ? Number((level / maxLevel * 100).toFixed(2)) : null;
+  }
+
+  function numberMarks(left, right) {
+    if (left === null || left === undefined || right === null || right === undefined
+      || !Number.isFinite(Number(left)) || !Number.isFinite(Number(right))) return { left: 'none', right: 'none' };
+    const a = Number(left); const b = Number(right);
+    if (Math.abs(a - b) < .005) return { left: 'equal', right: 'equal' };
+    return a > b ? { left: 'higher', right: 'lower' } : { left: 'lower', right: 'higher' };
+  }
+
+  function itemComparison(left, right, mode = 'actual') {
+    const leftValue = mode === 'progress' ? itemProgress(left) : left?.level;
+    const rightValue = mode === 'progress' ? itemProgress(right) : right?.level;
+    const marks = numberMarks(leftValue, rightValue);
+    return { ...marks, leftValue, rightValue,
+      difference: marks.left === 'none' ? null : Number(Math.abs(Number(leftValue) - Number(rightValue)).toFixed(2)) };
+  }
+
+  function progressCategorySummary(left, right) {
+    const rows = categoryRows(left, right);
+    const counts = { left: 0, right: 0, equal: 0, compared: 0 };
+    for (const row of rows) {
+      const marks = numberMarks(row.left?.percent, row.right?.percent);
+      if (marks.left === 'none') continue;
+      counts.compared++;
+      if (marks.left === 'higher') counts.left++;
+      else if (marks.right === 'higher') counts.right++;
+      else counts.equal++;
+    }
+    return counts;
+  }
+
   function parseWarDate(value) {
     if (!value) return null;
     if (/^\d{8}T\d{6}\.\d{3}Z$/.test(value)) {
@@ -111,11 +148,25 @@
     const attacks = roster.flatMap(row => row[side].attacks || []);
     const stars = attacks.reduce((sum, attack) => sum + (attack.stars || 0), 0);
     const destruction = attacks.reduce((sum, attack) => sum + (attack.destructionPercentage || 0), 0);
-    const missedQuota = roster.reduce((sum, row) => sum + (row.state === 'warEnded'
+    const triples = attacks.filter(attack => Number(attack.stars) === 3).length;
+    const completed = roster.filter(row => (row.state || row[side].state) === 'warEnded');
+    const completedQuota = completed.reduce((sum, row) => sum + (row[side].quota || 0), 0);
+    const completedAttacks = completed.reduce((sum, row) => sum + (row[side].attacks?.length || 0), 0);
+    const destructionAverage = attacks.length ? destruction / attacks.length : null;
+    const variance = attacks.length > 1 ? attacks.reduce((sum, attack) =>
+      sum + Math.pow((attack.destructionPercentage || 0) - destructionAverage, 2), 0) / attacks.length : null;
+    const starDistribution = [0, 1, 2, 3].map(value => attacks.filter(attack => Number(attack.stars) === value).length);
+    const missedQuota = roster.reduce((sum, row) => sum + ((row.state || row[side].state) === 'warEnded'
       ? Math.max(0, (row[side].quota || 0) - (row[side].attacks?.length || 0)) : 0), 0);
     return { wars: roster.length, attacks: attacks.length, stars, missedQuota,
       starsPerAttack: attacks.length ? Number((stars / attacks.length).toFixed(2)) : null,
-      destructionAverage: attacks.length ? Number((destruction / attacks.length).toFixed(2)) : null,
+      destructionAverage: destructionAverage == null ? null : Number(destructionAverage.toFixed(2)),
+      tripleRate: attacks.length ? Number((triples / attacks.length * 100).toFixed(2)) : null,
+      triples, completedQuota, completedAttacks,
+      quotaUsage: completedQuota ? Number((completedAttacks / completedQuota * 100).toFixed(2)) : null,
+      destructionDeviation: variance == null ? null : Number(Math.sqrt(variance).toFixed(2)),
+      starDistribution,
+      sampleQuality: attacks.length >= 10 ? 'baik' : attacks.length >= 5 ? 'cukup' : 'rendah',
       limitedSample: attacks.length < 5 };
   }
 
@@ -124,6 +175,19 @@
     return (left?.trend || []).filter(point => rightByDate.has(point.date))
       .map(point => ({ date: point.date, left: point, right: rightByDate.get(point.date) }))
       .sort((a, b) => a.date.localeCompare(b.date));
+  }
+
+  function filterSnapshots(points, period) {
+    if (period === 'all' || !points.length) return points;
+    const days = Number(period);
+    if (!Number.isFinite(days) || days <= 0) return points;
+    const latest = new Date(`${points.at(-1).date}T00:00:00Z`);
+    if (Number.isNaN(latest.getTime())) return points;
+    const cutoff = new Date(latest.getTime() - (days - 1) * 86400000);
+    return points.filter(point => {
+      const date = new Date(`${point.date}T00:00:00Z`);
+      return !Number.isNaN(date.getTime()) && date >= cutoff;
+    });
   }
 
   function donationChanges(points, side) {
@@ -165,7 +229,8 @@
   }
 
   const api = { sections, categories, comparableProgress, armyRows, categoryRows, levelDifferences,
-    itemLevelMark, parseWarDate, filterWars, combineWars, warStatus, warSummary, sharedSnapshots, donationChanges, resume };
+    itemLevelMark, itemProgress, numberMarks, itemComparison, progressCategorySummary,
+    parseWarDate, filterWars, combineWars, warStatus, warSummary, sharedSnapshots, filterSnapshots, donationChanges, resume };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CompareModel = api;
 })(typeof window !== 'undefined' ? window : globalThis);

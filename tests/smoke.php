@@ -208,15 +208,17 @@ try {
             throw new RuntimeException('URL asset tidak memiliki versi konten yang benar: ' . $assetFile);
         }
     }
-    foreach (['data-tab="league"', 'leagueComparisonGrid', 'Performa liga'] as $marker) {
+    foreach (['href="#army"', 'href="#war-cwl"', 'href="#ranked-league"', 'leagueComparisonGrid', 'Performa liga', 'stickyCompareHeader', 'overviewScore', 'armyMode', 'armyDifferencesOnly', 'armySort', 'headToHeadChart', 'warAdvanced', 'activityPeriod', 'activityMetric', 'copyCompareLink'] as $marker) {
         if (!str_contains($comparePage, $marker)) throw new RuntimeException('Panel perbandingan Ranked League tidak tersedia: ' . $marker);
     }
     $compareScript = (string)$app->handle($factory->createServerRequest('GET', '/compare.js'))->getBody();
-    foreach (['/war-history', 'leagueTier', 'attackWins', 'defenseWins', 'Bintang / serangan', 'Ketiadaan arsip tidak berarti', 'leagueSession${side}', 'leagueResult${side}', 'sameLeagueSeason', 'leagueMetricMark', 'defenseDestruction', 'Level liga berbeda', 'grup yang berbeda'] as $marker) {
+    foreach (['/war-history', 'leagueTier', 'attackWins', 'defenseWins', 'Bintang / serangan', 'Ketiadaan arsip tidak berarti', 'leagueSession${side}', 'leagueResult${side}', 'sameLeagueSeason', 'leagueMetricMark', 'defenseDestruction', 'Level liga berbeda', 'grup yang berbeda', 'renderComparisonOverview', 'renderStickyCompareHeader', 'itemComparison', 'activateCompareTab', "window.addEventListener('hashchange'", 'renderHeadToHead', 'sampleQuality', 'tripleRate', 'copyComparisonLink', 'Rekomendasi konteks'] as $marker) {
         if (!str_contains($compareScript, $marker)) throw new RuntimeException('Perbandingan War/Ranked League tidak lengkap: ' . $marker);
     }
     $compareStyles = (string)$app->handle($factory->createServerRequest('GET', '/compare.css'))->getBody();
-    if (!str_contains($compareStyles, '.league-comparison-grid') || !str_contains($compareStyles, '.war-player-history')) {
+    if (!str_contains($compareStyles, '.league-comparison-grid') || !str_contains($compareStyles, '.war-player-history')
+        || !str_contains($compareStyles, '.head-to-head-chart') || !str_contains($compareStyles, '.war-advanced-grid')
+        || !str_contains($compareStyles, '.resume-section')) {
         throw new RuntimeException('Style panel comparison War/Ranked League tidak tersedia.');
     }
     $playerScript = (string)$app->handle($factory->createServerRequest('GET', '/player.js'))->getBody();
@@ -310,6 +312,9 @@ try {
         throw new RuntimeException('Profil tidak memprioritaskan ikon lokal.');
     }
     if (($profile['player']['clan']['tag'] ?? null) !== '#9RU089PG') throw new RuntimeException('Profil API kehilangan tag clan pemain.');
+    if (($profile['army']['heroes'][0]['progressMaxLevel'] ?? null) !== 1 || ($profile['army']['heroes'][0]['progressMaxSource'] ?? null) !== 'TH 18') {
+        throw new RuntimeException('Profil tidak menyematkan batas level progres sesuai Town Hall pada item Army.');
+    }
     if (($profile['player']['leagueTier']['name'] ?? null) !== 'Legend II' || count($profile['player']['leagueSessions'] ?? []) !== 2) {
         throw new RuntimeException('Sesi grup liga tidak tersedia pada profil.');
     }

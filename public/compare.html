@@ -45,17 +45,29 @@
     </div>
 
     <div id="comparisonContent" hidden>
+      <div id="stickyCompareHeader" class="sticky-compare-header" aria-label="Pemain yang dibandingkan"></div>
+      <section class="comparison-overview" aria-labelledby="overviewTitle">
+        <div><div class="eyebrow">HASIL CEPAT</div><h2 id="overviewTitle">Ringkasan perbandingan</h2><p id="overviewConclusion"></p></div>
+        <div id="overviewScore" class="overview-score"></div>
+      </section>
+      <div class="comparison-legend" aria-label="Keterangan tanda perbandingan">
+        <span><b class="level-mark higher-mark">★</b> Lebih unggul</span>
+        <span><b class="level-mark equal-mark">=</b> Setara</span>
+        <span><b class="level-mark lower-mark">▼</b> Lebih rendah</span>
+        <span><b class="level-mark unavailable-mark">—</b> Tidak dapat dibandingkan</span>
+      </div>
       <div id="compareNotice" class="compare-notice"></div>
       <nav class="tabs compare-tabs" aria-label="Bagian perbandingan">
-        <button type="button" data-tab="progress" aria-selected="true">Progres</button>
-        <button type="button" data-tab="army" aria-selected="false">Army</button>
-        <button type="button" data-tab="war" aria-selected="false">War/CWL</button>
-        <button type="button" data-tab="league" aria-selected="false">Ranked League</button>
-        <button type="button" data-tab="activity" aria-selected="false">Aktivitas</button>
+        <a href="#progress" data-tab="progress" aria-selected="true">Progres</a>
+        <a href="#army" data-tab="army" aria-selected="false">Army</a>
+        <a href="#war-cwl" data-tab="war-cwl" aria-selected="false">War/CWL</a>
+        <a href="#ranked-league" data-tab="ranked-league" aria-selected="false">Ranked League</a>
+        <a href="#activity" data-tab="activity" aria-selected="false">Aktivitas</a>
       </nav>
       <section id="progress" class="panel compare-panel">
         <div class="section-head"><div><div class="eyebrow">PROGRES PASUKAN DAN HERO</div><h2>Skor & kategori</h2></div></div>
         <p class="section-note">Skor hanya mencakup item yang memiliki batas level. Ini bukan persentase maksimal seluruh akun.</p>
+        <div id="headToHeadChart" class="head-to-head-chart"></div>
         <div id="scoreComparison" class="score-comparison"></div>
         <div id="categoryComparison" class="comparison-list"></div>
         <h3>Selisih level terbesar</h3><p class="section-note">Hanya item yang ada pada kedua profil, dengan TH dan batas level API yang sama. Selisih level bukan ukuran kekuatan serangan.</p>
@@ -63,31 +75,37 @@
       </section>
       <section id="army" class="panel compare-panel" hidden>
         <div class="section-head"><div><div class="eyebrow">LEVEL AKTUAL</div><h2>Matriks Army</h2></div><span id="armyCount"></span></div>
-        <p class="section-note">Item disejajarkan berdasarkan kategori dan nama. Penanda ★ menunjukkan level mentah lebih tinggi, = menunjukkan level sama. Pada TH berbeda, penanda tidak menyatakan kekuatan akun.</p>
-        <div class="army-filter"><label for="armyCategory">Kategori</label><select id="armyCategory"><option value="all">Semua kategori</option></select></div>
+        <p id="armyModeNote" class="section-note">Mode level aktual membandingkan angka level secara langsung. Pada TH berbeda, hasil ini bukan ukuran kematangan akun.</p>
+        <div class="army-filter">
+          <label for="armyCategory">Kategori</label><select id="armyCategory"><option value="all">Semua kategori</option></select>
+          <label for="armyMode">Mode</label><select id="armyMode"><option value="actual">Level aktual</option><option value="progress">Progres terhadap batas</option></select>
+          <label for="armySort">Urutan</label><select id="armySort"><option value="name">Nama item</option><option value="difference">Selisih terbesar</option></select>
+          <label class="army-difference-toggle"><input id="armyDifferencesOnly" type="checkbox"> Hanya perbedaan</label>
+        </div>
         <div id="armyComparison" class="army-comparison"></div>
       </section>
-      <section id="war" class="panel compare-panel" hidden>
+      <section id="war-cwl" class="panel compare-panel" hidden>
         <div class="section-head"><div><div class="eyebrow">ARSIP PERANG</div><h2>Performa War/CWL</h2></div><label class="war-period-label" for="warPeriod">Periode <select id="warPeriod"><option value="cwl-current">CWL bulan ini</option><option value="30d">30 hari</option><option value="90d">90 hari</option><option value="all">Semua arsip</option></select></label></div>
         <p id="warNote" class="section-note">Memuat arsip perang…</p>
         <div id="warSummary" class="war-summary-grid"></div>
+        <div id="warAdvanced" class="war-advanced-grid"></div>
         <div id="warCharts" class="war-summary-grid"></div>
       </section>
-      <section id="league" class="panel compare-panel" hidden>
+      <section id="ranked-league" class="panel compare-panel" hidden>
         <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2>Performa liga</h2></div></div>
         <p class="section-note">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
         <div id="leagueComparisonNote" class="league-comparison-note"></div>
         <div id="leagueComparisonGrid" class="league-comparison-grid"></div>
       </section>
       <section id="activity" class="panel compare-panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">SNAPSHOT ANGGOTA</div><h2>Tren aktivitas</h2></div><span id="activityCount"></span></div>
+        <div class="section-head"><div><div class="eyebrow">SNAPSHOT ANGGOTA</div><h2>Tren aktivitas</h2></div><div class="activity-controls"><label for="activityPeriod">Periode <select id="activityPeriod"><option value="7">7 hari</option><option value="30" selected>30 hari</option><option value="all">Semua</option></select></label><label for="activityMetric">Grafik <select id="activityMetric"><option value="trophies">Trofi</option><option value="donations">Donasi</option></select></label><span id="activityCount"></span></div></div>
         <p id="activityNote" class="section-note"></p>
         <div id="activityChart" class="activity-chart"></div>
         <div id="donationTable" class="donation-table"></div>
         <div class="export-actions"><button id="exportCsv" type="button" disabled>Ekspor CSV</button><button id="exportPng" type="button" disabled>Ekspor PNG</button></div>
       </section>
       <section id="comparisonResume" class="panel resume-card" aria-labelledby="resumeTitle">
-        <div class="eyebrow">RINGKASAN</div><h2 id="resumeTitle">Resume perbandingan</h2>
+        <div class="resume-heading"><div><div class="eyebrow">RINGKASAN</div><h2 id="resumeTitle">Resume perbandingan</h2></div><div class="share-actions"><button id="copyCompareLink" type="button">Salin tautan</button><span id="shareStatus" role="status"></span></div></div>
         <div id="resumeText"></div>
       </section>
     </div>

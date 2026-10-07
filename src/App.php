@@ -397,6 +397,7 @@ final class App
     }
     private function profile(array $p, string $updated): array
     {
+        $progress=$this->progress($p);
         $army=['heroes'=>[],'heroEquipment'=>[],'pets'=>[],'troops'=>[],'superTroops'=>[],'builderBase'=>[],'spells'=>[]];
         foreach($p['heroes']??[] as $i)$army[($i['village']??'')==='builderBase'?'builderBase':'heroes'][]=$this->playerItem($i);
         foreach($p['heroEquipment']??[] as $i)$army['heroEquipment'][]=$this->playerItem($i);
@@ -404,13 +405,30 @@ final class App
         $seen=array_column($army['pets'],'name');
         foreach($p['troops']??[] as $i){$item=$this->playerItem($i);if(($i['village']??'')==='builderBase')$army['builderBase'][]=$item;elseif(in_array($i['name']??'',self::PETS,true)){if(!in_array($item['name'],$seen,true))$army['pets'][]=$item;$seen[]=$item['name'];}elseif(in_array($i['name']??'',self::SUPER_TROOPS,true))$army['superTroops'][]=$item;else $army['troops'][]=$item;}
         foreach($p['spells']??[] as $i)$army[($i['village']??'')==='builderBase'?'builderBase':'spells'][]=$this->playerItem($i);
+        $progressSections=['heroes'=>'heroes','pets'=>'pets','troops'=>'troops','spells'=>'spells'];
+        foreach($progressSections as $section=>$category){
+            $limits=[];
+            foreach($progress['score']['categories'][$category]['items']??[] as $scoredItem)$limits[$scoredItem['name']]=(int)$scoredItem['maxLevel'];
+            foreach($army[$section] as &$item)if(isset($limits[$item['name']])){
+                $item['progressMaxLevel']=$limits[$item['name']];
+                $item['progressMaxSource']='TH '.($p['townHallLevel']??'—');
+            }
+            unset($item);
+        }
+        $builderLimits=[];
+        foreach($progress['score']['builderBase']['items']??[] as $scoredItem)$builderLimits[$scoredItem['name']]=(int)$scoredItem['maxLevel'];
+        foreach($army['builderBase'] as &$item)if(isset($builderLimits[$item['name']])){
+            $item['progressMaxLevel']=$builderLimits[$item['name']];
+            $item['progressMaxSource']='BH '.($p['builderHallLevel']??'—');
+        }
+        unset($item);
         foreach($army as $section=>&$items)foreach($items as &$item)$item['iconUrls']=$this->iconCandidates($item['name'],$section);unset($items,$item);
         $fields=['tag','name','townHallLevel','builderHallLevel','expLevel','trophies','bestTrophies','builderBaseTrophies','warStars','donations','donationsReceived','role'];$player=[];foreach($fields as $f)$player[$f]=$p[$f]??null;
         $player['league']=isset($p['league'])?['name'=>$p['league']['name']??null,'iconUrls'=>$p['league']['iconUrls']??null]:null;
         $player['leagueTier']=isset($p['leagueTier'])?['id'=>$p['leagueTier']['id']??null,'name'=>$p['leagueTier']['name']??null]:null;
         $player['leagueSessions']=$this->leagueSessions($p);
         $player['clan']=isset($p['clan'])?['tag'=>$p['clan']['tag']??null,'name'=>$p['clan']['name']??null,'badgeUrls'=>$p['clan']['badgeUrls']??null]:null;
-        return ['player'=>$player,'army'=>$army,'progress'=>$this->progress($p),'lastUpdated'=>$updated];
+        return ['player'=>$player,'army'=>$army,'progress'=>$progress,'lastUpdated'=>$updated];
     }
 
     private function clan(ResponseInterface $res,string $raw):ResponseInterface{$tag=$this->normalizeTag($raw);if(!$tag)return $this->tagError($res,'Tag klan tidak valid.');try{$e=$this->upstream('/clans/'.rawurlencode('#'.$tag));$snapshot=$this->saveSnapshot($tag,$e['data']);$data=$e['data'];$data['snapshotDate']=$snapshot['date'];return $this->respond($res,$data);}catch(\Throwable $e){return $this->failure($res,$e);}}
