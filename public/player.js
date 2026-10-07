@@ -22,6 +22,27 @@ function wikiArticle(name) {
   return `https://clashofclans.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
 }
 
+function renderBaseLevel(id, level, type) {
+  const element = document.getElementById(id);
+  const numericLevel = Number(level);
+  element.replaceChildren();
+  element.classList.add('base-level');
+  if (!Number.isInteger(numericLevel) || numericLevel < 1) {
+    element.textContent = '—';
+    return;
+  }
+  const label = type === 'th' ? 'Town Hall' : 'Builder Hall';
+  const icon = document.createElement('img');
+  icon.src = `/${type}-${numericLevel}.webp`;
+  icon.alt = `${label} level ${numericLevel}`;
+  icon.loading = 'eager';
+  icon.addEventListener('error', () => icon.remove());
+  const number = document.createElement('span');
+  number.className = 'base-level-number';
+  number.textContent = numericLevel;
+  element.append(icon, number);
+}
+
 const VERIFIED_WIKI_ICONS = {
   'Heroes:Royal Champion': 'https://static.wikia.nocookie.net/clashofclans/images/8/8e/Avatar_Hero_Royal_Champion.png/revision/latest/scale-to-width-down/100?cb=20200913051659',
   'Hero Equipment:Barbarian Puppet': 'https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430'
@@ -298,8 +319,8 @@ function renderProfile(data) {
     clanName.textContent = 'Tanpa klan';
   }
   setText('role', player.role || '');
-  setText('townHall', player.townHallLevel);
-  setText('builderHall', player.builderHallLevel);
+  renderBaseLevel('townHall', player.townHallLevel, 'th');
+  renderBaseLevel('builderHall', player.builderHallLevel, 'bh');
   setText('exp', player.expLevel);
   setText('trophies', player.trophies?.toLocaleString('id-ID'));
   setText('warStars', player.warStars?.toLocaleString('id-ID'));

@@ -12,3 +12,4 @@
 @keyframes max-level-flame{from{transform:translateY(2px) scale(.8) rotate(-12deg);opacity:.65}to{transform:translateY(-8px) scale(1.12) rotate(12deg);opacity:1}}
 @keyframes max-level-glow{from{box-shadow:0 0 4px #ffb52b66}to{box-shadow:0 0 10px #ffcf52cc}}
 @media(prefers-reduced-motion:reduce){.level.max-level,.level.max-level::before,.level.max-level::after{animation:none}}
+.stats .base-level{display:flex;align-items:center;gap:8px;min-height:43px;margin-top:3px}.stats .base-level img{width:44px;height:44px;flex:0 0 auto;object-fit:contain;filter:drop-shadow(0 2px 3px #0008)}.stats .base-level-number{color:#edf5ff;font-size:17px;font-variant-numeric:tabular-nums}

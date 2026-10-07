@@ -125,6 +125,11 @@ $checks = [
     '/player.css' => [200, 'text/css'],
     '/player-league.css' => [200, 'text/css'],
     '/player-league.js' => [200, 'text/javascript'],
+    '/th-1.webp' => [200, 'image/webp'],
+    '/th-17.webp' => [200, 'image/webp'],
+    '/th-18.webp' => [200, 'image/webp'],
+    '/bh-1.webp' => [200, 'image/webp'],
+    '/bh-10.webp' => [200, 'image/webp'],
     '/donation.css' => [200, 'text/css'],
     '/donation.js' => [200, 'text/javascript'],
     '/recent.js' => [200, 'text/javascript'],
@@ -216,6 +221,8 @@ try {
     }
     $playerScript = (string)$app->handle($factory->createServerRequest('GET', '/player.js'))->getBody();
     foreach ([
+        'renderBaseLevel',
+        '/${type}-${numericLevel}.webp',
         'if (!clanTag && playerClanTag) clanTag = playerClanTag;',
         'backLink.href = `/?clan=${encodeURIComponent(clanTag)}`',
         'clanLink.href = `/?clan=${encodeURIComponent(playerClanTag)}`'
