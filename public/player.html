@@ -43,6 +43,12 @@
         <div id="updated" class="updated"></div>
       </section>
 
+      <section id="player-overview" class="panel player-overview-panel">
+        <div class="section-head"><div><div class="eyebrow">PLAYER SNAPSHOT</div><h2>Ringkasan akun</h2></div><span id="overviewUpdated"></span></div>
+        <div id="playerOverviewCards" class="player-overview-cards"></div>
+        <div id="playerOverviewActions" class="player-overview-actions"></div>
+      </section>
+
       <section class="stats" aria-label="Ringkasan pemain">
         <div><span>Town Hall</span><strong id="townHall">—</strong></div>
         <div><span>Builder Hall</span><strong id="builderHall">—</strong></div>
@@ -66,15 +72,21 @@
         <div class="section-head"><div><div class="eyebrow">AUDIT AKUN</div><h2>Progres & Rushed Check</h2></div></div>
         <div class="progress-summary"><div><span>Skor pasukan & hero</span><strong id="score">—</strong></div><div><span>Status</span><strong id="rushed">—</strong></div><div><span>Cakupan</span><strong id="coverage">—</strong></div></div>
         <div id="progressNotice" class="notice"></div>
+        <div class="progress-toolbar"><input id="progressSearch" type="search" placeholder="Cari item…"><select id="progressFilter"><option value="all">Semua item</option><option value="behind">Belum maksimal</option><option value="maxed">Maksimal</option><option value="priority">Prioritas upgrade</option></select><select id="progressSort"><option value="gap">Gap terbesar</option><option value="progress">Progres terendah</option><option value="level">Level tertinggi</option><option value="name">Nama</option></select></div>
         <div id="categoryProgress" class="category-progress"></div>
         <ul id="reasons" class="reasons"></ul>
         <h3>Prioritas upgrade</h3><div id="upgradePriorities" class="priority-list"></div>
+        <div id="upgradePlanner" class="upgrade-planner"></div>
+        <div id="progressDistribution" class="progress-distribution"></div>
+        <div id="progressRadar" class="progress-radar"></div>
         <div id="builderProgress" class="notice"></div>
       </section>
       <section id="performance" class="panel" hidden>
         <div class="section-head"><div><div class="eyebrow">ARSIP PERANG</div><h2>Performa War/CWL</h2></div></div>
         <p id="performanceNote" class="section-note">Memuat arsip perang...</p>
         <div id="performanceSummary" class="performance-summary"></div>
+        <div id="performanceQuality" class="performance-quality"></div>
+        <div id="performanceDistribution" class="performance-distribution"></div>
         <div id="performanceChart" class="performance-chart"></div>
         <h3>Riwayat perang</h3><div id="performanceWars" class="war-history"></div>
         <h3>Tren aktivitas</h3><div id="snapshotTrend" class="snapshot-trend"></div>
@@ -82,11 +94,17 @@
       <section id="ranked-battles" class="panel ranked-battles-panel" hidden>
         <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2>Battle Log</h2></div><select id="rankedBattleSession" aria-label="Pilih sesi battle log"></select></div>
         <p id="rankedBattleStatus" class="section-note" role="status">Memuat battle log…</p>
+        <div class="ranked-log-toolbar"><select id="rankedLogFilter"><option value="all">Semua hasil</option><option value="triple">3 bintang</option><option value="low">0–1 bintang</option><option value="highDestruction">Destruksi ≥80%</option></select><select id="rankedLogSort"><option value="latest">Urut terbaru</option><option value="stars">Bintang</option><option value="destruction">Destruksi</option><option value="trophies">Trofi</option></select></div>
         <div id="rankedBattleSummary" class="ranked-battle-summary"></div>
         <div class="ranked-battle-columns">
           <section><div class="ranked-battle-heading"><h3>Attacks</h3><span id="rankedAttackTotal"></span></div><div id="rankedAttackLogs" class="ranked-battle-list"></div></section>
           <section><div class="ranked-battle-heading"><h3>Defenses</h3><span id="rankedDefenseTotal"></span></div><div id="rankedDefenseLogs" class="ranked-battle-list"></div></section>
         </div>
+      </section>
+      <section id="player-resume" class="panel player-resume-panel">
+        <div class="section-head"><div><div class="eyebrow">PROFILE REPORT</div><h2>Resume pemain</h2></div><span id="dataSourceNote"></span></div>
+        <p id="playerResumeText" class="section-note">Resume akan tersedia setelah profil dimuat.</p>
+        <div class="resume-actions"><button id="copyPlayerResume" type="button">Salin resume</button><button id="copyPlayerLink" type="button">Salin tautan</button><button id="exportPlayerCsv" type="button">Export CSV</button></div>
       </section>
       </div>
       <aside class="league-sidebar panel" aria-labelledby="leagueSidebarTitle">

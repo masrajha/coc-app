@@ -250,6 +250,12 @@ try {
     foreach (['data-tab="ranked-battles"', 'rankedBattleSession', 'rankedBattleSummary', 'rankedAttackLogs', 'rankedDefenseLogs'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Tab battle log Ranked League tidak tersedia: ' . $marker);
     }
+    foreach (['player-overview', 'playerOverviewCards', 'progressSearch', 'progressFilter', 'upgradePlanner', 'progressDistribution', 'progressRadar', 'rankedLogFilter', 'rankedLogSort'] as $marker) {
+        if (!str_contains($playerPage, $marker)) throw new RuntimeException('Dashboard player P5-P9 tidak lengkap: ' . $marker);
+    }
+    foreach (['performanceQuality', 'performanceDistribution', 'playerResume', 'playerResumeText', 'dataSourceNote', 'copyPlayerResume', 'copyPlayerLink', 'exportPlayerCsv'] as $marker) {
+        if (!str_contains($playerPage, $marker)) throw new RuntimeException('Statistik dan resume player P10-P14 tidak lengkap: ' . $marker);
+    }
     $leagueScript = (string)$app->handle($factory->createServerRequest('GET', '/player-league.js'))->getBody();
     foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Renderer battle log Ranked League tidak lengkap: ' . $marker);

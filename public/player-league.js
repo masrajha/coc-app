@@ -1,6 +1,6 @@
 (function () {
   const PAGE_SIZE = 25;
-  const state = { playerTag: null, members: [], page: 0, request: 0, logRequest: 0, battleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null };
+  const state = { playerTag: null, members: [], page: 0, request: 0, logRequest: 0, logFilter: 'all', logSort: 'latest', battleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null };
   const clanTag = normalizeTag(new URLSearchParams(location.search).get('clan'));
 
   function normalizeTag(value) {
@@ -286,8 +286,9 @@
     for (const [label, value] of metrics) {
       const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); summary.appendChild(item);
     }
-    const attacks = Array.isArray(data.attack?.logs) ? data.attack.logs : [];
-    const defenses = Array.isArray(data.defense?.logs) ? data.defense.logs : [];
+    const prepare = logs => logs.filter(log => state.logFilter === 'all' || (state.logFilter === 'triple' && Number(log.stars) === 3) || (state.logFilter === 'low' && Number(log.stars) <= 1) || (state.logFilter === 'highDestruction' && Number(log.destructionPercentage) >= 80)).sort((a, b) => state.logSort === 'stars' ? Number(b.stars || 0) - Number(a.stars || 0) : state.logSort === 'destruction' ? Number(b.destructionPercentage || 0) - Number(a.destructionPercentage || 0) : state.logSort === 'trophies' ? Number(b.trophies || 0) - Number(a.trophies || 0) : String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
+    const attacks = prepare(Array.isArray(data.attack?.logs) ? data.attack.logs : []);
+    const defenses = prepare(Array.isArray(data.defense?.logs) ? data.defense.logs : []);
     setText('rankedAttackTotal', `${attacks.length} battle`); setText('rankedDefenseTotal', `${defenses.length} battle`);
     renderBattleLogList('rankedAttackLogs', attacks, 'Belum ada riwayat serangan pada sesi ini.');
     renderBattleLogList('rankedDefenseLogs', defenses, 'Belum ada riwayat pertahanan pada sesi ini.');
@@ -407,6 +408,8 @@
     loadPlayerBattleLog(event.target.value);
   });
   element('rankedBattleSession').addEventListener('change', event => loadPlayerBattleLog(event.target.value));
+  element('rankedLogFilter').addEventListener('change', event => { state.logFilter = event.target.value; loadPlayerBattleLog(element('rankedBattleSession').value); });
+  element('rankedLogSort').addEventListener('change', event => { state.logSort = event.target.value; loadPlayerBattleLog(element('rankedBattleSession').value); });
   element('leaguePrev').addEventListener('click', () => {
     if (state.page > 0) { state.page--; renderPage(); }
   });

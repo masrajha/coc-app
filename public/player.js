@@ -6,6 +6,10 @@ const SECTION_ORDER = [
 const SECTION_KEY_BY_TITLE = Object.fromEntries(SECTION_ORDER.map(([key, title]) => [title, key]));
 const params = new URLSearchParams(location.search);
 let clanTag = normalizeTag(params.get('clan'));
+let currentProgress = null;
+let currentArmy = null;
+let currentProfileData = null;
+let currentPerformanceData = null;
 const backLink = document.getElementById('backLink');
 if (clanTag) backLink.href = `/?clan=${encodeURIComponent(clanTag)}`;
 
@@ -191,6 +195,7 @@ function renderArmy(army) {
 }
 
 function renderProgress(progress) {
+  currentProgress = progress;
   const exact = progress.tableExactMatch;
   setText('score', progress.score.overall !== null ? `${progress.score.overall.toLocaleString('id-ID')}%${progress.complete ? '' : ' (parsial)'}` : 'Belum tersedia');
   setText('rushed', progress.rushed.label);
@@ -229,9 +234,59 @@ function renderProgress(progress) {
   if (!progress.priorities?.length) priorities.textContent = 'Belum ada prioritas yang dapat dihitung.';
   const builder = progress.score.builderBase;
   setText('builderProgress', `Builder Base: ${builder.percent === null ? 'belum dapat dihitung' : `${builder.percent.toLocaleString('id-ID')}%`} · ${builder.knownItems} item dengan batas level API.`);
+  renderProgressTools(progress);
+}
+
+function progressItems(progress) {
+  const items = [];
+  for (const [category, value] of Object.entries(progress.score.categories || {})) {
+    for (const item of value.items || []) items.push({ ...item, category });
+  }
+  for (const item of progress.score.builderBase?.items || []) items.push({ ...item, category: 'builderBase' });
+  return items;
+}
+
+function renderProgressTools(progress) {
+  const items = progressItems(progress);
+  const search = (document.getElementById('progressSearch')?.value || '').trim().toLocaleLowerCase('id-ID');
+  const filter = document.getElementById('progressFilter')?.value || 'all';
+  const sort = document.getElementById('progressSort')?.value || 'gap';
+  const visible = items.filter(item => {
+    const gap = Math.max(0, Number(item.maxLevel || 0) - Number(item.level || 0));
+    const match = !search || String(item.name || '').toLocaleLowerCase('id-ID').includes(search);
+    return match && (filter === 'all' || (filter === 'behind' && gap > 0) || (filter === 'maxed' && gap === 0) || (filter === 'priority' && gap >= 3));
+  }).sort((a, b) => {
+    if (sort === 'name') return String(a.name).localeCompare(String(b.name));
+    if (sort === 'level') return Number(b.level || 0) - Number(a.level || 0);
+    if (sort === 'progress') return (Number(a.level || 0) / Math.max(1, Number(a.maxLevel || 1))) - (Number(b.level || 0) / Math.max(1, Number(b.maxLevel || 1)));
+    return (Number(b.maxLevel || 0) - Number(b.level || 0)) - (Number(a.maxLevel || 0) - Number(a.level || 0));
+  });
+  const planner = document.getElementById('upgradePlanner'); planner.replaceChildren();
+  const heading = document.createElement('h3'); heading.textContent = `Upgrade planner · ${visible.length} item`; planner.appendChild(heading);
+  visible.slice(0, 8).forEach(item => {
+    const gap = Math.max(0, Number(item.maxLevel || 0) - Number(item.level || 0));
+    const row = document.createElement('div'); row.className = 'planner-row';
+    row.textContent = `${item.name} · ${item.level}/${item.maxLevel} · gap ${gap} · ${gap >= 3 ? 'prioritas tinggi' : 'prioritas rutin'}`; planner.appendChild(row);
+  });
+  const distribution = document.getElementById('progressDistribution'); distribution.replaceChildren();
+  const groups = [['Maksimal', items.filter(i => Number(i.level) >= Number(i.maxLevel) && Number(i.maxLevel) > 0).length], ['Mendekati', items.filter(i => Number(i.maxLevel) - Number(i.level) > 0 && Number(i.maxLevel) - Number(i.level) <= 2).length], ['Tertinggal', items.filter(i => Number(i.maxLevel) - Number(i.level) >= 3).length]];
+  groups.forEach(([label, count]) => { const el = document.createElement('span'); el.textContent = `${label}: ${count}`; distribution.appendChild(el); });
+  const radar = document.getElementById('progressRadar'); radar.replaceChildren();
+  Object.entries(progress.score.categories || {}).forEach(([key, value]) => { const row = document.createElement('div'); row.className = 'progress-radar-row'; row.innerHTML = `<span>${key}</span><i style="width:${Math.min(100, Number(value.percent || 0))}%"></i><b>${value.percent ?? '—'}%</b>`; radar.appendChild(row); });
+}
+
+function renderPlayerOverview(player, progress, updated) {
+  const root = document.getElementById('playerOverviewCards'); root.replaceChildren();
+  const cards = [['Status', progress.rushed.label], ['Skor progres', progress.score.overall === null ? '—' : `${progress.score.overall}%`], ['Cakupan', `${Object.values(progress.score.categories || {}).reduce((n, v) => n + Number(v.knownItems || 0), 0)} item`], ['Trofi', Number(player.trophies || 0).toLocaleString('id-ID')]];
+  cards.forEach(([label, value]) => { const card = document.createElement('div'); card.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); root.appendChild(card); });
+  setText('overviewUpdated', updated ? `Update ${new Date(updated).toLocaleString('id-ID')}` : '');
+  const actions = document.getElementById('playerOverviewActions'); actions.replaceChildren();
+  const compare = document.createElement('a'); compare.href = document.getElementById('compareLink').href; compare.textContent = 'Bandingkan pemain'; actions.appendChild(compare);
+  if (player.clan?.tag) { const clan = document.createElement('a'); clan.href = `/?clan=${encodeURIComponent(normalizeTag(player.clan.tag))}`; clan.textContent = 'Buka clan'; actions.appendChild(clan); }
 }
 
 function renderPerformance(data) {
+  currentPerformanceData = data;
   setText('performanceNote', data.note);
   const summary = document.getElementById('performanceSummary');
   summary.replaceChildren();
@@ -241,6 +296,12 @@ function renderPerformance(data) {
     const strong = document.createElement('strong'); strong.textContent = value;
     box.append(small, strong); summary.appendChild(box);
   }
+  const quality = document.getElementById('performanceQuality'); quality.replaceChildren();
+  const sample = Number(data.summary.attacks || 0); quality.textContent = `Kualitas sampel: ${sample >= 15 ? 'Kuat' : sample >= 5 ? 'Cukup' : 'Rendah'} · ${sample} serangan tersimpan`;
+  const distribution = document.getElementById('performanceDistribution'); distribution.replaceChildren();
+  const attacks = data.wars.flatMap(war => war.attacks || []);
+  [['0★', 0], ['1★', 1], ['2★', 2], ['3★', 3]].forEach(([label, stars]) => { const item = document.createElement('span'); item.textContent = `${label}: ${attacks.filter(attack => Number(attack.stars) === stars).length}`; distribution.appendChild(item); });
+  const mode = document.createElement('span'); mode.textContent = `CWL ${data.wars.filter(war => war.type === 'CWL').length} · Klasik ${data.wars.filter(war => war.type !== 'CWL').length}`; distribution.appendChild(mode);
   const chart = document.getElementById('performanceChart');
   chart.replaceChildren();
   const wars = document.getElementById('performanceWars');
@@ -273,6 +334,14 @@ function renderPerformance(data) {
   }
 }
 
+function renderPlayerResume(player, progress) {
+  const score = progress.score.overall === null ? 'belum dapat dihitung' : `${progress.score.overall}%`;
+  const summary = currentPerformanceData?.summary;
+  const warText = summary?.attacks ? ` Dari ${summary.attacks} serangan tersimpan, rata-rata ${summary.starsPerAttack ?? '—'} bintang per serangan.` : ' Riwayat serangan belum cukup untuk statistik perang.';
+  setText('playerResumeText', `${player.name} adalah pemain TH ${player.townHallLevel || '—'} dengan progres akun ${score}. Status rushed: ${progress.rushed.label}.${warText}`);
+  setText('dataSourceNote', 'Profil API · tabel batas lokal · arsip perang lokal');
+}
+
 async function loadPerformance(player) {
   const tag = normalizeTag(clanTag || player.clan?.tag);
   if (!tag) { setText('performanceNote', 'Tag klan tidak tersedia untuk membaca arsip perang.'); return; }
@@ -291,11 +360,13 @@ async function loadPerformance(player) {
       }
     }
     renderPerformance(data);
+    if (currentProfileData) renderPlayerResume(currentProfileData.player, currentProfileData.progress);
   } catch (error) { setText('performanceNote', error.message); }
 }
 
 function renderProfile(data) {
   const player = data.player;
+  currentProfileData = data;
   window.RecentlyOpened?.player({ tag: player.tag, name: player.name, meta: player.townHallLevel ? `TH ${player.townHallLevel}` : '' });
   const playerClanTag = normalizeTag(player.clan?.tag);
   if (!clanTag && playerClanTag) clanTag = playerClanTag;
@@ -332,6 +403,9 @@ function renderProfile(data) {
   if (badgeUrl) badge.src = badgeUrl;
   renderArmy(data.army);
   renderProgress(data.progress);
+  currentArmy = data.army;
+  renderPlayerOverview(player, data.progress, data.lastUpdated);
+  renderPlayerResume(player, data.progress);
   PlayerLeague.initialize(player);
   loadPerformance(player);
   document.getElementById('profile').hidden = false;
@@ -372,5 +446,12 @@ document.getElementById('itemDialog').addEventListener('click', event => {
 document.querySelectorAll('.tabs button').forEach(button => button.addEventListener('click', () => {
   for (const tab of document.querySelectorAll('.tabs button')) tab.setAttribute('aria-selected', String(tab === button));
   for (const section of ['army', 'progress', 'performance', 'ranked-battles']) document.getElementById(section).hidden = section !== button.dataset.tab;
+  history.replaceState(null, '', `#${button.dataset.tab}`);
 }));
+['progressSearch', 'progressFilter', 'progressSort'].forEach(id => document.getElementById(id)?.addEventListener(id === 'progressSearch' ? 'input' : 'change', () => currentProgress && renderProgressTools(currentProgress)));
+document.getElementById('copyPlayerResume').addEventListener('click', async () => { try { await navigator.clipboard.writeText(document.getElementById('playerResumeText').textContent); setText('copyPlayerResume', 'Tersalin'); } catch {} });
+document.getElementById('copyPlayerLink').addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); setText('copyPlayerLink', 'Tersalin'); } catch {} });
+document.getElementById('exportPlayerCsv').addEventListener('click', () => { const p = currentProfileData?.player; if (!p) return; const csv = `\uFEFFfield,value\r\nname,"${String(p.name || '').replaceAll('"', '""')}"\r\ntag,"${p.tag || ''}"\r\ntownHall,${p.townHallLevel || ''}\r\ntrophies,${p.trophies || ''}\r\nwarStars,${p.warStars || ''}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); const link = document.createElement('a'); link.href = url; link.download = `player-${normalizeTag(p.tag)}.csv`; link.click(); URL.revokeObjectURL(url); });
+const tabFromHash = location.hash.replace('#', '');
+if (tabFromHash && document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`)) document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`).click();
 if (params.has('tag')) loadProfile(params.get('tag'));
