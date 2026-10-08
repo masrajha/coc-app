@@ -195,7 +195,7 @@
       const next = new URLSearchParams({ tag: normalizeTag(member.tag) || '' });
       const context = normalizeTag(member.clanTag) || clanTag;
       if (context) next.set('clan', context);
-      link.href = `/player.html?${next}`;
+      link.href = `/player.html?${next}#ranked-battles`;
       if (isCurrent) link.setAttribute('aria-current', 'page');
       const clan = document.createElement('small');
       clan.textContent = member.clanName || 'Tanpa klan';
