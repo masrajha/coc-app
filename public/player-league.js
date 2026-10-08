@@ -253,7 +253,8 @@
       const empty = document.createElement('p'); empty.className = 'ranked-battle-empty'; empty.textContent = emptyMessage; list.appendChild(empty); return;
     }
     logs.forEach((log, index) => {
-      const card = document.createElement('article'); card.className = 'ranked-battle-card';
+      const side = id === 'rankedAttackLogs' ? 'attack' : 'defense';
+      const card = document.createElement('article'); card.className = `ranked-battle-card ranked-${side}${Number(log.stars) === 3 ? ' ranked-triple' : ''}`;
       const top = document.createElement('div'); top.className = 'ranked-battle-card-top';
       const number = document.createElement('span'); number.textContent = `#${index + 1}`;
       const trophies = document.createElement('strong'); trophies.textContent = log.trophies === null || log.trophies === undefined ? 'Trofi —' : `${Number(log.trophies) >= 0 ? '+' : ''}${Number(log.trophies).toLocaleString('id-ID')} trofi`;
