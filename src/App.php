@@ -72,6 +72,7 @@ final class App
         $app->get('/api/player/{tag}/league-group', fn($req, $res, $args) => $self->playerLeagueGroup($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html'));
+        $app->get('/clan.html', fn($req, $res) => $self->staticFile($res, 'index.html'));
         $app->get('/{path:.*}', fn($req, $res, $args) => $self->staticFile($res, $args['path'] ?? ''));
         return $app;
     }

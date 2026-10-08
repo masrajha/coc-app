@@ -10,6 +10,7 @@
 
   function element(id) { return document.getElementById(id); }
   function setText(id, value) { element(id).textContent = value; }
+  function setLoading(id, message) { const target = element(id); target.replaceChildren(); const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); target.append(spinner, document.createTextNode(message)); target.classList.add('loading-state'); }
   const leagueIcons = [
     ['legend', 'legend'], ['electro', 'electro-dragon'], ['titan', 'electro-titan'],
     ['dragon', 'dragon'], ['pekka', 'pekka'], ['p.e.k.k.a', 'pekka'],
@@ -310,7 +311,7 @@
 
   async function loadPlayerBattleLog(sessionId) {
     const request = ++state.logRequest;
-    const status = element('rankedBattleStatus'); status.hidden = false; status.textContent = 'Memuat battle log…';
+    const status = element('rankedBattleStatus'); status.hidden = false; setLoading('rankedBattleStatus', 'Memuat battle log…');
     try {
       const response = await fetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=battle&memberTag=${encodeURIComponent(state.playerTag)}`);
       const data = await response.json();
@@ -332,7 +333,7 @@
     const request = ++state.request;
     const status = element('leagueStatus');
     status.hidden = false;
-    status.textContent = 'Memuat peringkat grup...';
+    setLoading('leagueStatus', 'Memuat peringkat grup…');
     state.members = [];
     state.page = 0;
     renderPage();

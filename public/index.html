@@ -25,8 +25,8 @@
                     </a>
                 </div>
                 <div class="home-header-links">
-                    <a href="/player.html">Cari pemain</a>
-                    <a id="comparePlayersLink" href="/compare.html">Bandingkan</a>
+                    <a href="/#player" data-home-tab-link="player">Cari pemain</a>
+                    <a id="comparePlayersLink" href="/#compare" data-home-tab-link="compare">Bandingkan</a>
                 </div>
             </div>
         </div>
@@ -73,6 +73,23 @@
                 </form>
             </section>
 
+            <section class="landing-quick-access" aria-label="Akses cepat">
+                <div class="quick-access-heading"><span class="landing-eyebrow">QUICK ACCESS</span><span id="landingLastActivity">Siap digunakan</span></div>
+                <div class="quick-access-grid">
+                    <a id="quickRecentClan" href="/clan.html" class="quick-access-card"><span class="quick-access-icon">CL</span><span><strong>Clan terakhir</strong><small id="quickRecentClanText">Buka clan yang terakhir dilihat</small></span><b>→</b></a>
+                    <a id="quickRecentPlayer" href="/player.html" class="quick-access-card"><span class="quick-access-icon">PL</span><span><strong>Player terakhir</strong><small id="quickRecentPlayerText">Buka profil yang terakhir dilihat</small></span><b>→</b></a>
+                    <a href="/#compare" data-home-tab-link="compare" class="quick-access-card"><span class="quick-access-icon">VS</span><span><strong>Bandingkan player</strong><small>Progres, Army, War/CWL</small></span><b>→</b></a>
+                </div>
+            </section>
+            <section class="landing-features" aria-label="Fitur utama">
+                <div class="landing-feature-card"><span>01</span><strong>War Command Center</strong><p>Roster, serangan tersisa, CWL standings, dan target cleanup.</p><a href="/#clan" data-home-tab-link="clan">Buka dashboard →</a></div>
+                <div class="landing-feature-card"><span>02</span><strong>Player Progress</strong><p>Audit Army, rushed check, upgrade planner, dan battle log.</p><a href="/#player" data-home-tab-link="player">Cari player →</a></div>
+                <div class="landing-feature-card"><span>03</span><strong>Ranked League</strong><p>Riwayat serangan, pertahanan, bintang, dan destruksi.</p><a href="/player.html#ranked-battles">Lihat battle log →</a></div>
+            </section>
+            <section class="landing-stats" aria-label="Statistik akses">
+                <div><span>Clan tersimpan</span><strong id="landingClanCount">0</strong></div><div><span>Player tersimpan</span><strong id="landingPlayerCount">0</strong></div><div><span>Clan populer</span><strong id="landingPopularCount">0</strong></div><div><span>Mode tersedia</span><strong>3</strong></div>
+            </section>
+
                 </div>
                 <aside class="landing-sidebar" aria-label="Riwayat dan clan populer">
             <section class="recent-overview" aria-label="Terakhir dibuka">
@@ -84,8 +101,8 @@
             </div>
 
             <section class="access-overview" aria-label="Akses cepat">
-                <a href="/player.html" class="access-item"><span class="access-index">01</span><span><strong>Cari pemain</strong><small>Audit akun, Army, dan performa.</small></span><b aria-hidden="true">→</b></a>
-                <a href="/compare.html" class="access-item"><span class="access-index">02</span><span><strong>Bandingkan pemain</strong><small>Lihat selisih progres dan kekuatan akun.</small></span><b aria-hidden="true">→</b></a>
+                <a href="/#player" data-home-tab-link="player" class="access-item"><span class="access-index">01</span><span><strong>Cari pemain</strong><small>Audit akun, Army, dan performa.</small></span><b aria-hidden="true">→</b></a>
+                <a href="/#compare" data-home-tab-link="compare" class="access-item"><span class="access-index">02</span><span><strong>Bandingkan pemain</strong><small>Lihat selisih progres dan kekuatan akun.</small></span><b aria-hidden="true">→</b></a>
                 <a href="#rankingsPanel" class="access-item"><span class="access-index">03</span><span><strong>Leaderboard</strong><small>Lihat ranking pemain dan clan.</small></span><b aria-hidden="true">→</b></a>
             </section>
         </section>
@@ -123,7 +140,7 @@
             <p class="ranking-footnote">Data ranking diambil dari API Clash of Clans dan dapat berubah. Peringkat War/CWL tidak termasuk di leaderboard ini.</p>
         </section>
 
-        <div id="statusMessage" class="hidden rounded border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600">Loading...</div>
+        <div id="statusMessage" class="hidden loading-state" role="status"><span class="loading-spinner" aria-hidden="true"></span><span>Memuat data klan…</span></div>
 
         <div id="clanResult" class="hidden space-y-4">
             <section class="rounded border border-slate-200 bg-white px-4 py-3">
@@ -178,7 +195,7 @@
                     </div>
                 </div>
 
-                <p id="warStatus" class="px-4 py-4 text-sm text-slate-600" role="status">Memuat data perang...</p>
+                <p id="warStatus" class="loading-state px-4 py-4 text-sm" role="status"><span class="loading-spinner" aria-hidden="true"></span><span>Memuat data perang…</span></p>
 
                 <div id="warContent" class="hidden">
                     <div id="warCommandStrip" class="war-command-strip">
@@ -599,7 +616,11 @@
         }
 
         function showWarStatus(message, preserveContent = false) {
-            setText('warStatus', message);
+            const status = document.getElementById('warStatus');
+            status.replaceChildren();
+            status.classList.toggle('loading-state', /^Memuat/i.test(message));
+            if (/^Memuat/i.test(message)) { const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); status.appendChild(spinner); }
+            status.appendChild(document.createTextNode(message));
             document.getElementById('warStatus').classList.remove('hidden');
             if (!preserveContent) document.getElementById('warContent').classList.add('hidden');
         }
@@ -1325,7 +1346,7 @@
             document.getElementById('searchButton').disabled = true;
 
             resultDiv.classList.add('hidden');
-            statusMsg.textContent = 'Mencari data klan...';
+            statusMsg.replaceChildren(); statusMsg.classList.add('loading-state'); const statusSpinner = document.createElement('span'); statusSpinner.className = 'loading-spinner'; statusSpinner.setAttribute('aria-hidden', 'true'); statusMsg.append(statusSpinner, document.createTextNode('Mencari data klan…'));
             statusMsg.classList.remove('hidden');
 
             try {
@@ -1342,7 +1363,7 @@
                 document.getElementById('clanPoints').textContent = data.clanPoints;
                 document.getElementById('clanMembersCount').textContent = data.members;
                 document.getElementById('joinClanLink').href = `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${encodeURIComponent(cleanTag)}`;
-                document.getElementById('comparePlayersLink').href = `/compare.html?clan=${encodeURIComponent(cleanTag)}`;
+                document.getElementById('comparePlayersLink').href = '/#compare';
                 renderClanOverview(data);
                 window.RecentlyOpened?.clan({ tag: cleanTag, name: data.name, badgeUrl: data.badgeUrls?.small || data.badgeUrls?.medium || data.badgeUrls?.large, meta: `Level ${data.clanLevel || '-'}` });
 
@@ -1483,7 +1504,7 @@
                 const item = document.createElement('li');
                 const link = document.createElement('a');
                 link.className = 'recent-item';
-                link.href = type === 'clan' ? `/?clan=${encodeURIComponent(entry.tag)}` : `/player.html?tag=${encodeURIComponent(entry.tag)}`;
+                link.href = type === 'clan' ? `/clan.html?tag=${encodeURIComponent(entry.tag)}` : `/player.html?tag=${encodeURIComponent(entry.tag)}`;
                 if (type === 'clan' && entry.badgeUrl) {
                     const image = document.createElement('img');
                     image.className = 'recent-avatar'; image.src = entry.badgeUrl; image.alt = '';
@@ -1501,10 +1522,19 @@
             }
         }
 
-        function renderRecent() { renderRecentList('recentClans', 'clan'); renderRecentList('recentPlayers', 'player'); }
+        function renderRecent() {
+            renderRecentList('recentClans', 'clan'); renderRecentList('recentPlayers', 'player');
+            const clans = window.RecentlyOpened?.list('clan') || []; const players = window.RecentlyOpened?.list('player') || [];
+            setText('landingClanCount', clans.length); setText('landingPlayerCount', players.length);
+            const latestClan = clans[0]; const latestPlayer = players[0];
+            const clanLink = document.getElementById('quickRecentClan'); const playerLink = document.getElementById('quickRecentPlayer'); clanLink.href = '/clan.html';
+            if (latestClan) { clanLink.href = `/clan.html?tag=${encodeURIComponent(latestClan.tag)}`; setText('quickRecentClanText', latestClan.name || `#${latestClan.tag}`); setText('landingLastActivity', `Terakhir: ${latestClan.name || latestClan.tag}`); }
+            if (latestPlayer) { playerLink.href = `/player.html?tag=${encodeURIComponent(latestPlayer.tag)}`; setText('quickRecentPlayerText', latestPlayer.name || `#${latestPlayer.tag}`); }
+        }
 
         function renderPopularClans(items) {
             const list = document.getElementById('popularClans');
+            setText('landingPopularCount', items.length);
             list.replaceChildren();
             if (!items.length) {
                 const empty = document.createElement('li');
@@ -1517,7 +1547,7 @@
                 const item = document.createElement('li');
                 const link = document.createElement('a');
                 link.className = 'recent-item';
-                link.href = `/?clan=${encodeURIComponent(String(clan.tag || '').replace(/^#/, ''))}`;
+                link.href = `/clan.html?tag=${encodeURIComponent(String(clan.tag || '').replace(/^#/, ''))}`;
                 const avatar = document.createElement('span');
                 avatar.className = 'recent-avatar'; avatar.textContent = 'CL';
                 const copy = document.createElement('span'); copy.className = 'recent-copy';
@@ -1559,14 +1589,40 @@
                 document.querySelectorAll('.quick-search-form').forEach(form => {
                     form.hidden = form.id !== tab.getAttribute('aria-controls');
                 });
+                const fieldByMode = { clan: 'clanTagInput', player: 'playerTagInput', compare: 'comparePlayerOne' };
+                const field = document.getElementById(fieldByMode[tab.dataset.homeMode]);
+                if (field) window.setTimeout(() => field.focus(), 0);
             });
         });
+
+        function activateHomeTab(mode) {
+            const tab = document.querySelector(`.quick-search-tab[data-home-mode="${mode}"]`);
+            if (!tab) return;
+            tab.click();
+            const fieldByMode = { clan: 'clanTagInput', player: 'playerTagInput', compare: 'comparePlayerOne' };
+            const field = document.getElementById(fieldByMode[mode]);
+            if (field) window.setTimeout(() => field.focus(), 0);
+        }
+
+        document.querySelectorAll('[data-home-tab-link]').forEach(link => {
+            link.addEventListener('click', event => {
+                if (location.pathname !== '/' && location.pathname !== '/index.html') return;
+                const mode = link.dataset.homeTabLink;
+                if (!mode) return;
+                event.preventDefault();
+                history.replaceState(null, '', `/#${mode}`);
+                activateHomeTab(mode);
+            });
+        });
+
+        const initialHomeTab = location.hash.slice(1).toLowerCase();
+        if (['clan', 'player', 'compare'].includes(initialHomeTab)) activateHomeTab(initialHomeTab);
 
         document.getElementById('homeClanPanel').addEventListener('submit', event => {
             event.preventDefault();
             const tag = normalizeHomeTag(document.getElementById('clanTagInput').value);
             if (!tag) return alert('Masukkan Clan Tag yang valid.');
-            location.href = `/?clan=${encodeURIComponent(tag)}`;
+            location.href = `/clan.html?tag=${encodeURIComponent(tag)}`;
         });
 
         document.getElementById('homePlayerPanel').addEventListener('submit', event => {
@@ -1585,7 +1641,8 @@
             location.href = `/compare.html?${query}`;
         });
 
-        const initialClan = new URLSearchParams(location.search).get('clan');
+        const pageParams = new URLSearchParams(location.search);
+        const initialClan = pageParams.get('tag') || pageParams.get('clan');
         if (initialClan) {
             document.getElementById('landingPanel').hidden = true;
             document.getElementById('rankingsPanel').hidden = true;

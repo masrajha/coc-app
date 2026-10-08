@@ -21,6 +21,7 @@ function normalizeTag(value) {
 function setText(id, value) {
   document.getElementById(id).textContent = value ?? '—';
 }
+function setLoading(id, message) { const el = document.getElementById(id); el.replaceChildren(); const spin = document.createElement('span'); spin.className = 'loading-spinner'; spin.setAttribute('aria-hidden', 'true'); const text = document.createElement('span'); text.textContent = message; el.append(spin, text); el.classList.add('loading-state'); }
 
 function wikiArticle(name) {
   return `https://clashofclans.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
@@ -422,7 +423,7 @@ async function loadProfile(rawTag) {
   document.getElementById('playerTag').value = tag;
   document.getElementById('profile').hidden = true;
   status.hidden = false;
-  status.textContent = 'Memuat profil pemain...';
+  setLoading('status', 'Memuat profil pemain…');
   try {
     const response = await fetch(`/api/player/${encodeURIComponent(tag)}/profile`);
     const data = await response.json();

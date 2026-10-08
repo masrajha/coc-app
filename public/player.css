@@ -1358,3 +1358,4 @@ dialog::backdrop {
         flex-wrap: wrap
     }
 }
+\n+.loading-state{display:flex;align-items:center;gap:9px}.loading-spinner{display:inline-block;width:16px;height:16px;flex:0 0 16px;border:2px solid #40546b;border-top-color:#76a8ff;border-radius:50%;animation:loading-spin .8s linear infinite}@keyframes loading-spin{to{transform:rotate(360deg)}}.loading-skeleton{height:12px;border-radius:5px;background:linear-gradient(90deg,#1b2938 25%,#2a3b4f 50%,#1b2938 75%);background-size:200% 100%;animation:loading-shimmer 1.3s ease-in-out infinite}@keyframes loading-shimmer{to{background-position:-200% 0}}

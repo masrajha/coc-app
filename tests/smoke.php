@@ -120,6 +120,7 @@ $seedApiCache('/leaguegroup/%238U89LYJ/1790571600?playerTag=%232R92VJG0U', ['mem
 
 $checks = [
     '/' => [200, 'text/html'],
+    '/clan.html' => [200, 'text/html'],
     '/player.html' => [200, 'text/html'],
     '/compare.html' => [200, 'text/html'],
     '/player.css' => [200, 'text/css'],
@@ -277,7 +278,7 @@ try {
     foreach (['landingPanel', 'homeClanTab', 'homePlayerTab', 'homeCompareTab', 'clanTagInput', 'playerTagInput', 'comparePlayerOne', 'comparePlayerTwo', 'searchButton', 'rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation', 'joinClanLink', 'OpenClanProfile', 'Join Clan'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Homepage kehilangan kontrol leaderboard: ' . $marker);
     }
-    foreach (["location.href = `/?clan=", "location.href = `/player.html?tag=", "location.href = `/compare.html?"] as $marker) {
+    foreach (["location.href = `/clan.html?tag=", "location.href = `/player.html?tag=", "location.href = `/compare.html?"] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Form pencarian home tidak mengarah ke halaman tujuan yang tersedia.');
     }
     if (!str_contains($home, 'href="/" class="home-brand"') || !str_contains($home, 'aria-label="Kembali ke home"')) {
@@ -290,8 +291,10 @@ try {
     if (str_contains($rankingScript, 'townhall-cell') || str_contains($rankingScript, "'Town Hall'")) {
         throw new RuntimeException('Kolom Town Hall seharusnya tidak lagi ada di leaderboard.');
     }
-    if (!preg_match('/const initialClan = new URLSearchParams\(location\.search\)\.get\([\'\"]clan[\'\"]\);[\s\S]*?if \(initialClan\) \{\s*document\.getElementById\([\'\"]landingPanel[\'\"]\)\.hidden = true;\s*document\.getElementById\([\'\"]rankingsPanel[\'\"]\)\.hidden = true;/', $home)) {
-        throw new RuntimeException('Leaderboard tidak disembunyikan saat URL memiliki parameter clan.');
+    if (!str_contains($home, "pageParams.get('tag') || pageParams.get('clan')")
+        || !str_contains($home, "document.getElementById('landingPanel').hidden = true")
+        || !str_contains($home, "document.getElementById('rankingsPanel').hidden = true")) {
+        throw new RuntimeException('Dashboard clan tidak memproses parameter tag/clan dengan benar.');
     }
     $locations = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/rankings/locations'))->getBody(), true);
     $locationNames = array_column($locations['items'], 'name');

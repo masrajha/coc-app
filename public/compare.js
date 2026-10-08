@@ -26,7 +26,9 @@ function textNode(tag, value, className) {
 
 function showStatus(side, message, error = false) {
   const status = document.getElementById(side === 'left' ? 'status1' : 'status2');
-  status.textContent = message;
+  status.replaceChildren();
+  if (!error && message.toLowerCase().startsWith('memuat')) { const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); status.append(spinner); status.classList.add('loading-state'); } else status.classList.remove('loading-state');
+  status.appendChild(document.createTextNode(message));
   status.classList.toggle('error', error);
   status.hidden = false;
   document.getElementById(side === 'left' ? 'card1' : 'card2').replaceChildren();
