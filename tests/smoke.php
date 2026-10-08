@@ -250,6 +250,9 @@ try {
     foreach (['data-tab="ranked-battles"', 'rankedBattleSession', 'rankedBattleSummary', 'rankedAttackLogs', 'rankedDefenseLogs'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Tab battle log Ranked League tidak tersedia: ' . $marker);
     }
+    foreach (['rankedAttackTrophies', 'rankedDefenseTrophies'] as $marker) {
+        if (!str_contains($playerPage, $marker)) throw new RuntimeException('Total trofi battle log belum tersedia: ' . $marker);
+    }
     foreach (['player-overview', 'playerOverviewCards', 'progressSearch', 'progressFilter', 'upgradePlanner', 'progressDistribution', 'progressRadar', 'rankedLogFilter', 'rankedLogSort'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Dashboard player P5-P9 tidak lengkap: ' . $marker);
     }
@@ -260,6 +263,7 @@ try {
     foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Renderer battle log Ranked League tidak lengkap: ' . $marker);
     }
+    if (!str_contains($leagueScript, '/assets/trophy.png')) throw new RuntimeException('Aset ikon trofi battle log belum digunakan.');
     foreach (["className = 'league-battle-info'", 'showBattle(member, row, true, info)', "aria-haspopup', 'dialog'", "event.key === 'Escape'", 'state.pinned'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Popup detail pertempuran belum mendukung interaksi tap: ' . $marker);
     }
