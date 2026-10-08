@@ -1,6 +1,6 @@
 (function () {
   const PAGE_SIZE = 25;
-  const state = { playerTag: null, members: [], page: 0, request: 0, battleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null };
+  const state = { playerTag: null, members: [], page: 0, request: 0, logRequest: 0, battleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null };
   const clanTag = normalizeTag(new URLSearchParams(location.search).get('clan'));
 
   function normalizeTag(value) {
@@ -246,6 +246,71 @@
     element('leagueNext').disabled = state.page >= totalPages - 1;
   }
 
+  function renderBattleLogList(id, logs, emptyMessage) {
+    const list = element(id);
+    list.replaceChildren();
+    if (!logs.length) {
+      const empty = document.createElement('p'); empty.className = 'ranked-battle-empty'; empty.textContent = emptyMessage; list.appendChild(empty); return;
+    }
+    logs.forEach((log, index) => {
+      const card = document.createElement('article'); card.className = 'ranked-battle-card';
+      const top = document.createElement('div'); top.className = 'ranked-battle-card-top';
+      const number = document.createElement('span'); number.textContent = `#${index + 1}`;
+      const trophies = document.createElement('strong'); trophies.textContent = log.trophies === null || log.trophies === undefined ? 'Trofi —' : `${Number(log.trophies) >= 0 ? '+' : ''}${Number(log.trophies).toLocaleString('id-ID')} trofi`;
+      top.append(number, trophies);
+      const stars = document.createElement('div'); stars.className = 'ranked-battle-stars'; stars.setAttribute('aria-label', `${log.stars ?? 0} dari 3 bintang`);
+      for (let star = 1; star <= 3; star++) stars.appendChild(Object.assign(document.createElement('span'), { className: star <= Number(log.stars || 0) ? 'earned' : '', textContent: '★' }));
+      const destruction = document.createElement('div'); destruction.className = 'ranked-battle-destruction';
+      destruction.append(Object.assign(document.createElement('span'), { textContent: 'Destruksi' }), Object.assign(document.createElement('strong'), { textContent: log.destructionPercentage === null || log.destructionPercentage === undefined ? '—' : `${Number(log.destructionPercentage).toLocaleString('id-ID', { maximumFractionDigits: 2 })}%` }));
+      const track = document.createElement('div'); track.className = 'ranked-destruction-track';
+      const fill = document.createElement('i'); fill.style.width = `${Math.min(100, Math.max(0, Number(log.destructionPercentage || 0)))}%`; track.appendChild(fill);
+      card.append(top, stars, destruction, track);
+      if (log.opponentName || log.timestamp) {
+        const meta = document.createElement('small');
+        const parsedTime = log.timestamp ? new Date(log.timestamp) : null;
+        const time = parsedTime && !Number.isNaN(parsedTime.getTime()) ? parsedTime.toLocaleString('id-ID') : '';
+        meta.textContent = [log.opponentName, time].filter(Boolean).join(' · '); card.appendChild(meta);
+      }
+      list.appendChild(card);
+    });
+  }
+
+  function renderPlayerBattleLog(data) {
+    const summary = element('rankedBattleSummary'); summary.replaceChildren();
+    const metrics = [
+      ['Peringkat', data.playerRank ? `#${data.playerRank}/${data.totalMembers}` : '—'],
+      ['Bintang / serangan', data.attack?.starsAverage ?? '—'],
+      ['Destruksi serangan', data.attack?.destructionAverage == null ? '—' : `${Number(data.attack.destructionAverage).toLocaleString('id-ID')}%`],
+      ['Destruksi pertahanan', data.defense?.destructionAverage == null ? '—' : `${Number(data.defense.destructionAverage).toLocaleString('id-ID')}%`]
+    ];
+    for (const [label, value] of metrics) {
+      const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); summary.appendChild(item);
+    }
+    const attacks = Array.isArray(data.attack?.logs) ? data.attack.logs : [];
+    const defenses = Array.isArray(data.defense?.logs) ? data.defense.logs : [];
+    setText('rankedAttackTotal', `${attacks.length} battle`); setText('rankedDefenseTotal', `${defenses.length} battle`);
+    renderBattleLogList('rankedAttackLogs', attacks, 'Belum ada riwayat serangan pada sesi ini.');
+    renderBattleLogList('rankedDefenseLogs', defenses, 'Belum ada riwayat pertahanan pada sesi ini.');
+  }
+
+  async function loadPlayerBattleLog(sessionId) {
+    const request = ++state.logRequest;
+    const status = element('rankedBattleStatus'); status.hidden = false; status.textContent = 'Memuat battle log…';
+    try {
+      const response = await fetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=battle&memberTag=${encodeURIComponent(state.playerTag)}`);
+      const data = await response.json();
+      if (request !== state.logRequest) return;
+      if (!response.ok) throw new Error(data.error || 'Battle log tidak dapat dimuat.');
+      renderPlayerBattleLog(data);
+      status.textContent = data.stale ? `Menampilkan data tersimpan · diperbarui ${new Date(data.lastUpdated).toLocaleString('id-ID')}` : `Sesi ${data.session?.label || sessionId} · ${data.attack?.sampleSize || 0} serangan dan ${data.defense?.sampleSize || 0} pertahanan`;
+    } catch (error) {
+      if (request !== state.logRequest) return;
+      element('rankedBattleSummary').replaceChildren();
+      renderBattleLogList('rankedAttackLogs', [], 'Battle log tidak tersedia.'); renderBattleLogList('rankedDefenseLogs', [], 'Battle log tidak tersedia.');
+      status.textContent = error.message;
+    }
+  }
+
   async function loadSession(sessionId) {
     hideBattle(true);
     setLeagueTitle(null);
@@ -302,7 +367,9 @@
     state.page = 0;
     renderPage();
     const select = element('leagueSession');
+    const battleSelect = element('rankedBattleSession');
     select.replaceChildren();
+    battleSelect.replaceChildren();
     const sessions = Array.isArray(player.leagueSessions) ? player.leagueSessions : [];
     for (const session of sessions) {
       const option = document.createElement('option');
@@ -311,8 +378,10 @@
         ? new Date(Number(session.seasonId) * 1000).toLocaleDateString('id-ID', { month: 'short', year: 'numeric' }) : '';
       option.textContent = `${session.label}${date ? ` · ${date}` : ''}`;
       select.appendChild(option);
+      battleSelect.appendChild(option.cloneNode(true));
     }
     select.disabled = sessions.length === 0;
+    battleSelect.disabled = sessions.length === 0;
     if (!sessions.length) {
       const message = player.leagueTier?.name === 'Legend I'
         ? 'Legend I memakai leaderboard global; tidak ada grup 100 pemain untuk ditampilkan.'
@@ -322,13 +391,22 @@
       status.textContent = message;
       setText('leagueRankSummary', message);
       element('leaguePlayerRank').hidden = true;
+      setText('rankedBattleStatus', message);
+      renderBattleLogList('rankedAttackLogs', [], 'Battle log tidak tersedia.'); renderBattleLogList('rankedDefenseLogs', [], 'Battle log tidak tersedia.');
       return;
     }
     select.value = sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
+    battleSelect.value = select.value;
     loadSession(select.value);
+    loadPlayerBattleLog(battleSelect.value);
   }
 
-  element('leagueSession').addEventListener('change', event => loadSession(event.target.value));
+  element('leagueSession').addEventListener('change', event => {
+    loadSession(event.target.value);
+    element('rankedBattleSession').value = event.target.value;
+    loadPlayerBattleLog(event.target.value);
+  });
+  element('rankedBattleSession').addEventListener('change', event => loadPlayerBattleLog(event.target.value));
   element('leaguePrev').addEventListener('click', () => {
     if (state.page > 0) { state.page--; renderPage(); }
   });

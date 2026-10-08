@@ -148,7 +148,23 @@
                 </div>
             </section>
 
-            <section class="rounded border border-slate-200 bg-white" aria-labelledby="warTitle">
+            <nav id="clanSectionNav" class="clan-section-nav" aria-label="Navigasi dashboard clan">
+                <a href="#clan-overview">Overview</a><a href="#clan-war">War</a><a href="#cwl-standings">CWL</a><a href="#war-roster">Roster</a><a href="#clan-performance">Performance</a><a href="#clan-activity">Aktivitas</a><a href="#clan-actions">Laporan</a>
+            </nav>
+
+            <section id="clan-overview" class="clan-overview" aria-labelledby="clanOverviewTitle">
+                <div class="clan-overview-heading"><div><p class="clan-overview-eyebrow">CLAN OVERVIEW</p><h2 id="clanOverviewTitle">Ringkasan operasional</h2></div><span id="clanDataFreshness" class="data-freshness">Menunggu data…</span></div>
+                <div class="clan-overview-grid">
+                    <div><span>Rata-rata TH</span><strong id="overviewAverageTh">—</strong><small id="overviewThRange">Belum tersedia</small></div>
+                    <div><span>War saat ini</span><strong id="overviewWarState">Memuat…</strong><small id="overviewWarScore">Menunggu data war</small></div>
+                    <div><span>Posisi CWL</span><strong id="overviewCwlPosition">—</strong><small id="overviewCwlMeta">Belum tersedia</small></div>
+                    <div><span>Perlu review</span><strong id="overviewReviewCount">—</strong><small id="overviewActiveCount">Menunggu snapshot</small></div>
+                    <div><span>Total donasi</span><strong id="overviewDonations">—</strong><small>Musim berjalan</small></div>
+                    <div><span>Komposisi anggota</span><strong id="overviewMembers">—</strong><small id="overviewRoles">Belum tersedia</small></div>
+                </div>
+            </section>
+
+            <section id="clan-war" class="rounded border border-slate-200 bg-white clan-anchor-section" aria-labelledby="warTitle">
                 <div class="border-b border-slate-200 px-4 py-3">
                     <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                         <div>
@@ -165,6 +181,11 @@
                 <p id="warStatus" class="px-4 py-4 text-sm text-slate-600" role="status">Memuat data perang...</p>
 
                 <div id="warContent" class="hidden">
+                    <div id="warCommandStrip" class="war-command-strip">
+                        <div><span id="warCommandTone" class="war-command-indicator"></span><div><strong id="warCommandText">Menilai kondisi perang…</strong><small id="warCommandDetail"></small></div></div>
+                        <button id="showPendingRoster" type="button">Tampilkan yang belum menyerang</button>
+                    </div>
+                    <div id="warProjection" class="war-projection"></div>
                     <div class="grid border-b border-slate-200 md:grid-cols-4">
                         <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
                             <p class="text-xs font-semibold uppercase text-slate-500">Clan</p>
@@ -190,7 +211,8 @@
 
                     <div class="grid gap-4 p-4 xl:grid-cols-[1fr_360px]">
                         <div class="min-w-0 space-y-4">
-                            <section id="cwlStandingsSection" class="hidden">
+                            <section id="cwlStandingsSection" class="hidden clan-anchor-section">
+                                <span id="cwl-standings" class="anchor-target" aria-hidden="true"></span>
                                 <div class="mb-2 flex flex-wrap items-end justify-between gap-2">
                                     <div>
                                         <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Peringkat CWL</h3>
@@ -211,14 +233,20 @@
                                         <tbody id="cwlStandingsTable" class="divide-y divide-slate-200 bg-white"></tbody>
                                     </table>
                                 </div>
+                                <div id="cwlPositionInsight" class="cwl-position-insight" aria-live="polite"></div>
                             </section>
-                            <section>
+                            <section id="war-roster" class="clan-anchor-section">
                                 <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
                                     <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Roster perang</h3>
                                     <div class="flex flex-wrap gap-1.5">
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="all">Semua</button>
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="pending">Belum</button>
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="done">Sudah</button>
+                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="low">0–1★</button>
+                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="triple">3★</button>
+                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="missed">Missed</button>
+                                        <select id="rosterTownHall" class="roster-select" aria-label="Filter Town Hall"><option value="all">Semua TH</option></select>
+                                        <select id="rosterSort" class="roster-select" aria-label="Urutkan roster"><option value="position">Urut posisi</option><option value="remaining">Sisa serangan</option><option value="stars">Bintang</option><option value="destruction">Destruksi</option><option value="th">Town Hall</option></select>
                                     </div>
                                 </div>
                                 <div class="max-h-[520px] overflow-auto rounded border border-slate-200">
@@ -240,10 +268,10 @@
                                 </div>
                             </section>
 
-                            <section>
+                            <section id="matchup-map" class="clan-anchor-section">
                                 <div class="mb-2 flex items-center justify-between">
-                                    <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Target lawan</h3>
-                                    <p class="text-xs text-slate-500">Urut posisi peta</p>
+                                    <div><h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Matchup & cleanup map</h3><p id="targetSummary" class="text-xs text-slate-500"></p></div>
+                                    <div class="target-filters"><button type="button" data-target-filter="all">Semua</button><button type="button" data-target-filter="cleanup">Perlu cleanup</button><button type="button" data-target-filter="untouched">Belum disentuh</button></div>
                                 </div>
                                 <div class="max-h-[360px] overflow-auto rounded border border-slate-200">
                                     <table class="w-full text-left text-xs">
@@ -254,7 +282,7 @@
                                                 <th class="px-3 py-2">TH</th>
                                                 <th class="px-3 py-2">Best</th>
                                                 <th class="px-3 py-2">Diserang</th>
-                                                <th class="px-3 py-2">Catatan</th>
+                                                <th class="px-3 py-2">Status / best attacker</th>
                                             </tr>
                                         </thead>
                                         <tbody id="opponentTargets" class="divide-y divide-slate-200 bg-white"></tbody>
@@ -264,11 +292,13 @@
                         </div>
 
                         <aside class="space-y-4">
-                            <section class="rounded border border-slate-200 p-3">
+                            <section id="clan-performance" class="rounded border border-slate-200 p-3 clan-anchor-section">
                                 <div class="mb-3 flex items-center justify-between">
                                     <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Performance</h3>
                                     <span id="performanceScope" class="text-xs text-slate-500">War aktif</span>
                                 </div>
+                                <div id="performanceKpis" class="performance-kpis"></div>
+                                <div id="performanceDistribution" class="performance-distribution" aria-label="Distribusi hasil serangan"></div>
                                 <div id="performanceChart" class="space-y-3"></div>
                                 <div id="performancePager" class="mt-3 hidden items-center justify-between border-t border-slate-200 pt-3">
                                     <button id="performancePrev" type="button" class="rounded border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">Prev</button>
@@ -301,7 +331,7 @@
                 </div>
             </section>
 
-            <section class="rounded border border-slate-200 bg-white">
+            <section id="clan-activity" class="rounded border border-slate-200 bg-white clan-anchor-section">
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 md:flex-row md:items-center md:justify-between">
                     <div>
                         <h2 class="text-lg font-bold leading-6">Anggota Klan</h2>
@@ -327,6 +357,16 @@
                     </div>
                 </div>
                 <div class="p-4">
+                    <div class="health-toolbar">
+                        <label><span class="sr-only">Cari anggota</span><input id="healthSearch" type="search" placeholder="Cari nama atau role…" autocomplete="off"></label>
+                        <div class="health-segments" aria-label="Filter status anggota">
+                            <button type="button" data-health-filter="all" class="active">Semua</button>
+                            <button type="button" data-health-filter="review">Perlu review</button>
+                            <button type="button" data-health-filter="stable">Stabil</button>
+                            <button type="button" data-health-filter="zeroDonation">Donasi nol</button>
+                        </div>
+                        <span id="healthVisibleCount" class="health-visible-count"></span>
+                    </div>
                     <div class="max-h-[420px] overflow-auto rounded border border-slate-200">
                         <table class="w-full text-left text-xs">
                             <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
@@ -346,8 +386,18 @@
                 </div>
             </section>
 
+            <section id="clan-actions" class="clan-actions-card clan-anchor-section">
+                <div><p class="clan-overview-eyebrow">CLAN REPORT</p><h2>Bagikan ringkasan operasional</h2><p id="clanReportSummary">Ringkasan tersedia setelah data klan dan perang dimuat.</p></div>
+                <div class="clan-actions-buttons"><button id="copyClanSummary" type="button">Salin ringkasan</button><button id="exportWarRoster" type="button" disabled>Export roster CSV</button></div>
+                <span id="clanActionStatus" role="status" aria-live="polite"></span>
+            </section>
+
         </div>
     </main>
+    <dialog id="warMemberDialog" class="war-member-dialog">
+        <div class="war-dialog-head"><div><span id="warMemberPosition"></span><h2 id="warMemberName">Detail pemain</h2></div><button id="closeWarMemberDialog" type="button" aria-label="Tutup">×</button></div>
+        <div id="warMemberDialogBody" class="war-dialog-body"></div>
+    </dialog>
     <footer class="mx-auto max-w-7xl px-4 py-5 text-center text-xs text-slate-500">Dikembangkan oleh Amerta Buana #28P08PG0G · <a data-donation-trigger href="https://saweria.co/masrajha">Dukung pengembangan</a></footer>
 
     <script>
@@ -356,13 +406,20 @@
         let selectedRound = null;
         let warRequestId = 0;
         let rosterFilter = 'all';
+        let rosterSort = 'position';
+        let rosterTownHall = 'all';
+        let targetFilter = 'all';
         let latestWarData = null;
+        let latestClanData = null;
+        const freshness = { clan: null, war: null, health: null, cwl: null };
         const PERFORMANCE_PAGE_SIZE = 5;
         let performancePlayers = [];
         let performancePage = 1;
         let performanceScopeLabel = 'War aktif';
         let healthMembers = [];
         let healthSort = { key: null, direction: 'asc' };
+        let healthFilter = 'all';
+        let healthQuery = '';
 
         function setText(id, value) {
             document.getElementById(id).textContent = value ?? '-';
@@ -466,6 +523,81 @@
             return new Date(Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5], +match[6]));
         }
 
+        function updateDataFreshness(key, value) {
+            freshness[key] = value ? new Date(value) : null;
+            const available = Object.entries(freshness).filter(([, date]) => date && !Number.isNaN(date.getTime()));
+            const newest = available.sort((a, b) => b[1] - a[1])[0];
+            const missing = Object.values(freshness).filter(value => !value).length;
+            setText('clanDataFreshness', newest
+                ? `${missing ? 'Data sebagian' : 'Data lengkap'} · terbaru ${newest[1].toLocaleString('id-ID')}`
+                : 'Belum ada data yang berhasil dimuat');
+        }
+
+        function renderClanOverview(data) {
+            latestClanData = data;
+            const members = data.memberList || [];
+            const townHalls = members.map(member => Number(member.townHallLevel)).filter(Number.isFinite);
+            const average = townHalls.length ? townHalls.reduce((sum, value) => sum + value, 0) / townHalls.length : null;
+            setText('overviewAverageTh', average === null ? '—' : average.toLocaleString('id-ID', { maximumFractionDigits: 1 }));
+            setText('overviewThRange', townHalls.length ? `TH ${Math.min(...townHalls)}–${Math.max(...townHalls)} · ${townHalls.length} profil` : 'Belum tersedia');
+            setText('overviewDonations', members.reduce((sum, member) => sum + Number(member.donations || 0), 0).toLocaleString('id-ID'));
+            setText('overviewMembers', `${data.members || members.length}/50`);
+            const leadership = members.filter(member => ['leader', 'coLeader', 'admin'].includes(member.role)).length;
+            setText('overviewRoles', `${leadership} leader/co-leader/elder`);
+            updateDataFreshness('clan', new Date().toISOString());
+            refreshClanReport();
+        }
+
+        function refreshClanReport() {
+            if (!latestClanData) return;
+            const parts = [
+                `${latestClanData.name} (#${activeTag})`,
+                `Level ${latestClanData.clanLevel || '—'} · ${latestClanData.members || 0}/50 anggota`,
+                `Total donasi ${(latestClanData.memberList || []).reduce((sum, member) => sum + Number(member.donations || 0), 0).toLocaleString('id-ID')}`
+            ];
+            if (latestWarData?.clan && latestWarData?.opponent) parts.push(`${latestWarData.type || 'War'}: ${latestWarData.clan.stars}–${latestWarData.opponent.stars}★ vs ${latestWarData.opponent.name}`);
+            const review = healthMembers.filter(member => member.status === 'review').length;
+            if (healthMembers.length) parts.push(`${review} anggota perlu review dari ${healthMembers.length}`);
+            setText('clanReportSummary', parts.join(' · '));
+            document.getElementById('exportWarRoster').disabled = !latestWarData?.members?.length;
+        }
+
+        function renderWarCommand(data, deadline) {
+            const pending = (data.members || []).filter(member => Number(member.attacksRemaining) > 0);
+            const remaining = Number(data.attacksRemaining || 0);
+            const clanStars = Number(data.clan?.stars || 0);
+            const opponentStars = Number(data.opponent?.stars || 0);
+            const totalQuota = data.attacksPerMember == null ? null : Number(data.teamSize || 0) * Number(data.attacksPerMember || 0);
+            const opponentRemaining = totalQuota === null ? 0 : Math.max(0, totalQuota - Number(data.opponent?.attacks || 0));
+            const hours = deadline ? Math.max(0, (deadline - new Date()) / 3600000) : null;
+            let tone = 'neutral'; let headline = 'Perang sedang dipantau';
+            if (data.state === 'preparation') { tone = 'info'; headline = 'Fase persiapan · roster belum menyerang'; }
+            else if (data.state === 'warEnded') { tone = clanStars > opponentStars ? 'safe' : clanStars < opponentStars ? 'danger' : 'warning'; headline = `Perang selesai · ${clanStars > opponentStars ? 'unggul' : clanStars < opponentStars ? 'tertinggal' : 'imbang'} ${Math.abs(clanStars - opponentStars)} bintang`; }
+            else if (hours !== null && hours <= 2 && pending.length) { tone = 'danger'; headline = `${pending.length} pemain belum selesai · waktu kurang dari 2 jam`; }
+            else if (pending.length || remaining) { tone = 'warning'; headline = `${remaining} serangan tersisa · ${pending.length} pemain perlu follow up`; }
+            else { tone = 'safe'; headline = 'Semua kuota serangan sudah digunakan'; }
+            document.getElementById('warCommandStrip').dataset.tone = tone;
+            document.getElementById('warCommandTone').className = `war-command-indicator ${tone}`;
+            setText('warCommandText', headline);
+            setText('warCommandDetail', `${clanStars}–${opponentStars} bintang · ${data.clan?.attacks || 0}/${totalQuota ?? '—'} serangan · lawan masih memiliki ${opponentRemaining} kuota`);
+
+            const needed = Math.max(0, opponentStars + 1 - clanStars);
+            const maxAdditional = remaining * 3;
+            const ourMaximum = clanStars + maxAdditional;
+            const opponentMaximum = opponentStars + opponentRemaining * 3;
+            let status;
+            if (data.state === 'warEnded') status = clanStars > opponentStars ? 'Menang berdasarkan bintang saat ini.' : clanStars < opponentStars ? 'Kalah berdasarkan bintang saat ini.' : 'Bintang seimbang; destruksi menjadi penentu.';
+            else if (ourMaximum < opponentStars) status = 'Tidak dapat mengejar secara matematis dengan kuota tersisa.';
+            else if (clanStars > opponentMaximum) status = 'Posisi aman secara matematis terhadap kuota lawan.';
+            else if (!remaining && clanStars <= opponentStars) status = 'Tidak ada serangan tersisa untuk menambah bintang.';
+            else status = needed ? `Butuh minimal ${needed} bintang tambahan, rata-rata ${(needed / Math.max(1, remaining)).toLocaleString('id-ID', { maximumFractionDigits: 2 })} per serangan.` : 'Sedang unggul, tetapi lawan masih dapat menambah bintang.';
+            const projection = document.getElementById('warProjection');
+            projection.replaceChildren();
+            for (const [label, value] of [['Batas teoretis clan', `${ourMaximum}★`], ['Batas teoretis lawan', `${opponentMaximum}★`], ['Kebutuhan', status]]) {
+                const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); projection.appendChild(item);
+            }
+        }
+
         function showWarStatus(message, preserveContent = false) {
             setText('warStatus', message);
             document.getElementById('warStatus').classList.remove('hidden');
@@ -504,16 +636,36 @@
         function renderRoster(data) {
             const roster = document.getElementById('warRoster');
             roster.replaceChildren();
+            const thSelect = document.getElementById('rosterTownHall');
+            const selectedTh = thSelect.value || rosterTownHall;
+            const townHalls = [...new Set((data.members || []).map(member => member.townhallLevel).filter(Boolean))].sort((a, b) => b - a);
+            thSelect.replaceChildren(new Option('Semua TH', 'all'), ...townHalls.map(th => new Option(`TH ${th}`, String(th))));
+            thSelect.value = townHalls.map(String).includes(String(selectedTh)) ? String(selectedTh) : 'all';
+            rosterTownHall = thSelect.value;
             const members = (data.members || []).filter(member => {
+                if (rosterTownHall !== 'all' && String(member.townhallLevel) !== rosterTownHall) return false;
                 if (rosterFilter === 'pending') return member.attacksRemaining > 0;
                 if (rosterFilter === 'done') return member.attacksRemaining === 0;
+                if (rosterFilter === 'low') return member.attacksUsed > 0 && (member.attacks || []).some(attack => Number(attack.stars) <= 1);
+                if (rosterFilter === 'triple') return (member.attacks || []).some(attack => Number(attack.stars) === 3);
+                if (rosterFilter === 'missed') return data.state === 'warEnded' && member.attacksRemaining > 0;
                 return true;
+            });
+            const direction = rosterSort === 'position' ? 1 : -1;
+            members.sort((a, b) => {
+                const values = {
+                    position: [a.mapPosition, b.mapPosition], remaining: [a.attacksRemaining, b.attacksRemaining],
+                    stars: [a.starsEarned, b.starsEarned], destruction: [a.destructionAverage, b.destructionAverage], th: [a.townhallLevel, b.townhallLevel]
+                }[rosterSort] || [a.mapPosition, b.mapPosition];
+                return direction * (Number(values[0] || 0) - Number(values[1] || 0));
             });
 
             for (const member of members) {
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50';
-                const status = member.attacksRemaining > 0 ? 'Belum' : 'Done';
+                row.className = 'hover:bg-slate-50 roster-member-row';
+                row.tabIndex = 0;
+                const missed = data.state === 'warEnded' && member.attacksRemaining > 0;
+                const status = missed ? 'Missed' : member.attacksRemaining > 0 ? 'Belum' : 'Done';
                 addCell(row, member.mapPosition);
                 addPlayerLinkCell(row, member);
                 addCell(row, member.townhallLevel);
@@ -521,27 +673,81 @@
                 addCell(row, member.attacksRemaining);
                 addCell(row, member.starsEarned);
                 addCell(row, member.attacksUsed ? `${formatPercent(member.destructionAverage)}%` : '0%');
-                addBadgeCell(row, status, member.attacksRemaining > 0 ? 'pending' : 'done');
+                addBadgeCell(row, status, missed ? 'missed' : member.attacksRemaining > 0 ? 'pending' : 'done');
+                row.addEventListener('click', event => { if (!event.target.closest('a,button')) openWarMemberDialog(member, data); });
+                row.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openWarMemberDialog(member, data); } });
                 roster.appendChild(row);
             }
+            if (!members.length) {
+                const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 8; cell.className = 'px-3 py-5 text-center text-slate-500'; cell.textContent = 'Tidak ada anggota yang cocok dengan filter.'; row.appendChild(cell); roster.appendChild(row);
+            }
+        }
+
+        function targetStatus(target) {
+            if (Number(target.bestStars) >= 3) return { key: 'cleared', label: 'Rata' };
+            if (Number(target.attacksReceived) > 0) return { key: 'cleanup', label: `Perlu cleanup · best ${target.bestStars || 0}★ ${formatPercent(target.bestDestruction)}%` };
+            return { key: 'untouched', label: 'Belum disentuh' };
         }
 
         function renderTargets(data) {
             const tbody = document.getElementById('opponentTargets');
             tbody.replaceChildren();
-            for (const target of data.opponentMembers || []) {
+            const targets = data.opponentMembers || [];
+            const cleanup = targets.filter(target => targetStatus(target).key === 'cleanup').length;
+            const untouched = targets.filter(target => targetStatus(target).key === 'untouched').length;
+            setText('targetSummary', `${cleanup} perlu cleanup · ${untouched} belum disentuh · ${targets.length - cleanup - untouched} rata`);
+            const visibleTargets = targets.filter(target => targetFilter === 'all' || targetStatus(target).key === targetFilter);
+            for (const target of visibleTargets) {
                 const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50';
-                const best = `${target.bestStars || 0}b / ${formatPercent(target.bestDestruction)}%`;
-                const note = target.bestStars >= 3 ? 'Rata' : target.attacksReceived ? 'Belum Rata' : 'Belum disentuh';
+                const status = targetStatus(target);
+                row.className = `hover:bg-slate-50 target-row target-${status.key}`;
+                const best = `${target.bestStars || 0}★ / ${formatPercent(target.bestDestruction)}%`;
                 addCell(row, target.mapPosition);
                 addPlayerLinkCell(row, target);
                 addCell(row, target.townhallLevel);
                 addCell(row, best);
                 addCell(row, target.attacksReceived);
-                addCell(row, note);
+                addCell(row, `${status.label}${target.bestAttackerName ? ` · ${target.bestAttackerName}` : ''}`);
                 tbody.appendChild(row);
             }
+            if (!visibleTargets.length) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 6;
+                cell.className = 'px-3 py-5 text-center text-slate-500';
+                cell.textContent = 'Tidak ada target dengan status ini.';
+                row.appendChild(cell);
+                tbody.appendChild(row);
+            }
+        }
+
+        function openWarMemberDialog(member, data) {
+            const dialog = document.getElementById('warMemberDialog');
+            setText('warMemberName', member.name || member.tag || 'Pemain');
+            setText('warMemberPosition', `Posisi #${member.mapPosition || '—'} · TH ${member.townhallLevel || '—'}`);
+            const body = document.getElementById('warMemberDialogBody'); body.replaceChildren();
+            const summary = document.createElement('div'); summary.className = 'war-dialog-summary';
+            for (const [label, value] of [['Serangan', `${member.attacksUsed}/${data.attacksPerMember ?? '—'}`], ['Bintang', member.starsEarned || 0], ['Destruksi', `${formatPercent(member.destructionAverage)}%`]]) {
+                const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); summary.appendChild(item);
+            }
+            body.appendChild(summary);
+            const targets = new Map((data.opponentMembers || []).map(target => [String(target.tag || '').toUpperCase(), target]));
+            const list = document.createElement('div'); list.className = 'war-dialog-attacks';
+            if (!(member.attacks || []).length) list.appendChild(Object.assign(document.createElement('p'), { textContent: 'Belum ada serangan pada perang ini.' }));
+            for (const [index, attack] of (member.attacks || []).entries()) {
+                const target = targets.get(String(attack.defenderTag || '').toUpperCase());
+                const item = document.createElement('article');
+                const label = document.createElement('span'); label.textContent = `Serangan ${index + 1}`;
+                const result = document.createElement('strong'); result.textContent = `${attack.stars || 0}★ · ${formatPercent(attack.destructionPercentage)}%`;
+                const detail = document.createElement('small'); detail.textContent = `Target #${target?.mapPosition || '—'} · ${target?.name || attack.defenderTag || 'Tidak diketahui'} · TH ${target?.townhallLevel || '—'}`;
+                item.append(label, result, detail);
+                list.appendChild(item);
+            }
+            body.appendChild(list);
+            const actions = document.createElement('div'); actions.className = 'war-dialog-actions';
+            const profile = document.createElement('a'); profile.href = playerProfileUrl(member.tag); profile.textContent = 'Buka profil';
+            const compare = document.createElement('a'); compare.href = playerComparisonUrl(member.tag); compare.textContent = 'Bandingkan pemain'; actions.append(profile, compare); body.appendChild(actions);
+            if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
         }
 
         function hideCwlStandings() {
@@ -549,6 +755,8 @@
             document.getElementById('cwlStandingsTable').replaceChildren();
             setText('cwlStandingsMeta', '');
             renderCwlLeagueBadge('');
+            setText('overviewCwlPosition', '—');
+            setText('overviewCwlMeta', 'Standings tidak tersedia');
         }
 
         const cwlLeagueIcons = {
@@ -590,6 +798,26 @@
             const rounds = data.loadedRounds?.length ? `Data R${data.loadedRounds.join(', R')}` : 'Belum ada war yang tersedia';
             setText('cwlStandingsMeta', `${rounds} dari ${data.roundCount || 0} ronde`);
             renderCwlLeagueBadge(data.league || 'CWL');
+            const currentClan = data.standings.find(clan => clan.isCurrentClan);
+            setText('overviewCwlPosition', currentClan ? `#${currentClan.rank}` : '—');
+            setText('overviewCwlMeta', currentClan ? `${currentClan.stars}★ · ${data.league || 'CWL'}` : 'Clan tidak ditemukan di standings');
+            updateDataFreshness('cwl', new Date().toISOString());
+            const insight = document.getElementById('cwlPositionInsight');
+            insight.replaceChildren();
+            if (currentClan) {
+                const above = data.standings.find(clan => clan.rank === currentClan.rank - 1);
+                const below = data.standings.find(clan => clan.rank === currentClan.rank + 1);
+                const cards = [
+                    ['Posisi', `#${currentClan.rank} dari ${data.standings.length}`],
+                    ['Ke posisi atas', above ? `${Math.max(0, Number(above.stars) - Number(currentClan.stars))}★ menuju ${above.name}` : 'Sudah di posisi teratas'],
+                    ['Jarak ke bawah', below ? `${Math.max(0, Number(currentClan.stars) - Number(below.stars))}★ dari ${below.name}` : 'Posisi terakhir']
+                ];
+                for (const [label, value] of cards) {
+                    const card = document.createElement('div');
+                    card.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value }));
+                    insight.appendChild(card);
+                }
+            }
             for (const clan of data.standings) {
                 const row = document.createElement('tr');
                 row.className = clan.isCurrentClan ? 'bg-blue-700 font-semibold text-white' : 'hover:bg-slate-50';
@@ -748,7 +976,30 @@
             performancePlayers = players;
             performancePage = 1;
             performanceScopeLabel = scopeLabel;
+            renderPerformanceInsights(players);
             renderPerformancePage();
+        }
+
+        function renderPerformanceInsights(players) {
+            const kpis = document.getElementById('performanceKpis');
+            const distribution = document.getElementById('performanceDistribution');
+            kpis.replaceChildren(); distribution.replaceChildren();
+            const attacks = players.reduce((sum, player) => sum + Number(player.attacks || 0), 0);
+            const stars = players.reduce((sum, player) => sum + Number(player.stars || 0), 0);
+            const weightedDestruction = attacks ? players.reduce((sum, player) => sum + Number(player.destructionAverage || 0) * Number(player.attacks || 0), 0) / attacks : 0;
+            for (const [label, value] of [['Serangan', attacks], ['Bintang/atk', attacks ? (stars / attacks).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : '—'], ['Destruksi', attacks ? `${formatPercent(weightedDestruction)}%` : '—']]) {
+                const card = document.createElement('div'); card.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); kpis.appendChild(card);
+            }
+            const groups = [
+                { label: 'Elite ≥80', count: players.filter(player => player.score >= 80).length, tone: 'elite' },
+                { label: 'Solid 60–79', count: players.filter(player => player.score >= 60 && player.score < 80).length, tone: 'solid' },
+                { label: 'Review <60', count: players.filter(player => player.score < 60).length, tone: 'review' }
+            ];
+            for (const group of groups) {
+                const item = document.createElement('div'); item.className = `performance-band ${group.tone}`;
+                item.style.setProperty('--band-width', `${players.length ? group.count / players.length * 100 : 0}%`);
+                item.append(Object.assign(document.createElement('span'), { textContent: group.label }), Object.assign(document.createElement('strong'), { textContent: group.count })); distribution.appendChild(item);
+            }
         }
 
         function renderPerformance(data) {
@@ -856,11 +1107,23 @@
             return Number(member.trophies || 0);
         }
 
+        function filteredHealthMembers() {
+            return healthMembers.filter(member => {
+                const matchesQuery = !healthQuery || `${member.name || ''} ${member.role || ''}`.toLocaleLowerCase('id-ID').includes(healthQuery);
+                const matchesStatus = healthFilter === 'all' ||
+                    (healthFilter === 'review' && member.status === 'review') ||
+                    (healthFilter === 'stable' && member.status === 'stable') ||
+                    (healthFilter === 'zeroDonation' && Number(member.donations || 0) === 0);
+                return matchesQuery && matchesStatus;
+            });
+        }
+
         function sortedHealthMembers() {
-            if (!healthSort.key) return healthMembers;
+            const visibleMembers = filteredHealthMembers();
+            if (!healthSort.key) return visibleMembers;
             const { key, direction } = healthSort;
             const multiplier = direction === 'asc' ? 1 : -1;
-            return [...healthMembers].sort((a, b) => {
+            return [...visibleMembers].sort((a, b) => {
                 const first = healthSortValue(a, key);
                 const second = healthSortValue(b, key);
                 if (first === null || first === undefined) return 1;
@@ -883,7 +1146,9 @@
         function renderHealthRows() {
             const tbody = document.getElementById('healthTable');
             tbody.replaceChildren();
-            for (const member of sortedHealthMembers()) {
+            const visibleMembers = sortedHealthMembers();
+            setText('healthVisibleCount', `${visibleMembers.length} dari ${healthMembers.length} anggota`);
+            for (const member of visibleMembers) {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-slate-50';
                 addPlayerLinkCell(row, member, 'px-3 py-2 font-semibold health-member-name', true);
@@ -894,6 +1159,9 @@
                 addCell(row, member.donationRatio === null ? '-' : member.donationRatio);
                 addBadgeCell(row, member.flags.length ? member.flags.join(', ') : 'Stabil', member.flags.length ? 'pending' : 'done');
                 tbody.appendChild(row);
+            }
+            if (!visibleMembers.length) {
+                const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 7; cell.className = 'px-3 py-6 text-center text-slate-500'; cell.textContent = 'Tidak ada anggota yang cocok.'; row.appendChild(cell); tbody.appendChild(row);
             }
             updateHealthSortHeaders();
         }
@@ -910,6 +1178,11 @@
             csvLink.classList.remove('hidden');
 
             healthMembers = Array.isArray(report.members) ? report.members : [];
+            const activeMembers = healthMembers.filter(member => member.status === 'stable').length;
+            setText('overviewReviewCount', report.summary.review);
+            setText('overviewActiveCount', `${activeMembers} stabil dari ${healthMembers.length} anggota`);
+            updateDataFreshness('health', report.generatedAt);
+            refreshClanReport();
             renderHealthRows();
         }
 
@@ -943,17 +1216,23 @@
                 if (!response.ok) throw new Error(data.error || 'Gagal memuat data perang.');
 
                 latestWarData = data;
+                refreshClanReport();
                 setText('warUpdated', `Update: ${new Date(data.lastUpdated).toLocaleString('id-ID')}`);
+                updateDataFreshness('war', data.lastUpdated);
                 renderRounds(data.availableRounds || []);
                 setText('warTitle', selectedRound === null ? 'Perang aktif' : `CWL putaran ${selectedRound}`);
 
                 if (data.state === 'notInWar') {
                     setText('warPhase', 'Tidak dalam perang');
+                    setText('overviewWarState', 'Tidak dalam perang');
+                    setText('overviewWarScore', 'Tidak ada war aktif');
                     showWarStatus('Klan sedang tidak mengikuti perang.');
                     return;
                 }
                 if (data.state === 'cwlWaiting') {
                     setText('warPhase', 'CWL');
+                    setText('overviewWarState', 'Menunggu CWL');
+                    setText('overviewWarScore', 'Detail ronde belum tersedia');
                     showWarStatus('Klan mengikuti CWL, tetapi rincian perang putaran belum tersedia.');
                     return;
                 }
@@ -966,6 +1245,8 @@
                 setText('warClanScore', `${data.clan.stars} bintang - ${formatPercent(data.clan.destructionPercentage)}% destruksi - ${data.clan.attacks} atk`);
                 setText('warOpponentName', data.opponent.name);
                 setText('warOpponentScore', `${data.opponent.stars} bintang - ${formatPercent(data.opponent.destructionPercentage)}% destruksi - ${data.opponent.attacks} atk`);
+                setText('overviewWarState', `${data.type}${data.round ? ` R${data.round}` : ''}`);
+                setText('overviewWarScore', `${data.clan.stars}–${data.opponent.stars}★ · ${phases[data.state] || data.state}`);
 
                 const totalQuota = data.attacksPerMember === null ? null : data.teamSize * data.attacksPerMember;
                 setText('warRemaining', data.attacksRemaining === null ? `${data.attacksUsed} atk tercatat` : `${data.attacksRemaining}/${totalQuota} sisa`);
@@ -975,6 +1256,7 @@
                 setText('warPendingCount', pending.length ? `${pending.length} pemain` : 'Aman');
                 setText('warPendingNames', pending.length ? pending.slice(0, 5).map(member => member.name).join(', ') : 'Semua jatah serangan sudah dipakai');
 
+                renderWarCommand(data, deadline);
                 renderRoster(data);
                 renderTargets(data);
                 renderPerformance(data);
@@ -1015,7 +1297,26 @@
             activeTag = cleanTag;
             selectedRound = null;
             rosterFilter = 'all';
+            rosterSort = 'position';
+            rosterTownHall = 'all';
+            targetFilter = 'all';
+            healthFilter = 'all';
+            healthQuery = '';
+            healthMembers = [];
             latestWarData = null;
+            latestClanData = null;
+            for (const key of Object.keys(freshness)) freshness[key] = null;
+            document.getElementById('rosterTownHall').value = 'all';
+            document.getElementById('rosterSort').value = 'position';
+            document.querySelectorAll('.roster-filter').forEach(button => {
+                const active = button.dataset.filter === 'all';
+                button.className = active
+                    ? 'roster-filter rounded border border-blue-600 bg-blue-600 px-2 py-1 text-xs font-semibold text-white'
+                    : 'roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold';
+            });
+            document.querySelectorAll('[data-target-filter]').forEach(button => button.classList.toggle('active', button.dataset.targetFilter === 'all'));
+            document.getElementById('healthSearch').value = '';
+            document.querySelectorAll('[data-health-filter]').forEach(button => button.classList.toggle('active', button.dataset.healthFilter === 'all'));
             hideCwlStandings();
             performancePlayers = [];
             performancePage = 1;
@@ -1042,10 +1343,13 @@
                 document.getElementById('clanMembersCount').textContent = data.members;
                 document.getElementById('joinClanLink').href = `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${encodeURIComponent(cleanTag)}`;
                 document.getElementById('comparePlayersLink').href = `/compare.html?clan=${encodeURIComponent(cleanTag)}`;
+                renderClanOverview(data);
                 window.RecentlyOpened?.clan({ tag: cleanTag, name: data.name, badgeUrl: data.badgeUrls?.small || data.badgeUrls?.medium || data.badgeUrls?.large, meta: `Level ${data.clanLevel || '-'}` });
 
                 statusMsg.classList.add('hidden');
                 resultDiv.classList.remove('hidden');
+                const requestedSection = decodeURIComponent(window.location.hash.slice(1));
+                if (requestedSection) requestAnimationFrame(() => document.getElementById(requestedSection)?.scrollIntoView({ block: 'start' }));
                 setText('warUpdated', '');
                 setText('warPhase', '');
                 setText('warTitle', 'Perang aktif');
@@ -1073,6 +1377,42 @@
             });
         });
 
+        document.getElementById('showPendingRoster').addEventListener('click', () => {
+            const pendingButton = document.querySelector('.roster-filter[data-filter="pending"]');
+            pendingButton?.click();
+            document.getElementById('war-roster').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        document.getElementById('rosterTownHall').addEventListener('change', event => {
+            rosterTownHall = event.target.value;
+            if (latestWarData) renderRoster(latestWarData);
+        });
+        document.getElementById('rosterSort').addEventListener('change', event => {
+            rosterSort = event.target.value;
+            if (latestWarData) renderRoster(latestWarData);
+        });
+        document.querySelectorAll('[data-target-filter]').forEach(button => button.addEventListener('click', () => {
+            targetFilter = button.dataset.targetFilter;
+            document.querySelectorAll('[data-target-filter]').forEach(item => item.classList.toggle('active', item === button));
+            if (latestWarData) renderTargets(latestWarData);
+        }));
+        document.getElementById('closeWarMemberDialog').addEventListener('click', () => document.getElementById('warMemberDialog').close());
+        document.getElementById('warMemberDialog').addEventListener('click', event => {
+            if (event.target === event.currentTarget) event.currentTarget.close();
+        });
+
+        function updateClanSectionNav() {
+            const activeSection = window.location.hash || '#clan-overview';
+            document.querySelectorAll('#clanSectionNav a').forEach(link => {
+                if (link.getAttribute('href') === activeSection) link.setAttribute('aria-current', 'page');
+                else link.removeAttribute('aria-current');
+            });
+        }
+        document.getElementById('clanSectionNav').addEventListener('click', event => {
+            if (event.target.closest('a')) requestAnimationFrame(updateClanSectionNav);
+        });
+        window.addEventListener('hashchange', updateClanSectionNav);
+        updateClanSectionNav();
+
         document.querySelectorAll('.health-sort').forEach(button => {
             button.addEventListener('click', () => {
                 const key = button.dataset.healthSort;
@@ -1080,6 +1420,37 @@
                 healthSort = { key, direction: isSame && healthSort.direction === 'asc' ? 'desc' : 'asc' };
                 renderHealthRows();
             });
+        });
+
+        document.getElementById('healthSearch').addEventListener('input', event => {
+            healthQuery = event.target.value.trim().toLocaleLowerCase('id-ID');
+            renderHealthRows();
+        });
+        document.querySelectorAll('[data-health-filter]').forEach(button => button.addEventListener('click', () => {
+            healthFilter = button.dataset.healthFilter;
+            document.querySelectorAll('[data-health-filter]').forEach(item => item.classList.toggle('active', item === button));
+            renderHealthRows();
+        }));
+
+        document.getElementById('copyClanSummary').addEventListener('click', async () => {
+            const summary = document.getElementById('clanReportSummary').textContent;
+            try {
+                await navigator.clipboard.writeText(`${summary}\n${window.location.href}`);
+                setText('clanActionStatus', 'Ringkasan berhasil disalin.');
+            } catch {
+                setText('clanActionStatus', 'Browser tidak mengizinkan akses clipboard.');
+            }
+        });
+
+        document.getElementById('exportWarRoster').addEventListener('click', () => {
+            if (!latestWarData?.members?.length) return;
+            const escapeCsv = value => `"${String(value ?? '').replaceAll('"', '""')}"`;
+            const rows = [['Posisi', 'Nama', 'Tag', 'TH', 'Serangan', 'Sisa', 'Bintang', 'Destruksi']];
+            for (const member of latestWarData.members) rows.push([member.mapPosition, member.name, member.tag, member.townhallLevel, member.attacksUsed, member.attacksRemaining, member.starsEarned, member.destructionAverage]);
+            const csv = `\uFEFF${rows.map(row => row.map(escapeCsv).join(',')).join('\r\n')}`;
+            const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+            const link = document.createElement('a'); link.href = url; link.download = `war-roster-${activeTag}-${latestWarData.round || 'active'}.csv`; link.click(); URL.revokeObjectURL(url);
+            setText('clanActionStatus', 'Roster war berhasil diekspor.');
         });
 
         document.getElementById('performancePrev').addEventListener('click', () => {

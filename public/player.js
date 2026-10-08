@@ -371,6 +371,6 @@ document.getElementById('itemDialog').addEventListener('click', event => {
 });
 document.querySelectorAll('.tabs button').forEach(button => button.addEventListener('click', () => {
   for (const tab of document.querySelectorAll('.tabs button')) tab.setAttribute('aria-selected', String(tab === button));
-  for (const section of ['army', 'progress', 'performance']) document.getElementById(section).hidden = section !== button.dataset.tab;
+  for (const section of ['army', 'progress', 'performance', 'ranked-battles']) document.getElementById(section).hidden = section !== button.dataset.tab;
 }));
 if (params.has('tag')) loadProfile(params.get('tag'));

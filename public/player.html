@@ -53,7 +53,7 @@
       </section>
 
       <nav class="tabs" aria-label="Bagian profil">
-        <button type="button" data-tab="army" aria-selected="true">Army</button><button type="button" data-tab="progress" aria-selected="false">Progres</button><button type="button" data-tab="performance" aria-selected="false">Performa War/CWL</button>
+        <button type="button" data-tab="army" aria-selected="true">Army</button><button type="button" data-tab="progress" aria-selected="false">Progres</button><button type="button" data-tab="performance" aria-selected="false">Performa War/CWL</button><button type="button" data-tab="ranked-battles" aria-selected="false">Ranked League</button>
       </nav>
 
       <section id="army" class="panel">
@@ -78,6 +78,15 @@
         <div id="performanceChart" class="performance-chart"></div>
         <h3>Riwayat perang</h3><div id="performanceWars" class="war-history"></div>
         <h3>Tren aktivitas</h3><div id="snapshotTrend" class="snapshot-trend"></div>
+      </section>
+      <section id="ranked-battles" class="panel ranked-battles-panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2>Battle Log</h2></div><select id="rankedBattleSession" aria-label="Pilih sesi battle log"></select></div>
+        <p id="rankedBattleStatus" class="section-note" role="status">Memuat battle log…</p>
+        <div id="rankedBattleSummary" class="ranked-battle-summary"></div>
+        <div class="ranked-battle-columns">
+          <section><div class="ranked-battle-heading"><h3>Attacks</h3><span id="rankedAttackTotal"></span></div><div id="rankedAttackLogs" class="ranked-battle-list"></div></section>
+          <section><div class="ranked-battle-heading"><h3>Defenses</h3><span id="rankedDefenseTotal"></span></div><div id="rankedDefenseLogs" class="ranked-battle-list"></div></section>
+        </div>
       </section>
       </div>
       <aside class="league-sidebar panel" aria-labelledby="leagueSidebarTitle">

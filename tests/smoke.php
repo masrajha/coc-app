@@ -195,6 +195,12 @@ try {
     foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
     }
+    foreach (['clanSectionNav', 'clan-overview', 'warCommandStrip', 'warProjection', 'rosterTownHall', 'rosterSort', 'matchup-map', 'warMemberDialog', 'renderWarCommand', 'openWarMemberDialog', 'updateClanSectionNav'] as $marker) {
+        if (!str_contains($home, $marker)) throw new RuntimeException('Command center clan CL1-CL3 belum lengkap: ' . $marker);
+    }
+    foreach (['cwlPositionInsight', 'performanceKpis', 'performanceDistribution', 'healthSearch', 'data-health-filter', 'healthVisibleCount', 'clanReportSummary', 'copyClanSummary', 'exportWarRoster', 'renderPerformanceInsights', 'filteredHealthMembers', 'refreshClanReport'] as $marker) {
+        if (!str_contains($home, $marker)) throw new RuntimeException('Analitik dan laporan clan CL4-CL7 belum lengkap: ' . $marker);
+    }
     foreach ([
         [$home, '/index.css', 'public/index.css'],
         [$home, '/rankings.js', 'public/rankings.js'],
@@ -241,7 +247,13 @@ try {
     foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', '/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }
+    foreach (['data-tab="ranked-battles"', 'rankedBattleSession', 'rankedBattleSummary', 'rankedAttackLogs', 'rankedDefenseLogs'] as $marker) {
+        if (!str_contains($playerPage, $marker)) throw new RuntimeException('Tab battle log Ranked League tidak tersedia: ' . $marker);
+    }
     $leagueScript = (string)$app->handle($factory->createServerRequest('GET', '/player-league.js'))->getBody();
+    foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
+        if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Renderer battle log Ranked League tidak lengkap: ' . $marker);
+    }
     foreach (["className = 'league-battle-info'", 'showBattle(member, row, true, info)', "aria-haspopup', 'dialog'", "event.key === 'Escape'", 'state.pinned'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Popup detail pertempuran belum mendukung interaksi tap: ' . $marker);
     }
@@ -327,6 +339,11 @@ try {
     if (($battle['attack']['starsAverage'] ?? null) !== 2.5 || ($battle['attack']['destructionAverage'] ?? null) != 90
         || ($battle['defense']['destructionAverage'] ?? null) != 70) {
         throw new RuntimeException('Rata-rata detail pertempuran tidak dihitung dengan benar.');
+    }
+    if (count($battle['attack']['logs'] ?? []) !== 2 || ($battle['attack']['logs'][0]['stars'] ?? null) !== 3
+        || ($battle['attack']['logs'][0]['destructionPercentage'] ?? null) != 100
+        || count($battle['defense']['logs'] ?? []) !== 1) {
+        throw new RuntimeException('Battle log Ranked League tidak diteruskan ke profil pemain.');
     }
     if (($battle['leagueTier'] ?? null) !== 'Legend II' || ($battle['playerRank'] ?? null) !== 30
         || ($battle['player']['attackCount'] ?? null) !== 5 || ($battle['player']['defenseCount'] ?? null) !== 5) {

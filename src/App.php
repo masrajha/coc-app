@@ -552,7 +552,16 @@ final class App
                     $averages[$side] = [
                         'sampleSize' => count($logs),
                         'starsAverage' => $stars ? round(array_sum(array_column($stars, 'stars')) / count($stars), 2) : null,
-                        'destructionAverage' => $destruction ? round(array_sum(array_column($destruction, 'destructionPercentage')) / count($destruction), 2) : null
+                        'destructionAverage' => $destruction ? round(array_sum(array_column($destruction, 'destructionPercentage')) / count($destruction), 2) : null,
+                        'logs' => array_map(static fn(array $log): array => [
+                            'stars' => is_numeric($log['stars'] ?? null) ? (int)$log['stars'] : null,
+                            'destructionPercentage' => is_numeric($log['destructionPercentage'] ?? null) ? round((float)$log['destructionPercentage'], 2) : null,
+                            'trophies' => is_numeric($log['trophies'] ?? $log['leagueTrophies'] ?? $log['trophyChange'] ?? null)
+                                ? (int)($log['trophies'] ?? $log['leagueTrophies'] ?? $log['trophyChange']) : null,
+                            'timestamp' => $log['timestamp'] ?? $log['battleTime'] ?? $log['attackTime'] ?? null,
+                            'opponentName' => $log['opponentName'] ?? ($log['opponent']['name'] ?? null),
+                            'opponentTag' => $log['opponentTag'] ?? ($log['opponent']['tag'] ?? null)
+                        ], $logs)
                     ];
                 }
                 $rankedMembers = $group['data']['members'] ?? [];
