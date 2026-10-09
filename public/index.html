@@ -857,7 +857,13 @@
                 }
                 const name = document.createElement('span');
                 name.className = 'truncate';
-                name.textContent = clan.name || clan.tag;
+
+                const link = document.createElement('a');
+                link.href = `clan.html?tag=${encodeURIComponent(clan.tag)}`;
+                link.textContent = clan.name || clan.tag;
+                link.className = 'hover:underline hover:text-rose-400 transition-colors';
+
+                name.appendChild(link);
                 wrap.appendChild(name);
                 identity.appendChild(wrap);
                 row.appendChild(identity);
