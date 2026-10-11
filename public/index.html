@@ -600,17 +600,25 @@
 
             const needed = Math.max(0, opponentStars + 1 - clanStars);
             const maxAdditional = remaining * 3;
-            const ourMaximum = clanStars + maxAdditional;
-            const opponentMaximum = opponentStars + opponentRemaining * 3;
+            const rosterTheoreticalLimit = members => {
+                const rosterSize = Array.isArray(members) && members.length
+                    ? members.length
+                    : Number(data.teamSize || 0);
+                return rosterSize * 3;
+            };
+            const ourTheoreticalLimit = rosterTheoreticalLimit(data.members);
+            const opponentTheoreticalLimit = rosterTheoreticalLimit(data.opponentMembers);
+            const ourReachableMaximum = Math.min(ourTheoreticalLimit, clanStars + maxAdditional);
+            const opponentReachableMaximum = Math.min(opponentTheoreticalLimit, opponentStars + opponentRemaining * 3);
             let status;
             if (data.state === 'warEnded') status = clanStars > opponentStars ? 'Menang berdasarkan bintang saat ini.' : clanStars < opponentStars ? 'Kalah berdasarkan bintang saat ini.' : 'Bintang seimbang; destruksi menjadi penentu.';
-            else if (ourMaximum < opponentStars) status = 'Tidak dapat mengejar secara matematis dengan kuota tersisa.';
-            else if (clanStars > opponentMaximum) status = 'Posisi aman secara matematis terhadap kuota lawan.';
+            else if (ourReachableMaximum < opponentStars) status = 'Tidak dapat mengejar secara matematis dengan kuota tersisa.';
+            else if (clanStars > opponentReachableMaximum) status = 'Posisi aman secara matematis terhadap kuota lawan.';
             else if (!remaining && clanStars <= opponentStars) status = 'Tidak ada serangan tersisa untuk menambah bintang.';
             else status = needed ? `Butuh minimal ${needed} bintang tambahan, rata-rata ${(needed / Math.max(1, remaining)).toLocaleString('id-ID', { maximumFractionDigits: 2 })} per serangan.` : 'Sedang unggul, tetapi lawan masih dapat menambah bintang.';
             const projection = document.getElementById('warProjection');
             projection.replaceChildren();
-            for (const [label, value] of [['Batas teoretis clan', `${ourMaximum}★`], ['Batas teoretis lawan', `${opponentMaximum}★`], ['Kebutuhan', status]]) {
+            for (const [label, value] of [['Batas teoretis clan', `${ourTheoreticalLimit}★`], ['Batas teoretis lawan', `${opponentTheoreticalLimit}★`], ['Kebutuhan', status]]) {
                 const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); projection.appendChild(item);
             }
         }

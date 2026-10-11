@@ -196,8 +196,11 @@ try {
     foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
     }
-    foreach (['clanSectionNav', 'clan-overview', 'warCommandStrip', 'warProjection', 'rosterTownHall', 'rosterSort', 'matchup-map', 'warMemberDialog', 'renderWarCommand', 'openWarMemberDialog', 'updateClanSectionNav'] as $marker) {
+    foreach (['clanSectionNav', 'clan-overview', 'warCommandStrip', 'warProjection', 'rosterTownHall', 'rosterSort', 'matchup-map', 'warMemberDialog', 'renderWarCommand', 'rosterTheoreticalLimit', 'ourReachableMaximum', 'openWarMemberDialog', 'updateClanSectionNav'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Command center clan CL1-CL3 belum lengkap: ' . $marker);
+    }
+    if (!str_contains($home, 'return rosterSize * 3;') || str_contains($home, 'const ourMaximum = clanStars + maxAdditional;')) {
+        throw new RuntimeException('Batas teoretis war harus dihitung dari jumlah roster dikali tiga.');
     }
     foreach (['cwlPositionInsight', 'performanceKpis', 'performanceDistribution', 'healthSearch', 'data-health-filter', 'healthVisibleCount', 'clanReportSummary', 'copyClanSummary', 'exportWarRoster', 'renderPerformanceInsights', 'filteredHealthMembers', 'refreshClanReport'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Analitik dan laporan clan CL4-CL7 belum lengkap: ' . $marker);
