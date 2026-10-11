@@ -23,39 +23,39 @@ final class App
     private const SUPER_TROOPS = ['Super Barbarian', 'Super Archer', 'Super Giant', 'Sneaky Goblin', 'Super Wall Breaker', 'Super Wizard', 'Inferno Dragon', 'Super Minion', 'Super Valkyrie', 'Super Witch', 'Ice Hound', 'Rocket Balloon', 'Super Bowler', 'Super Dragon', 'Super Miner', 'Super Hog Rider', 'Super Yeti'];
     private const WEIGHTS = ['heroes' => 0.4, 'troops' => 0.35, 'spells' => 0.15, 'pets' => 0.1];
     private const RANKED_RULES = [
-        'Skeleton 1' => ['battles' => 6, 'promoted' => 50, 'demoted' => null],
-        'Skeleton 2' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
-        'Skeleton 3' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
-        'Barbarian 4' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
-        'Barbarian 5' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
-        'Barbarian 6' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
-        'Archer 7' => ['battles' => 8, 'promoted' => 50, 'demoted' => 5],
-        'Archer 8' => ['battles' => 8, 'promoted' => 50, 'demoted' => 5],
-        'Archer 9' => ['battles' => 8, 'promoted' => 40, 'demoted' => 5],
-        'Wizard 10' => ['battles' => 8, 'promoted' => 35, 'demoted' => 10],
-        'Wizard 11' => ['battles' => 8, 'promoted' => 50, 'demoted' => 10],
-        'Wizard 12' => ['battles' => 8, 'promoted' => 40, 'demoted' => 10],
-        'Valkyrie 13' => ['battles' => 10, 'promoted' => 35, 'demoted' => 10],
-        'Valkyrie 14' => ['battles' => 10, 'promoted' => 50, 'demoted' => 10],
-        'Valkyrie 15' => ['battles' => 10, 'promoted' => 40, 'demoted' => 10],
-        'Witch 16' => ['battles' => 10, 'promoted' => 35, 'demoted' => 10],
-        'Witch 17' => ['battles' => 10, 'promoted' => 50, 'demoted' => 10],
-        'Witch 18' => ['battles' => 10, 'promoted' => 40, 'demoted' => 10],
-        'Golem 19' => ['battles' => 12, 'promoted' => 35, 'demoted' => 10],
-        'Golem 20' => ['battles' => 12, 'promoted' => 50, 'demoted' => 10],
-        'Golem 21' => ['battles' => 12, 'promoted' => 40, 'demoted' => 10],
-        'P.E.K.K.A 22' => ['battles' => 12, 'promoted' => 30, 'demoted' => 15],
-        'P.E.K.K.A 23' => ['battles' => 12, 'promoted' => 50, 'demoted' => 15],
-        'P.E.K.K.A 24' => ['battles' => 12, 'promoted' => 40, 'demoted' => 15],
-        'Titan 25' => ['battles' => 12, 'promoted' => 30, 'demoted' => 15],
-        'Titan 26' => ['battles' => 12, 'promoted' => 50, 'demoted' => 15],
-        'Titan 27' => ['battles' => 12, 'promoted' => 40, 'demoted' => 15],
-        'Dragon 28' => ['battles' => 14, 'promoted' => 30, 'demoted' => 15],
-        'Dragon 29' => ['battles' => 14, 'promoted' => 25, 'demoted' => 15],
-        'Dragon 30' => ['battles' => 14, 'promoted' => 25, 'demoted' => 15],
-        'Electro 31' => ['battles' => 18, 'promoted' => 20, 'demoted' => 15],
-        'Electro 32' => ['battles' => 18, 'promoted' => 20, 'demoted' => 15],
-        'Electro 33' => ['battles' => 18, 'promoted' => 15, 'demoted' => 15],
+        'Skeleton League 1' => ['battles' => 6, 'promoted' => 50, 'demoted' => null],
+        'Skeleton League 2' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Skeleton League 3' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Barbarian League 4' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Barbarian League 5' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Barbarian League 6' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Archer League 7' => ['battles' => 8, 'promoted' => 50, 'demoted' => 5],
+        'Archer League 8' => ['battles' => 8, 'promoted' => 50, 'demoted' => 5],
+        'Archer League 9' => ['battles' => 8, 'promoted' => 40, 'demoted' => 5],
+        'Wizard League 10' => ['battles' => 8, 'promoted' => 35, 'demoted' => 10],
+        'Wizard League 11' => ['battles' => 8, 'promoted' => 50, 'demoted' => 10],
+        'Wizard League 12' => ['battles' => 8, 'promoted' => 40, 'demoted' => 10],
+        'Valkyrie League 13' => ['battles' => 10, 'promoted' => 35, 'demoted' => 10],
+        'Valkyrie League 14' => ['battles' => 10, 'promoted' => 50, 'demoted' => 10],
+        'Valkyrie League 15' => ['battles' => 10, 'promoted' => 40, 'demoted' => 10],
+        'Witch League 16' => ['battles' => 10, 'promoted' => 35, 'demoted' => 10],
+        'Witch League 17' => ['battles' => 10, 'promoted' => 50, 'demoted' => 10],
+        'Witch League 18' => ['battles' => 10, 'promoted' => 40, 'demoted' => 10],
+        'Golem League 19' => ['battles' => 12, 'promoted' => 35, 'demoted' => 10],
+        'Golem League 20' => ['battles' => 12, 'promoted' => 50, 'demoted' => 10],
+        'Golem League 21' => ['battles' => 12, 'promoted' => 40, 'demoted' => 10],
+        'P.E.K.K.A League 22' => ['battles' => 12, 'promoted' => 30, 'demoted' => 15],
+        'P.E.K.K.A League 23' => ['battles' => 12, 'promoted' => 50, 'demoted' => 15],
+        'P.E.K.K.A League 24' => ['battles' => 12, 'promoted' => 40, 'demoted' => 15],
+        'Titan League 25' => ['battles' => 12, 'promoted' => 30, 'demoted' => 15],
+        'Titan League 26' => ['battles' => 12, 'promoted' => 50, 'demoted' => 15],
+        'Titan League 27' => ['battles' => 12, 'promoted' => 40, 'demoted' => 15],
+        'Dragon League 28' => ['battles' => 14, 'promoted' => 30, 'demoted' => 15],
+        'Dragon League 29' => ['battles' => 14, 'promoted' => 25, 'demoted' => 15],
+        'Dragon League 30' => ['battles' => 14, 'promoted' => 25, 'demoted' => 15],
+        'Electro League 31' => ['battles' => 18, 'promoted' => 20, 'demoted' => 15],
+        'Electro League 32' => ['battles' => 18, 'promoted' => 20, 'demoted' => 15],
+        'Electro League 33' => ['battles' => 18, 'promoted' => 15, 'demoted' => 15],
         'Legend III' => ['battles' => 24, 'promoted' => 5, 'demoted' => 15],
         'Legend II' => ['battles' => 30, 'promoted' => 3, 'demoted' => 15]
     ];
@@ -559,7 +559,18 @@ final class App
 
     private function rankedRule(?string $tier): ?array
     {
-        return $tier !== null ? (self::RANKED_RULES[$tier] ?? null) : null;
+        if ($tier === null || trim($tier) === '') return null;
+        if (isset(self::RANKED_RULES[$tier])) return self::RANKED_RULES[$tier];
+
+        $normalize = static function (string $name): string {
+            $withoutLeague = preg_replace('/\bleague\b/i', ' ', trim($name)) ?? $name;
+            return strtoupper(preg_replace('/[^a-z0-9]+/i', '', $withoutLeague) ?? '');
+        };
+        $normalizedTier = $normalize($tier);
+        foreach (self::RANKED_RULES as $name => $rule) {
+            if ($normalize($name) === $normalizedTier) return $rule;
+        }
+        return null;
     }
 
     private function rankedLeagueStatistics(array $session, array $members, bool $previous): array

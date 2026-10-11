@@ -124,28 +124,50 @@
         <p id="leagueStatus" class="section-note" role="status">Memuat sesi liga...</p>
         <div id="leaguePlayerRank" class="league-player-rank" hidden></div>
         <div class="league-view-tabs" role="tablist" aria-label="Tampilan grup liga">
-          <button type="button" data-league-view="standings" role="tab" aria-selected="true">Peringkat</button>
-          <button type="button" data-league-view="statistics" role="tab" aria-selected="false">Statistik</button>
+          <button type="button" id="leagueStandingsTab" data-league-view="standings" role="tab" aria-controls="leagueStandingsView" aria-selected="true">Peringkat</button>
+          <button type="button" id="leagueStatisticsTab" data-league-view="statistics" role="tab" aria-controls="leagueStatisticsView" aria-selected="false">Statistik</button>
         </div>
-        <div id="leagueStandingsHeading" class="league-list-heading"><span>Anggota grup</span><span id="leagueMemberCount"></span></div>
-        <ol id="leagueMembers" class="league-members"></ol>
-        <div id="leaguePagination" class="league-pagination">
-          <button id="leaguePrev" type="button" disabled>Prev</button>
-          <span id="leaguePageInfo">—</span>
-          <button id="leagueNext" type="button" disabled>Next</button>
+        <div id="leagueStandingsView" class="league-standings-view" role="tabpanel" aria-labelledby="leagueStandingsTab">
+          <div id="leagueRankingInsights" class="league-ranking-insights">
+            <section class="league-stat-section" aria-labelledby="leagueTopAttackTitle">
+              <div class="league-list-heading"><span id="leagueTopAttackTitle">Top Attack</span><span id="leagueTopAttackMeta">Semua battle</span></div>
+              <ol id="leagueTopAttack" class="league-top-list"></ol>
+            </section>
+            <section class="league-stat-section" aria-labelledby="leagueTopDefenseTitle">
+              <div class="league-list-heading"><span id="leagueTopDefenseTitle">Top Defense</span><span id="leagueTopDefenseMeta">Semua battle</span></div>
+              <ol id="leagueTopDefense" class="league-top-list"></ol>
+            </section>
+            <section class="league-stat-section" aria-labelledby="leagueZonesTitle">
+              <div class="league-list-heading"><span id="leagueZonesTitle">Zona peringkat</span><span id="leagueBattleRule"></span></div>
+              <div id="leagueZones" class="league-zones"></div>
+            </section>
+          </div>
+          <div id="leagueStandingsHeading" class="league-list-heading"><span>Peringkat Anggota grup</span><span id="leagueMemberCount"></span></div>
+          <ol id="leagueMembers" class="league-members"></ol>
+          <div id="leaguePagination" class="league-pagination">
+            <button id="leaguePrev" type="button" disabled>Prev</button>
+            <span id="leaguePageInfo">—</span>
+            <button id="leagueNext" type="button" disabled>Next</button>
+          </div>
         </div>
-        <div id="leagueStatisticsView" class="league-statistics" role="tabpanel" hidden>
-          <section class="league-stat-section" aria-labelledby="leagueTopAttackTitle">
-            <div class="league-list-heading"><span id="leagueTopAttackTitle">Top Attack</span><span id="leagueTopAttackMeta">Semua battle</span></div>
-            <ol id="leagueTopAttack" class="league-top-list"></ol>
+        <div id="leagueStatisticsView" class="league-statistics" role="tabpanel" aria-labelledby="leagueStatisticsTab" hidden>
+          <div class="league-analysis-heading">
+            <div><strong>Analisis grup</strong><span id="leagueStatisticsCoverage">Belum ada data</span></div>
+            <label for="leagueStatisticsMetric">Metrik</label>
+            <select id="leagueStatisticsMetric">
+              <option value="trophies">Trofi</option>
+              <option value="attackPoints">Poin attack</option>
+              <option value="defensePoints">Poin defense</option>
+            </select>
+          </div>
+          <div id="leagueStatisticsSummary" class="league-stat-summary"></div>
+          <section class="league-chart-section" aria-labelledby="leagueDistributionTitle">
+            <div class="league-list-heading"><span id="leagueDistributionTitle">Kurva distribusi</span><span id="leagueDistributionMeta"></span></div>
+            <div id="leagueDistributionChart" class="league-distribution-chart"></div>
           </section>
-          <section class="league-stat-section" aria-labelledby="leagueTopDefenseTitle">
-            <div class="league-list-heading"><span id="leagueTopDefenseTitle">Top Defense</span><span id="leagueTopDefenseMeta">Semua battle</span></div>
-            <ol id="leagueTopDefense" class="league-top-list"></ol>
-          </section>
-          <section class="league-stat-section" aria-labelledby="leagueZonesTitle">
-            <div class="league-list-heading"><span id="leagueZonesTitle">Zona peringkat</span><span id="leagueBattleRule"></span></div>
-            <div id="leagueZones" class="league-zones"></div>
+          <section class="league-chart-section" aria-labelledby="leagueBoxplotTitle">
+            <div class="league-list-heading"><span id="leagueBoxplotTitle">Boxplot</span><span>IQR dan outlier</span></div>
+            <div id="leagueBoxplotChart" class="league-boxplot-chart"></div>
           </section>
         </div>
       </aside>

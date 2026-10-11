@@ -1,6 +1,12 @@
 (function () {
   const PAGE_SIZE = 25;
-  const state = { playerTag: null, members: [], sessions: [], page: 0, request: 0, logRequest: 0, comparisonRequest: 0, statisticsRequest: 0, logFilter: 'all', logSort: 'latest', battleCache: new Map(), playerBattleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null, leagueRule: null, leagueStats: null, statisticsSession: null, playerRank: null, leagueView: 'standings' };
+  const state = { playerTag: null, members: [], sessions: [], page: 0, request: 0, logRequest: 0, comparisonRequest: 0, statisticsRequest: 0, logFilter: 'all', logSort: 'latest', battleCache: new Map(), playerBattleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null, leagueRule: null, leagueStats: null, statisticsSession: null, statisticsLoadingSession: null, statisticsMetric: 'trophies', playerRank: null, leagueView: 'standings' };
+  const statisticsMetrics = {
+    trophies: { label: 'Trofi', source: 'standings' },
+    attackPoints: { label: 'Poin attack', source: 'battle' },
+    defensePoints: { label: 'Poin defense', source: 'battle' }
+  };
+  const SVG_NS = 'http://www.w3.org/2000/svg';
   const clanTag = normalizeTag(new URLSearchParams(location.search).get('clan'));
 
   function normalizeTag(value) {
@@ -383,44 +389,234 @@
     renderTopList('leagueTopAttack', topByPerformance('attack'), 'attack');
     renderTopList('leagueTopDefense', topByPerformance('defense'), 'defense');
     renderZones();
+    renderDescriptiveStatistics();
+  }
+
+  function metricDataset(metric) {
+    const config = statisticsMetrics[metric] || statisticsMetrics.trophies;
+    const members = config.source === 'standings'
+      ? state.members
+      : (Array.isArray(state.leagueStats?.members) ? state.leagueStats.members : []);
+    return members.map(member => ({ member, value: Number(member[metric]) }))
+      .filter(item => Number.isFinite(item.value));
+  }
+
+  function quantile(sorted, probability) {
+    if (!sorted.length) return null;
+    const position = (sorted.length - 1) * probability;
+    const lower = Math.floor(position);
+    const fraction = position - lower;
+    return sorted[lower + 1] === undefined ? sorted[lower] : sorted[lower] + fraction * (sorted[lower + 1] - sorted[lower]);
+  }
+
+  function describeValues(values) {
+    const sorted = [...values].sort((a, b) => a - b);
+    if (!sorted.length) return null;
+    const mean = sorted.reduce((sum, value) => sum + value, 0) / sorted.length;
+    const variance = sorted.reduce((sum, value) => sum + ((value - mean) ** 2), 0) / sorted.length;
+    return {
+      count: sorted.length,
+      min: sorted[0],
+      q1: quantile(sorted, 0.25),
+      median: quantile(sorted, 0.5),
+      q3: quantile(sorted, 0.75),
+      max: sorted[sorted.length - 1],
+      mean,
+      standardDeviation: Math.sqrt(variance),
+      sorted
+    };
+  }
+
+  function formatStatistic(value, maximumFractionDigits = 1) {
+    return Number(value).toLocaleString('id-ID', { maximumFractionDigits });
+  }
+
+  function svgNode(name, attributes = {}) {
+    const node = document.createElementNS(SVG_NS, name);
+    for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, String(value));
+    return node;
+  }
+
+  function renderStatisticEmpty(id, message) {
+    const root = element(id);
+    root.replaceChildren();
+    const empty = document.createElement('p');
+    empty.className = 'league-stat-empty';
+    empty.textContent = message;
+    root.appendChild(empty);
+  }
+
+  function renderStatisticSummary(stats) {
+    const root = element('leagueStatisticsSummary');
+    root.replaceChildren();
+    const items = [
+      ['Sampel', stats.count, 0],
+      ['Rata-rata', stats.mean, 1],
+      ['Median', stats.median, 1],
+      ['Std. deviasi', stats.standardDeviation, 1],
+      ['Minimum', stats.min, 0],
+      ['Kuartil 1', stats.q1, 1],
+      ['Kuartil 3', stats.q3, 1],
+      ['Maksimum', stats.max, 0]
+    ];
+    for (const [label, value, digits] of items) {
+      const item = document.createElement('div');
+      const term = document.createElement('span'); term.textContent = label;
+      const result = document.createElement('strong'); result.textContent = formatStatistic(value, digits);
+      item.append(term, result);
+      root.appendChild(item);
+    }
+  }
+
+  function renderDistribution(stats, metric, playerValue) {
+    const root = element('leagueDistributionChart');
+    root.replaceChildren();
+    const width = 300; const height = 154;
+    const left = 16; const right = 10; const top = 12; const bottom = 28;
+    const plotWidth = width - left - right; const plotHeight = height - top - bottom;
+    const rawRange = stats.max - stats.min;
+    const padding = rawRange === 0 ? Math.max(1, Math.abs(stats.min) * 0.05) : rawRange * 0.04;
+    const domainMin = stats.min - padding; const domainMax = stats.max + padding;
+    const range = domainMax - domainMin;
+    const x = value => left + ((value - domainMin) / range) * plotWidth;
+    const binsCount = Math.max(5, Math.min(12, Math.ceil(Math.sqrt(stats.count))));
+    const bins = Array.from({ length: binsCount }, () => 0);
+    for (const value of stats.sorted) {
+      const index = Math.min(binsCount - 1, Math.max(0, Math.floor(((value - domainMin) / range) * binsCount)));
+      bins[index]++;
+    }
+    const standardDeviation = stats.standardDeviation || range / 8;
+    const bandwidth = Math.max(range / 100, 1.06 * standardDeviation * (stats.count ** -0.2));
+    const density = Array.from({ length: 48 }, (_, index) => {
+      const value = domainMin + (index / 47) * range;
+      const sum = stats.sorted.reduce((total, sample) => total + Math.exp(-0.5 * (((value - sample) / bandwidth) ** 2)), 0);
+      return { value, density: sum / (stats.count * bandwidth * Math.sqrt(2 * Math.PI)) };
+    });
+    const maxBin = Math.max(...bins, 1);
+    const maxDensity = Math.max(...density.map(point => point.density), Number.EPSILON);
+    const svg = svgNode('svg', { viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': `Kurva distribusi ${statisticsMetrics[metric].label} untuk ${stats.count} pemain` });
+    svg.appendChild(svgNode('line', { x1: left, y1: top + plotHeight, x2: width - right, y2: top + plotHeight, class: 'league-chart-axis' }));
+    bins.forEach((count, index) => {
+      const binWidth = plotWidth / binsCount;
+      const barHeight = (count / maxBin) * plotHeight * 0.7;
+      svg.appendChild(svgNode('rect', { x: left + index * binWidth + 1, y: top + plotHeight - barHeight, width: Math.max(1, binWidth - 2), height: barHeight, class: 'league-distribution-bar' }));
+    });
+    const curve = density.map((point, index) => `${index ? 'L' : 'M'} ${x(point.value).toFixed(2)} ${(top + plotHeight - (point.density / maxDensity) * plotHeight).toFixed(2)}`).join(' ');
+    svg.appendChild(svgNode('path', { d: curve, class: 'league-density-curve' }));
+    svg.appendChild(svgNode('line', { x1: x(stats.mean), y1: top, x2: x(stats.mean), y2: top + plotHeight, class: 'league-mean-line' }));
+    if (Number.isFinite(playerValue)) svg.appendChild(svgNode('line', { x1: x(playerValue), y1: top, x2: x(playerValue), y2: top + plotHeight, class: 'league-player-line' }));
+    const labels = [[left, stats.min, 'start'], [x(stats.mean), stats.mean, 'middle'], [width - right, stats.max, 'end']];
+    for (const [labelX, value, anchor] of labels) {
+      const label = svgNode('text', { x: labelX, y: height - 7, 'text-anchor': anchor, class: 'league-chart-label' });
+      label.textContent = formatStatistic(value, 0);
+      svg.appendChild(label);
+    }
+    root.appendChild(svg);
+    const legend = document.createElement('div'); legend.className = 'league-chart-legend';
+    legend.append(Object.assign(document.createElement('span'), { className: 'is-curve', textContent: 'Distribusi' }), Object.assign(document.createElement('span'), { className: 'is-mean', textContent: 'Rata-rata' }));
+    if (Number.isFinite(playerValue)) legend.appendChild(Object.assign(document.createElement('span'), { className: 'is-player', textContent: 'Pemain ini' }));
+    root.appendChild(legend);
+  }
+
+  function renderBoxplot(stats, metric, playerValue) {
+    const root = element('leagueBoxplotChart');
+    root.replaceChildren();
+    const width = 300; const height = 102; const left = 16; const right = 10;
+    const rawRange = stats.max - stats.min;
+    const padding = rawRange === 0 ? Math.max(1, Math.abs(stats.min) * 0.05) : rawRange * 0.04;
+    const domainMin = stats.min - padding; const domainMax = stats.max + padding;
+    const x = value => left + ((value - domainMin) / (domainMax - domainMin)) * (width - left - right);
+    const iqr = stats.q3 - stats.q1;
+    const lowerFence = stats.q1 - 1.5 * iqr; const upperFence = stats.q3 + 1.5 * iqr;
+    const regular = stats.sorted.filter(value => value >= lowerFence && value <= upperFence);
+    const lowerWhisker = regular[0] ?? stats.min; const upperWhisker = regular[regular.length - 1] ?? stats.max;
+    const outliers = stats.sorted.filter(value => value < lowerWhisker || value > upperWhisker);
+    const svg = svgNode('svg', { viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': `Boxplot ${statisticsMetrics[metric].label}; median ${formatStatistic(stats.median)}, IQR ${formatStatistic(iqr)}` });
+    svg.appendChild(svgNode('line', { x1: x(lowerWhisker), y1: 42, x2: x(upperWhisker), y2: 42, class: 'league-boxplot-whisker' }));
+    svg.appendChild(svgNode('line', { x1: x(lowerWhisker), y1: 31, x2: x(lowerWhisker), y2: 53, class: 'league-boxplot-whisker' }));
+    svg.appendChild(svgNode('line', { x1: x(upperWhisker), y1: 31, x2: x(upperWhisker), y2: 53, class: 'league-boxplot-whisker' }));
+    svg.appendChild(svgNode('rect', { x: x(stats.q1), y: 23, width: Math.max(1, x(stats.q3) - x(stats.q1)), height: 38, class: 'league-boxplot-box' }));
+    svg.appendChild(svgNode('line', { x1: x(stats.median), y1: 23, x2: x(stats.median), y2: 61, class: 'league-boxplot-median' }));
+    svg.appendChild(svgNode('circle', { cx: x(stats.mean), cy: 42, r: 4, class: 'league-boxplot-mean' }));
+    outliers.slice(0, 30).forEach((value, index) => svg.appendChild(svgNode('circle', { cx: x(value), cy: 42 + ((index % 3) - 1) * 6, r: 2.5, class: 'league-boxplot-outlier' })));
+    if (Number.isFinite(playerValue)) svg.appendChild(svgNode('path', { d: `M ${x(playerValue) - 4} 14 L ${x(playerValue) + 4} 14 L ${x(playerValue)} 20 Z`, class: 'league-boxplot-player' }));
+    const labels = [['Min', lowerWhisker, 'start'], ['Median', stats.median, 'middle'], ['Maks', upperWhisker, 'end']];
+    for (const [labelText, value, anchor] of labels) {
+      const label = svgNode('text', { x: x(value), y: 79, 'text-anchor': anchor, class: 'league-chart-label' }); label.textContent = labelText; svg.appendChild(label);
+      const number = svgNode('text', { x: x(value), y: 94, 'text-anchor': anchor, class: 'league-chart-value' }); number.textContent = formatStatistic(value, 0); svg.appendChild(number);
+    }
+    root.appendChild(svg);
+  }
+
+  function renderDescriptiveStatistics() {
+    const metric = statisticsMetrics[state.statisticsMetric] ? state.statisticsMetric : 'trophies';
+    const config = statisticsMetrics[metric];
+    const dataset = metricDataset(metric);
+    const stats = describeValues(dataset.map(item => item.value));
+    const coverage = config.source === 'standings'
+      ? `${dataset.length}/${state.members.length || 0} pemain`
+      : state.leagueStats ? `${dataset.length}/${state.leagueStats.totalMembers} pemain` : 'Menghitung battle…';
+    setText('leagueStatisticsCoverage', coverage);
+    setText('leagueDistributionMeta', stats ? `n=${stats.count}` : 'Belum tersedia');
+    const summary = element('leagueStatisticsSummary');
+    summary.replaceChildren();
+    if (!stats) {
+      const message = config.source === 'battle' && state.members.length
+        ? 'Statistik battle sedang dihitung untuk seluruh anggota grup.'
+        : 'Data statistik belum tersedia untuk sesi ini.';
+      const empty = document.createElement('p'); empty.className = 'league-stat-empty'; empty.textContent = message; summary.appendChild(empty);
+      renderStatisticEmpty('leagueDistributionChart', message);
+      renderStatisticEmpty('leagueBoxplotChart', message);
+      return;
+    }
+    renderStatisticSummary(stats);
+    const playerValue = dataset.find(item => normalizeTag(item.member.tag) === state.playerTag)?.value;
+    renderDistribution(stats, metric, playerValue);
+    renderBoxplot(stats, metric, playerValue);
   }
 
   async function loadLeagueStatistics(sessionId) {
     if (state.statisticsSession === sessionId && state.leagueStats) return;
+    if (state.statisticsLoadingSession === sessionId) return;
     const request = ++state.statisticsRequest;
     state.statisticsSession = sessionId;
+    state.statisticsLoadingSession = sessionId;
     state.leagueStats = null;
     setText('leagueTopAttackMeta', 'Memuat…');
     setText('leagueTopDefenseMeta', 'Memuat…');
     renderTopList('leagueTopAttack', [], 'attack', 'Menghitung seluruh serangan grup…');
     renderTopList('leagueTopDefense', [], 'defense', 'Menghitung seluruh pertahanan grup…');
+    renderDescriptiveStatistics();
     try {
       const response = await fetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=statistics`);
       const data = await response.json();
       if (request !== state.statisticsRequest || sessionId !== element('leagueSession').value) return;
       if (!response.ok) throw new Error(data.error || 'Statistik grup tidak dapat dimuat.');
+      state.statisticsLoadingSession = null;
       state.leagueStats = data;
       renderStatistics();
     } catch (error) {
       if (request !== state.statisticsRequest) return;
+      state.statisticsLoadingSession = null;
       setText('leagueTopAttackMeta', 'Tidak tersedia');
       setText('leagueTopDefenseMeta', 'Tidak tersedia');
       renderTopList('leagueTopAttack', [], 'attack', error.message);
       renderTopList('leagueTopDefense', [], 'defense', error.message);
+      renderDescriptiveStatistics();
     }
   }
 
   function setLeagueView(view) {
     state.leagueView = view === 'statistics' ? 'statistics' : 'standings';
     const statistics = state.leagueView === 'statistics';
-    element('leagueStandingsHeading').hidden = statistics;
-    element('leagueMembers').hidden = statistics;
-    element('leaguePagination').hidden = statistics;
+    element('leagueStandingsView').hidden = statistics;
     element('leagueStatisticsView').hidden = !statistics;
     for (const tab of document.querySelectorAll('[data-league-view]')) {
       tab.setAttribute('aria-selected', String(tab.dataset.leagueView === state.leagueView));
+      tab.tabIndex = tab.dataset.leagueView === state.leagueView ? 0 : -1;
     }
-    if (statistics && state.members.length) loadLeagueStatistics(element('leagueSession').value);
+    if (statistics) renderDescriptiveStatistics();
+    if (state.members.length && !state.leagueStats) loadLeagueStatistics(element('leagueSession').value);
   }
 
   function renderBattleLogList(id, logs, emptyMessage) {
@@ -675,6 +871,7 @@
     state.leagueRule = null;
     state.leagueStats = null;
     state.statisticsSession = null;
+    state.statisticsLoadingSession = null;
     state.statisticsRequest++;
     state.playerRank = null;
     state.page = 0;
@@ -692,7 +889,7 @@
       state.page = data.playerRank ? Math.floor((data.playerRank - 1) / PAGE_SIZE) : 0;
       renderPage();
       renderStatistics();
-      if (state.leagueView === 'statistics') loadLeagueStatistics(sessionId);
+      loadLeagueStatistics(sessionId);
       const label = data.session.id === 'current' ? 'Sesi saat ini' : 'Sesi terakhir';
       setLeagueTitle(data.leagueTier);
       const tier = data.leagueTier ? `${data.leagueTier} · ` : '';
@@ -732,6 +929,7 @@
     state.leagueRule = null;
     state.leagueStats = null;
     state.statisticsSession = null;
+    state.statisticsLoadingSession = null;
     state.statisticsRequest++;
     state.playerRank = null;
     state.page = 0;
@@ -782,6 +980,11 @@
   element('rankedBattleSession').addEventListener('change', event => loadPlayerBattleLog(event.target.value));
   element('rankedLogFilter').addEventListener('change', event => { state.logFilter = event.target.value; loadPlayerBattleLog(element('rankedBattleSession').value); });
   element('rankedLogSort').addEventListener('change', event => { state.logSort = event.target.value; loadPlayerBattleLog(element('rankedBattleSession').value); });
+  element('leagueStatisticsMetric').addEventListener('change', event => {
+    state.statisticsMetric = statisticsMetrics[event.target.value] ? event.target.value : 'trophies';
+    renderDescriptiveStatistics();
+    if (statisticsMetrics[state.statisticsMetric].source === 'battle' && state.members.length && !state.leagueStats) loadLeagueStatistics(element('leagueSession').value);
+  });
   element('leaguePrev').addEventListener('click', () => {
     if (state.page > 0) { state.page--; renderPage(); }
   });

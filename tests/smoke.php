@@ -248,7 +248,7 @@ try {
         || $assetResponse->getHeaderLine('ETag') === '') {
         throw new RuntimeException('Header cache HTML/CSS tidak mendukung asset versioning.');
     }
-    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', 'leagueStatisticsView', 'leagueTopAttack', 'leagueTopAttackMeta', 'leagueTopDefense', 'leagueTopDefenseMeta', 'leagueZones', 'data-league-view="statistics"', '/player-league.js'] as $marker) {
+    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', 'leagueStandingsView', 'leagueRankingInsights', 'leagueStatisticsView', 'leagueStatisticsMetric', 'leagueStatisticsSummary', 'leagueDistributionChart', 'leagueBoxplotChart', 'leagueTopAttack', 'leagueTopAttackMeta', 'leagueTopDefense', 'leagueTopDefenseMeta', 'leagueZones', 'data-league-view="statistics"', '/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }
     foreach (['data-tab="ranked-battles"', 'rankedBattleSession', 'rankedBattleSummary', 'rankedSessionComparison', 'rankedComparisonChart', 'rankedComparisonInsights', 'rankedAttackLogs', 'rankedDefenseLogs'] as $marker) {
@@ -267,7 +267,7 @@ try {
     foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'loadRankedComparison', 'renderRankedComparison', 'renderRankedInsights', 'starDistribution', 'sessionLabel', "timeZone: 'Asia/Jakarta'", 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Renderer battle log Ranked League tidak lengkap: ' . $marker);
     }
-    foreach (['topByPerformance', 'renderTopList', 'loadLeagueStatistics', 'detail=statistics', 'attackTriples', 'defenseStops', 'base diratakan (3★)', 'serangan gagal 3★', 'renderZones', 'setLeagueView', 'playerLeagueHref', 'standingsZone', 'row.classList.add(`is-${zone}-zone`)', 'leagueRule'] as $marker) {
+    foreach (['topByPerformance', 'renderTopList', 'loadLeagueStatistics', 'detail=statistics', 'attackTriples', 'defenseStops', 'base diratakan (3★)', 'serangan gagal 3★', 'renderZones', 'setLeagueView', 'playerLeagueHref', 'standingsZone', 'row.classList.add(`is-${zone}-zone`)', 'leagueRule', 'describeValues', 'standardDeviation', 'renderDescriptiveStatistics', 'renderDistribution', 'renderBoxplot', '1.5 * iqr'] as $marker) {
         if (!str_contains($leagueScript, $marker) && !str_contains($playerPage, $marker)) throw new RuntimeException('Statistik sidebar Ranked League tidak lengkap: ' . $marker);
     }
     if (!str_contains($leagueScript, '/assets/trophy.png')) throw new RuntimeException('Aset ikon trofi battle log belum digunakan.');
@@ -281,7 +281,7 @@ try {
     if (!str_contains($leagueStyles, '@media(hover:none)') || !str_contains($leagueStyles, '.league-battle-info{display:inline-grid')) {
         throw new RuntimeException('Ikon popup tidak diaktifkan untuk perangkat layar sentuh.');
     }
-    foreach (['.league-view-tabs', '.league-top-member', '.league-member.is-promotion-zone', '.league-member.is-demotion-zone', '.league-zone.is-promotion', '.league-zone.is-demotion'] as $marker) {
+    foreach (['.league-view-tabs', '.league-top-member', '.league-member.is-promotion-zone', '.league-member.is-demotion-zone', '.league-zone.is-promotion', '.league-zone.is-demotion', '.league-stat-summary', '.league-distribution-chart', '.league-density-curve', '.league-boxplot-box'] as $marker) {
         if (!str_contains($leagueStyles, $marker)) throw new RuntimeException('Style statistik sidebar Ranked League tidak lengkap: ' . $marker);
     }
     $playerStyles = (string)$app->handle($factory->createServerRequest('GET', '/player.css'))->getBody();
@@ -401,6 +401,20 @@ try {
     }
     $source = (new ReflectionClass(App::class))->newInstanceWithoutConstructor();
     $sourceType = new ReflectionClass(App::class);
+    $rankedRuleMethod = $sourceType->getMethod('rankedRule');
+    $rankedRules = $sourceType->getReflectionConstant('RANKED_RULES')->getValue();
+    foreach ($rankedRules as $tierName => $expectedRule) {
+        $legacyTierName = str_ireplace(' League ', ' ', $tierName);
+        if ($rankedRuleMethod->invoke($source, $tierName) !== $expectedRule
+            || $rankedRuleMethod->invoke($source, $legacyTierName) !== $expectedRule) {
+            throw new RuntimeException('Rule Ranked League tidak cocok untuk nama tier API: ' . $tierName);
+        }
+    }
+    if (($rankedRuleMethod->invoke($source, '  pekka league 24  ')['battles'] ?? null) !== 12
+        || ($rankedRuleMethod->invoke($source, 'Legend League II')['battles'] ?? null) !== 30
+        || $rankedRuleMethod->invoke($source, 'Unknown League 99') !== null) {
+        throw new RuntimeException('Normalisasi nama tier Ranked League tidak konsisten.');
+    }
     $sourceType->getProperty('dataDir')->setValue($source, $dataDir);
     $sourceType->getProperty('cache')->setValue($source, []);
     $path = '/leaguegroup/%238YGL882/1790571600?playerTag=%23YJPRUUPUG';
