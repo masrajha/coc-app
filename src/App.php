@@ -6,6 +6,8 @@ namespace CocTracker;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Pool;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App as SlimApp;
@@ -20,6 +22,43 @@ final class App
     private const PETS = ['L.A.S.S.I', 'Electro Owl', 'Mighty Yak', 'Unicorn', 'Frosty', 'Diggy', 'Poison Lizard', 'Phoenix', 'Spirit Fox', 'Angry Jelly', 'Sneezy'];
     private const SUPER_TROOPS = ['Super Barbarian', 'Super Archer', 'Super Giant', 'Sneaky Goblin', 'Super Wall Breaker', 'Super Wizard', 'Inferno Dragon', 'Super Minion', 'Super Valkyrie', 'Super Witch', 'Ice Hound', 'Rocket Balloon', 'Super Bowler', 'Super Dragon', 'Super Miner', 'Super Hog Rider', 'Super Yeti'];
     private const WEIGHTS = ['heroes' => 0.4, 'troops' => 0.35, 'spells' => 0.15, 'pets' => 0.1];
+    private const RANKED_RULES = [
+        'Skeleton 1' => ['battles' => 6, 'promoted' => 50, 'demoted' => null],
+        'Skeleton 2' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Skeleton 3' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Barbarian 4' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Barbarian 5' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Barbarian 6' => ['battles' => 6, 'promoted' => 50, 'demoted' => 5],
+        'Archer 7' => ['battles' => 8, 'promoted' => 50, 'demoted' => 5],
+        'Archer 8' => ['battles' => 8, 'promoted' => 50, 'demoted' => 5],
+        'Archer 9' => ['battles' => 8, 'promoted' => 40, 'demoted' => 5],
+        'Wizard 10' => ['battles' => 8, 'promoted' => 35, 'demoted' => 10],
+        'Wizard 11' => ['battles' => 8, 'promoted' => 50, 'demoted' => 10],
+        'Wizard 12' => ['battles' => 8, 'promoted' => 40, 'demoted' => 10],
+        'Valkyrie 13' => ['battles' => 10, 'promoted' => 35, 'demoted' => 10],
+        'Valkyrie 14' => ['battles' => 10, 'promoted' => 50, 'demoted' => 10],
+        'Valkyrie 15' => ['battles' => 10, 'promoted' => 40, 'demoted' => 10],
+        'Witch 16' => ['battles' => 10, 'promoted' => 35, 'demoted' => 10],
+        'Witch 17' => ['battles' => 10, 'promoted' => 50, 'demoted' => 10],
+        'Witch 18' => ['battles' => 10, 'promoted' => 40, 'demoted' => 10],
+        'Golem 19' => ['battles' => 12, 'promoted' => 35, 'demoted' => 10],
+        'Golem 20' => ['battles' => 12, 'promoted' => 50, 'demoted' => 10],
+        'Golem 21' => ['battles' => 12, 'promoted' => 40, 'demoted' => 10],
+        'P.E.K.K.A 22' => ['battles' => 12, 'promoted' => 30, 'demoted' => 15],
+        'P.E.K.K.A 23' => ['battles' => 12, 'promoted' => 50, 'demoted' => 15],
+        'P.E.K.K.A 24' => ['battles' => 12, 'promoted' => 40, 'demoted' => 15],
+        'Titan 25' => ['battles' => 12, 'promoted' => 30, 'demoted' => 15],
+        'Titan 26' => ['battles' => 12, 'promoted' => 50, 'demoted' => 15],
+        'Titan 27' => ['battles' => 12, 'promoted' => 40, 'demoted' => 15],
+        'Dragon 28' => ['battles' => 14, 'promoted' => 30, 'demoted' => 15],
+        'Dragon 29' => ['battles' => 14, 'promoted' => 25, 'demoted' => 15],
+        'Dragon 30' => ['battles' => 14, 'promoted' => 25, 'demoted' => 15],
+        'Electro 31' => ['battles' => 18, 'promoted' => 20, 'demoted' => 15],
+        'Electro 32' => ['battles' => 18, 'promoted' => 20, 'demoted' => 15],
+        'Electro 33' => ['battles' => 18, 'promoted' => 15, 'demoted' => 15],
+        'Legend III' => ['battles' => 24, 'promoted' => 5, 'demoted' => 15],
+        'Legend II' => ['battles' => 30, 'promoted' => 3, 'demoted' => 15]
+    ];
     private const EQUIPMENT = [
         'Barbarian King' => ['Barbarian Puppet', 'Rage Vial', 'Earthquake Boots', 'Vampstache', 'Giant Gauntlet', 'Spiky Ball', 'Snake Bracelet', 'Stick Horse'],
         'Archer Queen' => ['Archer Puppet', 'Invisibility Vial', 'Giant Arrow', 'Healer Puppet', 'Frozen Arrow', 'Magic Mirror', 'Action Figure', 'Monolith Arrow'],
@@ -518,6 +557,64 @@ final class App
         return $sessions;
     }
 
+    private function rankedRule(?string $tier): ?array
+    {
+        return $tier !== null ? (self::RANKED_RULES[$tier] ?? null) : null;
+    }
+
+    private function rankedLeagueStatistics(array $session, array $members, bool $previous): array
+    {
+        $cachePath = 'ranked-stats/' . hash('sha256', (string)$session['groupTag'] . ':' . (string)$session['seasonId']) . '.json';
+        $cached = $this->readJson($cachePath, []);
+        if (($cached['expires'] ?? 0) > time() && is_array($cached['data'] ?? null)) return $cached['data'];
+
+        $token = (string)$this->env('COC_API_TOKEN');
+        if ($token === '') throw new \RuntimeException('Token API belum diatur.');
+        $memberMap = [];
+        foreach ($members as $member) {
+            $tag = $this->normalizeTag($member['playerTag'] ?? '');
+            if ($tag) $memberMap[$tag] = $member;
+        }
+        $rows = [];
+        $requests = function () use ($memberMap, $session, $token): \Generator {
+            foreach ($memberMap as $tag => $_member) {
+                $path = '/leaguegroup/' . rawurlencode((string)$session['groupTag']) . '/' . (int)$session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
+                yield $tag => new GuzzleRequest('GET', self::API_BASE . $path, ['Authorization' => 'Bearer ' . $token, 'Accept' => 'application/json']);
+            }
+        };
+        $pool = new Pool($this->http, $requests(), [
+            'concurrency' => 10,
+            'fulfilled' => function (ResponseInterface $response, string $tag) use (&$rows, $memberMap): void {
+                if ($response->getStatusCode() !== 200) return;
+                try { $data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR); }
+                catch (\JsonException) { return; }
+                $attackLogs = is_array($data['attackLogs'] ?? null) ? $data['attackLogs'] : [];
+                $defenseLogs = is_array($data['defenseLogs'] ?? null) ? $data['defenseLogs'] : [];
+                $points = static fn(array $logs): int => array_sum(array_map(static fn(array $log): int => is_numeric($log['trophies'] ?? $log['leagueTrophies'] ?? $log['trophyChange'] ?? null) ? (int)($log['trophies'] ?? $log['leagueTrophies'] ?? $log['trophyChange']) : 0, $logs));
+                $member = $memberMap[$tag];
+                $rows[] = [
+                    'tag' => '#' . $tag,
+                    'name' => $member['playerName'] ?? ('#' . $tag),
+                    'clanTag' => $member['clanTag'] ?? null,
+                    'clanName' => $member['clanName'] ?? null,
+                    'trophies' => $member['leagueTrophies'] ?? null,
+                    'attackPoints' => $points($attackLogs),
+                    'attackTriples' => count(array_filter($attackLogs, static fn(array $log): bool => is_numeric($log['stars'] ?? null) && (int)$log['stars'] === 3)),
+                    'attackCount' => count($attackLogs),
+                    'defensePoints' => $points($defenseLogs),
+                    'defenseStops' => count(array_filter($defenseLogs, static fn(array $log): bool => is_numeric($log['stars'] ?? null) && (int)$log['stars'] < 3)),
+                    'defenseCount' => count($defenseLogs)
+                ];
+            },
+            'rejected' => static function (): void {}
+        ]);
+        $pool->promise()->wait();
+        $data = ['members' => $rows, 'coverage' => count($rows), 'totalMembers' => count($memberMap), 'generatedAt' => gmdate('c')];
+        $ttl = $previous ? 30 * 86400 : 600;
+        $this->writeJson($cachePath, ['expires' => time() + $ttl, 'data' => $data], true);
+        return $data;
+    }
+
     private function playerLeagueGroup(ServerRequestInterface $req, ResponseInterface $res, string $raw): ResponseInterface
     {
         $tag = $this->normalizeTag($raw);
@@ -533,6 +630,10 @@ final class App
             $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
             $previous = $sessionId === 'previous';
             $group = $this->upstream($path, 18000, 0, $previous ? 30 * 86400 : null, $previous);
+            if (($req->getQueryParams()['detail'] ?? null) === 'statistics') {
+                $statistics = $this->rankedLeagueStatistics($session, $group['data']['members'] ?? [], $previous);
+                return $this->respond($res, ['playerTag' => '#' . $tag, 'session' => $session] + $statistics);
+            }
             if (($req->getQueryParams()['detail'] ?? null) === 'battle') {
                 $memberTag = $this->normalizeTag((string)($req->getQueryParams()['memberTag'] ?? ''));
                 if (!$memberTag) return $this->tagError($res, 'Tag anggota tidak valid.');
@@ -621,6 +722,7 @@ final class App
                 'playerTag' => '#' . $tag,
                 'session' => $session,
                 'leagueTier' => $sessionId === 'current' ? ($profile['data']['leagueTier']['name'] ?? null) : null,
+                'leagueRule' => $sessionId === 'current' ? $this->rankedRule($profile['data']['leagueTier']['name'] ?? null) : null,
                 'playerRank' => $playerRank,
                 'totalMembers' => count($members),
                 'members' => $members,

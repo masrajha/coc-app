@@ -245,10 +245,10 @@ try {
         || $assetResponse->getHeaderLine('ETag') === '') {
         throw new RuntimeException('Header cache HTML/CSS tidak mendukung asset versioning.');
     }
-    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', '/player-league.js'] as $marker) {
+    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', 'leagueStatisticsView', 'leagueTopAttack', 'leagueTopAttackMeta', 'leagueTopDefense', 'leagueTopDefenseMeta', 'leagueZones', 'data-league-view="statistics"', '/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }
-    foreach (['data-tab="ranked-battles"', 'rankedBattleSession', 'rankedBattleSummary', 'rankedAttackLogs', 'rankedDefenseLogs'] as $marker) {
+    foreach (['data-tab="ranked-battles"', 'rankedBattleSession', 'rankedBattleSummary', 'rankedSessionComparison', 'rankedComparisonChart', 'rankedComparisonInsights', 'rankedAttackLogs', 'rankedDefenseLogs'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Tab battle log Ranked League tidak tersedia: ' . $marker);
     }
     foreach (['rankedAttackTrophies', 'rankedDefenseTrophies'] as $marker) {
@@ -261,8 +261,11 @@ try {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Statistik dan resume player P10-P14 tidak lengkap: ' . $marker);
     }
     $leagueScript = (string)$app->handle($factory->createServerRequest('GET', '/player-league.js'))->getBody();
-    foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
+    foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'loadRankedComparison', 'renderRankedComparison', 'renderRankedInsights', 'starDistribution', 'sessionLabel', "timeZone: 'Asia/Jakarta'", 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Renderer battle log Ranked League tidak lengkap: ' . $marker);
+    }
+    foreach (['topByPerformance', 'renderTopList', 'loadLeagueStatistics', 'detail=statistics', 'attackTriples', 'defenseStops', 'base diratakan (3★)', 'serangan gagal 3★', 'renderZones', 'setLeagueView', 'playerLeagueHref', 'standingsZone', 'row.classList.add(`is-${zone}-zone`)', 'leagueRule'] as $marker) {
+        if (!str_contains($leagueScript, $marker) && !str_contains($playerPage, $marker)) throw new RuntimeException('Statistik sidebar Ranked League tidak lengkap: ' . $marker);
     }
     if (!str_contains($leagueScript, '/assets/trophy.png')) throw new RuntimeException('Aset ikon trofi battle log belum digunakan.');
     foreach (["className = 'league-battle-info'", 'showBattle(member, row, true, info)', "aria-haspopup', 'dialog'", "event.key === 'Escape'", 'state.pinned'] as $marker) {
@@ -274,6 +277,13 @@ try {
     $leagueStyles = (string)$app->handle($factory->createServerRequest('GET', '/player-league.css'))->getBody();
     if (!str_contains($leagueStyles, '@media(hover:none)') || !str_contains($leagueStyles, '.league-battle-info{display:inline-grid')) {
         throw new RuntimeException('Ikon popup tidak diaktifkan untuk perangkat layar sentuh.');
+    }
+    foreach (['.league-view-tabs', '.league-top-member', '.league-member.is-promotion-zone', '.league-member.is-demotion-zone', '.league-zone.is-promotion', '.league-zone.is-demotion'] as $marker) {
+        if (!str_contains($leagueStyles, $marker)) throw new RuntimeException('Style statistik sidebar Ranked League tidak lengkap: ' . $marker);
+    }
+    $playerStyles = (string)$app->handle($factory->createServerRequest('GET', '/player.css'))->getBody();
+    foreach (['.ranked-session-comparison', '.ranked-comparison-layout', '.ranked-comparison-row', '.ranked-comparison-series.is-current', '.ranked-comparison-metric .is-up', '.ranked-comparison-metric .is-down', '.ranked-comparison-insights', '.ranked-star-bar', '.ranked-insight-note'] as $marker) {
+        if (!str_contains($playerStyles, $marker)) throw new RuntimeException('Style perbandingan sesi Ranked League tidak lengkap: ' . $marker);
     }
     foreach (['landingPanel', 'homeClanTab', 'homePlayerTab', 'homeCompareTab', 'clanTagInput', 'playerTagInput', 'comparePlayerOne', 'comparePlayerTwo', 'searchButton', 'rankingsPanel', 'rankingPlayersTab', 'rankingClansTab', 'rankingLocation', 'joinClanLink', 'OpenClanProfile', 'Join Clan'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Homepage kehilangan kontrol leaderboard: ' . $marker);
@@ -345,7 +355,9 @@ try {
     }
     $group = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=current'))->getBody(), true);
     if (($group['playerRank'] ?? null) !== 30 || ($group['totalMembers'] ?? null) !== 60 || ($group['members'][0]['rank'] ?? null) !== 1
-        || ($group['members'][0]['attackCount'] ?? null) !== 5 || ($group['members'][0]['defenseCount'] ?? null) !== 5) {
+        || ($group['members'][0]['attackCount'] ?? null) !== 5 || ($group['members'][0]['defenseCount'] ?? null) !== 5
+        || ($group['leagueRule']['battles'] ?? null) !== 30 || ($group['leagueRule']['promoted'] ?? null) !== 3
+        || ($group['leagueRule']['demoted'] ?? null) !== 15) {
         throw new RuntimeException('Peringkat grup sesi saat ini tidak dihitung dengan benar.');
     }
     $battle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=current&detail=battle&memberTag=2GPP802UU'))->getBody(), true);

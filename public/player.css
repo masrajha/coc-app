@@ -786,6 +786,307 @@ dialog::backdrop {
     font-size: 16px
 }
 
+.ranked-session-comparison[hidden] {
+    display: none
+}
+
+.ranked-session-comparison {
+    margin: 16px 0 18px;
+    padding: 14px 0;
+    border-top: 1px solid #34475b;
+    border-bottom: 1px solid #34475b
+}
+
+.ranked-comparison-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 13px
+}
+
+.ranked-comparison-heading h3 {
+    margin: 2px 0 0;
+    font-size: 15px
+}
+
+.ranked-comparison-heading>div>span {
+    color: #80aaff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em
+}
+
+.ranked-comparison-legend {
+    display: flex;
+    gap: 13px;
+    color: #9eb1c7;
+    font-size: 10px
+}
+
+.ranked-comparison-legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px
+}
+
+.ranked-comparison-legend i {
+    width: 9px;
+    height: 9px;
+    background: #66788d
+}
+
+.ranked-comparison-legend i.is-current {
+    background: #4b8afa
+}
+
+.ranked-comparison-chart {
+    display: grid;
+    gap: 6px;
+    color: #aebed0;
+    font-size: 11px
+}
+
+.ranked-comparison-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(280px, .85fr);
+    gap: 18px;
+    align-items: start
+}
+
+.ranked-comparison-row {
+    display: grid;
+    grid-template-columns: minmax(110px, .65fr) minmax(190px, 2fr);
+    gap: 10px;
+    align-items: center;
+    min-height: 54px;
+    padding: 5px 0;
+    border-bottom: 1px solid #263648
+}
+
+.ranked-comparison-row:last-child {
+    border-bottom: 0
+}
+
+.ranked-comparison-metric {
+    display: grid;
+    gap: 5px
+}
+
+.ranked-comparison-metric strong {
+    color: #e7eff8;
+    font-size: 12px
+}
+
+.ranked-comparison-metric span {
+    width: fit-content;
+    font-size: 10px;
+    font-weight: 800
+}
+
+.ranked-comparison-metric .is-up {
+    color: #54c795
+}
+
+.ranked-comparison-metric .is-down {
+    color: #ef8585
+}
+
+.ranked-comparison-metric .is-steady {
+    color: #91a5bb
+}
+
+.ranked-comparison-bars {
+    display: grid;
+    gap: 6px
+}
+
+.ranked-comparison-series {
+    display: grid;
+    grid-template-columns: 62px minmax(50px, 1fr) 52px;
+    align-items: center;
+    gap: 8px
+}
+
+.ranked-comparison-series>span {
+    color: #8fa3ba;
+    font-size: 9px
+}
+
+.ranked-comparison-series>b {
+    color: #dce8f6;
+    text-align: right;
+    font-variant-numeric: tabular-nums
+}
+
+.ranked-comparison-track {
+    height: 9px;
+    overflow: hidden;
+    background: #29394b
+}
+
+.ranked-comparison-track i {
+    display: block;
+    height: 100%;
+    background: #66788d
+}
+
+.ranked-comparison-series.is-current .ranked-comparison-track i {
+    background: #4b8afa
+}
+
+.ranked-comparison-insights {
+    min-width: 0;
+    padding-left: 18px;
+    border-left: 1px solid #34475b
+}
+
+.ranked-insight-verdict {
+    display: grid;
+    gap: 4px;
+    padding-bottom: 11px;
+    border-bottom: 1px solid #2a3b4e
+}
+
+.ranked-insight-verdict>span {
+    color: #80aaff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em
+}
+
+.ranked-insight-verdict>strong {
+    font-size: 20px
+}
+
+.ranked-comparison-insights .is-up {
+    color: #54c795
+}
+
+.ranked-comparison-insights .is-down {
+    color: #ef8585
+}
+
+.ranked-comparison-insights .is-steady {
+    color: #a7b8ca
+}
+
+.ranked-insight-performance {
+    padding: 10px 0;
+    border-bottom: 1px solid #2a3b4e
+}
+
+.ranked-insight-performance>div {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px
+}
+
+.ranked-insight-performance>div strong,
+.ranked-star-distribution>strong {
+    color: #e7eff8;
+    font-size: 11px
+}
+
+.ranked-insight-performance>div span {
+    font-size: 10px;
+    font-weight: 800
+}
+
+.ranked-insight-performance p {
+    margin: 5px 0 2px;
+    color: #d8e5f3;
+    font-size: 11px
+}
+
+.ranked-insight-performance small {
+    color: #8196ad;
+    font-size: 9px
+}
+
+.ranked-star-distribution {
+    padding: 11px 0
+}
+
+.ranked-star-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 7px 0;
+    color: #91a5bb;
+    font-size: 8px
+}
+
+.ranked-star-legend span::before {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 4px;
+    background: #d76f78
+}
+
+.ranked-star-legend .is-two::before,
+.ranked-star-bar .is-two {
+    background: #d0a64d
+}
+
+.ranked-star-legend .is-triple::before,
+.ranked-star-bar .is-triple {
+    background: #4fba8d
+}
+
+.ranked-star-series {
+    display: grid;
+    grid-template-columns: 62px minmax(50px, 1fr) 47px;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    color: #8fa3ba;
+    font-size: 9px
+}
+
+.ranked-star-series b {
+    color: #dce8f6;
+    text-align: right;
+    font-size: 9px
+}
+
+.ranked-star-bar {
+    display: flex;
+    height: 9px;
+    overflow: hidden;
+    background: #29394b
+}
+
+.ranked-star-bar i {
+    display: block;
+    height: 100%;
+    background: #d76f78
+}
+
+.ranked-insight-note {
+    margin: 0;
+    padding: 10px;
+    border-left: 3px solid #6b8db8;
+    background: #121b26;
+    color: #a9bed4;
+    font-size: 10px;
+    line-height: 1.45
+}
+
+@media(max-width:780px) {
+    .ranked-comparison-layout {
+        grid-template-columns: 1fr
+    }
+
+    .ranked-comparison-insights {
+        padding: 14px 0 0;
+        border-top: 1px solid #34475b;
+        border-left: 0
+    }
+}
+
 .ranked-battle-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -911,6 +1212,37 @@ dialog::backdrop {
 }
 
 @media(max-width:650px) {
+    .ranked-battles-panel .section-head {
+        align-items: stretch;
+        flex-direction: column
+    }
+
+    .ranked-battles-panel .section-head select {
+        width: 100%;
+        max-width: 100%
+    }
+
+    .ranked-comparison-heading {
+        align-items: flex-start;
+        flex-direction: column
+    }
+
+    .ranked-comparison-row {
+        grid-template-columns: 1fr;
+        gap: 8px
+    }
+
+    .ranked-comparison-series {
+        grid-template-columns: 62px minmax(0, 1fr) 48px;
+        min-width: 0
+    }
+
+    .ranked-comparison-chart,
+    .ranked-comparison-bars,
+    .ranked-battle-columns>section {
+        min-width: 0
+    }
+
     .ranked-battle-summary {
         grid-template-columns: repeat(2, 1fr)
     }

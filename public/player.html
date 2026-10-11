@@ -96,6 +96,13 @@
         <p id="rankedBattleStatus" class="section-note" role="status">Memuat battle log…</p>
         <div class="ranked-log-toolbar"><select id="rankedLogFilter"><option value="all">Semua hasil</option><option value="triple">3 bintang</option><option value="low">0–1 bintang</option><option value="highDestruction">Destruksi ≥80%</option></select><select id="rankedLogSort"><option value="latest">Urut terbaru</option><option value="stars">Bintang</option><option value="destruction">Destruksi</option><option value="trophies">Trofi</option></select></div>
         <div id="rankedBattleSummary" class="ranked-battle-summary"></div>
+        <section id="rankedSessionComparison" class="ranked-session-comparison" aria-labelledby="rankedComparisonTitle" hidden>
+          <div class="ranked-comparison-heading"><div><span>PERUBAHAN MINGGUAN</span><h3 id="rankedComparisonTitle">Perbandingan 2 sesi terakhir</h3></div><div class="ranked-comparison-legend"><span><i class="is-previous"></i>Sebelumnya</span><span><i class="is-current"></i>Saat ini</span></div></div>
+          <div class="ranked-comparison-layout">
+            <div id="rankedComparisonChart" class="ranked-comparison-chart"></div>
+            <aside id="rankedComparisonInsights" class="ranked-comparison-insights" aria-label="Ringkasan performa dua sesi"></aside>
+          </div>
+        </section>
         <div class="ranked-battle-columns">
           <section><div class="ranked-battle-heading"><h3>Attacks</h3><span><b id="rankedAttackTotal"></b><b id="rankedAttackTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedAttackLogs" class="ranked-battle-list"></div></section>
           <section><div class="ranked-battle-heading"><h3>Defenses</h3><span><b id="rankedDefenseTotal"></b><b id="rankedDefenseTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedDefenseLogs" class="ranked-battle-list"></div></section>
@@ -116,12 +123,30 @@
         <select id="leagueSession" aria-label="Pilih sesi liga"></select>
         <p id="leagueStatus" class="section-note" role="status">Memuat sesi liga...</p>
         <div id="leaguePlayerRank" class="league-player-rank" hidden></div>
-        <div class="league-list-heading"><span>Anggota grup</span><span id="leagueMemberCount"></span></div>
+        <div class="league-view-tabs" role="tablist" aria-label="Tampilan grup liga">
+          <button type="button" data-league-view="standings" role="tab" aria-selected="true">Peringkat</button>
+          <button type="button" data-league-view="statistics" role="tab" aria-selected="false">Statistik</button>
+        </div>
+        <div id="leagueStandingsHeading" class="league-list-heading"><span>Anggota grup</span><span id="leagueMemberCount"></span></div>
         <ol id="leagueMembers" class="league-members"></ol>
-        <div class="league-pagination">
+        <div id="leaguePagination" class="league-pagination">
           <button id="leaguePrev" type="button" disabled>Prev</button>
           <span id="leaguePageInfo">—</span>
           <button id="leagueNext" type="button" disabled>Next</button>
+        </div>
+        <div id="leagueStatisticsView" class="league-statistics" role="tabpanel" hidden>
+          <section class="league-stat-section" aria-labelledby="leagueTopAttackTitle">
+            <div class="league-list-heading"><span id="leagueTopAttackTitle">Top Attack</span><span id="leagueTopAttackMeta">Semua battle</span></div>
+            <ol id="leagueTopAttack" class="league-top-list"></ol>
+          </section>
+          <section class="league-stat-section" aria-labelledby="leagueTopDefenseTitle">
+            <div class="league-list-heading"><span id="leagueTopDefenseTitle">Top Defense</span><span id="leagueTopDefenseMeta">Semua battle</span></div>
+            <ol id="leagueTopDefense" class="league-top-list"></ol>
+          </section>
+          <section class="league-stat-section" aria-labelledby="leagueZonesTitle">
+            <div class="league-list-heading"><span id="leagueZonesTitle">Zona peringkat</span><span id="leagueBattleRule"></span></div>
+            <div id="leagueZones" class="league-zones"></div>
+          </section>
         </div>
       </aside>
     </div>
