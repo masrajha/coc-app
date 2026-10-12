@@ -627,11 +627,20 @@
     }
     logs.forEach((log, index) => {
       const side = id === 'rankedAttackLogs' ? 'attack' : 'defense';
-      const card = document.createElement('article'); card.className = `ranked-battle-card ranked-${side}${Number(log.stars) === 3 ? ' ranked-triple' : ''}`;
+      const bonus = log.kind === 'defenseBonus';
+      const card = document.createElement('article'); card.className = `ranked-battle-card ranked-${side}${Number(log.stars) === 3 ? ' ranked-triple' : ''}${bonus ? ' ranked-defense-bonus' : ''}`;
       const top = document.createElement('div'); top.className = 'ranked-battle-card-top';
-      const number = document.createElement('span'); number.textContent = `#${index + 1}`;
+      const number = document.createElement('span'); number.textContent = bonus ? 'BONUS' : `#${index + 1}`;
       const trophies = document.createElement('strong'); trophies.textContent = log.trophies === null || log.trophies === undefined ? 'Trofi —' : `${Number(log.trophies) >= 0 ? '+' : ''}${Number(log.trophies).toLocaleString('id-ID')} trofi`;
       top.append(number, trophies);
+      if (bonus) {
+        const bonusBody = document.createElement('div'); bonusBody.className = 'ranked-defense-bonus-body';
+        const trophy = document.createElement('img'); trophy.src = '/assets/trophy.png'; trophy.alt = ''; trophy.width = 22; trophy.height = 22;
+        const label = document.createElement('strong'); label.textContent = 'Bonus pertahanan';
+        bonusBody.append(trophy, label);
+        const note = document.createElement('small'); note.textContent = 'Kompensasi sisa slot pertahanan pada akhir sesi';
+        card.append(top, bonusBody, note); list.appendChild(card); return;
+      }
       const stars = document.createElement('div'); stars.className = 'ranked-battle-stars'; stars.setAttribute('aria-label', `${log.stars ?? 0} dari 3 bintang`);
       for (let star = 1; star <= 3; star++) stars.appendChild(Object.assign(document.createElement('span'), { className: star <= Number(log.stars || 0) ? 'earned' : '', textContent: '★' }));
       const destruction = document.createElement('div'); destruction.className = 'ranked-battle-destruction';
@@ -662,7 +671,9 @@
     }
     const allAttackLogs = Array.isArray(data.attack?.logs) ? data.attack.logs : [];
     const allDefenseLogs = Array.isArray(data.defense?.logs) ? data.defense.logs : [];
-    const totalTrophies = [...allAttackLogs, ...allDefenseLogs].reduce((sum, log) => sum + (Number.isFinite(Number(log.trophies)) ? Number(log.trophies) : 0), 0);
+    const defenseBonusLogs = Array.isArray(data.defense?.bonusLogs) ? data.defense.bonusLogs : [];
+    const calculatedTrophies = [...allAttackLogs, ...allDefenseLogs, ...defenseBonusLogs].reduce((sum, log) => sum + (Number.isFinite(Number(log.trophies)) ? Number(log.trophies) : 0), 0);
+    const totalTrophies = data.player?.trophies != null && Number.isFinite(Number(data.player.trophies)) ? Number(data.player.trophies) : calculatedTrophies;
     const trophyMetric = document.createElement('div');
     const trophyCaption = document.createElement('span'); trophyCaption.textContent = 'Total trofi';
     const trophyValue = document.createElement('strong'); trophyValue.className = 'summary-trophy-value';
@@ -671,12 +682,12 @@
     trophyMetric.append(trophyCaption, trophyValue); summary.insertBefore(trophyMetric, summary.children[1]);
     const prepare = logs => logs.filter(log => state.logFilter === 'all' || (state.logFilter === 'triple' && Number(log.stars) === 3) || (state.logFilter === 'low' && Number(log.stars) <= 1) || (state.logFilter === 'highDestruction' && Number(log.destructionPercentage) >= 80)).sort((a, b) => state.logSort === 'stars' ? Number(b.stars || 0) - Number(a.stars || 0) : state.logSort === 'destruction' ? Number(b.destructionPercentage || 0) - Number(a.destructionPercentage || 0) : state.logSort === 'trophies' ? Number(b.trophies || 0) - Number(a.trophies || 0) : String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
     const attacks = prepare(Array.isArray(data.attack?.logs) ? data.attack.logs : []);
-    const defenses = prepare(Array.isArray(data.defense?.logs) ? data.defense.logs : []);
-    setText('rankedAttackTotal', `${attacks.length} battle`); setText('rankedDefenseTotal', `${defenses.length} battle`);
+    const defenses = [...prepare(Array.isArray(data.defense?.logs) ? data.defense.logs : []), ...(state.logFilter === 'all' ? defenseBonusLogs : [])];
+    setText('rankedAttackTotal', `${allAttackLogs.length} battle`); setText('rankedDefenseTotal', `${allDefenseLogs.length} battle${defenseBonusLogs.length ? ` + ${defenseBonusLogs.length} bonus` : ''}`);
     const trophyTotal = logs => logs.reduce((sum, log) => sum + (Number.isFinite(Number(log.trophies)) ? Number(log.trophies) : 0), 0);
     const trophyLabel = value => { const image = document.createElement('img'); image.src = '/assets/trophy.png'; image.alt = ''; image.width = 16; image.height = 16; const span = document.createElement('span'); span.textContent = `${value >= 0 ? '+' : ''}${value.toLocaleString('id-ID')}`; span.prepend(image); return span; };
-    document.getElementById('rankedAttackTrophies').replaceChildren(trophyLabel(trophyTotal(attacks)));
-    document.getElementById('rankedDefenseTrophies').replaceChildren(trophyLabel(trophyTotal(defenses)));
+    document.getElementById('rankedAttackTrophies').replaceChildren(trophyLabel(trophyTotal(allAttackLogs)));
+    document.getElementById('rankedDefenseTrophies').replaceChildren(trophyLabel(trophyTotal([...allDefenseLogs, ...defenseBonusLogs])));
     renderBattleLogList('rankedAttackLogs', attacks, 'Belum ada riwayat serangan pada sesi ini.');
     renderBattleLogList('rankedDefenseLogs', defenses, 'Belum ada riwayat pertahanan pada sesi ini.');
   }

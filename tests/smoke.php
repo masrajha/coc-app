@@ -101,10 +101,27 @@ for ($rank = 1; $rank <= 60; $rank++) {
         'defenseWinCount' => 3, 'defenseLoseCount' => 2];
 }
 $seedApiCache('/leaguegroup/%238URPQL0/1791176400?playerTag=%232GPP802UU', ['members' => array_reverse($currentMembers),
-    'attackLogs' => [['stars' => 3, 'destructionPercentage' => 100], ['stars' => 2, 'destructionPercentage' => 80]],
-    'defenseLogs' => [['stars' => 2, 'destructionPercentage' => 70]]]);
+    'attackLogs' => [['stars' => 3, 'destructionPercentage' => 100, 'trophies' => 3000], ['stars' => 2, 'destructionPercentage' => 80, 'trophies' => 3000]],
+    'defenseLogs' => [['stars' => 2, 'destructionPercentage' => 70, 'trophies' => 941]]]);
 $seedApiCache('/leaguegroup/%238URPQL0/1791176400?playerTag=%232R92VJG0U', ['members' => $currentMembers,
     'attackLogs' => [], 'defenseLogs' => [['stars' => 3, 'destructionPercentage' => 90]]]);
+$seedApiCache('/players/%2328P08PG0G', [
+    'tag' => '#28P08PG0G', 'name' => 'Amerta Buana', 'townHallLevel' => 18,
+    'leagueTier' => ['name' => 'Legend III'],
+    'currentLeagueSeasonId' => 0,
+    'previousLeagueGroupTag' => '#8UUGLPJ', 'previousLeagueSeasonId' => 1791176400
+]);
+$bonusAttackLogs = array_fill(0, 22, ['stars' => 3, 'destructionPercentage' => 100, 'trophies' => 35]);
+$bonusAttackLogs[] = ['stars' => 2, 'destructionPercentage' => 90, 'trophies' => 33];
+$bonusAttackLogs[] = ['stars' => 2, 'destructionPercentage' => 83, 'trophies' => 35];
+$bonusDefenseLogs = array_fill(0, 20, ['stars' => 3, 'destructionPercentage' => 100, 'trophies' => 9]);
+$bonusDefenseLogs[] = ['stars' => 2, 'destructionPercentage' => 90, 'trophies' => 15];
+$bonusDefenseLogs[] = ['stars' => 2, 'destructionPercentage' => 80, 'trophies' => 15];
+$seedApiCache('/leaguegroup/%238UUGLPJ/1791176400?playerTag=%2328P08PG0G', [
+    'members' => [['playerTag' => '#28P08PG0G', 'playerName' => 'Amerta Buana', 'leagueTrophies' => 1066]],
+    'attackLogs' => $bonusAttackLogs,
+    'defenseLogs' => $bonusDefenseLogs
+]);
 $seedApiCache('/leaguegroup/%238U89LYJ/1790571600?playerTag=%232GPP802UU', ['members' => [
     ['playerTag' => '#2GPP802UU', 'playerName' => 'Test', 'leagueTrophies' => 6200]
 ]]);
@@ -376,6 +393,23 @@ try {
     if (($battle['leagueTier'] ?? null) !== 'Legend II' || ($battle['playerRank'] ?? null) !== 30
         || ($battle['player']['attackCount'] ?? null) !== 5 || ($battle['player']['defenseCount'] ?? null) !== 5) {
         throw new RuntimeException('Detail Ranked League tidak menyertakan liga, rank, dan jumlah battle.');
+    }
+    if (($battle['defense']['remainingSlots'] ?? null) !== 29
+        || ($battle['defense']['bonusPoints'] ?? null) !== 0
+        || ($battle['defense']['bonusLogs'] ?? null) !== []
+        || ($battle['defense']['points'] ?? null) !== 941) {
+        throw new RuntimeException('Sesi liga yang masih berjalan tidak boleh mendapat bonus pertahanan.');
+    }
+    $bonusBattle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/28P08PG0G/league-group?session=previous&detail=battle&memberTag=28P08PG0G'))->getBody(), true);
+    if (($bonusBattle['session']['id'] ?? null) !== 'previous'
+        || ($bonusBattle['leagueRule']['battles'] ?? null) !== 24
+        || ($bonusBattle['attack']['points'] ?? null) !== 838
+        || ($bonusBattle['defense']['battlePoints'] ?? null) !== 210
+        || ($bonusBattle['defense']['remainingSlots'] ?? null) !== 2
+        || ($bonusBattle['defense']['bonusPoints'] ?? null) !== 18
+        || array_column($bonusBattle['defense']['bonusLogs'] ?? [], 'trophies') !== [9, 9]
+        || ($bonusBattle['defense']['points'] ?? null) !== 228) {
+        throw new RuntimeException('Battle log Legend III tidak menghasilkan dua bonus +9 dan total defense +228.');
     }
     $otherBattle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/league-group?session=current&detail=battle&memberTag=2R92VJG0U'))->getBody(), true);
     if (($otherBattle['attack']['sampleSize'] ?? null) !== 0 || !array_key_exists('starsAverage', $otherBattle['attack'])

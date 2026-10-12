@@ -638,6 +638,9 @@ final class App
             $session = null;
             foreach ($sessions as $candidate) if ($candidate['id'] === $sessionId) { $session = $candidate; break; }
             if ($session === null) return $this->respond($res, ['error' => 'Pemain tidak memiliki grup pada sesi liga ini.'], 404);
+            $hasCurrentSession = (bool)array_filter($sessions, static fn(array $candidate): bool => $candidate['id'] === 'current');
+            $leagueTierName = ($sessionId === 'current' || !$hasCurrentSession) ? ($profile['data']['leagueTier']['name'] ?? null) : null;
+            $rankedRule = $this->rankedRule($leagueTierName);
             $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
             $previous = $sessionId === 'previous';
             $group = $this->upstream($path, 18000, 0, $previous ? 30 * 86400 : null, $previous);
@@ -671,7 +674,7 @@ final class App
                             'destructionPercentage' => is_numeric($log['destructionPercentage'] ?? null) ? round((float)$log['destructionPercentage'], 2) : null,
                             'trophies' => is_numeric($log['trophies'] ?? $log['leagueTrophies'] ?? $log['trophyChange'] ?? null)
                                 ? (int)($log['trophies'] ?? $log['leagueTrophies'] ?? $log['trophyChange']) : null,
-                            'timestamp' => $log['timestamp'] ?? $log['battleTime'] ?? $log['attackTime'] ?? null,
+                            'timestamp' => $log['timestamp'] ?? $log['creationTime'] ?? $log['battleTime'] ?? $log['attackTime'] ?? null,
                             'opponentName' => $log['opponentName'] ?? ($log['opponent']['name'] ?? null),
                             'opponentTag' => $log['opponentTag'] ?? ($log['opponent']['tag'] ?? null)
                         ], $logs)
@@ -687,10 +690,47 @@ final class App
                 $attackLosses = isset($battleMember['attackLoseCount']) ? (int)$battleMember['attackLoseCount'] : null;
                 $defenseWins = isset($battleMember['defenseWinCount']) ? (int)$battleMember['defenseWinCount'] : null;
                 $defenseLosses = isset($battleMember['defenseLoseCount']) ? (int)$battleMember['defenseLoseCount'] : null;
+                $pointValue = static fn(array $log): mixed => $log['trophies'] ?? $log['leagueTrophies'] ?? $log['trophyChange'] ?? null;
+                $rawAttackLogs = is_array($group['data']['attackLogs'] ?? null) ? array_values(array_filter($group['data']['attackLogs'], 'is_array')) : [];
+                $rawDefenseLogs = is_array($group['data']['defenseLogs'] ?? null) ? array_values(array_filter($group['data']['defenseLogs'], 'is_array')) : [];
+                $allPointLogs = array_merge($rawAttackLogs, $rawDefenseLogs);
+                $hasCompletePointData = $allPointLogs !== [] && count(array_filter($allPointLogs, static fn(array $log): bool => is_numeric($pointValue($log)))) === count($allPointLogs);
+                $attackPoints = array_sum(array_map(static fn(array $log): int => (int)$pointValue($log), $rawAttackLogs));
+                $defenseBattlePoints = array_sum(array_map(static fn(array $log): int => (int)$pointValue($log), $rawDefenseLogs));
+                $battleQuota = is_numeric($rankedRule['battles'] ?? null) ? (int)$rankedRule['battles'] : null;
+                $missingDefenseSlots = $battleQuota !== null ? max(0, $battleQuota - count($rawDefenseLogs)) : 0;
+                $leaguePoints = is_numeric($battleMember['leagueTrophies'] ?? null) ? (int)$battleMember['leagueTrophies'] : null;
+                $defenseBonusPoints = $previous && $hasCompletePointData && $leaguePoints !== null && $missingDefenseSlots > 0
+                    ? max(0, $leaguePoints - $attackPoints - $defenseBattlePoints) : 0;
+                $defenseBonusLogs = [];
+                if ($defenseBonusPoints > 0) {
+                    $baseBonus = intdiv($defenseBonusPoints, $missingDefenseSlots);
+                    $bonusRemainder = $defenseBonusPoints % $missingDefenseSlots;
+                    for ($slot = 0; $slot < $missingDefenseSlots; $slot++) {
+                        $defenseBonusLogs[] = [
+                            'kind' => 'defenseBonus',
+                            'trophies' => $baseBonus + ($slot < $bonusRemainder ? 1 : 0),
+                            'stars' => null,
+                            'destructionPercentage' => null,
+                            'timestamp' => null,
+                            'opponentName' => null,
+                            'opponentTag' => null
+                        ];
+                    }
+                }
+                $averages['attack']['points'] = $attackPoints;
+                $averages['defense']['battleQuota'] = $battleQuota;
+                $averages['defense']['remainingSlots'] = $missingDefenseSlots;
+                $averages['defense']['battlePoints'] = $defenseBattlePoints;
+                $averages['defense']['bonusPoints'] = $defenseBonusPoints;
+                $averages['defense']['bonusPerSlot'] = $missingDefenseSlots > 0 ? round($defenseBonusPoints / $missingDefenseSlots, 2) : 0;
+                $averages['defense']['bonusLogs'] = $defenseBonusLogs;
+                $averages['defense']['points'] = $defenseBattlePoints + $defenseBonusPoints;
                 return $this->respond($res, [
                     'playerTag' => '#' . $memberTag,
                     'session' => $session,
-                    'leagueTier' => $sessionId === 'current' ? ($profile['data']['leagueTier']['name'] ?? null) : null,
+                    'leagueTier' => $leagueTierName,
+                    'leagueRule' => $rankedRule,
                     'playerRank' => $memberRank,
                     'totalMembers' => count($rankedMembers),
                     'player' => [
@@ -732,8 +772,8 @@ final class App
             return $this->respond($res, [
                 'playerTag' => '#' . $tag,
                 'session' => $session,
-                'leagueTier' => $sessionId === 'current' ? ($profile['data']['leagueTier']['name'] ?? null) : null,
-                'leagueRule' => $sessionId === 'current' ? $this->rankedRule($profile['data']['leagueTier']['name'] ?? null) : null,
+                'leagueTier' => $leagueTierName,
+                'leagueRule' => $rankedRule,
                 'playerRank' => $playerRank,
                 'totalMembers' => count($members),
                 'members' => $members,
