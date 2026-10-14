@@ -1,6 +1,6 @@
 (function () {
   const PAGE_SIZE = 25;
-  const state = { playerTag: null, members: [], sessions: [], page: 0, request: 0, logRequest: 0, comparisonRequest: 0, statisticsRequest: 0, logFilter: 'all', logSort: 'latest', battleCache: new Map(), playerBattleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null, leagueRule: null, leagueStats: null, statisticsSession: null, statisticsLoadingSession: null, statisticsMetric: 'trophies', playerRank: null, leagueView: 'standings' };
+  const state = { playerTag: null, members: [], sessions: [], page: 0, request: 0, logRequest: 0, comparisonRequest: 0, statisticsRequest: 0, logFilter: 'all', logSort: 'oldest', battleCache: new Map(), playerBattleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null, leagueRule: null, leagueStats: null, statisticsSession: null, statisticsLoadingSession: null, statisticsMetric: 'trophies', playerRank: null, leagueView: 'standings' };
   const statisticsMetrics = {
     trophies: { label: 'Trofi', source: 'standings' },
     attackPoints: { label: 'Poin attack', source: 'battle' },
@@ -680,7 +680,7 @@
     const trophyImage = document.createElement('img'); trophyImage.src = '/assets/trophy.png'; trophyImage.alt = ''; trophyImage.width = 20; trophyImage.height = 20;
     trophyValue.append(trophyImage, document.createTextNode(`${totalTrophies >= 0 ? '+' : ''}${totalTrophies.toLocaleString('id-ID')}`));
     trophyMetric.append(trophyCaption, trophyValue); summary.insertBefore(trophyMetric, summary.children[1]);
-    const prepare = logs => logs.filter(log => state.logFilter === 'all' || (state.logFilter === 'triple' && Number(log.stars) === 3) || (state.logFilter === 'low' && Number(log.stars) <= 1) || (state.logFilter === 'highDestruction' && Number(log.destructionPercentage) >= 80)).sort((a, b) => state.logSort === 'stars' ? Number(b.stars || 0) - Number(a.stars || 0) : state.logSort === 'destruction' ? Number(b.destructionPercentage || 0) - Number(a.destructionPercentage || 0) : state.logSort === 'trophies' ? Number(b.trophies || 0) - Number(a.trophies || 0) : String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
+    const prepare = logs => logs.filter(log => state.logFilter === 'all' || (state.logFilter === 'triple' && Number(log.stars) === 3) || (state.logFilter === 'low' && Number(log.stars) <= 1) || (state.logFilter === 'highDestruction' && Number(log.destructionPercentage) >= 80)).sort((a, b) => state.logSort === 'stars' ? Number(b.stars || 0) - Number(a.stars || 0) : state.logSort === 'destruction' ? Number(b.destructionPercentage || 0) - Number(a.destructionPercentage || 0) : state.logSort === 'trophies' ? Number(b.trophies || 0) - Number(a.trophies || 0) : state.logSort === 'oldest' ? String(a.timestamp || '').localeCompare(String(b.timestamp || '')) : String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
     const attacks = prepare(Array.isArray(data.attack?.logs) ? data.attack.logs : []);
     const defenses = [...prepare(Array.isArray(data.defense?.logs) ? data.defense.logs : []), ...(state.logFilter === 'all' ? defenseBonusLogs : [])];
     setText('rankedAttackTotal', `${allAttackLogs.length} battle`); setText('rankedDefenseTotal', `${allDefenseLogs.length} battle${defenseBonusLogs.length ? ` + ${defenseBonusLogs.length} bonus` : ''}`);
