@@ -179,6 +179,40 @@
                     <div><span>Total donasi</span><strong id="overviewDonations">—</strong><small>Musim berjalan</small></div>
                     <div><span>Komposisi anggota</span><strong id="overviewMembers">—</strong><small id="overviewRoles">Belum tersedia</small></div>
                 </div>
+                <div class="clan-profile-grid" aria-label="Informasi profil klan">
+                    <section class="clan-profile-card" aria-labelledby="clanIdentityTitle">
+                        <h3 id="clanIdentityTitle">Profil & keanggotaan</h3>
+                        <dl>
+                            <div><dt>Pemimpin</dt><dd><a id="profileLeader" href="#">—</a></dd></div>
+                            <div><dt>Lokasi</dt><dd id="profileLocation">—</dd></div>
+                            <div><dt>Bahasa chat</dt><dd id="profileLanguage">—</dd></div>
+                            <div><dt>Tipe klan</dt><dd id="profileType">—</dd></div>
+                            <div><dt>Ramah keluarga</dt><dd id="profileFamilyFriendly">—</dd></div>
+                        </dl>
+                    </section>
+                    <section class="clan-profile-card" aria-labelledby="clanEntryTitle">
+                        <h3 id="clanEntryTitle">Syarat bergabung</h3>
+                        <dl>
+                            <div><dt>Minimal Town Hall</dt><dd id="profileRequiredTh">—</dd></div>
+                            <div><dt>Minimal trofi</dt><dd id="profileRequiredTrophies">—</dd></div>
+                            <div><dt>Minimal trofi Builder Base</dt><dd id="profileRequiredBuilderTrophies">—</dd></div>
+                        </dl>
+                        <p class="clan-profile-note">API memberikan batas trofi, bukan nama liga persyaratan.</p>
+                    </section>
+                    <section class="clan-profile-card" aria-labelledby="clanRecordTitle">
+                        <h3 id="clanRecordTitle">Rekam jejak & Capital</h3>
+                        <dl>
+                            <div><dt>Clan War League</dt><dd id="profileWarLeague">—</dd></div>
+                            <div><dt>Menang / seri / kalah</dt><dd id="profileWarRecord">—</dd></div>
+                            <div><dt>Rentetan kemenangan</dt><dd id="profileWinStreak">—</dd></div>
+                            <div><dt>Frekuensi perang</dt><dd id="profileWarFrequency">—</dd></div>
+                            <div><dt>Log perang publik</dt><dd id="profileWarLogPublic">—</dd></div>
+                            <div><dt>Capital Hall</dt><dd id="profileCapitalHall">—</dd></div>
+                            <div><dt>Liga Capital</dt><dd id="profileCapitalLeague">—</dd></div>
+                            <div><dt>Trofi Capital</dt><dd id="profileCapitalPoints">—</dd></div>
+                        </dl>
+                    </section>
+                </div>
             </section>
 
             <section id="clan-war" class="rounded border border-slate-200 bg-white clan-anchor-section" aria-labelledby="warTitle">
@@ -211,7 +245,7 @@
                         </div>
                         <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
                             <p class="text-xs font-semibold uppercase text-slate-500">Lawan</p>
-                            <h3 id="warOpponentName" class="mt-1 truncate text-base font-bold"></h3>
+                            <h3 class="mt-1 truncate text-base font-bold"><a id="warOpponentName" class="war-opponent-link"></a></h3>
                             <p id="warOpponentScore" class="text-sm font-semibold text-rose-700"></p>
                         </div>
                         <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
@@ -563,6 +597,40 @@
             setText('overviewRoles', `${leadership} leader/co-leader/elder`);
             updateDataFreshness('clan', new Date().toISOString());
             refreshClanReport();
+        }
+
+        function renderClanProfile(data) {
+            const number = value => value === null || value === undefined || value === ''
+                ? '—' : Number(value).toLocaleString('id-ID');
+            const yesNo = value => typeof value === 'boolean' ? (value ? 'Ya' : 'Tidak') : '—';
+            const leader = Array.isArray(data.memberList)
+                ? data.memberList.find(member => member.role === 'leader') : null;
+            const leaderLink = document.getElementById('profileLeader');
+            leaderLink.textContent = leader?.name || '—';
+            if (leader?.tag) leaderLink.href = playerProfileUrl(leader.tag);
+            else leaderLink.removeAttribute('href');
+
+            const typeNames = { open: 'Terbuka', inviteOnly: 'Undangan', closed: 'Tertutup' };
+            const frequencyNames = {
+                always: 'Selalu', moreThanOncePerWeek: 'Lebih dari sekali seminggu',
+                oncePerWeek: 'Sekali seminggu', lessThanOncePerWeek: 'Kurang dari sekali seminggu',
+                never: 'Tidak pernah', unknown: 'Belum ditentukan'
+            };
+            setText('profileLocation', data.location?.name || '—');
+            setText('profileLanguage', data.chatLanguage?.name || '—');
+            setText('profileType', typeNames[data.type] || '—');
+            setText('profileFamilyFriendly', yesNo(data.isFamilyFriendly));
+            setText('profileRequiredTh', number(data.requiredTownhallLevel));
+            setText('profileRequiredTrophies', number(data.requiredTrophies));
+            setText('profileRequiredBuilderTrophies', number(data.requiredBuilderBaseTrophies));
+            setText('profileWarLeague', data.warLeague?.name || '—');
+            setText('profileWarRecord', [data.warWins, data.warTies, data.warLosses].map(number).join(' / '));
+            setText('profileWinStreak', number(data.warWinStreak));
+            setText('profileWarFrequency', frequencyNames[data.warFrequency] || '—');
+            setText('profileWarLogPublic', yesNo(data.isWarLogPublic));
+            setText('profileCapitalHall', number(data.clanCapital?.capitalHallLevel));
+            setText('profileCapitalLeague', data.capitalLeague?.name || '—');
+            setText('profileCapitalPoints', number(data.clanCapitalPoints));
         }
 
         function refreshClanReport() {
@@ -1279,6 +1347,15 @@
                 setText('warClanName', data.clan.name);
                 setText('warClanScore', `${data.clan.stars} bintang - ${formatPercent(data.clan.destructionPercentage)}% destruksi - ${data.clan.attacks} atk`);
                 setText('warOpponentName', data.opponent.name);
+                const opponentLink = document.getElementById('warOpponentName');
+                const opponentTag = String(data.opponent.tag || '').replace(/^#/, '').toUpperCase();
+                if (opponentTag) {
+                    opponentLink.href = `/clan.html?tag=${encodeURIComponent(opponentTag)}`;
+                    opponentLink.title = `Buka profil klan ${data.opponent.name}`;
+                } else {
+                    opponentLink.removeAttribute('href');
+                    opponentLink.removeAttribute('title');
+                }
                 setText('warOpponentScore', `${data.opponent.stars} bintang - ${formatPercent(data.opponent.destructionPercentage)}% destruksi - ${data.opponent.attacks} atk`);
                 setText('overviewWarState', `${data.type}${data.round ? ` R${data.round}` : ''}`);
                 setText('overviewWarScore', `${data.clan.stars}–${data.opponent.stars}★ · ${phases[data.state] || data.state}`);
@@ -1379,6 +1456,7 @@
                 document.getElementById('joinClanLink').href = `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${encodeURIComponent(cleanTag)}`;
                 document.getElementById('comparePlayersLink').href = '/#compare';
                 renderClanOverview(data);
+                renderClanProfile(data);
                 window.RecentlyOpened?.clan({ tag: cleanTag, name: data.name, badgeUrl: data.badgeUrls?.small || data.badgeUrls?.medium || data.badgeUrls?.large, meta: `Level ${data.clanLevel || '-'}` });
 
                 statusMsg.classList.add('hidden');
