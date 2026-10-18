@@ -203,7 +203,7 @@
             </section>
 
             <nav id="clanSectionNav" class="clan-section-nav" aria-label="Navigasi dashboard clan" data-i18n-aria-label="clan.dashboardNavigation">
-                <a href="#clan-overview" data-i18n="clan.nav.overview">Overview</a><a href="#clan-war">War</a><a href="#cwl-standings">CWL</a><a href="#war-roster">Roster</a><a href="#clan-performance" data-i18n="clan.nav.performance">Performance</a><a href="#clan-activity" data-i18n="clan.nav.activity">Aktivitas</a><a href="#clan-actions" data-i18n="clan.nav.reports">Laporan</a>
+                <a href="#clan-overview" data-i18n="clan.nav.overview">Overview</a><a href="#clan-war">War</a><a href="#cwl-standings">CWL</a><a href="#war-roster">Roster</a><a href="#clan-performance" data-i18n="clan.nav.performance">Performance</a><a href="#clan-war-log" data-i18n="clan.nav.warLog">Riwayat War</a><a href="#clan-activity" data-i18n="clan.nav.activity">Aktivitas</a><a href="#clan-actions" data-i18n="clan.nav.reports">Laporan</a>
             </nav>
 
             <section id="clan-overview" class="clan-overview" aria-labelledby="clanOverviewTitle">
@@ -419,6 +419,16 @@
                 </div>
             </section>
 
+            <section id="clan-war-log" class="clan-war-log clan-anchor-section" aria-labelledby="clanWarLogTitle">
+                <div class="clan-war-log-head">
+                    <div><p class="clan-war-log-eyebrow" data-i18n="clan.warLogEyebrow">WAR KLASIK</p><h2 id="clanWarLogTitle" data-i18n="clan.warLogTitle">Riwayat perang</h2><p id="clanWarLogMeta" data-i18n="clan.warLogIntro">Tiga perang terbaru ditampilkan.</p></div>
+                    <button id="clanWarLogToggle" type="button" aria-expanded="false" aria-controls="clanWarLogList" hidden></button>
+                </div>
+                <p id="clanWarLogStatus" class="clan-war-log-status loading-state" role="status" aria-live="polite"><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="clan.warLogLoading">Memuat riwayat perang…</span></p>
+                <div id="clanWarLogList" class="clan-war-log-list" role="list"></div>
+                <div id="clanWarLogPager" class="clan-war-log-pager" hidden><button id="clanWarLogMore" type="button" data-i18n="clan.warLogMore">Muat war sebelumnya</button></div>
+            </section>
+
             <section id="clan-activity" class="rounded border border-slate-200 bg-white clan-anchor-section">
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 md:flex-row md:items-center md:justify-between">
                     <div>
@@ -510,6 +520,11 @@
         let healthSort = { key: null, direction: 'asc' };
         let healthFilter = 'all';
         let healthQuery = '';
+        let clanWarLogItems = [];
+        let clanWarLogNext = null;
+        let clanWarLogExpanded = false;
+        let clanWarLogRequestId = 0;
+        let clanWarLogLoading = false;
 
         function setText(id, value) {
             document.getElementById(id).textContent = value ?? '-';
@@ -1435,6 +1450,96 @@
             return formatLocalizedNumber(Number(value || 0), { maximumFractionDigits: 2 });
         }
 
+        function setClanWarLogStatus(key = '', error = '') {
+            const status = document.getElementById('clanWarLogStatus');
+            status.replaceChildren();
+            status.hidden = !key && !error;
+            if (status.hidden) return;
+            status.classList.toggle('loading-state', key === 'clan.warLogLoading');
+            if (key === 'clan.warLogLoading') {
+                const spinner = document.createElement('span');
+                spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true');
+                status.appendChild(spinner);
+            }
+            status.appendChild(document.createTextNode(error || tr(key)));
+        }
+
+        function renderClanWarLog() {
+            const list = document.getElementById('clanWarLogList');
+            const visible = clanWarLogExpanded ? clanWarLogItems : clanWarLogItems.slice(0, 3);
+            list.replaceChildren();
+            for (const war of visible) {
+                const result = ['win', 'lose', 'tie'].includes(war.result) ? war.result : 'unknown';
+                const article = document.createElement('article');
+                article.className = 'clan-war-log-item'; article.setAttribute('role', 'listitem');
+                const outcome = document.createElement('span');
+                outcome.className = `clan-war-log-result ${result}`;
+                outcome.textContent = tr(`clan.warLog.${result}`);
+                const identity = document.createElement('div'); identity.className = 'clan-war-log-opponent';
+                const badgeUrl = war.opponent?.badgeUrls?.small || war.opponent?.badgeUrls?.medium;
+                if (badgeUrl) { const badge = document.createElement('img'); badge.src = badgeUrl; badge.alt = ''; badge.loading = 'lazy'; identity.appendChild(badge); }
+                const name = document.createElement('a');
+                const opponentTag = String(war.opponent?.tag || '').replace(/^#/, '').toUpperCase();
+                name.textContent = war.opponent?.name || (opponentTag ? `#${opponentTag}` : '—');
+                if (opponentTag) name.href = `/clan.html?tag=${encodeURIComponent(opponentTag)}`;
+                identity.appendChild(name);
+                const date = parseCoCTime(war.endTime);
+                const details = document.createElement('small'); details.className = 'clan-war-log-details';
+                details.textContent = [date ? date.toLocaleDateString(window.CocI18n.formatLocale, { day: 'numeric', month: 'short', year: 'numeric' }) : tr('clan.warLog.dateUnknown'), Number.isFinite(Number(war.teamSize)) ? tr('clan.warLog.teamSize', { size: formatLocalizedNumber(war.teamSize) }) : ''].filter(Boolean).join(' · ');
+                const score = document.createElement('div'); score.className = 'clan-war-log-score';
+                const ownStars = war.clan?.stars, enemyStars = war.opponent?.stars;
+                const stars = document.createElement('strong');
+                stars.textContent = ownStars == null || enemyStars == null ? '—' : `${formatLocalizedNumber(ownStars)}–${formatLocalizedNumber(enemyStars)} ★`;
+                const ownDestruction = war.clan?.destructionPercentage, enemyDestruction = war.opponent?.destructionPercentage;
+                const destruction = document.createElement('small');
+                destruction.textContent = ownDestruction == null || enemyDestruction == null ? tr('clan.warLog.destructionUnavailable') : `${formatPercent(ownDestruction)}%–${formatPercent(enemyDestruction)}%`;
+                score.append(stars, destruction); article.append(outcome, identity, details, score); list.appendChild(article);
+            }
+            const toggle = document.getElementById('clanWarLogToggle');
+            toggle.hidden = clanWarLogItems.length <= 3 && !clanWarLogNext;
+            toggle.textContent = tr(clanWarLogExpanded ? 'clan.warLogCollapse' : 'clan.warLogExpand');
+            toggle.setAttribute('aria-expanded', String(clanWarLogExpanded));
+            setText('clanWarLogMeta', clanWarLogItems.length ? tr(clanWarLogExpanded ? 'clan.warLogShownAll' : 'clan.warLogShownRecent', { count: formatLocalizedNumber(visible.length) }) : tr('clan.warLogIntro'));
+            const pager = document.getElementById('clanWarLogPager');
+            pager.hidden = !clanWarLogExpanded || !clanWarLogNext;
+            document.getElementById('clanWarLogMore').disabled = clanWarLogLoading;
+        }
+
+        async function loadClanWarLog(tag, after = null) {
+            if (clanWarLogLoading) return;
+            const requestId = ++clanWarLogRequestId;
+            clanWarLogLoading = true;
+            setClanWarLogStatus('clan.warLogLoading');
+            renderClanWarLog();
+            try {
+                const params = new URLSearchParams({ limit: '10' });
+                if (after) params.set('after', after);
+                const response = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/war-log?${params}`);
+                const data = await response.json();
+                if (tag !== activeTag || requestId !== clanWarLogRequestId) return;
+                if (!response.ok) throw new Error(data.error || tr('clan.warLogLoadFailed'));
+                const seen = new Set(clanWarLogItems.map(war => `${war.endTime}:${war.opponent?.tag}`));
+                for (const war of Array.isArray(data.items) ? data.items : []) {
+                    const key = `${war.endTime}:${war.opponent?.tag}`;
+                    if (!seen.has(key)) { clanWarLogItems.push(war); seen.add(key); }
+                }
+                clanWarLogNext = data.paging?.cursors?.after || null;
+                setClanWarLogStatus(clanWarLogItems.length ? '' : 'clan.warLogEmpty');
+            } catch (error) {
+                if (tag === activeTag && requestId === clanWarLogRequestId) setClanWarLogStatus('', error.message || tr('clan.warLogLoadFailed'));
+            } finally {
+                if (tag === activeTag && requestId === clanWarLogRequestId) { clanWarLogLoading = false; renderClanWarLog(); }
+            }
+        }
+
+        document.getElementById('clanWarLogToggle').addEventListener('click', () => {
+            clanWarLogExpanded = !clanWarLogExpanded;
+            renderClanWarLog();
+        });
+        document.getElementById('clanWarLogMore').addEventListener('click', () => {
+            if (clanWarLogNext && activeTag) loadClanWarLog(activeTag, clanWarLogNext);
+        });
+
         async function searchClan() {
             const tagInput = document.getElementById('clanTagInput').value.trim();
             const resultDiv = document.getElementById('clanResult');
@@ -1452,6 +1557,13 @@
             healthFilter = 'all';
             healthQuery = '';
             healthMembers = [];
+            clanWarLogRequestId++;
+            clanWarLogLoading = false;
+            clanWarLogItems = [];
+            clanWarLogNext = null;
+            clanWarLogExpanded = false;
+            setClanWarLogStatus('clan.warLogLoading');
+            renderClanWarLog();
             latestWarData = null;
             latestClanData = null;
             for (const key of Object.keys(freshness)) freshness[key] = null;
@@ -1508,6 +1620,8 @@
                 showWarStatus(tr('clan.loadingWar'), false, true);
                 loadWar(cleanTag);
                 loadHealth(cleanTag);
+                if (data.isWarLogPublic === false) setClanWarLogStatus('clan.warLogPrivate');
+                else loadClanWarLog(cleanTag);
                 warRefreshTimer = setInterval(() => loadWar(cleanTag), 120000);
             } catch (error) {
                 if (cleanTag === activeTag) statusMsg.textContent = tr('clan.errorMessage', { message: error.message });

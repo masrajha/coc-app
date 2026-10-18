@@ -109,6 +109,7 @@ final class App
         'Filter pencarian klan tidak valid.' => 'Invalid clan search filter.',
         'Jumlah anggota minimal tidak boleh melebihi maksimal.' => 'Minimum members cannot exceed maximum members.',
         'Gunakan hanya salah satu cursor after atau before.' => 'Use either the after or before cursor, not both.',
+        'Parameter riwayat perang tidak valid.' => 'Invalid war log parameter.',
     ];
 
     private function __construct()
@@ -137,6 +138,7 @@ final class App
         $app->get('/api/clans/search', fn($req, $res) => $self->searchClans($req, $res));
         $app->get('/api/clans/popular', fn($req, $res) => $self->popularClans($res));
         $app->get('/api/clan/{tag}/war', fn($req, $res, $args) => $self->war($req, $res, $args['tag']));
+        $app->get('/api/clan/{tag}/war-log', fn($req, $res, $args) => $self->clanWarLog($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/standings', fn($req, $res, $args) => $self->cwlStandings($res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/performance', fn($req, $res, $args) => $self->cwlPerformance($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/health.csv', fn($req, $res, $args) => $self->healthCsv($res, $args['tag']));
@@ -521,6 +523,37 @@ final class App
     }
 
     private function clan(ResponseInterface $res,string $raw):ResponseInterface{$tag=$this->normalizeTag($raw);if(!$tag)return $this->tagError($res,'Tag klan tidak valid.');try{$e=$this->upstream('/clans/'.rawurlencode('#'.$tag));$snapshot=$this->saveSnapshot($tag,$e['data']);$data=$e['data'];$data['snapshotDate']=$snapshot['date'];return $this->respond($res,$data);}catch(\Throwable $e){return $this->failure($res,$e);}}
+
+    private function clanWarLog(ServerRequestInterface $req, ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag klan tidak valid.');
+        $query = $req->getQueryParams();
+        $limit = $query['limit'] ?? '10';
+        if (!is_string($limit) || !ctype_digit($limit) || (int)$limit < 1 || (int)$limit > 50) {
+            return $this->tagError($res, 'Parameter riwayat perang tidak valid.');
+        }
+        if (isset($query['after'], $query['before'])) return $this->tagError($res, 'Gunakan hanya salah satu cursor after atau before.');
+        $params = ['limit' => (int)$limit];
+        foreach (['after', 'before'] as $key) {
+            if (!isset($query[$key])) continue;
+            $cursor = $query[$key];
+            if (!is_string($cursor) || !preg_match('/^[^\x00-\x1F\x7F]{1,512}$/', $cursor)) {
+                return $this->tagError($res, 'Parameter riwayat perang tidak valid.');
+            }
+            $params[$key] = $cursor;
+        }
+        try {
+            $entry = $this->upstream('/clans/' . rawurlencode('#' . $tag) . '/warlog?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986));
+            return $this->respond($res, [
+                'items' => $entry['data']['items'] ?? [],
+                'paging' => $entry['data']['paging'] ?? null,
+                'lastUpdated' => $entry['lastUpdated']
+            ]);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
 
     private function searchClans(ServerRequestInterface $req, ResponseInterface $res): ResponseInterface
     {

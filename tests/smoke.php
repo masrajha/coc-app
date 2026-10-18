@@ -57,6 +57,15 @@ $seedApiCache('/locations/global/rankings/players?limit=25', ['items' => [
 $seedApiCache('/clans/%232GPP802UU', [
     'tag' => '#2GPP802UU', 'name' => 'Top Clan', 'location' => ['id' => 32000000, 'name' => 'Indonesia', 'isCountry' => true]
 ]);
+$seedApiCache('/clans/%232GPP802UU/warlog?limit=10', [
+    'items' => [['result' => 'win', 'endTime' => '20261010T000000.000Z', 'teamSize' => 15,
+        'clan' => ['tag' => '#2GPP802UU', 'stars' => 42, 'destructionPercentage' => 96.4],
+        'opponent' => ['tag' => '#9RU089PG', 'name' => 'Other Clan', 'stars' => 38, 'destructionPercentage' => 89.2]]],
+    'paging' => ['cursors' => ['after' => 'older-wars']]
+]);
+$seedApiCache('/clans/%232GPP802UU/warlog?limit=10&after=older-wars', [
+    'items' => [['result' => 'lose', 'endTime' => '20261001T000000.000Z', 'opponent' => ['name' => 'Previous Clan']]]
+]);
 $seedApiCache('/clans?name=Elite&minMembers=30&limit=20', [
     'items' => [['tag' => '#2GPP802UU', 'name' => 'Elite Clan', 'clanLevel' => 22, 'members' => 35, 'clanPoints' => 50000]],
     'paging' => ['cursors' => ['after' => 'next-page']]
@@ -167,6 +176,9 @@ $checks = [
     '/api/clan/INVALID' => [400, 'application/json'],
     '/api/clan/2GPP802UU/summary' => [200, 'application/json'],
     '/api/clan/INVALID/summary' => [400, 'application/json'],
+    '/api/clan/2GPP802UU/war-log' => [200, 'application/json'],
+    '/api/clan/2GPP802UU/war-log?limit=0' => [400, 'application/json'],
+    '/api/clan/2GPP802UU/war-log?after=one&before=two' => [400, 'application/json'],
     '/api/player/INVALID/profile' => [400, 'application/json'],
     '/api/player/2GPP802UU/war-history' => [200, 'application/json'],
     '/api/player/INVALID/war-history' => [400, 'application/json'],
@@ -210,6 +222,14 @@ try {
         throw new RuntimeException('The API must honor Accept-Language when lang is absent.');
     }
     $clanSearch = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clans/search?name=Elite&minMembers=30'))->getBody(), true);
+    $warLog = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/war-log'))->getBody(), true);
+    if (($warLog['items'][0]['result'] ?? null) !== 'win' || ($warLog['paging']['cursors']['after'] ?? null) !== 'older-wars') {
+        throw new RuntimeException('War log must return classic war results and its pagination cursor.');
+    }
+    $olderWarLog = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/war-log?after=older-wars'))->getBody(), true);
+    if (($olderWarLog['items'][0]['opponent']['name'] ?? null) !== 'Previous Clan') {
+        throw new RuntimeException('War log must forward the cursor for earlier wars.');
+    }
     if (($clanSearch['items'][0]['name'] ?? null) !== 'Elite Clan' || ($clanSearch['paging']['cursors']['after'] ?? null) !== 'next-page') {
         throw new RuntimeException('Clan search must return items and its next cursor.');
     }
