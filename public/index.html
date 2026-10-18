@@ -41,7 +41,7 @@
             <div class="landing-copy">
                 <p class="landing-eyebrow">CLAN COMMAND CENTER</p>
                 <h2 id="landingTitle" data-i18n="home.heading">Pantau clan, war, dan progres pemain.</h2>
-                <p class="landing-description" data-i18n="home.description">Masukkan tag clan untuk membuka war aktif, standings CWL, aktivitas anggota, dan performa pemain.</p>
+                <p class="landing-description" data-i18n="home.description">Cari clan lewat tag atau nama untuk membuka war aktif, standings CWL, dan aktivitas anggota.</p>
             </div>
 
             <section class="quick-search" aria-label="Pencarian clan dan pemain" data-i18n-aria-label="home.searchLabel">
@@ -50,13 +50,48 @@
                     <button type="button" class="quick-search-tab" id="homePlayerTab" role="tab" aria-selected="false" aria-controls="homePlayerPanel" data-home-mode="player">Player</button>
                     <button type="button" class="quick-search-tab" id="homeCompareTab" role="tab" aria-selected="false" aria-controls="homeComparePanel" data-home-mode="compare">Compare Player</button>
                 </div>
-                <form id="homeClanPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeClanTab">
-                    <label for="clanTagInput" data-i18n="home.clanTag">Clan tag</label>
-                    <div class="quick-search-input-row">
-                        <input type="text" id="clanTagInput" placeholder="Contoh: #2GPP802UU" data-i18n-placeholder="home.clanPlaceholder" autocomplete="off" spellcheck="false" aria-describedby="clanTagHint">
-                        <button id="searchButton" type="submit"><span data-i18n="home.openClan">Buka Clan</span> <span aria-hidden="true">→</span></button>
+                <form id="homeClanPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeClanTab" novalidate>
+                    <div class="clan-search-modes" role="group" aria-label="Cari clan berdasarkan" data-i18n-aria-label="home.clanSearchMode">
+                        <button type="button" class="active" data-clan-search-mode="tag" aria-pressed="true" data-i18n="home.searchByTag">Tag</button>
+                        <button type="button" data-clan-search-mode="name" aria-pressed="false" data-i18n="home.searchByName">Nama</button>
                     </div>
-                    <small id="clanTagHint" data-i18n="home.clanHint">Masukkan tag clan untuk membuka dashboard, perang, dan aktivitas.</small>
+                    <div id="clanTagSearch" class="clan-search-mode-panel">
+                        <label for="clanTagInput" data-i18n="home.clanTag">Clan tag</label>
+                        <div class="quick-search-input-row">
+                            <input type="text" id="clanTagInput" placeholder="Contoh: #2GPP802UU" data-i18n-placeholder="home.clanPlaceholder" autocomplete="off" spellcheck="false" aria-describedby="clanTagHint">
+                            <button id="searchButton" type="submit"><span data-i18n="home.openClan">Buka Clan</span> <span aria-hidden="true">→</span></button>
+                        </div>
+                        <small id="clanTagHint" data-i18n="home.clanHint">Masukkan tag clan untuk membuka dashboard, perang, dan aktivitas.</small>
+                    </div>
+                    <div id="clanNameSearch" class="clan-search-mode-panel" hidden>
+                        <label for="clanNameInput" data-i18n="home.clanName">Nama clan</label>
+                        <div class="quick-search-input-row">
+                            <input type="search" id="clanNameInput" placeholder="Minimal 3 karakter" data-i18n-placeholder="home.clanNamePlaceholder" autocomplete="off" aria-describedby="clanNameHint">
+                            <button id="clanNameSearchButton" type="submit"><span data-i18n="home.searchClans">Cari clan</span> <span aria-hidden="true">→</span></button>
+                        </div>
+                        <small id="clanNameHint" data-i18n="home.clanNameHint">Masukkan sedikitnya 3 karakter nama clan.</small>
+                        <div class="clan-search-filters">
+                            <label><span data-i18n="home.clanLocation">Lokasi</span><select id="clanNameLocation"><option value="" data-i18n="home.allLocations">Semua lokasi</option></select></label>
+                            <label><span data-i18n="home.minMembers">Minimal anggota</span><input id="clanNameMinMembers" type="number" min="1" max="50" inputmode="numeric" placeholder="—"></label>
+                        </div>
+                        <small id="clanLocationStatus" class="clan-search-helper" role="status" hidden></small>
+                        <details class="clan-search-advanced">
+                            <summary data-i18n="home.advancedFilters">Filter lanjutan</summary>
+                            <div class="clan-search-filters">
+                                <label><span data-i18n="home.maxMembers">Maksimal anggota</span><input id="clanNameMaxMembers" type="number" min="1" max="50" inputmode="numeric" placeholder="—"></label>
+                                <label><span data-i18n="home.minClanLevel">Minimal level clan</span><input id="clanNameMinLevel" type="number" min="1" max="1000" inputmode="numeric" placeholder="—"></label>
+                                <label><span data-i18n="home.minClanPoints">Minimal poin clan</span><input id="clanNameMinPoints" type="number" min="0" max="1000000" inputmode="numeric" placeholder="—"></label>
+                                <label><span data-i18n="home.warFrequency">Frekuensi war</span><select id="clanNameWarFrequency"><option value="" data-i18n="home.anyFrequency">Semua frekuensi</option><option value="always" data-i18n="home.frequency.always">Selalu</option><option value="moreThanOncePerWeek" data-i18n="home.frequency.moreThanOncePerWeek">Lebih dari sekali seminggu</option><option value="oncePerWeek" data-i18n="home.frequency.oncePerWeek">Sekali seminggu</option><option value="lessThanOncePerWeek" data-i18n="home.frequency.lessThanOncePerWeek">Kurang dari sekali seminggu</option><option value="never" data-i18n="home.frequency.never">Tidak pernah</option></select></label>
+                                <label class="clan-search-filter-wide"><span data-i18n="home.labelIds">ID label (maks. 3, pisahkan koma)</span><input id="clanNameLabelIds" type="text" inputmode="numeric" placeholder="Contoh: 56000000,56000001" data-i18n-placeholder="home.labelIdsPlaceholder"></label>
+                            </div>
+                        </details>
+                        <section id="clanNameResults" class="clan-search-results" aria-labelledby="clanNameResultsTitle" hidden>
+                            <div class="clan-search-results-head"><h3 id="clanNameResultsTitle" data-i18n="home.clanSearchResults">Hasil pencarian</h3><span id="clanNameResultCount"></span></div>
+                            <p id="clanNameSearchStatus" class="clan-search-status" role="status" aria-live="polite"></p>
+                            <div id="clanNameResultList" class="clan-search-result-list"></div>
+                            <div id="clanNamePagination" class="clan-search-pagination" hidden><button id="clanNamePrevious" type="button" data-i18n="home.previous">Sebelumnya</button><button id="clanNameNext" type="button" data-i18n="home.next">Berikutnya</button></div>
+                        </section>
+                    </div>
                 </form>
                 <form id="homePlayerPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homePlayerTab" hidden>
                     <label for="playerTagInput" data-i18n="home.playerTag">Player tag</label>
@@ -1583,6 +1618,189 @@
             return /^[0289PYLQGRJCUV]{3,15}$/.test(tag) ? tag : null;
         }
 
+        let clanSearchMode = 'tag';
+        let clanNameLocationsLoaded = false;
+        let clanNameSearchParams = null;
+        let clanNameSearchRequest = 0;
+
+        function setClanNameSearchStatus(message, loading = false, error = false) {
+            const status = document.getElementById('clanNameSearchStatus');
+            status.replaceChildren();
+            status.classList.toggle('loading-state', loading);
+            status.classList.toggle('error', error);
+            if (loading) {
+                const spinner = document.createElement('span');
+                spinner.className = 'loading-spinner';
+                spinner.setAttribute('aria-hidden', 'true');
+                status.appendChild(spinner);
+            }
+            if (message) status.appendChild(document.createTextNode(message));
+        }
+
+        async function loadClanNameLocations() {
+            if (clanNameLocationsLoaded) return;
+            clanNameLocationsLoaded = true;
+            try {
+                const response = await window.CocI18n.apiFetch('/api/rankings/locations');
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || tr('home.locationLoadFailed'));
+                const select = document.getElementById('clanNameLocation');
+                for (const location of data.items || []) {
+                    if (!/^\d+$/.test(String(location.id || ''))) continue;
+                    const option = document.createElement('option');
+                    option.value = String(location.id);
+                    option.textContent = location.name || option.value;
+                    select.appendChild(option);
+                }
+                document.getElementById('clanLocationStatus').hidden = true;
+            } catch {
+                clanNameLocationsLoaded = false;
+                const status = document.getElementById('clanLocationStatus');
+                status.textContent = tr('home.locationLoadFailed');
+                status.hidden = false;
+            }
+        }
+
+        function setClanSearchMode(mode) {
+            clanSearchMode = mode === 'name' ? 'name' : 'tag';
+            document.getElementById('clanTagSearch').hidden = clanSearchMode !== 'tag';
+            document.getElementById('clanNameSearch').hidden = clanSearchMode !== 'name';
+            document.querySelectorAll('[data-clan-search-mode]').forEach(button => {
+                const selected = button.dataset.clanSearchMode === clanSearchMode;
+                button.classList.toggle('active', selected);
+                button.setAttribute('aria-pressed', String(selected));
+            });
+            if (clanSearchMode === 'name') loadClanNameLocations();
+            document.getElementById(clanSearchMode === 'name' ? 'clanNameInput' : 'clanTagInput').focus();
+        }
+
+        function clanNameFilters() {
+            const name = document.getElementById('clanNameInput').value.trim();
+            if ([...name].length < 3 || [...name].length > 80 || /[\x00-\x1F\x7F]/.test(name)) throw new Error(tr('home.clanNameTooShort'));
+            const params = new URLSearchParams({ name, limit: '20' });
+            const filters = [
+                ['minMembers', 'clanNameMinMembers', 1, 50],
+                ['maxMembers', 'clanNameMaxMembers', 1, 50],
+                ['minClanLevel', 'clanNameMinLevel', 1, 1000],
+                ['minClanPoints', 'clanNameMinPoints', 0, 1000000]
+            ];
+            for (const [key, id, min, max] of filters) {
+                const value = document.getElementById(id).value.trim();
+                if (!value) continue;
+                const number = Number(value);
+                if (!/^\d+$/.test(value) || !Number.isInteger(number) || number < min || number > max) throw new Error(tr('home.invalidSearchFilter'));
+                params.set(key, String(number));
+            }
+            if (params.has('minMembers') && params.has('maxMembers') && Number(params.get('minMembers')) > Number(params.get('maxMembers'))) {
+                throw new Error(tr('home.invalidMemberRange'));
+            }
+            const location = document.getElementById('clanNameLocation').value;
+            if (location) params.set('locationId', location);
+            const frequency = document.getElementById('clanNameWarFrequency').value;
+            if (frequency) params.set('warFrequency', frequency);
+            const labels = document.getElementById('clanNameLabelIds').value.trim().replace(/\s*,\s*/g, ',');
+            if (labels) {
+                if (!/^\d{1,12}(?:,\d{1,12}){0,2}$/.test(labels)) throw new Error(tr('home.invalidSearchFilter'));
+                params.set('labelIds', labels);
+            }
+            return params;
+        }
+
+        function renderClanNameResults(data) {
+            const items = Array.isArray(data.items) ? data.items : [];
+            const list = document.getElementById('clanNameResultList');
+            list.replaceChildren();
+            document.getElementById('clanNameResultCount').textContent = items.length ? tr('home.clanSearchCount', { count: formatLocalizedNumber(items.length) }) : '';
+            for (const clan of items) {
+                const card = document.createElement('article');
+                card.className = 'clan-search-result';
+                const badgeUrl = clan.badgeUrls?.small || clan.badgeUrls?.medium;
+                const badge = badgeUrl ? document.createElement('img') : document.createElement('span');
+                if (badgeUrl) {
+                    badge.src = badgeUrl; badge.alt = ''; badge.loading = 'lazy';
+                    badge.addEventListener('error', () => {
+                        const fallback = document.createElement('span');
+                        fallback.className = 'recent-avatar'; fallback.textContent = 'CL';
+                        badge.replaceWith(fallback);
+                    }, { once: true });
+                }
+                else { badge.className = 'recent-avatar'; badge.textContent = 'CL'; }
+                const copy = document.createElement('div');
+                copy.className = 'clan-search-result-copy';
+                const name = document.createElement('strong'); name.textContent = clan.name || clan.tag || '—';
+                const tag = document.createElement('small'); tag.textContent = clan.tag || '—';
+                const meta = document.createElement('small');
+                meta.textContent = tr('home.clanResultMeta', {
+                    level: clan.clanLevel == null ? '—' : formatLocalizedNumber(clan.clanLevel),
+                    members: clan.members == null ? '—' : formatLocalizedNumber(clan.members),
+                    points: clan.clanPoints == null ? '—' : formatLocalizedNumber(clan.clanPoints)
+                });
+                copy.append(name, tag, meta);
+                const details = [clan.location?.name];
+                const frequencyKey = `home.frequency.${clan.warFrequency}`;
+                if (window.CocI18n.hasTranslation(frequencyKey, window.CocI18n.locale)) details.push(tr(frequencyKey));
+                if (details.filter(Boolean).length) {
+                    const extra = document.createElement('small'); extra.textContent = details.filter(Boolean).join(' · ');
+                    copy.appendChild(extra);
+                }
+                card.append(badge, copy);
+                const validTag = normalizeHomeTag(clan.tag);
+                if (validTag) {
+                    const link = document.createElement('a');
+                    link.href = `/clan.html?tag=${encodeURIComponent(validTag)}`;
+                    link.textContent = `${tr('home.openClanDashboard')} →`;
+                    card.appendChild(link);
+                }
+                list.appendChild(card);
+            }
+            setClanNameSearchStatus(items.length ? '' : tr('home.clanSearchEmpty'));
+            const cursors = data.paging?.cursors || {};
+            const previous = document.getElementById('clanNamePrevious');
+            const next = document.getElementById('clanNameNext');
+            previous.dataset.cursor = typeof cursors.before === 'string' ? cursors.before : '';
+            next.dataset.cursor = typeof cursors.after === 'string' ? cursors.after : '';
+            previous.disabled = !previous.dataset.cursor;
+            next.disabled = !next.dataset.cursor;
+            document.getElementById('clanNamePagination').hidden = previous.disabled && next.disabled;
+        }
+
+        async function searchClansByName(cursorKey = null, cursor = null) {
+            const results = document.getElementById('clanNameResults');
+            results.hidden = false;
+            let params;
+            try {
+                params = cursorKey && clanNameSearchParams ? new URLSearchParams(clanNameSearchParams) : clanNameFilters();
+            } catch (error) {
+                setClanNameSearchStatus(error.message, false, true);
+                document.getElementById('clanNamePagination').hidden = true;
+                return;
+            }
+            if (!cursorKey) clanNameSearchParams = new URLSearchParams(params);
+            if (cursorKey && cursor) params.set(cursorKey, cursor);
+            const request = ++clanNameSearchRequest;
+            document.getElementById('clanNameResultList').replaceChildren();
+            document.getElementById('clanNameResultCount').textContent = '';
+            document.getElementById('clanNamePagination').hidden = true;
+            document.getElementById('clanNameSearchButton').disabled = true;
+            setClanNameSearchStatus(tr('home.searchingClans'), true);
+            try {
+                const response = await window.CocI18n.apiFetch(`/api/clans/search?${params}`);
+                const data = await response.json();
+                if (request !== clanNameSearchRequest) return;
+                if (!response.ok) throw new Error(data.error || tr('home.clanSearchFailed'));
+                renderClanNameResults(data);
+            } catch (error) {
+                if (request !== clanNameSearchRequest) return;
+                setClanNameSearchStatus(error.message || tr('home.clanSearchFailed'), false, true);
+            } finally {
+                if (request === clanNameSearchRequest) document.getElementById('clanNameSearchButton').disabled = false;
+            }
+        }
+
+        document.querySelectorAll('[data-clan-search-mode]').forEach(button => button.addEventListener('click', () => setClanSearchMode(button.dataset.clanSearchMode)));
+        document.getElementById('clanNamePrevious').addEventListener('click', event => searchClansByName('before', event.currentTarget.dataset.cursor));
+        document.getElementById('clanNameNext').addEventListener('click', event => searchClansByName('after', event.currentTarget.dataset.cursor));
+
         function renderRecentList(id, type) {
             const list = document.getElementById(id);
             const entries = window.RecentlyOpened?.list(type) || [];
@@ -1685,7 +1903,7 @@
                 document.querySelectorAll('.quick-search-form').forEach(form => {
                     form.hidden = form.id !== tab.getAttribute('aria-controls');
                 });
-                const fieldByMode = { clan: 'clanTagInput', player: 'playerTagInput', compare: 'comparePlayerOne' };
+                const fieldByMode = { clan: clanSearchMode === 'name' ? 'clanNameInput' : 'clanTagInput', player: 'playerTagInput', compare: 'comparePlayerOne' };
                 const field = document.getElementById(fieldByMode[tab.dataset.homeMode]);
                 if (field) window.setTimeout(() => field.focus(), 0);
             });
@@ -1695,7 +1913,7 @@
             const tab = document.querySelector(`.quick-search-tab[data-home-mode="${mode}"]`);
             if (!tab) return;
             tab.click();
-            const fieldByMode = { clan: 'clanTagInput', player: 'playerTagInput', compare: 'comparePlayerOne' };
+            const fieldByMode = { clan: clanSearchMode === 'name' ? 'clanNameInput' : 'clanTagInput', player: 'playerTagInput', compare: 'comparePlayerOne' };
             const field = document.getElementById(fieldByMode[mode]);
             if (field) window.setTimeout(() => field.focus(), 0);
         }
@@ -1713,9 +1931,11 @@
 
         const initialHomeTab = location.hash.slice(1).toLowerCase();
         if (['clan', 'player', 'compare'].includes(initialHomeTab)) activateHomeTab(initialHomeTab);
+        if (initialHomeTab === 'clan-name') { activateHomeTab('clan'); setClanSearchMode('name'); }
 
         document.getElementById('homeClanPanel').addEventListener('submit', event => {
             event.preventDefault();
+            if (clanSearchMode === 'name') { searchClansByName(); return; }
             const tag = normalizeHomeTag(document.getElementById('clanTagInput').value);
             if (!tag) return alert(tr('home.invalidClan'));
             location.href = `/clan.html?tag=${encodeURIComponent(tag)}`;

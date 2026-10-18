@@ -57,6 +57,14 @@ $seedApiCache('/locations/global/rankings/players?limit=25', ['items' => [
 $seedApiCache('/clans/%232GPP802UU', [
     'tag' => '#2GPP802UU', 'name' => 'Top Clan', 'location' => ['id' => 32000000, 'name' => 'Indonesia', 'isCountry' => true]
 ]);
+$seedApiCache('/clans?name=Elite&minMembers=30&limit=20', [
+    'items' => [['tag' => '#2GPP802UU', 'name' => 'Elite Clan', 'clanLevel' => 22, 'members' => 35, 'clanPoints' => 50000]],
+    'paging' => ['cursors' => ['after' => 'next-page']]
+]);
+$seedApiCache('/clans?name=Elite&minMembers=30&limit=20&after=next-page', [
+    'items' => [['tag' => '#9RU089PG', 'name' => 'Elite Two', 'clanLevel' => 19, 'members' => 33, 'clanPoints' => 45000]],
+    'paging' => ['cursors' => ['before' => 'previous-page']]
+]);
 $seedApiCache('/clans/%239RU089PG', ['tag' => '#9RU089PG', 'name' => 'Home', 'warLeague' => ['name' => 'Master League I']]);
 $seedApiCache('/clans/%239RU089PG/currentwar/leaguegroup', ['state' => 'inWar', 'season' => '2026-10', 'clans' => [
     ['tag' => '#9RU089PG', 'name' => 'Home'], ['tag' => '#2GPP802UU', 'name' => 'Away']
@@ -172,6 +180,10 @@ $checks = [
     '/api/rankings/unknown' => [400, 'application/json'],
     '/api/rankings/players?location=bad%2Fpath' => [400, 'application/json'],
     '/api/clans/popular' => [200, 'application/json'],
+    '/api/clans/search?name=Elite&minMembers=30' => [200, 'application/json'],
+    '/api/clans/search?name=El' => [400, 'application/json'],
+    '/api/clans/search?name=Elite&minMembers=40&maxMembers=20' => [400, 'application/json'],
+    '/api/clans/search?name=Elite&after=one&before=two' => [400, 'application/json'],
     '/api/clan/2GPP802UU/health' => [200, 'application/json'],
     '/api/clan/2GPP802UU/health.csv' => [200, 'text/csv'],
     '/api/clan/9RU089PG/war?round=2' => [200, 'application/json'],
@@ -196,6 +208,18 @@ try {
     $englishHeaderError = $app->handle($factory->createServerRequest('GET', '/api/clan/INVALID')->withHeader('Accept-Language', 'en-US,en;q=0.9'));
     if ($englishHeaderError->getHeaderLine('Content-Language') !== 'en') {
         throw new RuntimeException('The API must honor Accept-Language when lang is absent.');
+    }
+    $clanSearch = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clans/search?name=Elite&minMembers=30'))->getBody(), true);
+    if (($clanSearch['items'][0]['name'] ?? null) !== 'Elite Clan' || ($clanSearch['paging']['cursors']['after'] ?? null) !== 'next-page') {
+        throw new RuntimeException('Clan search must return items and its next cursor.');
+    }
+    $clanSearchNext = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clans/search?name=Elite&minMembers=30&after=next-page'))->getBody(), true);
+    if (($clanSearchNext['items'][0]['name'] ?? null) !== 'Elite Two' || ($clanSearchNext['paging']['cursors']['before'] ?? null) !== 'previous-page') {
+        throw new RuntimeException('Clan search must forward pagination cursors.');
+    }
+    $englishSearchError = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clans/search?name=El&lang=en'))->getBody(), true);
+    if (($englishSearchError['error'] ?? null) !== 'Clan name must contain 3 to 80 characters.') {
+        throw new RuntimeException('Clan search validation must follow the selected language.');
     }
     $englishCsv = $app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/health.csv?lang=en'));
     if ($englishCsv->getHeaderLine('Content-Language') !== 'en' || !str_starts_with((string)$englishCsv->getBody(), 'Name,Tag,Role,')) {
