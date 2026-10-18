@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Profil Pemain · CoC Clan Command Center</title>
+  <title data-i18n="player.pageTitle">Profil Pemain · CoC Clan Command Center</title>
   <link rel="stylesheet" href="/player.css">
   <link rel="stylesheet" href="/player-league.css">
   <link rel="stylesheet" href="/donation.css">
+  <script src="/i18n.js"></script>
   <script src="/player-league.js" defer></script>
   <script src="/recent.js" defer></script>
   <script src="/player.js" defer></script>
@@ -15,19 +16,20 @@
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a id="backLink" class="back-link" href="/">← Kembali ke klan</a>
+      <a id="backLink" class="back-link" href="/" data-i18n="player.back">← Kembali ke klan</a>
       <span class="brand">CoC <span>Player Profile</span></span>
-      <a id="compareLink" class="back-link" href="/compare.html">Bandingkan</a>
+      <a id="compareLink" class="back-link" href="/compare.html" data-i18n="player.compare">Bandingkan</a>
       <form id="playerSearch" class="search-form">
         <label class="sr-only" for="playerTag">Player tag</label>
-        <input id="playerTag" name="tag" placeholder="Cari player tag" autocomplete="off" spellcheck="false">
-        <button type="submit">Cari</button>
+        <input id="playerTag" name="tag" placeholder="Cari player tag" data-i18n-placeholder="player.searchPlaceholder" autocomplete="off" spellcheck="false">
+        <button type="submit" data-i18n="player.search">Cari</button>
       </form>
+      <label class="language-control"><span data-i18n="language.label">Bahasa</span><select data-language-switch aria-label="Bahasa / Language"><option value="id">Indonesia</option><option value="en">English</option></select></label>
     </div>
   </header>
 
   <main class="page">
-    <div id="status" class="status" role="status">Masukkan player tag untuk membuka profil.</div>
+    <div id="status" class="status" role="status" data-i18n="player.enterTag">Masukkan player tag untuk membuka profil.</div>
     <div id="profile" class="profile-layout" hidden>
       <div class="profile-main">
       <section class="profile-head">
@@ -36,133 +38,133 @@
           <div>
             <div class="eyebrow">PLAYER PROFILE</div>
             <div class="player-name-row"><h1 id="playerName"></h1><div id="playerLeagueBadge" class="player-league-badge" hidden></div></div>
-            <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag"></button><span id="clanName"></span><span id="role"></span></div>
-            <div id="leagueRankSummary" class="league-rank-summary">Peringkat grup liga belum tersedia.</div>
+            <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag" data-i18n-title="player.copyTag"></button><span id="clanName"></span><span id="role"></span></div>
+            <div id="leagueRankSummary" class="league-rank-summary" data-i18n="player.leagueUnavailable">Peringkat grup liga belum tersedia.</div>
           </div>
         </div>
         <div id="updated" class="updated"></div>
       </section>
 
       <section id="player-overview" class="panel player-overview-panel">
-        <div class="section-head"><div><div class="eyebrow">PLAYER SNAPSHOT</div><h2>Ringkasan akun</h2></div><span id="overviewUpdated"></span></div>
+        <div class="section-head"><div><div class="eyebrow">PLAYER SNAPSHOT</div><h2 data-i18n="player.accountSummary">Ringkasan akun</h2></div><span id="overviewUpdated"></span></div>
         <div id="playerOverviewCards" class="player-overview-cards"></div>
         <div id="playerOverviewActions" class="player-overview-actions"></div>
       </section>
 
-      <section class="stats" aria-label="Ringkasan pemain">
+      <section class="stats" aria-label="Ringkasan pemain" data-i18n-aria-label="player.profileSummary">
         <div><span>Town Hall</span><strong id="townHall">—</strong></div>
         <div><span>Builder Hall</span><strong id="builderHall">—</strong></div>
         <div><span>XP</span><strong id="exp">—</strong></div>
-        <div><span>Trofi</span><strong id="trophies">—</strong></div>
+        <div><span data-i18n="player.trophies">Trofi</span><strong id="trophies">—</strong></div>
         <div><span>War Stars</span><strong id="warStars">—</strong></div>
-        <div><span>Donasi</span><strong id="donations">—</strong></div>
+        <div><span data-i18n="player.donations">Donasi</span><strong id="donations">—</strong></div>
       </section>
 
-      <nav class="tabs" aria-label="Bagian profil">
-        <button type="button" data-tab="army" aria-selected="true">Army</button><button type="button" data-tab="progress" aria-selected="false">Progres</button><button type="button" data-tab="performance" aria-selected="false">Performa War/CWL</button><button type="button" data-tab="ranked-battles" aria-selected="false">Ranked League</button>
+      <nav class="tabs" aria-label="Bagian profil" data-i18n-aria-label="player.profileSections">
+        <button type="button" data-tab="army" aria-selected="true">Army</button><button type="button" data-tab="progress" aria-selected="false" data-i18n="player.progress">Progres</button><button type="button" data-tab="performance" aria-selected="false" data-i18n="player.warPerformance">Performa War/CWL</button><button type="button" data-tab="ranked-battles" aria-selected="false">Ranked League</button>
       </nav>
 
       <section id="army" class="panel">
-        <div class="section-head"><div><div class="eyebrow">KOMPOSISI AKUN</div><h2>Army</h2></div><span id="armyCount"></span></div>
-        <p class="section-note">Angka pada ikon adalah level pemain. Pilih item untuk melihat rinciannya.</p>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="player.accountComposition">KOMPOSISI AKUN</div><h2>Army</h2></div><span id="armyCount"></span></div>
+        <p class="section-note" data-i18n="player.armyNote">Angka pada ikon adalah level pemain. Pilih item untuk melihat rinciannya.</p>
         <div id="armySections"></div>
       </section>
 
       <section id="progress" class="panel progress-panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">AUDIT AKUN</div><h2>Progres & Rushed Check</h2></div></div>
-        <div class="progress-summary"><div><span>Skor pasukan & hero</span><strong id="score">—</strong></div><div><span>Status</span><strong id="rushed">—</strong></div><div><span>Cakupan</span><strong id="coverage">—</strong></div></div>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="player.accountAudit">AUDIT AKUN</div><h2 data-i18n="player.progressHeading">Progres & Rushed Check</h2></div></div>
+        <div class="progress-summary"><div><span data-i18n="player.armyScore">Skor pasukan & hero</span><strong id="score">—</strong></div><div><span data-i18n="player.status">Status</span><strong id="rushed">—</strong></div><div><span data-i18n="player.coverage">Cakupan</span><strong id="coverage">—</strong></div></div>
         <div id="progressNotice" class="notice"></div>
-        <div class="progress-toolbar"><input id="progressSearch" type="search" placeholder="Cari item…"><select id="progressFilter"><option value="all">Semua item</option><option value="behind">Belum maksimal</option><option value="maxed">Maksimal</option><option value="priority">Prioritas upgrade</option></select><select id="progressSort"><option value="gap">Gap terbesar</option><option value="progress">Progres terendah</option><option value="level">Level tertinggi</option><option value="name">Nama</option></select></div>
+        <div class="progress-toolbar"><input id="progressSearch" type="search" placeholder="Cari item…" data-i18n-placeholder="player.searchItem"><select id="progressFilter"><option value="all" data-i18n="player.allItems">Semua item</option><option value="behind" data-i18n="player.behind">Belum maksimal</option><option value="maxed" data-i18n="player.maxed">Maksimal</option><option value="priority" data-i18n="player.upgradePriority">Prioritas upgrade</option></select><select id="progressSort"><option value="gap" data-i18n="player.largestGap">Gap terbesar</option><option value="progress" data-i18n="player.lowestProgress">Progres terendah</option><option value="level" data-i18n="player.highestLevel">Level tertinggi</option><option value="name" data-i18n="player.name">Nama</option></select></div>
         <div id="categoryProgress" class="category-progress"></div>
         <ul id="reasons" class="reasons"></ul>
-        <h3>Prioritas upgrade</h3><div id="upgradePriorities" class="priority-list"></div>
+        <h3 data-i18n="player.upgradePriority">Prioritas upgrade</h3><div id="upgradePriorities" class="priority-list"></div>
         <div id="upgradePlanner" class="upgrade-planner"></div>
         <div id="progressDistribution" class="progress-distribution"></div>
         <div id="progressRadar" class="progress-radar"></div>
         <div id="builderProgress" class="notice"></div>
       </section>
       <section id="performance" class="panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">ARSIP PERANG</div><h2>Performa War/CWL</h2></div></div>
-        <p id="performanceNote" class="section-note">Memuat arsip perang...</p>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="player.warArchive">ARSIP PERANG</div><h2 data-i18n="player.warPerformance">Performa War/CWL</h2></div></div>
+        <p id="performanceNote" class="section-note" data-i18n="player.loadingWarArchive">Memuat arsip perang...</p>
         <div id="performanceSummary" class="performance-summary"></div>
         <div id="performanceQuality" class="performance-quality"></div>
         <div id="performanceDistribution" class="performance-distribution"></div>
         <div id="performanceChart" class="performance-chart"></div>
-        <h3>Riwayat perang</h3><div id="performanceWars" class="war-history"></div>
-        <h3>Tren aktivitas</h3><div id="snapshotTrend" class="snapshot-trend"></div>
+        <h3 data-i18n="player.warHistory">Riwayat perang</h3><div id="performanceWars" class="war-history"></div>
+        <h3 data-i18n="player.activityTrend">Tren aktivitas</h3><div id="snapshotTrend" class="snapshot-trend"></div>
       </section>
       <section id="ranked-battles" class="panel ranked-battles-panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2>Battle Log</h2></div><select id="rankedBattleSession" aria-label="Pilih sesi battle log"></select></div>
-        <p id="rankedBattleStatus" class="section-note" role="status">Memuat battle log…</p>
-        <div class="ranked-log-toolbar"><select id="rankedLogFilter"><option value="all">Semua hasil</option><option value="triple">3 bintang</option><option value="low">0–1 bintang</option><option value="highDestruction">Destruksi ≥80%</option></select><select id="rankedLogSort"><option value="oldest" selected>Terlama</option><option value="latest">Terbaru</option><option value="stars">Bintang</option><option value="destruction">Destruksi</option><option value="trophies">Trofi</option></select></div>
+        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2>Battle Log</h2></div><select id="rankedBattleSession" aria-label="Pilih sesi battle log" data-i18n-aria-label="player.chooseBattleSession"></select></div>
+        <p id="rankedBattleStatus" class="section-note" role="status" data-i18n="player.loadingBattleLog">Memuat battle log…</p>
+        <div class="ranked-log-toolbar"><select id="rankedLogFilter"><option value="all" data-i18n="player.allResults">Semua hasil</option><option value="triple" data-i18n="player.threeStars">3 bintang</option><option value="low" data-i18n="player.zeroOneStars">0–1 bintang</option><option value="highDestruction" data-i18n="player.destruction80">Destruksi ≥80%</option></select><select id="rankedLogSort"><option value="oldest" selected data-i18n="player.oldest">Terlama</option><option value="latest" data-i18n="player.latest">Terbaru</option><option value="stars" data-i18n="player.stars">Bintang</option><option value="destruction" data-i18n="player.destruction">Destruksi</option><option value="trophies" data-i18n="player.trophies">Trofi</option></select></div>
         <div id="rankedBattleSummary" class="ranked-battle-summary"></div>
         <section id="rankedSessionComparison" class="ranked-session-comparison" aria-labelledby="rankedComparisonTitle" hidden>
-          <div class="ranked-comparison-heading"><div><span>PERUBAHAN MINGGUAN</span><h3 id="rankedComparisonTitle">Perbandingan 2 sesi terakhir</h3></div><div class="ranked-comparison-legend"><span><i class="is-previous"></i>Sebelumnya</span><span><i class="is-current"></i>Saat ini</span></div></div>
+          <div class="ranked-comparison-heading"><div><span data-i18n="player.weeklyChange">PERUBAHAN MINGGUAN</span><h3 id="rankedComparisonTitle" data-i18n="player.twoSessions">Perbandingan 2 sesi terakhir</h3></div><div class="ranked-comparison-legend"><span><i class="is-previous"></i><span data-i18n="player.previous">Sebelumnya</span></span><span><i class="is-current"></i><span data-i18n="player.current">Saat ini</span></span></div></div>
           <div class="ranked-comparison-layout">
             <div id="rankedComparisonChart" class="ranked-comparison-chart"></div>
-            <aside id="rankedComparisonInsights" class="ranked-comparison-insights" aria-label="Ringkasan performa dua sesi"></aside>
+            <aside id="rankedComparisonInsights" class="ranked-comparison-insights" aria-label="Ringkasan performa dua sesi" data-i18n-aria-label="player.twoSessionSummary"></aside>
           </div>
         </section>
         <div class="ranked-battle-columns">
-          <section><div class="ranked-battle-heading"><h3>Attacks</h3><span><b id="rankedAttackTotal"></b><b id="rankedAttackTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedAttackLogs" class="ranked-battle-list"></div></section>
-          <section><div class="ranked-battle-heading"><h3>Defenses</h3><span><b id="rankedDefenseTotal"></b><b id="rankedDefenseTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedDefenseLogs" class="ranked-battle-list"></div></section>
+          <section><div class="ranked-battle-heading"><h3 data-i18n="player.attacks">Attacks</h3><span><b id="rankedAttackTotal"></b><b id="rankedAttackTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedAttackLogs" class="ranked-battle-list"></div></section>
+          <section><div class="ranked-battle-heading"><h3 data-i18n="player.defenses">Defenses</h3><span><b id="rankedDefenseTotal"></b><b id="rankedDefenseTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedDefenseLogs" class="ranked-battle-list"></div></section>
         </div>
       </section>
       <section id="player-resume" class="panel player-resume-panel">
-        <div class="section-head"><div><div class="eyebrow">PROFILE REPORT</div><h2>Resume pemain</h2></div><span id="dataSourceNote"></span></div>
-        <p id="playerResumeText" class="section-note">Resume akan tersedia setelah profil dimuat.</p>
-        <div class="resume-actions"><button id="copyPlayerResume" type="button">Salin resume</button><button id="copyPlayerLink" type="button">Salin tautan</button><button id="exportPlayerCsv" type="button">Export CSV</button></div>
+        <div class="section-head"><div><div class="eyebrow">PROFILE REPORT</div><h2 data-i18n="player.resume">Resume pemain</h2></div><span id="dataSourceNote"></span></div>
+        <p id="playerResumeText" class="section-note" data-i18n="player.resumePending">Resume akan tersedia setelah profil dimuat.</p>
+        <div class="resume-actions"><button id="copyPlayerResume" type="button" data-i18n="player.copyResume">Salin resume</button><button id="copyPlayerLink" type="button" data-i18n="player.copyLink">Salin tautan</button><button id="exportPlayerCsv" type="button">Export CSV</button></div>
       </section>
       </div>
       <aside class="league-sidebar panel" aria-labelledby="leagueSidebarTitle">
         <div class="league-sidebar-heading">
-          <div><div id="leagueSidebarEyebrow" class="eyebrow">RANKED LEAGUE</div><h2 id="leagueSidebarTitle">Peringkat grup liga</h2></div>
+          <div><div id="leagueSidebarEyebrow" class="eyebrow">RANKED LEAGUE</div><h2 id="leagueSidebarTitle" data-i18n="player.leagueGroup">Peringkat grup liga</h2></div>
           <div id="sidebarLeagueBadge" class="sidebar-league-badge" hidden></div>
         </div>
-        <label class="league-session-label" for="leagueSession">Sesi liga</label>
-        <select id="leagueSession" aria-label="Pilih sesi liga"></select>
-        <p id="leagueStatus" class="section-note" role="status">Memuat sesi liga...</p>
+        <label class="league-session-label" for="leagueSession" data-i18n="player.leagueSession">Sesi liga</label>
+        <select id="leagueSession" aria-label="Pilih sesi liga" data-i18n-aria-label="player.chooseLeagueSession"></select>
+        <p id="leagueStatus" class="section-note" role="status" data-i18n="player.loadingLeagueSession">Memuat sesi liga...</p>
         <div id="leaguePlayerRank" class="league-player-rank" hidden></div>
-        <div class="league-view-tabs" role="tablist" aria-label="Tampilan grup liga">
-          <button type="button" id="leagueStandingsTab" data-league-view="standings" role="tab" aria-controls="leagueStandingsView" aria-selected="true">Peringkat</button>
-          <button type="button" id="leagueStatisticsTab" data-league-view="statistics" role="tab" aria-controls="leagueStatisticsView" aria-selected="false">Statistik</button>
+        <div class="league-view-tabs" role="tablist" aria-label="Tampilan grup liga" data-i18n-aria-label="player.leagueView">
+          <button type="button" id="leagueStandingsTab" data-league-view="standings" role="tab" aria-controls="leagueStandingsView" aria-selected="true" data-i18n="player.standings">Peringkat</button>
+          <button type="button" id="leagueStatisticsTab" data-league-view="statistics" role="tab" aria-controls="leagueStatisticsView" aria-selected="false" data-i18n="player.statistics">Statistik</button>
         </div>
         <div id="leagueStandingsView" class="league-standings-view" role="tabpanel" aria-labelledby="leagueStandingsTab">
           <div id="leagueRankingInsights" class="league-ranking-insights">
             <section class="league-stat-section" aria-labelledby="leagueTopAttackTitle">
-              <div class="league-list-heading"><span id="leagueTopAttackTitle">Top Attack</span><span id="leagueTopAttackMeta">Semua battle</span></div>
+              <div class="league-list-heading"><span id="leagueTopAttackTitle">Top Attack</span><span id="leagueTopAttackMeta" data-i18n="player.allBattles">Semua battle</span></div>
               <ol id="leagueTopAttack" class="league-top-list"></ol>
             </section>
             <section class="league-stat-section" aria-labelledby="leagueTopDefenseTitle">
-              <div class="league-list-heading"><span id="leagueTopDefenseTitle">Top Defense</span><span id="leagueTopDefenseMeta">Semua battle</span></div>
+              <div class="league-list-heading"><span id="leagueTopDefenseTitle">Top Defense</span><span id="leagueTopDefenseMeta" data-i18n="player.allBattles">Semua battle</span></div>
               <ol id="leagueTopDefense" class="league-top-list"></ol>
             </section>
             <section class="league-stat-section" aria-labelledby="leagueZonesTitle">
-              <div class="league-list-heading"><span id="leagueZonesTitle">Zona peringkat</span><span id="leagueBattleRule"></span></div>
+              <div class="league-list-heading"><span id="leagueZonesTitle" data-i18n="player.rankZones">Zona peringkat</span><span id="leagueBattleRule"></span></div>
               <div id="leagueZones" class="league-zones"></div>
             </section>
           </div>
-          <div id="leagueStandingsHeading" class="league-list-heading"><span>Peringkat Anggota grup</span><span id="leagueMemberCount"></span></div>
+          <div id="leagueStandingsHeading" class="league-list-heading"><span data-i18n="player.groupMembers">Peringkat Anggota grup</span><span id="leagueMemberCount"></span></div>
           <ol id="leagueMembers" class="league-members"></ol>
           <div id="leaguePagination" class="league-pagination">
-            <button id="leaguePrev" type="button" disabled>Prev</button>
+            <button id="leaguePrev" type="button" disabled data-i18n="player.previousPage">Sebelumnya</button>
             <span id="leaguePageInfo">—</span>
-            <button id="leagueNext" type="button" disabled>Next</button>
+            <button id="leagueNext" type="button" disabled data-i18n="player.nextPage">Berikutnya</button>
           </div>
         </div>
         <div id="leagueStatisticsView" class="league-statistics" role="tabpanel" aria-labelledby="leagueStatisticsTab" hidden>
           <div class="league-analysis-heading">
-            <div><strong>Analisis grup</strong><span id="leagueStatisticsCoverage">Belum ada data</span></div>
-            <label for="leagueStatisticsMetric">Metrik</label>
+            <div><strong data-i18n="player.groupAnalysis">Analisis grup</strong><span id="leagueStatisticsCoverage" data-i18n="player.noData">Belum ada data</span></div>
+            <label for="leagueStatisticsMetric" data-i18n="player.metric">Metrik</label>
             <select id="leagueStatisticsMetric">
-              <option value="trophies">Trofi</option>
-              <option value="attackPoints">Poin attack</option>
-              <option value="defensePoints">Poin defense</option>
+              <option value="trophies" data-i18n="player.trophies">Trofi</option>
+              <option value="attackPoints" data-i18n="player.attackPoints">Poin attack</option>
+              <option value="defensePoints" data-i18n="player.defensePoints">Poin defense</option>
             </select>
           </div>
           <div id="leagueStatisticsSummary" class="league-stat-summary"></div>
           <section class="league-chart-section" aria-labelledby="leagueDistributionTitle">
-            <div class="league-list-heading"><span id="leagueDistributionTitle">Kurva distribusi</span><span id="leagueDistributionMeta"></span></div>
+            <div class="league-list-heading"><span id="leagueDistributionTitle" data-i18n="player.distribution">Kurva distribusi</span><span id="leagueDistributionMeta"></span></div>
             <div id="leagueDistributionChart" class="league-distribution-chart"></div>
           </section>
           <section class="league-chart-section" aria-labelledby="leagueBoxplotTitle">
@@ -175,10 +177,10 @@
   </main>
 
   <dialog id="itemDialog" aria-labelledby="itemTitle">
-    <div class="dialog-head"><h2 id="itemTitle"></h2><button id="closeDialog" type="button" aria-label="Tutup">×</button></div>
-    <div class="dialog-body"><div id="detailIcon" class="detail-icon"></div><dl id="itemDetails"></dl><a id="wikiLink" target="_blank" rel="noopener noreferrer">Lihat artikel di Clash of Clans Wiki ↗</a></div>
+    <div class="dialog-head"><h2 id="itemTitle"></h2><button id="closeDialog" type="button" aria-label="Tutup" data-i18n-aria-label="player.close">×</button></div>
+    <div class="dialog-body"><div id="detailIcon" class="detail-icon"></div><dl id="itemDetails"></dl><a id="wikiLink" target="_blank" rel="noopener noreferrer" data-i18n="player.wikiArticle">Lihat artikel di Clash of Clans Wiki ↗</a></div>
   </dialog>
 
-  <footer class="footer">Ikon item ditautkan dari <a href="https://clashofclans.fandom.com/wiki/Clash_of_Clans_Wiki" target="_blank" rel="noopener noreferrer">Clash of Clans Wiki</a>. Konten ini tidak berafiliasi dengan Supercell.<br>Dikembangkan oleh Amerta Buana #28P08PG0G · <a data-donation-trigger href="https://saweria.co/masrajha">Dukung pengembangan</a></footer>
+  <footer class="footer"><span data-i18n="player.footerIntro">Ikon item ditautkan dari</span> <a href="https://clashofclans.fandom.com/wiki/Clash_of_Clans_Wiki" target="_blank" rel="noopener noreferrer">Clash of Clans Wiki</a>. <span data-i18n="player.footerDisclaimer">Konten ini tidak berafiliasi dengan Supercell.</span><br><span data-i18n="player.footerDeveloper">Dikembangkan oleh Amerta Buana #28P08PG0G</span> · <a data-donation-trigger href="https://saweria.co/masrajha" data-i18n="player.footerSupport">Dukung pengembangan</a></footer>
 </body>
 </html>

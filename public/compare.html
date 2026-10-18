@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Player Comparison · CoC Clan Command Center</title>
+  <title data-i18n="compare.pageTitle">Perbandingan Pemain · CoC Clan Command Center</title>
   <link rel="stylesheet" href="/player.css">
   <link rel="stylesheet" href="/compare.css">
   <link rel="stylesheet" href="/donation.css">
+  <script src="/i18n.js"></script>
   <script src="/compare-model.js" defer></script>
   <script src="/recent.js" defer></script>
   <script src="/compare.js" defer></script>
@@ -15,101 +16,102 @@
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a id="backLink" class="back-link" href="/">← Kembali ke klan</a>
+      <a id="backLink" class="back-link" href="/" data-i18n="player.back">← Kembali ke klan</a>
       <span class="brand">CoC <span>Player Comparison</span></span>
-      <a class="header-profile-link" href="/player.html">Profil pemain</a>
+      <a class="header-profile-link" href="/player.html" data-i18n="compare.playerProfile">Profil pemain</a>
+      <label class="language-control"><span data-i18n="language.label">Bahasa</span><select data-language-switch aria-label="Bahasa / Language"><option value="id">Indonesia</option><option value="en">English</option></select></label>
     </div>
   </header>
 
   <main class="page compare-page">
-    <div class="section-head compare-heading"><div><div class="eyebrow">DUA PEMAIN</div><h1>Bandingkan pemain</h1><p>Level, progres, dan cakupan data pada satu layar.</p></div></div>
+    <div class="section-head compare-heading"><div><div class="eyebrow" data-i18n="compare.twoPlayers">DUA PEMAIN</div><h1 data-i18n="compare.heading">Bandingkan pemain</h1><p data-i18n="compare.intro">Level, progres, dan cakupan data pada satu layar.</p></div></div>
     <form id="compareForm" class="compare-form">
       <div class="pick-player">
-        <label for="player1">Pemain A</label>
-        <input id="player1" name="player1" placeholder="Tag pemain A" autocomplete="off" spellcheck="false">
-        <select id="member1" aria-label="Pilih pemain A dari anggota klan"><option value="">Pilih dari anggota klan</option></select>
+        <label for="player1" data-i18n="compare.playerA">Pemain A</label>
+        <input id="player1" name="player1" placeholder="Tag pemain A" data-i18n-placeholder="compare.tagA" autocomplete="off" spellcheck="false">
+        <select id="member1" aria-label="Pilih pemain A dari anggota klan" data-i18n-aria-label="compare.chooseA"><option value="" data-i18n="compare.chooseMember">Pilih dari anggota klan</option></select>
       </div>
-      <button id="swapPlayers" class="swap-button" type="button" aria-label="Tukar pemain" title="Tukar pemain">⇄</button>
+      <button id="swapPlayers" class="swap-button" type="button" aria-label="Tukar pemain" data-i18n-aria-label="compare.swap" title="Tukar pemain" data-i18n-title="compare.swap">⇄</button>
       <div class="pick-player">
-        <label for="player2">Pemain B</label>
-        <input id="player2" name="player2" placeholder="Tag pemain B" autocomplete="off" spellcheck="false">
-        <select id="member2" aria-label="Pilih pemain B dari anggota klan"><option value="">Pilih dari anggota klan</option></select>
+        <label for="player2" data-i18n="compare.playerB">Pemain B</label>
+        <input id="player2" name="player2" placeholder="Tag pemain B" data-i18n-placeholder="compare.tagB" autocomplete="off" spellcheck="false">
+        <select id="member2" aria-label="Pilih pemain B dari anggota klan" data-i18n-aria-label="compare.chooseB"><option value="" data-i18n="compare.chooseMember">Pilih dari anggota klan</option></select>
       </div>
-      <button class="compare-button" type="submit">Bandingkan</button>
+      <button class="compare-button" type="submit" data-i18n="compare.submit">Bandingkan</button>
     </form>
     <p id="clanPickerNote" class="picker-note" role="status"></p>
 
     <div class="players-grid">
-      <section class="player-slot" aria-label="Pemain A"><div id="status1" class="slot-status" role="status">Masukkan tag pemain A.</div><div id="card1"></div></section>
-      <section class="player-slot" aria-label="Pemain B"><div id="status2" class="slot-status" role="status">Masukkan tag pemain B.</div><div id="card2"></div></section>
+      <section class="player-slot" aria-label="Pemain A" data-i18n-aria-label="compare.playerA"><div id="status1" class="slot-status" role="status" data-i18n="compare.enterA">Masukkan tag pemain A.</div><div id="card1"></div></section>
+      <section class="player-slot" aria-label="Pemain B" data-i18n-aria-label="compare.playerB"><div id="status2" class="slot-status" role="status" data-i18n="compare.enterB">Masukkan tag pemain B.</div><div id="card2"></div></section>
     </div>
 
     <div id="comparisonContent" hidden>
-      <div id="stickyCompareHeader" class="sticky-compare-header" aria-label="Pemain yang dibandingkan"></div>
+      <div id="stickyCompareHeader" class="sticky-compare-header" aria-label="Pemain yang dibandingkan" data-i18n-aria-label="compare.comparedPlayers"></div>
       <section class="comparison-overview" aria-labelledby="overviewTitle">
-        <div><div class="eyebrow">HASIL CEPAT</div><h2 id="overviewTitle">Ringkasan perbandingan</h2><p id="overviewConclusion"></p></div>
+        <div><div class="eyebrow" data-i18n="compare.quickResult">HASIL CEPAT</div><h2 id="overviewTitle" data-i18n="compare.overview">Ringkasan perbandingan</h2><p id="overviewConclusion"></p></div>
         <div id="overviewScore" class="overview-score"></div>
       </section>
-      <div class="comparison-legend" aria-label="Keterangan tanda perbandingan">
-        <span><b class="level-mark higher-mark">★</b> Lebih unggul</span>
-        <span><b class="level-mark equal-mark">=</b> Setara</span>
-        <span><b class="level-mark lower-mark">▼</b> Lebih rendah</span>
-        <span><b class="level-mark unavailable-mark">—</b> Tidak dapat dibandingkan</span>
+      <div class="comparison-legend" aria-label="Keterangan tanda perbandingan" data-i18n-aria-label="compare.legendLabel">
+        <span><b class="level-mark higher-mark">★</b> <span data-i18n="compare.higher">Lebih unggul</span></span>
+        <span><b class="level-mark equal-mark">=</b> <span data-i18n="compare.equal">Setara</span></span>
+        <span><b class="level-mark lower-mark">▼</b> <span data-i18n="compare.lower">Lebih rendah</span></span>
+        <span><b class="level-mark unavailable-mark">—</b> <span data-i18n="compare.uncomparable">Tidak dapat dibandingkan</span></span>
       </div>
       <div id="compareNotice" class="compare-notice"></div>
-      <nav class="tabs compare-tabs" aria-label="Bagian perbandingan">
-        <a href="#progress" data-tab="progress" aria-selected="true">Progres</a>
+      <nav class="tabs compare-tabs" aria-label="Bagian perbandingan" data-i18n-aria-label="compare.sections">
+        <a href="#progress" data-tab="progress" aria-selected="true" data-i18n="player.progress">Progres</a>
         <a href="#army" data-tab="army" aria-selected="false">Army</a>
         <a href="#war-cwl" data-tab="war-cwl" aria-selected="false">War/CWL</a>
         <a href="#ranked-league" data-tab="ranked-league" aria-selected="false">Ranked League</a>
-        <a href="#activity" data-tab="activity" aria-selected="false">Aktivitas</a>
+        <a href="#activity" data-tab="activity" aria-selected="false" data-i18n="compare.activity">Aktivitas</a>
       </nav>
       <section id="progress" class="panel compare-panel">
-        <div class="section-head"><div><div class="eyebrow">PROGRES PASUKAN DAN HERO</div><h2>Skor & kategori</h2></div></div>
-        <p class="section-note">Skor hanya mencakup item yang memiliki batas level. Ini bukan persentase maksimal seluruh akun.</p>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="compare.progressEyebrow">PROGRES PASUKAN DAN HERO</div><h2 data-i18n="compare.scoresAndCategories">Skor & kategori</h2></div></div>
+        <p class="section-note" data-i18n="compare.scoreScope">Skor hanya mencakup item yang memiliki batas level. Ini bukan persentase maksimal seluruh akun.</p>
         <div id="headToHeadChart" class="head-to-head-chart"></div>
         <div id="scoreComparison" class="score-comparison"></div>
         <div id="categoryComparison" class="comparison-list"></div>
-        <h3>Selisih level terbesar</h3><p class="section-note">Hanya item yang ada pada kedua profil, dengan TH dan batas level API yang sama. Selisih level bukan ukuran kekuatan serangan.</p>
+        <h3 data-i18n="compare.largestLevelGaps">Selisih level terbesar</h3><p class="section-note" data-i18n="compare.levelGapScope">Hanya item yang ada pada kedua profil, dengan TH dan batas level API yang sama. Selisih level bukan ukuran kekuatan serangan.</p>
         <div id="levelDifferences" class="difference-list"></div>
       </section>
       <section id="army" class="panel compare-panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">LEVEL AKTUAL</div><h2>Matriks Army</h2></div><span id="armyCount"></span></div>
-        <p id="armyModeNote" class="section-note">Mode level aktual membandingkan angka level secara langsung. Pada TH berbeda, hasil ini bukan ukuran kematangan akun.</p>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="compare.actualLevel">LEVEL AKTUAL</div><h2 data-i18n="compare.armyMatrix">Matriks Army</h2></div><span id="armyCount"></span></div>
+        <p id="armyModeNote" class="section-note" data-i18n="compare.armyActualNote">Mode level aktual membandingkan angka level secara langsung. Pada TH berbeda, hasil ini bukan ukuran kematangan akun.</p>
         <div class="army-filter">
-          <label for="armyCategory">Kategori</label><select id="armyCategory"><option value="all">Semua kategori</option></select>
-          <label for="armyMode">Mode</label><select id="armyMode"><option value="actual">Level aktual</option><option value="progress">Progres terhadap batas</option></select>
-          <label for="armySort">Urutan</label><select id="armySort"><option value="name">Nama item</option><option value="difference">Selisih terbesar</option></select>
-          <label class="army-difference-toggle"><input id="armyDifferencesOnly" type="checkbox"> Hanya perbedaan</label>
+          <label for="armyCategory" data-i18n="compare.category">Kategori</label><select id="armyCategory"><option value="all" data-i18n="compare.allCategories">Semua kategori</option></select>
+          <label for="armyMode" data-i18n="compare.mode">Mode</label><select id="armyMode"><option value="actual" data-i18n="compare.actualLevel">Level aktual</option><option value="progress" data-i18n="compare.relativeProgress">Progres terhadap batas</option></select>
+          <label for="armySort" data-i18n="compare.order">Urutan</label><select id="armySort"><option value="name" data-i18n="compare.itemName">Nama item</option><option value="difference" data-i18n="compare.largestDifference">Selisih terbesar</option></select>
+          <label class="army-difference-toggle"><input id="armyDifferencesOnly" type="checkbox"> <span data-i18n="compare.differencesOnly">Hanya perbedaan</span></label>
         </div>
         <div id="armyComparison" class="army-comparison"></div>
       </section>
       <section id="war-cwl" class="panel compare-panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">ARSIP PERANG</div><h2>Performa War/CWL</h2></div><label class="war-period-label" for="warPeriod">Periode <select id="warPeriod"><option value="cwl-current">CWL bulan ini</option><option value="30d">30 hari</option><option value="90d">90 hari</option><option value="all">Semua arsip</option></select></label></div>
-        <p id="warNote" class="section-note">Memuat arsip perang…</p>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="compare.warArchive">ARSIP PERANG</div><h2 data-i18n="player.warPerformance">Performa War/CWL</h2></div><label class="war-period-label" for="warPeriod"><span data-i18n="compare.period">Periode</span> <select id="warPeriod"><option value="cwl-current" data-i18n="compare.cwlThisMonth">CWL bulan ini</option><option value="30d" data-i18n="compare.thirtyDays">30 hari</option><option value="90d" data-i18n="compare.ninetyDays">90 hari</option><option value="all" data-i18n="compare.allArchive">Semua arsip</option></select></label></div>
+        <p id="warNote" class="section-note" data-i18n="compare.loadingWarArchive">Memuat arsip perang…</p>
         <div id="warSummary" class="war-summary-grid"></div>
         <div id="warAdvanced" class="war-advanced-grid"></div>
         <div id="warCharts" class="war-summary-grid"></div>
       </section>
       <section id="ranked-league" class="panel compare-panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2>Performa liga</h2></div></div>
-        <p class="section-note">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
+        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2 data-i18n="compare.leaguePerformance">Performa liga</h2></div></div>
+        <p class="section-note" data-i18n="compare.leagueScope">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
         <div id="leagueComparisonNote" class="league-comparison-note"></div>
         <div id="leagueComparisonGrid" class="league-comparison-grid"></div>
       </section>
       <section id="activity" class="panel compare-panel" hidden>
-        <div class="section-head"><div><div class="eyebrow">SNAPSHOT ANGGOTA</div><h2>Tren aktivitas</h2></div><div class="activity-controls"><label for="activityPeriod">Periode <select id="activityPeriod"><option value="7">7 hari</option><option value="30" selected>30 hari</option><option value="all">Semua</option></select></label><label for="activityMetric">Grafik <select id="activityMetric"><option value="trophies">Trofi</option><option value="donations">Donasi</option></select></label><span id="activityCount"></span></div></div>
+        <div class="section-head"><div><div class="eyebrow" data-i18n="compare.memberSnapshots">SNAPSHOT ANGGOTA</div><h2 data-i18n="compare.activityTrend">Tren aktivitas</h2></div><div class="activity-controls"><label for="activityPeriod"><span data-i18n="compare.period">Periode</span> <select id="activityPeriod"><option value="7" data-i18n="compare.sevenDays">7 hari</option><option value="30" selected data-i18n="compare.thirtyDays">30 hari</option><option value="all" data-i18n="compare.all">Semua</option></select></label><label for="activityMetric"><span data-i18n="compare.chart">Grafik</span> <select id="activityMetric"><option value="trophies" data-i18n="player.trophies">Trofi</option><option value="donations" data-i18n="player.donations">Donasi</option></select></label><span id="activityCount"></span></div></div>
         <p id="activityNote" class="section-note"></p>
         <div id="activityChart" class="activity-chart"></div>
         <div id="donationTable" class="donation-table"></div>
-        <div class="export-actions"><button id="exportCsv" type="button" disabled>Ekspor CSV</button><button id="exportPng" type="button" disabled>Ekspor PNG</button></div>
+        <div class="export-actions"><button id="exportCsv" type="button" disabled data-i18n="compare.exportCsv">Ekspor CSV</button><button id="exportPng" type="button" disabled data-i18n="compare.exportPng">Ekspor PNG</button></div>
       </section>
       <section id="comparisonResume" class="panel resume-card" aria-labelledby="resumeTitle">
-        <div class="resume-heading"><div><div class="eyebrow">RINGKASAN</div><h2 id="resumeTitle">Resume perbandingan</h2></div><div class="share-actions"><button id="copyCompareLink" type="button">Salin tautan</button><span id="shareStatus" role="status"></span></div></div>
+        <div class="resume-heading"><div><div class="eyebrow" data-i18n="compare.summaryEyebrow">RINGKASAN</div><h2 id="resumeTitle" data-i18n="compare.resume">Resume perbandingan</h2></div><div class="share-actions"><button id="copyCompareLink" type="button" data-i18n="compare.copyLink">Salin tautan</button><span id="shareStatus" role="status"></span></div></div>
         <div id="resumeText"></div>
       </section>
     </div>
   </main>
-  <footer class="footer">Data profil berasal dari API Clash of Clans. Ikon item dari <a href="https://clashofclans.fandom.com/wiki/Clash_of_Clans_Wiki" target="_blank" rel="noopener noreferrer">Clash of Clans Wiki</a>.<br>Dikembangkan oleh Amerta Buana #28P08PG0G · <a data-donation-trigger href="https://saweria.co/masrajha">Dukung pengembangan</a></footer>
+  <footer class="footer"><span data-i18n="compare.footerSource">Data profil berasal dari API Clash of Clans. Ikon item dari</span> <a href="https://clashofclans.fandom.com/wiki/Clash_of_Clans_Wiki" target="_blank" rel="noopener noreferrer">Clash of Clans Wiki</a>.<br><span data-i18n="player.footerDeveloper">Dikembangkan oleh Amerta Buana #28P08PG0G</span> · <a data-donation-trigger href="https://saweria.co/masrajha" data-i18n="player.footerSupport">Dukung pengembangan</a></footer>
 </body>
 </html>

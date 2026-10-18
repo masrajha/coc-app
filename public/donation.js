@@ -1,5 +1,6 @@
 (() => {
   const donationUrl = 'https://saweria.co/masrajha';
+  const tr = key => window.CocI18n?.t(key) || key;
 
   function openDonation(event) {
     event?.preventDefault();
@@ -12,8 +13,7 @@
     const button = document.createElement('a');
     button.className = 'donation-fab';
     button.href = donationUrl;
-    button.setAttribute('aria-label', 'Dukung pengembangan aplikasi');
-    button.innerHTML = '<span class="donation-fab-icon" aria-hidden="true">♥</span><span class="donation-fab-label">Dukung pengembangan</span>';
+    button.innerHTML = '<span class="donation-fab-icon" aria-hidden="true">♥</span><span class="donation-fab-label"></span>';
     button.addEventListener('click', openDonation);
     document.body.appendChild(button);
 
@@ -21,7 +21,18 @@
     dialog.id = 'donationDialog';
     dialog.className = 'donation-dialog';
     dialog.setAttribute('aria-labelledby', 'donationDialogTitle');
-    dialog.innerHTML = '<div class="donation-dialog-inner"><button class="donation-dialog-close" type="button" aria-label="Tutup">×</button><h2 id="donationDialogTitle">Dukung pengembangan</h2><p>Jika aplikasi ini bermanfaat untuk membantu pengelolaan clan, analisis war, dan perkembangan pemain, Anda dapat mendukung biaya pengembangan dan pemeliharaan aplikasi secara sukarela.</p><p class="donation-dialog-note">Dukungan Anda membantu aplikasi tetap aktif, cepat, dan terus diperbarui. Donasi bersifat sukarela dan tidak membuka fitur khusus.</p><a class="donation-dialog-link" href="https://saweria.co/masrajha" target="_blank" rel="noopener noreferrer">Donasi melalui Saweria</a></div>';
+    dialog.innerHTML = '<div class="donation-dialog-inner"><button class="donation-dialog-close" type="button">×</button><h2 id="donationDialogTitle"></h2><p class="donation-dialog-description"></p><p class="donation-dialog-note"></p><a class="donation-dialog-link" href="https://saweria.co/masrajha" target="_blank" rel="noopener noreferrer"></a></div>';
+    const updateTexts = () => {
+      button.setAttribute('aria-label', tr('donation.buttonLabel'));
+      button.querySelector('.donation-fab-label').textContent = tr('donation.title');
+      dialog.querySelector('.donation-dialog-close').setAttribute('aria-label', tr('donation.close'));
+      dialog.querySelector('#donationDialogTitle').textContent = tr('donation.title');
+      dialog.querySelector('.donation-dialog-description').textContent = tr('donation.description');
+      dialog.querySelector('.donation-dialog-note').textContent = tr('donation.note');
+      dialog.querySelector('.donation-dialog-link').textContent = tr('donation.link');
+    };
+    updateTexts();
+    window.addEventListener('coc-language-changed', updateTexts);
     dialog.querySelector('.donation-dialog-close').addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
     document.body.appendChild(dialog);

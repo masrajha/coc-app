@@ -10,6 +10,9 @@ let currentProgress = null;
 let currentArmy = null;
 let currentProfileData = null;
 let currentPerformanceData = null;
+const tr = (key, variables) => window.CocI18n.t(key, variables);
+const localizedNumber = (value, options) => window.CocI18n.number(value, options);
+const localizedDate = value => window.CocI18n.dateTime(new Date(value));
 const backLink = document.getElementById('backLink');
 if (clanTag) backLink.href = `/?clan=${encodeURIComponent(clanTag)}`;
 
@@ -22,6 +25,20 @@ function setText(id, value) {
   document.getElementById(id).textContent = value ?? '—';
 }
 function setLoading(id, message) { const el = document.getElementById(id); el.replaceChildren(); const spin = document.createElement('span'); spin.className = 'loading-spinner'; spin.setAttribute('aria-hidden', 'true'); const text = document.createElement('span'); text.textContent = message; el.append(spin, text); el.classList.add('loading-state'); }
+
+function rushedLabel(progress) {
+  return tr(!progress.complete ? 'player.rushed.unknown' : progress.rushed.rushed ? 'player.rushed.yes' : 'player.rushed.no');
+}
+
+function localizedProgressReason(reason) {
+  if (reason === 'Cakupan batas level belum lengkap; status rushed ditahan agar tidak menyesatkan.') return tr('player.reasonPartial');
+  if (reason === 'Skor keseluruhan di bawah 60%.') return tr('player.reasonLowOverall');
+  if (reason === 'Kategori utama yang tersedia masih berada di ambang aman.') return tr('player.reasonSafe');
+  const below50 = /^Kategori (.+) di bawah 50%\.$/.exec(reason);
+  if (below50) return tr('player.reasonBelow50', { category: below50[1] });
+  const below60 = /^Kategori (.+) perlu perhatian karena di bawah 60%\.$/.exec(reason);
+  return below60 ? tr('player.reasonBelow60', { category: below60[1] }) : reason;
+}
 
 function wikiArticle(name) {
   return `https://clashofclans.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
@@ -107,7 +124,7 @@ function addDetail(label, value) {
   const dt = document.createElement('dt');
   dt.textContent = label;
   const dd = document.createElement('dd');
-  dd.textContent = value ?? 'Tidak tersedia';
+  dd.textContent = value ?? tr('player.unavailable');
   list.append(dt, dd);
 }
 
@@ -116,10 +133,10 @@ function showItem(item, section) {
   const icon = document.getElementById('detailIcon');
   icon.replaceChildren(makeIcon(item, section));
   document.getElementById('itemDetails').replaceChildren();
-  addDetail('Kategori', section);
-  addDetail('Level pemain', item.level);
-  addDetail('Max level dari API', item.maxLevel);
-  addDetail('Desa', item.village === 'builderBase' ? 'Builder Base' : 'Home Village');
+  addDetail(tr('player.detailCategory'), section);
+  addDetail(tr('player.detailPlayerLevel'), item.level);
+  addDetail(tr('player.detailApiMax'), item.maxLevel);
+  addDetail(tr('player.detailVillage'), item.village === 'builderBase' ? 'Builder Base' : 'Home Village');
   if (item.equipmentHero) addDetail('Hero', item.equipmentHero);
   const link = document.getElementById('wikiLink');
   link.href = wikiArticle(item.name);
@@ -130,7 +147,7 @@ function makeItem(item, section) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'item';
-  button.title = `${item.name} · level ${item.level ?? 'tidak tersedia'}`;
+  button.title = tr('player.itemTooltip', { name: item.name, level: item.level ?? tr('player.unavailable') });
   button.setAttribute('aria-label', button.title);
   button.appendChild(makeIcon(item, section));
   const name = document.createElement('span');
@@ -187,24 +204,26 @@ function renderArmy(army) {
     } else {
       const empty = document.createElement('p');
       empty.className = 'empty';
-      empty.textContent = 'Belum ada item dalam respons profil.';
+      empty.textContent = tr('player.emptyItems');
       section.appendChild(empty);
     }
     root.appendChild(section);
   }
-  setText('armyCount', `${total} item dari API`);
+  setText('armyCount', tr('player.itemCount', { count: localizedNumber(total) }));
 }
 
 function renderProgress(progress) {
   currentProgress = progress;
   const exact = progress.tableExactMatch;
-  setText('score', progress.score.overall !== null ? `${progress.score.overall.toLocaleString('id-ID')}%${progress.complete ? '' : ' (parsial)'}` : 'Belum tersedia');
-  setText('rushed', progress.rushed.label);
+  setText('score', progress.score.overall !== null ? `${localizedNumber(progress.score.overall)}%${progress.complete ? '' : tr('player.partial')}` : tr('player.unavailable'));
+  setText('rushed', rushedLabel(progress));
   const categories = Object.entries(progress.score.categories);
   const known = categories.reduce((sum, [, value]) => sum + value.knownItems, 0);
   const expected = categories.reduce((sum, [, value]) => sum + value.expectedItems, 0);
   setText('coverage', `${known}/${expected}`);
-  setText('progressNotice', `${progress.baselineSource}. ${progress.limitations.join(' ')}`);
+  const source = progress.tableExactMatch ? tr('player.apiMaxSource') : tr('player.localTableSource', { th: progress.tableTownHallLevel });
+  const limits = [tr('player.limitBuildings'), tr(progress.tableExactMatch ? 'player.limitApi' : 'player.limitLocal', { th: progress.tableTownHallLevel }), tr('player.limitScope')];
+  setText('progressNotice', `${source}. ${limits.join(' ')}`);
   const grid = document.getElementById('categoryProgress');
   grid.replaceChildren();
   const names = { heroes: 'Hero', troops: 'Troops', spells: 'Spells', pets: 'Pets' };
@@ -213,7 +232,7 @@ function renderProgress(progress) {
     const label = document.createElement('span');
     label.textContent = `${names[key] || key} · ${value.knownItems}/${value.expectedItems}`;
     const number = document.createElement('b');
-    number.textContent = value.percent !== null ? `${value.percent.toLocaleString('id-ID')}%` : '—';
+    number.textContent = value.percent !== null ? `${localizedNumber(value.percent)}%` : '—';
     box.append(label, number);
     grid.appendChild(box);
   }
@@ -221,7 +240,7 @@ function renderProgress(progress) {
   reasons.replaceChildren();
   for (const reason of progress.rushed.reasons) {
     const li = document.createElement('li');
-    li.textContent = reason;
+    li.textContent = localizedProgressReason(reason);
     reasons.appendChild(li);
   }
   const priorities = document.getElementById('upgradePriorities');
@@ -229,12 +248,12 @@ function renderProgress(progress) {
   for (const item of progress.priorities || []) {
     const row = document.createElement('div');
     row.className = 'priority-row';
-    row.textContent = `${item.name} · ${item.level}/${item.maxLevel} · kurang ${item.levelsRemaining} level`;
+    row.textContent = tr('player.priorityLevels', { name: item.name, level: item.level, max: item.maxLevel, remaining: item.levelsRemaining });
     priorities.appendChild(row);
   }
-  if (!progress.priorities?.length) priorities.textContent = 'Belum ada prioritas yang dapat dihitung.';
+  if (!progress.priorities?.length) priorities.textContent = tr('player.missingPriorities');
   const builder = progress.score.builderBase;
-  setText('builderProgress', `Builder Base: ${builder.percent === null ? 'belum dapat dihitung' : `${builder.percent.toLocaleString('id-ID')}%`} · ${builder.knownItems} item dengan batas level API.`);
+  setText('builderProgress', tr('player.builderProgress', { percent: builder.percent === null ? tr('player.cannotCalculate') : `${localizedNumber(builder.percent)}%`, count: localizedNumber(builder.knownItems) }));
   renderProgressTools(progress);
 }
 
@@ -249,12 +268,12 @@ function progressItems(progress) {
 
 function renderProgressTools(progress) {
   const items = progressItems(progress);
-  const search = (document.getElementById('progressSearch')?.value || '').trim().toLocaleLowerCase('id-ID');
+  const search = (document.getElementById('progressSearch')?.value || '').trim().toLocaleLowerCase(window.CocI18n.formatLocale);
   const filter = document.getElementById('progressFilter')?.value || 'all';
   const sort = document.getElementById('progressSort')?.value || 'gap';
   const visible = items.filter(item => {
     const gap = Math.max(0, Number(item.maxLevel || 0) - Number(item.level || 0));
-    const match = !search || String(item.name || '').toLocaleLowerCase('id-ID').includes(search);
+    const match = !search || String(item.name || '').toLocaleLowerCase(window.CocI18n.formatLocale).includes(search);
     return match && (filter === 'all' || (filter === 'behind' && gap > 0) || (filter === 'maxed' && gap === 0) || (filter === 'priority' && gap >= 3));
   }).sort((a, b) => {
     if (sort === 'name') return String(a.name).localeCompare(String(b.name));
@@ -263,14 +282,14 @@ function renderProgressTools(progress) {
     return (Number(b.maxLevel || 0) - Number(b.level || 0)) - (Number(a.maxLevel || 0) - Number(a.level || 0));
   });
   const planner = document.getElementById('upgradePlanner'); planner.replaceChildren();
-  const heading = document.createElement('h3'); heading.textContent = `Upgrade planner · ${visible.length} item`; planner.appendChild(heading);
+  const heading = document.createElement('h3'); heading.textContent = tr('player.plannerCount', { count: localizedNumber(visible.length) }); planner.appendChild(heading);
   visible.slice(0, 8).forEach(item => {
     const gap = Math.max(0, Number(item.maxLevel || 0) - Number(item.level || 0));
     const row = document.createElement('div'); row.className = 'planner-row';
-    row.textContent = `${item.name} · ${item.level}/${item.maxLevel} · gap ${gap} · ${gap >= 3 ? 'prioritas tinggi' : 'prioritas rutin'}`; planner.appendChild(row);
+    row.textContent = `${item.name} · ${item.level}/${item.maxLevel} · gap ${gap} · ${tr(gap >= 3 ? 'player.highPriority' : 'player.normalPriority')}`; planner.appendChild(row);
   });
   const distribution = document.getElementById('progressDistribution'); distribution.replaceChildren();
-  const groups = [['Maksimal', items.filter(i => Number(i.level) >= Number(i.maxLevel) && Number(i.maxLevel) > 0).length], ['Mendekati', items.filter(i => Number(i.maxLevel) - Number(i.level) > 0 && Number(i.maxLevel) - Number(i.level) <= 2).length], ['Tertinggal', items.filter(i => Number(i.maxLevel) - Number(i.level) >= 3).length]];
+  const groups = [[tr('player.maxedGroup'), items.filter(i => Number(i.level) >= Number(i.maxLevel) && Number(i.maxLevel) > 0).length], [tr('player.nearGroup'), items.filter(i => Number(i.maxLevel) - Number(i.level) > 0 && Number(i.maxLevel) - Number(i.level) <= 2).length], [tr('player.behindGroup'), items.filter(i => Number(i.maxLevel) - Number(i.level) >= 3).length]];
   groups.forEach(([label, count]) => { const el = document.createElement('span'); el.textContent = `${label}: ${count}`; distribution.appendChild(el); });
   const radar = document.getElementById('progressRadar'); radar.replaceChildren();
   Object.entries(progress.score.categories || {}).forEach(([key, value]) => { const row = document.createElement('div'); row.className = 'progress-radar-row'; row.innerHTML = `<span>${key}</span><i style="width:${Math.min(100, Number(value.percent || 0))}%"></i><b>${value.percent ?? '—'}%</b>`; radar.appendChild(row); });
@@ -278,49 +297,54 @@ function renderProgressTools(progress) {
 
 function renderPlayerOverview(player, progress, updated) {
   const root = document.getElementById('playerOverviewCards'); root.replaceChildren();
-  const cards = [['Status', progress.rushed.label], ['Skor progres', progress.score.overall === null ? '—' : `${progress.score.overall}%`], ['Cakupan', `${Object.values(progress.score.categories || {}).reduce((n, v) => n + Number(v.knownItems || 0), 0)} item`], ['Trofi', Number(player.trophies || 0).toLocaleString('id-ID')]];
+  const cards = [[tr('player.status'), rushedLabel(progress)], [tr('player.progressScore'), progress.score.overall === null ? '—' : `${localizedNumber(progress.score.overall)}%`], [tr('player.coverage'), tr('player.items', { count: localizedNumber(Object.values(progress.score.categories || {}).reduce((n, v) => n + Number(v.knownItems || 0), 0)) })], [tr('player.trophies'), localizedNumber(Number(player.trophies || 0))]];
   cards.forEach(([label, value]) => { const card = document.createElement('div'); card.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); root.appendChild(card); });
-  setText('overviewUpdated', updated ? `Update ${new Date(updated).toLocaleString('id-ID')}` : '');
+  setText('overviewUpdated', updated ? tr('player.updatedShort', { date: localizedDate(updated) }) : '');
   const actions = document.getElementById('playerOverviewActions'); actions.replaceChildren();
-  const compare = document.createElement('a'); compare.href = document.getElementById('compareLink').href; compare.textContent = 'Bandingkan pemain'; actions.appendChild(compare);
-  if (player.clan?.tag) { const clan = document.createElement('a'); clan.href = `/?clan=${encodeURIComponent(normalizeTag(player.clan.tag))}`; clan.textContent = 'Buka clan'; actions.appendChild(clan); }
+  const compare = document.createElement('a'); compare.href = document.getElementById('compareLink').href; compare.textContent = tr('player.comparePlayers'); actions.appendChild(compare);
+  if (player.clan?.tag) { const clan = document.createElement('a'); clan.href = `/?clan=${encodeURIComponent(normalizeTag(player.clan.tag))}`; clan.textContent = tr('player.openClan'); actions.appendChild(clan); }
 }
 
 function renderPerformance(data) {
   currentPerformanceData = data;
-  setText('performanceNote', data.note);
+  const noteKey = data.note?.startsWith('Riwayat digabungkan') ? 'player.performanceNoteMerged'
+    : data.note?.startsWith('Arsip perang dimulai') ? 'player.performanceNoteArchive' : null;
+  setText('performanceNote', noteKey ? tr(noteKey) : data.note);
   const summary = document.getElementById('performanceSummary');
   summary.replaceChildren();
-  for (const [label, value] of [['Perang', data.summary.wars], ['Serangan', data.summary.attacks], ['Bintang', data.summary.stars], ['Bintang/serangan', data.summary.starsPerAttack ?? '—'], ['Destruksi rata-rata', data.summary.destructionAverage === null ? '—' : `${data.summary.destructionAverage}%`], ['Kuota terlewat', data.summary.missed]]) {
+  for (const [label, value] of [[tr('player.warCount'), data.summary.wars], [tr('player.attackCount'), data.summary.attacks], [tr('player.starCount'), data.summary.stars], [tr('player.starsPerAttack'), data.summary.starsPerAttack ?? '—'], [tr('player.averageDestruction'), data.summary.destructionAverage === null ? '—' : `${localizedNumber(data.summary.destructionAverage)}%`], [tr('player.missedQuota'), data.summary.missed]]) {
     const box = document.createElement('div');
     const small = document.createElement('span'); small.textContent = label;
     const strong = document.createElement('strong'); strong.textContent = value;
     box.append(small, strong); summary.appendChild(box);
   }
   const quality = document.getElementById('performanceQuality'); quality.replaceChildren();
-  const sample = Number(data.summary.attacks || 0); quality.textContent = `Kualitas sampel: ${sample >= 15 ? 'Kuat' : sample >= 5 ? 'Cukup' : 'Rendah'} · ${sample} serangan tersimpan`;
+  const sample = Number(data.summary.attacks || 0); quality.textContent = tr('player.sampleQuality', { quality: tr(sample >= 15 ? 'player.qualityStrong' : sample >= 5 ? 'player.qualityFair' : 'player.qualityLow'), count: localizedNumber(sample) });
   const distribution = document.getElementById('performanceDistribution'); distribution.replaceChildren();
   const attacks = data.wars.flatMap(war => war.attacks || []);
   [['0★', 0], ['1★', 1], ['2★', 2], ['3★', 3]].forEach(([label, stars]) => { const item = document.createElement('span'); item.textContent = `${label}: ${attacks.filter(attack => Number(attack.stars) === stars).length}`; distribution.appendChild(item); });
-  const mode = document.createElement('span'); mode.textContent = `CWL ${data.wars.filter(war => war.type === 'CWL').length} · Klasik ${data.wars.filter(war => war.type !== 'CWL').length}`; distribution.appendChild(mode);
+  const mode = document.createElement('span'); mode.textContent = `CWL ${data.wars.filter(war => war.type === 'CWL').length} · ${tr('player.classic')} ${data.wars.filter(war => war.type !== 'CWL').length}`; distribution.appendChild(mode);
   const chart = document.getElementById('performanceChart');
   chart.replaceChildren();
   const wars = document.getElementById('performanceWars');
   wars.replaceChildren();
   for (const war of data.wars) {
+    const warLabel = war.type === 'CWL' ? 'CWL' : tr('compare.classicWar');
+    const stateKey = `clan.phase.${war.state}`;
+    const stateLabel = window.CocI18n.hasTranslation(stateKey, window.CocI18n.locale) ? tr(stateKey) : war.state;
     const bar = document.createElement('div'); bar.className = 'performance-bar';
-    const label = document.createElement('span'); label.textContent = `${war.type}${war.round ? ` R${war.round}` : ''} · ${war.opponent?.name || 'Musuh'}`;
+    const label = document.createElement('span'); label.textContent = `${warLabel}${war.round ? ` R${war.round}` : ''} · ${war.opponent?.name || tr('player.enemy')}`;
     const track = document.createElement('div'); track.className = 'bar-track';
     const fill = document.createElement('div'); fill.style.width = `${Math.min(100, war.stars / Math.max(1, war.quota * 3) * 100)}%`; track.appendChild(fill);
-    const value = document.createElement('b'); value.textContent = `${war.stars}★ / ${war.attacks.length} serangan`;
+    const value = document.createElement('b'); value.textContent = `${war.stars}★ / ${war.attacks.length} ${tr('player.attackCount').toLowerCase()}`;
     bar.append(label, track, value); chart.appendChild(bar);
     const row = document.createElement('div'); row.className = 'history-row';
-    row.textContent = `${war.type}${war.round ? ` · Putaran ${war.round}` : ''} · ${war.opponent?.name || 'Musuh'} · ${war.state} · ${war.stars}★ · ${war.destructionAverage}% destruksi${war.missed ? ' · kuota terlewat' : ''}`;
+    row.textContent = `${warLabel}${war.round ? ` · ${tr('player.round', { round: war.round })}` : ''} · ${war.opponent?.name || tr('player.enemy')} · ${stateLabel} · ${war.stars}★ · ${war.destructionAverage}% ${tr('player.destruction').toLowerCase()}${war.missed ? ` · ${tr('player.missedQuota').toLowerCase()}` : ''}`;
     wars.appendChild(row);
   }
-  if (!data.wars.length) { chart.textContent = 'Belum ada perang tersimpan untuk pemain ini.'; wars.textContent = 'Arsip akan bertambah saat aplikasi membuka data perang.'; }
+  if (!data.wars.length) { chart.textContent = tr('player.noWars'); wars.textContent = tr('player.archiveGrowth'); }
   const trend = document.getElementById('snapshotTrend'); trend.replaceChildren();
-  if (!data.trendAvailable) { trend.textContent = 'Tren muncul setelah tersedia minimal dua snapshot pada hari berbeda.'; return; }
+  if (!data.trendAvailable) { trend.textContent = tr('player.trendPending'); return; }
   const trophies = data.trend.map(point => point.trophies);
   const min = Math.min(...trophies);
   const max = Math.max(...trophies);
@@ -329,34 +353,34 @@ function renderPerformance(data) {
     const label = document.createElement('span'); label.textContent = point.date;
     const bar = document.createElement('div'); bar.className = 'trend-track';
     const fill = document.createElement('div'); fill.style.width = `${max === min ? 50 : 10 + 90 * (point.trophies - min) / (max - min)}%`; bar.appendChild(fill);
-    const value = document.createElement('span'); value.textContent = `${point.trophies} trofi · ${point.donations} donasi`;
+    const value = document.createElement('span'); value.textContent = tr('player.trophyDonation', { trophies: localizedNumber(point.trophies), donations: localizedNumber(point.donations) });
     row.append(label, bar, value);
     trend.appendChild(row);
   }
 }
 
 function renderPlayerResume(player, progress) {
-  const score = progress.score.overall === null ? 'belum dapat dihitung' : `${progress.score.overall}%`;
+  const score = progress.score.overall === null ? tr('player.cannotCalculate') : `${localizedNumber(progress.score.overall)}%`;
   const summary = currentPerformanceData?.summary;
-  const warText = summary?.attacks ? ` Dari ${summary.attacks} serangan tersimpan, rata-rata ${summary.starsPerAttack ?? '—'} bintang per serangan.` : ' Riwayat serangan belum cukup untuk statistik perang.';
-  setText('playerResumeText', `${player.name} adalah pemain TH ${player.townHallLevel || '—'} dengan progres akun ${score}. Status rushed: ${progress.rushed.label}.${warText}`);
-  setText('dataSourceNote', 'Profil API · tabel batas lokal · arsip perang lokal');
+  const warText = summary?.attacks ? tr('player.resumeWar', { attacks: localizedNumber(summary.attacks), average: summary.starsPerAttack ?? '—' }) : tr('player.resumeNoWar');
+  setText('playerResumeText', tr('player.resumeCore', { name: player.name, th: player.townHallLevel || '—', score, status: rushedLabel(progress), warText }));
+  setText('dataSourceNote', tr('player.dataSource'));
 }
 
 async function loadPerformance(player) {
   const tag = normalizeTag(clanTag || player.clan?.tag);
-  if (!tag) { setText('performanceNote', 'Tag klan tidak tersedia untuk membaca arsip perang.'); return; }
+  if (!tag) { setText('performanceNote', tr('player.archiveNoClan')); return; }
   try {
     const endpoint = `/api/player/${encodeURIComponent(normalizeTag(player.tag))}/performance?clan=${encodeURIComponent(tag)}`;
-    let response = await fetch(endpoint);
+    let response = await window.CocI18n.apiFetch(endpoint);
     let data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Gagal memuat performa.');
+    if (!response.ok) throw new Error(data.error || tr('player.performanceFailed'));
     if (!data.wars.length) {
-      const warResponse = await fetch(`/api/clan/${encodeURIComponent(tag)}/war`);
+      const warResponse = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/war`);
       if (warResponse.ok) {
         const war = await warResponse.json();
-        if (war.type === 'CWL') await fetch(`/api/clan/${encodeURIComponent(tag)}/cwl/performance`);
-        response = await fetch(endpoint);
+        if (war.type === 'CWL') await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/cwl/performance`);
+        response = await window.CocI18n.apiFetch(endpoint);
         if (response.ok) data = await response.json();
       }
     }
@@ -376,7 +400,7 @@ function renderProfile(data) {
   const compareClan = clanTag || normalizeTag(player.clan?.tag);
   if (compareClan) compareParams.set('clan', compareClan);
   document.getElementById('compareLink').href = `/compare.html?${compareParams}`;
-  document.title = `${player.name} · Profil Pemain`;
+  document.title = `${player.name} · ${tr('player.pageTitle')}`;
   setText('playerName', player.name);
   setText('copyTag', player.tag);
   const clanName = document.getElementById('clanName');
@@ -385,19 +409,19 @@ function renderProfile(data) {
     const clanLink = document.createElement('a');
     clanLink.href = `/?clan=${encodeURIComponent(playerClanTag)}`;
     clanLink.textContent = player.clan.name;
-    clanLink.title = `Buka clan ${player.clan.name}`;
+    clanLink.title = `${tr('player.openClan')} ${player.clan.name}`;
     clanName.appendChild(clanLink);
   } else {
-    clanName.textContent = 'Tanpa klan';
+    clanName.textContent = tr('player.noClan');
   }
   setText('role', player.role || '');
   renderBaseLevel('townHall', player.townHallLevel, 'th');
   renderBaseLevel('builderHall', player.builderHallLevel, 'bh');
   setText('exp', player.expLevel);
-  setText('trophies', player.trophies?.toLocaleString('id-ID'));
-  setText('warStars', player.warStars?.toLocaleString('id-ID'));
-  setText('donations', player.donations?.toLocaleString('id-ID'));
-  setText('updated', `Diperbarui ${new Date(data.lastUpdated).toLocaleString('id-ID')}`);
+  setText('trophies', player.trophies == null ? '—' : localizedNumber(player.trophies));
+  setText('warStars', player.warStars == null ? '—' : localizedNumber(player.warStars));
+  setText('donations', player.donations == null ? '—' : localizedNumber(player.donations));
+  setText('updated', tr('player.updated', { date: localizedDate(data.lastUpdated) }));
   const badge = document.getElementById('clanBadge');
   const badgeUrl = player.clan?.badgeUrls?.small || player.clan?.badgeUrls?.medium;
   badge.hidden = !badgeUrl;
@@ -412,22 +436,22 @@ function renderProfile(data) {
   document.getElementById('profile').hidden = false;
   document.getElementById('status').hidden = true;
   document.getElementById('copyTag').onclick = async () => {
-    try { await navigator.clipboard.writeText(player.tag); setText('copyTag', 'Tersalin!'); setTimeout(() => setText('copyTag', player.tag), 1500); } catch { setText('copyTag', player.tag); }
+    try { await navigator.clipboard.writeText(player.tag); setText('copyTag', tr('player.copied')); setTimeout(() => setText('copyTag', player.tag), 1500); } catch { setText('copyTag', player.tag); }
   };
 }
 
 async function loadProfile(rawTag) {
   const tag = normalizeTag(rawTag);
   const status = document.getElementById('status');
-  if (!tag) { status.hidden = false; status.textContent = 'Tag pemain tidak valid. Masukkan tag yang benar.'; return; }
+  if (!tag) { status.hidden = false; status.textContent = tr('player.invalidTag'); return; }
   document.getElementById('playerTag').value = tag;
   document.getElementById('profile').hidden = true;
   status.hidden = false;
-  setLoading('status', 'Memuat profil pemain…');
+  setLoading('status', tr('player.loadingProfile'));
   try {
-    const response = await fetch(`/api/player/${encodeURIComponent(tag)}/profile`);
+    const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(tag)}/profile`);
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Gagal mengambil profil pemain.');
+    if (!response.ok) throw new Error(data.error || tr('player.fetchFailed'));
     renderProfile(data);
   } catch (error) { status.textContent = error.message; }
 }
@@ -435,7 +459,7 @@ async function loadProfile(rawTag) {
 document.getElementById('playerSearch').addEventListener('submit', event => {
   event.preventDefault();
   const tag = normalizeTag(document.getElementById('playerTag').value);
-  if (!tag) { setText('status', 'Tag pemain tidak valid.'); document.getElementById('status').hidden = false; return; }
+  if (!tag) { setText('status', tr('player.invalidTagShort')); document.getElementById('status').hidden = false; return; }
   const next = new URLSearchParams({ tag });
   if (clanTag) next.set('clan', clanTag);
   location.href = `/player.html?${next}`;
@@ -450,8 +474,8 @@ document.querySelectorAll('.tabs button').forEach(button => button.addEventListe
   history.replaceState(null, '', `#${button.dataset.tab}`);
 }));
 ['progressSearch', 'progressFilter', 'progressSort'].forEach(id => document.getElementById(id)?.addEventListener(id === 'progressSearch' ? 'input' : 'change', () => currentProgress && renderProgressTools(currentProgress)));
-document.getElementById('copyPlayerResume').addEventListener('click', async () => { try { await navigator.clipboard.writeText(document.getElementById('playerResumeText').textContent); setText('copyPlayerResume', 'Tersalin'); } catch {} });
-document.getElementById('copyPlayerLink').addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); setText('copyPlayerLink', 'Tersalin'); } catch {} });
+document.getElementById('copyPlayerResume').addEventListener('click', async () => { try { await navigator.clipboard.writeText(document.getElementById('playerResumeText').textContent); setText('copyPlayerResume', tr('player.copied')); } catch {} });
+document.getElementById('copyPlayerLink').addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); setText('copyPlayerLink', tr('player.copied')); } catch {} });
 document.getElementById('exportPlayerCsv').addEventListener('click', () => { const p = currentProfileData?.player; if (!p) return; const csv = `\uFEFFfield,value\r\nname,"${String(p.name || '').replaceAll('"', '""')}"\r\ntag,"${p.tag || ''}"\r\ntownHall,${p.townHallLevel || ''}\r\ntrophies,${p.trophies || ''}\r\nwarStars,${p.warStars || ''}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); const link = document.createElement('a'); link.href = url; link.download = `player-${normalizeTag(p.tag)}.csv`; link.click(); URL.revokeObjectURL(url); });
 const tabFromHash = location.hash.replace('#', '');
 if (tabFromHash && document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`)) document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`).click();

@@ -9,6 +9,7 @@
   const updated = document.getElementById('rankingUpdated');
   const caption = document.getElementById('rankingCaption');
   const tabs = [...document.querySelectorAll('.ranking-tab')];
+  const tr = (key, variables) => window.CocI18n.t(key, variables);
   let rankingType = 'players';
   let requestNumber = 0;
   let clanLocationObserver = null;
@@ -24,7 +25,7 @@
   };
 
   function displayNumber(value) {
-    return Number(value || 0).toLocaleString('id-ID');
+    return window.CocI18n.number(Number(value || 0));
   }
 
   function cleanTag(tag) {
@@ -35,7 +36,7 @@
     const selected = locationSelect.value || 'global';
     const countries = (items || [])
       .filter(location => location?.isCountry && location.id && location.name)
-      .sort((a, b) => a.name.localeCompare(b.name, 'id'));
+      .sort((a, b) => a.name.localeCompare(b.name, window.CocI18n.locale));
     for (const location of countries) {
       if ([...locationSelect.options].some(option => option.value === String(location.id))) continue;
       locationSelect.appendChild(new Option(location.name, location.id));
@@ -45,7 +46,7 @@
 
   async function loadLocations() {
     try {
-      const response = await fetch('/api/rankings/locations');
+      const response = await window.CocI18n.apiFetch('/api/rankings/locations');
       const data = await response.json();
       if (response.ok) addLocationOptions(data.items);
     } catch {
@@ -59,10 +60,10 @@
     clanLocationQueue = [];
     status.hidden = false;
     status.className = 'ranking-status';
-    status.textContent = 'Memuat leaderboard…';
+    status.textContent = tr('home.loadingLeaderboard');
     tableWrap.hidden = true;
     updated.textContent = '';
-    caption.textContent = rankingType === 'players' ? 'Top pemain Home Village' : 'Top klan berdasarkan poin klan';
+    caption.textContent = tr(rankingType === 'players' ? 'home.rankingCaption' : 'home.rankingClanCaption');
   }
 
   function appendCell(row, content, className = '') {
@@ -97,7 +98,7 @@
 
     const clan = item.clan;
     appendCell(row, clan?.name || '—', 'secondary-cell');
-    const countryCell = appendCell(row, clan?.tag ? 'Memuat…' : 'Tidak tersedia', 'secondary-cell player-location-cell');
+    const countryCell = appendCell(row, tr(clan?.tag ? 'home.loadingShort' : 'home.notAvailable'), 'secondary-cell player-location-cell');
     if (clan?.tag) countryCell.dataset.clanTag = cleanTag(clan.tag);
     appendCell(row, item.leagueTier?.name || item.league?.name || '—', 'secondary-cell league-cell');
     appendCell(row, displayNumber(item.trophies), 'score-cell');
@@ -143,10 +144,10 @@
     tableHead.replaceChildren();
     tableRows.replaceChildren();
     const headings = rankingType === 'players'
-      ? ['Rank', 'Pemain', 'Klan', 'Lokasi', 'Liga', 'Trofi', 'Attacks', 'Defenses']
-      : ['Rank', 'Klan', 'Level', 'Anggota', 'Lokasi', 'Poin klan'];
+      ? ['home.rank', 'home.player', 'home.clan', 'home.location', 'home.league', 'home.trophies', 'home.attacks', 'home.defenses']
+      : ['home.rank', 'home.clan', 'clan.levelWord', 'home.membersHeading', 'home.location', 'home.clanPoints'];
     const headRow = document.createElement('tr');
-    for (const label of headings) headRow.appendChild(text('th', label));
+    for (const key of headings) headRow.appendChild(text('th', tr(key)));
     tableHead.appendChild(headRow);
 
     const items = Array.isArray(data.items) ? data.items : [];
@@ -155,7 +156,7 @@
     ));
     if (!items.length) {
       const row = document.createElement('tr');
-      const empty = text('td', 'Belum ada data ranking untuk lokasi ini.', 'ranking-empty');
+      const empty = text('td', tr('home.rankingEmpty'), 'ranking-empty');
       empty.colSpan = headings.length;
       row.appendChild(empty);
       tableRows.appendChild(row);
@@ -163,14 +164,14 @@
     tableWrap.hidden = false;
     status.hidden = true;
     updated.textContent = data.lastUpdated
-      ? `Diperbarui ${new Date(data.lastUpdated).toLocaleString('id-ID')}`
-      : 'Waktu pembaruan tidak tersedia';
+      ? tr('home.rankingUpdated', { date: window.CocI18n.dateTime(new Date(data.lastUpdated)) })
+      : tr('home.rankingUpdatedUnknown');
     hydrateClanLocations(requestNumber);
   }
 
   function lookupClanCountry(tag) {
     if (!clanLocationPromises.has(tag)) {
-      const request = fetch(`/api/clan/${encodeURIComponent(tag)}/summary`)
+      const request = window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/summary`)
         .then(async response => {
           const data = await response.json();
           if (!response.ok) throw new Error(data.error || 'Negara klan tidak tersedia');
@@ -188,10 +189,10 @@
       clanLocationLookups += 1;
       lookupClanCountry(tag)
         .then(country => {
-          if (requestId === requestNumber && cell.isConnected) cell.textContent = country || 'Tidak tersedia';
+          if (requestId === requestNumber && cell.isConnected) cell.textContent = country || tr('home.notAvailable');
         })
         .catch(() => {
-          if (requestId === requestNumber && cell.isConnected) cell.textContent = 'Tidak tersedia';
+          if (requestId === requestNumber && cell.isConnected) cell.textContent = tr('home.notAvailable');
         })
         .finally(() => {
           clanLocationLookups -= 1;
@@ -228,15 +229,15 @@
     setLoading();
     const params = new URLSearchParams({ location: locationSelect.value || 'global', limit: '25' });
     try {
-      const response = await fetch(`/api/rankings/${rankingType}?${params}`);
+      const response = await window.CocI18n.apiFetch(`/api/rankings/${rankingType}?${params}`);
       const data = await response.json();
       if (currentRequest !== requestNumber) return;
-      if (!response.ok) throw new Error(data.error || 'Gagal mengambil leaderboard.');
+      if (!response.ok) throw new Error(data.error || tr('home.rankingFailed'));
       render(data);
     } catch (error) {
       if (currentRequest !== requestNumber) return;
       status.className = 'ranking-status error';
-      status.textContent = `${error.message} Pastikan token API tersedia dan IP server sudah terdaftar.`;
+      status.textContent = `${error.message} ${tr('home.rankingFailedHelp')}`;
     }
   }
 

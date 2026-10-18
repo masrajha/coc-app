@@ -188,10 +188,27 @@ try {
             throw new RuntimeException(sprintf('%s expected %d / %s, got %d / %s', $uri, $expectedStatus, $contentType, $actualStatus, $actualType));
         }
     }
+    $englishError = $app->handle($factory->createServerRequest('GET', '/api/clan/INVALID?lang=en'));
+    $englishErrorBody = json_decode((string)$englishError->getBody(), true);
+    if ($englishError->getHeaderLine('Content-Language') !== 'en' || ($englishErrorBody['error'] ?? null) !== 'Invalid clan tag.') {
+        throw new RuntimeException('English API errors must follow the selected language.');
+    }
+    $englishHeaderError = $app->handle($factory->createServerRequest('GET', '/api/clan/INVALID')->withHeader('Accept-Language', 'en-US,en;q=0.9'));
+    if ($englishHeaderError->getHeaderLine('Content-Language') !== 'en') {
+        throw new RuntimeException('The API must honor Accept-Language when lang is absent.');
+    }
+    $englishCsv = $app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/health.csv?lang=en'));
+    if ($englishCsv->getHeaderLine('Content-Language') !== 'en' || !str_starts_with((string)$englishCsv->getBody(), 'Name,Tag,Role,')) {
+        throw new RuntimeException('English CSV headings must follow the selected language.');
+    }
+    $indonesianCsv = $app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/health.csv?lang=id'));
+    if ($indonesianCsv->getHeaderLine('Content-Language') !== 'id' || !str_starts_with((string)$indonesianCsv->getBody(), 'Nama,Tag,Peran,')) {
+        throw new RuntimeException('Indonesian CSV headings must follow the selected language.');
+    }
     $home = (string)$app->handle($factory->createServerRequest('GET', '/'))->getBody();
     foreach ([
         'preserveContent = false',
-        "showWarStatus('Memuat data perang...', true)",
+        "showWarStatus(tr('clan.loadingWar'), true, true)",
         'const isSelected = choice.value === selectedRound',
         "setAttribute('aria-pressed', String(isSelected))",
         "setAttribute('aria-current', 'true')",
@@ -209,6 +226,12 @@ try {
         foreach (['/donation.css', '/donation.js', 'Dukung pengembangan'] as $marker) {
             if (!str_contains($page, $marker)) throw new RuntimeException('Kontrol donasi belum tersedia di seluruh halaman.');
         }
+    }
+    foreach (['/i18n.js', 'data-language-switch', 'data-i18n="player.accountSummary"'] as $marker) {
+        if (!str_contains($playerPage, $marker)) throw new RuntimeException('Pemilih bahasa halaman player belum lengkap: ' . $marker);
+    }
+    foreach (['/i18n.js', 'data-language-switch', 'data-i18n="compare.heading"'] as $marker) {
+        if (!str_contains($comparePage, $marker)) throw new RuntimeException('Pemilih bahasa halaman compare belum lengkap: ' . $marker);
     }
     foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
@@ -239,7 +262,7 @@ try {
         if (!str_contains($comparePage, $marker)) throw new RuntimeException('Panel perbandingan Ranked League tidak tersedia: ' . $marker);
     }
     $compareScript = (string)$app->handle($factory->createServerRequest('GET', '/compare.js'))->getBody();
-    foreach (['/war-history', 'leagueTier', 'attackWins', 'defenseWins', 'Bintang / serangan', 'Ketiadaan arsip tidak berarti', 'leagueSession${side}', 'leagueResult${side}', 'sameLeagueSeason', 'leagueMetricMark', 'defenseDestruction', 'Level liga berbeda', 'grup yang berbeda', 'renderComparisonOverview', 'renderStickyCompareHeader', 'itemComparison', 'activateCompareTab', "window.addEventListener('hashchange'", 'renderHeadToHead', 'sampleQuality', 'tripleRate', 'copyComparisonLink', 'Rekomendasi konteks'] as $marker) {
+    foreach (['/war-history', 'leagueTier', 'attackWins', 'defenseWins', 'compare.starsPerAttack', 'compare.warArchiveNote', 'leagueSession${side}', 'leagueResult${side}', 'sameLeagueSeason', 'leagueMetricMark', 'defenseDestruction', 'compare.differentTiers', 'compare.differentGroups', 'renderComparisonOverview', 'renderStickyCompareHeader', 'itemComparison', 'activateCompareTab', "window.addEventListener('hashchange'", 'renderHeadToHead', 'sampleQuality', 'tripleRate', 'copyComparisonLink', 'compare.contextRecommendations'] as $marker) {
         if (!str_contains($compareScript, $marker)) throw new RuntimeException('Perbandingan War/Ranked League tidak lengkap: ' . $marker);
     }
     $compareStyles = (string)$app->handle($factory->createServerRequest('GET', '/compare.css'))->getBody();
@@ -284,7 +307,7 @@ try {
     foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'loadRankedComparison', 'renderRankedComparison', 'renderRankedInsights', 'starDistribution', 'sessionLabel', "timeZone: 'Asia/Jakarta'", 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Renderer battle log Ranked League tidak lengkap: ' . $marker);
     }
-    foreach (['topByPerformance', 'renderTopList', 'loadLeagueStatistics', 'detail=statistics', 'attackTriples', 'defenseStops', 'base diratakan (3★)', 'serangan gagal 3★', 'renderZones', 'setLeagueView', 'playerLeagueHref', 'standingsZone', 'row.classList.add(`is-${zone}-zone`)', 'leagueRule', 'describeValues', 'standardDeviation', 'renderDescriptiveStatistics', 'renderDistribution', 'renderBoxplot', '1.5 * iqr'] as $marker) {
+    foreach (['topByPerformance', 'renderTopList', 'loadLeagueStatistics', 'detail=statistics', 'attackTriples', 'defenseStops', 'player.attackTriples', 'player.defenseStops', 'renderZones', 'setLeagueView', 'playerLeagueHref', 'standingsZone', 'row.classList.add(`is-${zone}-zone`)', 'leagueRule', 'describeValues', 'standardDeviation', 'renderDescriptiveStatistics', 'renderDistribution', 'renderBoxplot', '1.5 * iqr'] as $marker) {
         if (!str_contains($leagueScript, $marker) && !str_contains($playerPage, $marker)) throw new RuntimeException('Statistik sidebar Ranked League tidak lengkap: ' . $marker);
     }
     if (!str_contains($leagueScript, '/assets/trophy.png')) throw new RuntimeException('Aset ikon trofi battle log belum digunakan.');
@@ -315,8 +338,12 @@ try {
         throw new RuntimeException('Navigasi kembali ke home tidak tersedia di header.');
     }
     $rankingScript = (string)$app->handle($factory->createServerRequest('GET', '/rankings.js'))->getBody();
-    foreach (["'Lokasi'", "'Attacks'", "'Defenses'", "clan?.tag ? 'Memuat…' : 'Tidak tersedia'", '/summary', 'data.location?.name', 'item.attackWins', 'item.defenseWins', 'item.leagueTier?.name'] as $marker) {
+    foreach (['home.location', 'home.attacks', 'home.defenses', 'home.notAvailable', '/summary', 'data.location?.name', 'item.attackWins', 'item.defenseWins', 'item.leagueTier?.name'] as $marker) {
         if (!str_contains($rankingScript, $marker)) throw new RuntimeException('Leaderboard pemain tidak menampilkan kolom ranking yang diharapkan.');
+    }
+    $i18nScript = (string)$app->handle($factory->createServerRequest('GET', '/i18n.js'))->getBody();
+    foreach (['data-language-switch', 'data-i18n', 'coc-language', 'id-ID', 'en-US', "'home.rankingsTitle'", "'clan.joinRules'"] as $marker) {
+        if (!str_contains($i18nScript, $marker)) throw new RuntimeException('Fondasi multibahasa beranda belum lengkap: ' . $marker);
     }
     if (str_contains($rankingScript, 'townhall-cell') || str_contains($rankingScript, "'Town Hall'")) {
         throw new RuntimeException('Kolom Town Hall seharusnya tidak lagi ada di leaderboard.');

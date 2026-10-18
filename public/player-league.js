@@ -2,11 +2,13 @@
   const PAGE_SIZE = 25;
   const state = { playerTag: null, members: [], sessions: [], page: 0, request: 0, logRequest: 0, comparisonRequest: 0, statisticsRequest: 0, logFilter: 'all', logSort: 'oldest', battleCache: new Map(), playerBattleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null, leagueRule: null, leagueStats: null, statisticsSession: null, statisticsLoadingSession: null, statisticsMetric: 'trophies', playerRank: null, leagueView: 'standings' };
   const statisticsMetrics = {
-    trophies: { label: 'Trofi', source: 'standings' },
-    attackPoints: { label: 'Poin attack', source: 'battle' },
-    defensePoints: { label: 'Poin defense', source: 'battle' }
+    trophies: { labelKey: 'player.trophies', source: 'standings' },
+    attackPoints: { labelKey: 'player.attackPoints', source: 'battle' },
+    defensePoints: { labelKey: 'player.defensePoints', source: 'battle' }
   };
   const SVG_NS = 'http://www.w3.org/2000/svg';
+  const tr = (key, variables) => window.CocI18n.t(key, variables);
+  const localizedNumber = (value, options) => window.CocI18n.number(value, options);
   const clanTag = normalizeTag(new URLSearchParams(location.search).get('clan'));
 
   function normalizeTag(value) {
@@ -19,13 +21,11 @@
   function setLoading(id, message) { const target = element(id); target.replaceChildren(); const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); target.append(spinner, document.createTextNode(message)); target.classList.add('loading-state'); }
   function sessionDate(session) {
     if (!session || Number(session.seasonId) <= 0) return '';
-    const parts = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric', timeZone: 'Asia/Jakarta' })
-      .formatToParts(new Date(Number(session.seasonId) * 1000)).reduce((result, part) => ({ ...result, [part.type]: part.value }), {});
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sept', 'Okt', 'Nov', 'Des'];
-    return `${Number(parts.day)} ${months[Number(parts.month) - 1]} ${parts.year}`;
+    return new Intl.DateTimeFormat(window.CocI18n.formatLocale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' })
+      .format(new Date(Number(session.seasonId) * 1000));
   }
   function sessionLabel(session) {
-    const label = session?.id === 'current' ? 'Saat ini' : session?.id === 'previous' ? 'Sebelumnya' : session?.label || 'Sesi';
+    const label = session?.id === 'current' ? tr('player.sessionCurrent') : session?.id === 'previous' ? tr('player.sessionPrevious') : session?.label || tr('player.sessionGeneric');
     const date = sessionDate(session);
     return `${label}${date ? ` - ${date}` : ''}`;
   }
@@ -67,12 +67,12 @@
     target.hidden = !badge;
     if (!badge) return;
     target.appendChild(badge);
-    target.setAttribute('aria-label', `Liga ${tier}`);
-    target.title = `Liga ${tier}`;
+    target.setAttribute('aria-label', tr('player.leagueBadge', { tier }));
+    target.title = tr('player.leagueBadge', { tier });
   }
 
   function setLeagueTitle(tier) {
-    setText('leagueSidebarEyebrow', tier ? `RANKED LEAGUE (${tier})` : 'RANKED LEAGUE');
+    setText('leagueSidebarEyebrow', tier ? tr('player.leagueSidebarTitleTier', { tier }) : tr('player.leagueSidebarTitle'));
     setLeagueBadge('sidebarLeagueBadge', tier);
   }
 
@@ -115,8 +115,8 @@
       const caption = document.createElement('span');
       caption.textContent = label;
       const number = document.createElement('strong');
-      number.textContent = value === null || value === undefined ? 'Belum tersedia' : `${Number(value).toLocaleString('id-ID', { maximumFractionDigits: 2 })}${unit}`;
-      if (count) number.title = `Dihitung dari ${count} riwayat`;
+      number.textContent = value === null || value === undefined ? tr('player.unavailable') : `${localizedNumber(Number(value), { maximumFractionDigits: 2 })}${unit}`;
+      if (count) number.title = tr('player.historyCount', { count });
       line.append(caption, number);
       return line;
     };
@@ -125,19 +125,19 @@
       const close = document.createElement('button');
       close.type = 'button';
       close.className = 'league-tooltip-close';
-      close.setAttribute('aria-label', 'Tutup detail pertempuran');
+      close.setAttribute('aria-label', tr('player.closeBattleDetails'));
       close.textContent = '×';
       close.addEventListener('click', () => hideBattle(true));
       tooltip.appendChild(close);
     }
     const heading = document.createElement('b');
-    heading.textContent = `Battle details: ${name}`;
+    heading.textContent = tr('player.battleDetails', { name });
     tooltip.append(heading,
-      metric('Rata-rata bintang / serangan', data.attack?.starsAverage, '', data.attack?.sampleSize),
-      metric('Rata-rata destruksi / serangan', data.attack?.destructionAverage, '%', data.attack?.sampleSize),
-      metric('Rata-rata destruksi / pertahanan', data.defense?.destructionAverage, '%', data.defense?.sampleSize));
+      metric(tr('player.averageStarsAttack'), data.attack?.starsAverage, '', data.attack?.sampleSize),
+      metric(tr('player.averageDestructionAttack'), data.attack?.destructionAverage, '%', data.attack?.sampleSize),
+      metric(tr('player.averageDestructionDefense'), data.defense?.destructionAverage, '%', data.defense?.sampleSize));
     const note = document.createElement('small');
-    note.textContent = `Berdasarkan riwayat tersedia: ${data.attack?.sampleSize ?? 0} serangan, ${data.defense?.sampleSize ?? 0} pertahanan.`;
+    note.textContent = tr('player.battleHistoryNote', { attacks: data.attack?.sampleSize ?? 0, defenses: data.defense?.sampleSize ?? 0 });
     tooltip.append(note);
   }
 
@@ -154,21 +154,21 @@
     state.trigger?.setAttribute('aria-expanded', 'true');
     tooltip.classList.toggle('is-pinned', pinned);
     tooltip.setAttribute('role', pinned ? 'dialog' : 'tooltip');
-    if (pinned) tooltip.setAttribute('aria-label', `Battle details: ${member.name || member.tag}`);
+    if (pinned) tooltip.setAttribute('aria-label', tr('player.battleDetails', { name: member.name || member.tag }));
     else tooltip.removeAttribute('aria-label');
     tooltip.replaceChildren();
     if (pinned) {
       const close = document.createElement('button');
       close.type = 'button';
       close.className = 'league-tooltip-close';
-      close.setAttribute('aria-label', 'Tutup detail pertempuran');
+      close.setAttribute('aria-label', tr('player.closeBattleDetails'));
       close.textContent = '×';
       close.addEventListener('click', () => hideBattle(true));
       tooltip.appendChild(close);
     }
     const loading = document.createElement('span');
     loading.className = 'league-tooltip-loading';
-    loading.textContent = 'Memuat detail pertempuran…';
+    loading.textContent = tr('player.loadingBattleDetails');
     tooltip.appendChild(loading);
     tooltip.hidden = false;
     positionTooltip(row);
@@ -177,9 +177,9 @@
         let data = state.battleCache.get(key);
         if (!data) {
           const url = `/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(session)}&detail=battle&memberTag=${encodeURIComponent(tag)}`;
-          const response = await fetch(url);
+          const response = await window.CocI18n.apiFetch(url);
           data = await response.json();
-          if (!response.ok) throw new Error(data.error || 'Detail tidak tersedia.');
+          if (!response.ok) throw new Error(data.error || tr('player.battleDetailsFailed'));
           state.battleCache.set(key, data);
         }
         if (state.hoverKey !== key) return;
@@ -210,35 +210,35 @@
       const identity = document.createElement('span');
       identity.className = 'league-member-identity';
       const link = document.createElement('a');
-      link.textContent = member.name || member.tag || 'Pemain';
+      link.textContent = member.name || member.tag || tr('player.player');
       link.href = playerLeagueHref(member);
       if (isCurrent) link.setAttribute('aria-current', 'page');
       const clan = document.createElement('small');
-      clan.textContent = member.clanName || 'Tanpa klan';
+      clan.textContent = member.clanName || tr('player.noClan');
       identity.append(link, clan);
       const trophies = document.createElement('strong');
       trophies.className = 'league-member-trophies';
-      trophies.textContent = Number(member.trophies || 0).toLocaleString('id-ID');
-      trophies.title = 'Trofi liga';
+      trophies.textContent = localizedNumber(Number(member.trophies || 0));
+      trophies.title = tr('player.leagueTrophies');
       const activity = document.createElement('span');
       activity.className = 'league-member-activity';
       const attacks = document.createElement('span');
       const defenses = document.createElement('span');
       const attackCount = Number.isFinite(Number(member.attackCount)) && member.attackCount !== null ? Number(member.attackCount) : null;
       const defenseCount = Number.isFinite(Number(member.defenseCount)) && member.defenseCount !== null ? Number(member.defenseCount) : null;
-      attacks.textContent = `Attacks ${attackCount ?? '—'}`;
-      defenses.textContent = `Defenses ${defenseCount ?? '—'}`;
-      attacks.title = 'Jumlah serangan: menang + kalah';
-      defenses.title = 'Jumlah pertahanan: menang + kalah';
+      attacks.textContent = tr('player.attackCountShort', { count: attackCount ?? '—' });
+      defenses.textContent = tr('player.defenseCountShort', { count: defenseCount ?? '—' });
+      attacks.title = tr('player.attackCountTitle');
+      defenses.title = tr('player.defenseCountTitle');
       activity.append(attacks, defenses);
       const info = document.createElement('button');
       info.type = 'button';
       info.className = 'league-battle-info';
       info.textContent = 'i';
-      info.setAttribute('aria-label', `Detail pertempuran ${member.name || member.tag || 'pemain'}`);
+      info.setAttribute('aria-label', tr('player.battleDetailsFor', { name: member.name || member.tag || tr('player.player') }));
       info.setAttribute('aria-haspopup', 'dialog');
       info.setAttribute('aria-expanded', 'false');
-      info.title = 'Tampilkan detail pertempuran';
+      info.title = tr('player.showBattleDetails');
       info.addEventListener('click', event => {
         event.stopPropagation();
         const key = `${element('leagueSession').value}:${normalizeTag(member.tag)}`;
@@ -258,7 +258,7 @@
       row.addEventListener('focusout', hideBattle);
       list.appendChild(row);
     }
-    setText('leagueMemberCount', `${state.members.length} pemain`);
+    setText('leagueMemberCount', tr('player.playersCount', { count: localizedNumber(state.members.length) }));
     setText('leaguePageInfo', totalPages ? `${state.page + 1} / ${totalPages}` : '—');
     element('leaguePrev').disabled = state.page <= 0;
     element('leagueNext').disabled = state.page >= totalPages - 1;
@@ -295,7 +295,7 @@
       || Number(b.defenseCount || 0) - Number(a.defenseCount || 0)).slice(0, 3);
   }
 
-  function renderTopList(id, members, side, emptyMessage = 'Statistik battle belum dimuat.') {
+  function renderTopList(id, members, side, emptyMessage = tr('player.battleStatsPending')) {
     const list = element(id);
     list.replaceChildren();
     if (!members.length) {
@@ -312,16 +312,16 @@
       const identity = document.createElement('span'); identity.className = 'league-top-identity';
       const name = document.createElement('a');
       name.href = playerLeagueHref(member);
-      name.textContent = member.name || member.tag || 'Pemain';
+      name.textContent = member.name || member.tag || tr('player.player');
       if (normalizeTag(member.tag) === state.playerTag) name.setAttribute('aria-current', 'page');
       const record = document.createElement('small');
-      record.textContent = side === 'attack' ? `${Number(member.attackTriples || 0)} base diratakan (3★)` : `${Number(member.defenseStops || 0)} serangan gagal 3★`;
+      record.textContent = tr(side === 'attack' ? 'player.attackTriples' : 'player.defenseStops', { count: localizedNumber(Number(side === 'attack' ? member.attackTriples || 0 : member.defenseStops || 0)) });
       identity.append(name, record);
       const rate = document.createElement('span'); rate.className = 'league-top-rate';
       const points = side === 'attack' ? Number(member.attackPoints || 0) : Number(member.defensePoints || 0);
       const battles = side === 'attack' ? Number(member.attackCount || 0) : Number(member.defenseCount || 0);
-      const value = document.createElement('strong'); value.textContent = `${points.toLocaleString('id-ID')} poin`;
-      const sample = document.createElement('small'); sample.textContent = `${battles} battle`;
+      const value = document.createElement('strong'); value.textContent = `${localizedNumber(points)} ${tr('player.pointsUnit')}`;
+      const sample = document.createElement('small'); sample.textContent = tr('player.battleCount', { count: localizedNumber(battles) });
       rate.append(value, sample);
       row.append(place, identity, rate);
       list.appendChild(row);
@@ -335,7 +335,7 @@
     const range = document.createElement('span'); range.textContent = ranks;
     heading.append(label, range);
     const cutoff = document.createElement('p');
-    cutoff.textContent = trophies === null ? 'Batas trofi belum tersedia.' : `Batas saat ini ${Number(trophies).toLocaleString('id-ID')} trofi.`;
+    cutoff.textContent = trophies === null ? tr('player.trophyCutoffUnavailable') : tr('player.trophyCutoff', { count: localizedNumber(Number(trophies)) });
     card.append(heading, cutoff);
     if (detail) {
       const status = document.createElement('small'); status.textContent = detail; card.appendChild(status);
@@ -349,10 +349,10 @@
     const rule = state.leagueRule;
     if (!rule || !state.members.length) {
       setText('leagueBattleRule', '');
-      const empty = document.createElement('p'); empty.className = 'league-stat-empty'; empty.textContent = 'Rule zona tidak tersedia untuk sesi ini.'; root.appendChild(empty);
+      const empty = document.createElement('p'); empty.className = 'league-stat-empty'; empty.textContent = tr('player.zoneRuleUnavailable'); root.appendChild(empty);
       return;
     }
-    setText('leagueBattleRule', `${rule.battles} battle/minggu`);
+    setText('leagueBattleRule', tr('player.weeklyBattles', { count: rule.battles }));
     const total = state.members.length;
     const promotionCount = Math.max(1, Math.ceil(total * Number(rule.promoted) / 100));
     const promotionCutoff = state.members[promotionCount - 1] || null;
@@ -360,11 +360,11 @@
     const promotionGap = player && promotionCutoff && player.rank > promotionCount
       ? Math.max(0, Number(promotionCutoff.trophies || 0) - Number(player.trophies || 0) + 1) : 0;
     const promotionDetail = player?.rank <= promotionCount
-      ? `Posisi #${player.rank}: berada di zona promosi.`
-      : player ? `Sekitar ${promotionGap} trofi dari zona promosi.` : '';
-    addZone('promotion', `Promosi ${rule.promoted}%`, `#1-${promotionCount}`, promotionCutoff?.trophies ?? null, promotionDetail);
+      ? tr('player.inPromotion', { rank: player.rank })
+      : player ? tr('player.promotionGap', { count: localizedNumber(promotionGap) }) : '';
+    addZone('promotion', tr('player.promotion', { percent: rule.promoted }), `#1-${promotionCount}`, promotionCutoff?.trophies ?? null, promotionDetail);
     if (rule.demoted === null || rule.demoted === undefined) {
-      addZone('safe', 'Degradasi', 'Tidak ada', null, 'Tier ini tidak memiliki zona degradasi.');
+      addZone('safe', tr('player.demotionLabel'), tr('player.none'), null, tr('player.noDemotion'));
       return;
     }
     const demotionCount = Math.max(1, Math.ceil(total * Number(rule.demoted) / 100));
@@ -377,9 +377,9 @@
     const margin = player && !inDemotion && demotionCutoff
       ? Math.max(0, Number(player.trophies || 0) - Number(demotionCutoff.trophies || 0)) : 0;
     const demotionDetail = !player ? '' : inDemotion
-      ? `Posisi #${player.rank}: perlu sekitar ${safetyGap} trofi untuk keluar.`
-      : `Posisi #${player.rank}: unggul ${margin} trofi dari batas degradasi.`;
-    addZone('demotion', `Degradasi ${rule.demoted}%`, `#${demotionStart}-${total}`, demotionCutoff?.trophies ?? null, demotionDetail);
+      ? tr('player.demotionEscape', { rank: player.rank, count: localizedNumber(safetyGap) })
+      : tr('player.demotionMargin', { rank: player.rank, count: localizedNumber(margin) });
+    addZone('demotion', tr('player.demotion', { percent: rule.demoted }), `#${demotionStart}-${total}`, demotionCutoff?.trophies ?? null, demotionDetail);
   }
 
   function renderStatistics() {
@@ -428,7 +428,7 @@
   }
 
   function formatStatistic(value, maximumFractionDigits = 1) {
-    return Number(value).toLocaleString('id-ID', { maximumFractionDigits });
+    return localizedNumber(Number(value), { maximumFractionDigits });
   }
 
   function svgNode(name, attributes = {}) {
@@ -450,14 +450,14 @@
     const root = element('leagueStatisticsSummary');
     root.replaceChildren();
     const items = [
-      ['Sampel', stats.count, 0],
-      ['Rata-rata', stats.mean, 1],
+      [tr('player.statSample'), stats.count, 0],
+      [tr('player.statMean'), stats.mean, 1],
       ['Median', stats.median, 1],
-      ['Std. deviasi', stats.standardDeviation, 1],
-      ['Minimum', stats.min, 0],
-      ['Kuartil 1', stats.q1, 1],
-      ['Kuartil 3', stats.q3, 1],
-      ['Maksimum', stats.max, 0]
+      [tr('player.statDeviation'), stats.standardDeviation, 1],
+      [tr('player.statMinimum'), stats.min, 0],
+      [tr('player.statQ1'), stats.q1, 1],
+      [tr('player.statQ3'), stats.q3, 1],
+      [tr('player.statMaximum'), stats.max, 0]
     ];
     for (const [label, value, digits] of items) {
       const item = document.createElement('div');
@@ -494,7 +494,7 @@
     });
     const maxBin = Math.max(...bins, 1);
     const maxDensity = Math.max(...density.map(point => point.density), Number.EPSILON);
-    const svg = svgNode('svg', { viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': `Kurva distribusi ${statisticsMetrics[metric].label} untuk ${stats.count} pemain` });
+    const svg = svgNode('svg', { viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': tr('player.chartDistributionLabel', { metric: tr(statisticsMetrics[metric].labelKey), count: stats.count }) });
     svg.appendChild(svgNode('line', { x1: left, y1: top + plotHeight, x2: width - right, y2: top + plotHeight, class: 'league-chart-axis' }));
     bins.forEach((count, index) => {
       const binWidth = plotWidth / binsCount;
@@ -513,8 +513,8 @@
     }
     root.appendChild(svg);
     const legend = document.createElement('div'); legend.className = 'league-chart-legend';
-    legend.append(Object.assign(document.createElement('span'), { className: 'is-curve', textContent: 'Distribusi' }), Object.assign(document.createElement('span'), { className: 'is-mean', textContent: 'Rata-rata' }));
-    if (Number.isFinite(playerValue)) legend.appendChild(Object.assign(document.createElement('span'), { className: 'is-player', textContent: 'Pemain ini' }));
+    legend.append(Object.assign(document.createElement('span'), { className: 'is-curve', textContent: tr('player.statDistribution') }), Object.assign(document.createElement('span'), { className: 'is-mean', textContent: tr('player.statMean') }));
+    if (Number.isFinite(playerValue)) legend.appendChild(Object.assign(document.createElement('span'), { className: 'is-player', textContent: tr('player.thisPlayer') }));
     root.appendChild(legend);
   }
 
@@ -531,7 +531,7 @@
     const regular = stats.sorted.filter(value => value >= lowerFence && value <= upperFence);
     const lowerWhisker = regular[0] ?? stats.min; const upperWhisker = regular[regular.length - 1] ?? stats.max;
     const outliers = stats.sorted.filter(value => value < lowerWhisker || value > upperWhisker);
-    const svg = svgNode('svg', { viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': `Boxplot ${statisticsMetrics[metric].label}; median ${formatStatistic(stats.median)}, IQR ${formatStatistic(iqr)}` });
+    const svg = svgNode('svg', { viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': tr('player.chartBoxplotLabel', { metric: tr(statisticsMetrics[metric].labelKey), median: formatStatistic(stats.median), iqr: formatStatistic(iqr) }) });
     svg.appendChild(svgNode('line', { x1: x(lowerWhisker), y1: 42, x2: x(upperWhisker), y2: 42, class: 'league-boxplot-whisker' }));
     svg.appendChild(svgNode('line', { x1: x(lowerWhisker), y1: 31, x2: x(lowerWhisker), y2: 53, class: 'league-boxplot-whisker' }));
     svg.appendChild(svgNode('line', { x1: x(upperWhisker), y1: 31, x2: x(upperWhisker), y2: 53, class: 'league-boxplot-whisker' }));
@@ -554,16 +554,16 @@
     const dataset = metricDataset(metric);
     const stats = describeValues(dataset.map(item => item.value));
     const coverage = config.source === 'standings'
-      ? `${dataset.length}/${state.members.length || 0} pemain`
-      : state.leagueStats ? `${dataset.length}/${state.leagueStats.totalMembers} pemain` : 'Menghitung battle…';
+      ? tr('player.statCoverage', { known: dataset.length, total: state.members.length || 0 })
+      : state.leagueStats ? tr('player.statCoverage', { known: dataset.length, total: state.leagueStats.totalMembers }) : tr('player.statsCalculating');
     setText('leagueStatisticsCoverage', coverage);
-    setText('leagueDistributionMeta', stats ? `n=${stats.count}` : 'Belum tersedia');
+    setText('leagueDistributionMeta', stats ? `n=${stats.count}` : tr('player.unavailable'));
     const summary = element('leagueStatisticsSummary');
     summary.replaceChildren();
     if (!stats) {
       const message = config.source === 'battle' && state.members.length
-        ? 'Statistik battle sedang dihitung untuk seluruh anggota grup.'
-        : 'Data statistik belum tersedia untuk sesi ini.';
+        ? tr('player.statsCalculatingAll')
+        : tr('player.statsUnavailable');
       const empty = document.createElement('p'); empty.className = 'league-stat-empty'; empty.textContent = message; summary.appendChild(empty);
       renderStatisticEmpty('leagueDistributionChart', message);
       renderStatisticEmpty('leagueBoxplotChart', message);
@@ -582,24 +582,24 @@
     state.statisticsSession = sessionId;
     state.statisticsLoadingSession = sessionId;
     state.leagueStats = null;
-    setText('leagueTopAttackMeta', 'Memuat…');
-    setText('leagueTopDefenseMeta', 'Memuat…');
-    renderTopList('leagueTopAttack', [], 'attack', 'Menghitung seluruh serangan grup…');
-    renderTopList('leagueTopDefense', [], 'defense', 'Menghitung seluruh pertahanan grup…');
+    setText('leagueTopAttackMeta', tr('home.loadingShort'));
+    setText('leagueTopDefenseMeta', tr('home.loadingShort'));
+    renderTopList('leagueTopAttack', [], 'attack', tr('player.calculatingAttacks'));
+    renderTopList('leagueTopDefense', [], 'defense', tr('player.calculatingDefenses'));
     renderDescriptiveStatistics();
     try {
-      const response = await fetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=statistics`);
+      const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=statistics`);
       const data = await response.json();
       if (request !== state.statisticsRequest || sessionId !== element('leagueSession').value) return;
-      if (!response.ok) throw new Error(data.error || 'Statistik grup tidak dapat dimuat.');
+      if (!response.ok) throw new Error(data.error || tr('player.statsFailed'));
       state.statisticsLoadingSession = null;
       state.leagueStats = data;
       renderStatistics();
     } catch (error) {
       if (request !== state.statisticsRequest) return;
       state.statisticsLoadingSession = null;
-      setText('leagueTopAttackMeta', 'Tidak tersedia');
-      setText('leagueTopDefenseMeta', 'Tidak tersedia');
+      setText('leagueTopAttackMeta', tr('player.unavailable'));
+      setText('leagueTopDefenseMeta', tr('player.unavailable'));
       renderTopList('leagueTopAttack', [], 'attack', error.message);
       renderTopList('leagueTopDefense', [], 'defense', error.message);
       renderDescriptiveStatistics();
@@ -631,27 +631,27 @@
       const card = document.createElement('article'); card.className = `ranked-battle-card ranked-${side}${Number(log.stars) === 3 ? ' ranked-triple' : ''}${bonus ? ' ranked-defense-bonus' : ''}`;
       const top = document.createElement('div'); top.className = 'ranked-battle-card-top';
       const number = document.createElement('span'); number.textContent = bonus ? 'BONUS' : `#${index + 1}`;
-      const trophies = document.createElement('strong'); trophies.textContent = log.trophies === null || log.trophies === undefined ? 'Trofi —' : `${Number(log.trophies) >= 0 ? '+' : ''}${Number(log.trophies).toLocaleString('id-ID')} trofi`;
+      const trophies = document.createElement('strong'); trophies.textContent = log.trophies === null || log.trophies === undefined ? `${tr('player.trophies')} —` : tr('player.trophyValue', { value: `${Number(log.trophies) >= 0 ? '+' : ''}${localizedNumber(Number(log.trophies))}` });
       top.append(number, trophies);
       if (bonus) {
         const bonusBody = document.createElement('div'); bonusBody.className = 'ranked-defense-bonus-body';
         const trophy = document.createElement('img'); trophy.src = '/assets/trophy.png'; trophy.alt = ''; trophy.width = 22; trophy.height = 22;
-        const label = document.createElement('strong'); label.textContent = 'Bonus pertahanan';
+        const label = document.createElement('strong'); label.textContent = tr('player.defenseBonus');
         bonusBody.append(trophy, label);
-        const note = document.createElement('small'); note.textContent = 'Kompensasi sisa slot pertahanan pada akhir sesi';
+        const note = document.createElement('small'); note.textContent = tr('player.defenseBonusNote');
         card.append(top, bonusBody, note); list.appendChild(card); return;
       }
-      const stars = document.createElement('div'); stars.className = 'ranked-battle-stars'; stars.setAttribute('aria-label', `${log.stars ?? 0} dari 3 bintang`);
+      const stars = document.createElement('div'); stars.className = 'ranked-battle-stars'; stars.setAttribute('aria-label', tr('player.starsOfThree', { count: log.stars ?? 0 }));
       for (let star = 1; star <= 3; star++) stars.appendChild(Object.assign(document.createElement('span'), { className: star <= Number(log.stars || 0) ? 'earned' : '', textContent: '★' }));
       const destruction = document.createElement('div'); destruction.className = 'ranked-battle-destruction';
-      destruction.append(Object.assign(document.createElement('span'), { textContent: 'Destruksi' }), Object.assign(document.createElement('strong'), { textContent: log.destructionPercentage === null || log.destructionPercentage === undefined ? '—' : `${Number(log.destructionPercentage).toLocaleString('id-ID', { maximumFractionDigits: 2 })}%` }));
+      destruction.append(Object.assign(document.createElement('span'), { textContent: tr('player.destruction') }), Object.assign(document.createElement('strong'), { textContent: log.destructionPercentage === null || log.destructionPercentage === undefined ? '—' : `${localizedNumber(Number(log.destructionPercentage), { maximumFractionDigits: 2 })}%` }));
       const track = document.createElement('div'); track.className = 'ranked-destruction-track';
       const fill = document.createElement('i'); fill.style.width = `${Math.min(100, Math.max(0, Number(log.destructionPercentage || 0)))}%`; track.appendChild(fill);
       card.append(top, stars, destruction, track);
       if (log.opponentName || log.timestamp) {
         const meta = document.createElement('small');
         const parsedTime = log.timestamp ? new Date(log.timestamp) : null;
-        const time = parsedTime && !Number.isNaN(parsedTime.getTime()) ? parsedTime.toLocaleString('id-ID') : '';
+        const time = parsedTime && !Number.isNaN(parsedTime.getTime()) ? window.CocI18n.dateTime(parsedTime) : '';
         meta.textContent = [log.opponentName, time].filter(Boolean).join(' · '); card.appendChild(meta);
       }
       list.appendChild(card);
@@ -661,10 +661,10 @@
   function renderPlayerBattleLog(data) {
     const summary = element('rankedBattleSummary'); summary.replaceChildren();
     const metrics = [
-      ['Peringkat', data.playerRank ? `#${data.playerRank}/${data.totalMembers}` : '—'],
-      ['Bintang / serangan', data.attack?.starsAverage ?? '—'],
-      ['Destruksi serangan', data.attack?.destructionAverage == null ? '—' : `${Number(data.attack.destructionAverage).toLocaleString('id-ID')}%`],
-      ['Destruksi pertahanan', data.defense?.destructionAverage == null ? '—' : `${Number(data.defense.destructionAverage).toLocaleString('id-ID')}%`]
+      [tr('player.rankMetric'), data.playerRank ? `#${data.playerRank}/${data.totalMembers}` : '—'],
+      [tr('player.attackStarsAverage'), data.attack?.starsAverage ?? '—'],
+      [tr('player.attackDestruction'), data.attack?.destructionAverage == null ? '—' : `${localizedNumber(Number(data.attack.destructionAverage))}%`],
+      [tr('player.defenseDestruction'), data.defense?.destructionAverage == null ? '—' : `${localizedNumber(Number(data.defense.destructionAverage))}%`]
     ];
     for (const [label, value] of metrics) {
       const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); summary.appendChild(item);
@@ -675,21 +675,21 @@
     const calculatedTrophies = [...allAttackLogs, ...allDefenseLogs, ...defenseBonusLogs].reduce((sum, log) => sum + (Number.isFinite(Number(log.trophies)) ? Number(log.trophies) : 0), 0);
     const totalTrophies = data.player?.trophies != null && Number.isFinite(Number(data.player.trophies)) ? Number(data.player.trophies) : calculatedTrophies;
     const trophyMetric = document.createElement('div');
-    const trophyCaption = document.createElement('span'); trophyCaption.textContent = 'Total trofi';
+    const trophyCaption = document.createElement('span'); trophyCaption.textContent = tr('player.totalTrophies');
     const trophyValue = document.createElement('strong'); trophyValue.className = 'summary-trophy-value';
     const trophyImage = document.createElement('img'); trophyImage.src = '/assets/trophy.png'; trophyImage.alt = ''; trophyImage.width = 20; trophyImage.height = 20;
-    trophyValue.append(trophyImage, document.createTextNode(`${totalTrophies >= 0 ? '+' : ''}${totalTrophies.toLocaleString('id-ID')}`));
+    trophyValue.append(trophyImage, document.createTextNode(`${totalTrophies >= 0 ? '+' : ''}${localizedNumber(totalTrophies)}`));
     trophyMetric.append(trophyCaption, trophyValue); summary.insertBefore(trophyMetric, summary.children[1]);
     const prepare = logs => logs.filter(log => state.logFilter === 'all' || (state.logFilter === 'triple' && Number(log.stars) === 3) || (state.logFilter === 'low' && Number(log.stars) <= 1) || (state.logFilter === 'highDestruction' && Number(log.destructionPercentage) >= 80)).sort((a, b) => state.logSort === 'stars' ? Number(b.stars || 0) - Number(a.stars || 0) : state.logSort === 'destruction' ? Number(b.destructionPercentage || 0) - Number(a.destructionPercentage || 0) : state.logSort === 'trophies' ? Number(b.trophies || 0) - Number(a.trophies || 0) : state.logSort === 'oldest' ? String(a.timestamp || '').localeCompare(String(b.timestamp || '')) : String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
     const attacks = prepare(Array.isArray(data.attack?.logs) ? data.attack.logs : []);
     const defenses = [...prepare(Array.isArray(data.defense?.logs) ? data.defense.logs : []), ...(state.logFilter === 'all' ? defenseBonusLogs : [])];
-    setText('rankedAttackTotal', `${allAttackLogs.length} battle`); setText('rankedDefenseTotal', `${allDefenseLogs.length} battle${defenseBonusLogs.length ? ` + ${defenseBonusLogs.length} bonus` : ''}`);
+    setText('rankedAttackTotal', tr('player.battleCount', { count: localizedNumber(allAttackLogs.length) })); setText('rankedDefenseTotal', tr(defenseBonusLogs.length ? 'player.battleBonusCount' : 'player.battleCount', { count: localizedNumber(allDefenseLogs.length), bonus: localizedNumber(defenseBonusLogs.length) }));
     const trophyTotal = logs => logs.reduce((sum, log) => sum + (Number.isFinite(Number(log.trophies)) ? Number(log.trophies) : 0), 0);
-    const trophyLabel = value => { const image = document.createElement('img'); image.src = '/assets/trophy.png'; image.alt = ''; image.width = 16; image.height = 16; const span = document.createElement('span'); span.textContent = `${value >= 0 ? '+' : ''}${value.toLocaleString('id-ID')}`; span.prepend(image); return span; };
+    const trophyLabel = value => { const image = document.createElement('img'); image.src = '/assets/trophy.png'; image.alt = ''; image.width = 16; image.height = 16; const span = document.createElement('span'); span.textContent = `${value >= 0 ? '+' : ''}${localizedNumber(value)}`; span.prepend(image); return span; };
     document.getElementById('rankedAttackTrophies').replaceChildren(trophyLabel(trophyTotal(allAttackLogs)));
     document.getElementById('rankedDefenseTrophies').replaceChildren(trophyLabel(trophyTotal([...allDefenseLogs, ...defenseBonusLogs])));
-    renderBattleLogList('rankedAttackLogs', attacks, 'Belum ada riwayat serangan pada sesi ini.');
-    renderBattleLogList('rankedDefenseLogs', defenses, 'Belum ada riwayat pertahanan pada sesi ini.');
+    renderBattleLogList('rankedAttackLogs', attacks, tr('player.noAttackHistory'));
+    renderBattleLogList('rankedDefenseLogs', defenses, tr('player.noDefenseHistory'));
   }
 
   async function fetchPlayerBattleSession(sessionId) {
@@ -697,9 +697,9 @@
     let pending = state.playerBattleCache.get(key);
     if (!pending) {
       pending = (async () => {
-        const response = await fetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=battle&memberTag=${encodeURIComponent(state.playerTag)}`);
+        const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=battle&memberTag=${encodeURIComponent(state.playerTag)}`);
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Battle log tidak dapat dimuat.');
+        if (!response.ok) throw new Error(data.error || tr('player.battleLogFailed'));
         return data;
       })();
       state.playerBattleCache.set(key, pending);
@@ -733,24 +733,24 @@
     const currentRank = Number(current.playerRank);
     const rankChange = previousRank - currentRank;
     const verdict = document.createElement('div'); verdict.className = 'ranked-insight-verdict';
-    const eyebrow = document.createElement('span'); eyebrow.textContent = 'HASIL SESI';
+    const eyebrow = document.createElement('span'); eyebrow.textContent = tr('player.sessionResult');
     const result = document.createElement('strong');
     result.className = rankChange > 0 ? 'is-up' : rankChange < 0 ? 'is-down' : 'is-steady';
-    result.textContent = rankChange === 0 ? 'Posisi tetap' : `${rankChange > 0 ? 'Naik' : 'Turun'} ${Math.abs(rankChange)} posisi`;
+    result.textContent = rankChange === 0 ? tr('player.rankSteady') : tr(rankChange > 0 ? 'player.rankUp' : 'player.rankDown', { count: localizedNumber(Math.abs(rankChange)) });
     verdict.append(eyebrow, result);
     root.appendChild(verdict);
 
-    const signedChange = (value, decimals = 0) => `${value > 0 ? '+' : ''}${value.toLocaleString('id-ID', { maximumFractionDigits: decimals })}`;
-    const record = player => player?.attackWins === undefined ? 'Data tidak tersedia' : `${Number(player.attackWins || 0)} menang · ${Number(player.attackLosses || 0)} kalah`;
-    const defenseRecord = player => player?.defenseWins === undefined ? 'Data tidak tersedia' : `${Number(player.defenseWins || 0)} menang · ${Number(player.defenseLosses || 0)} kalah`;
+    const signedChange = (value, decimals = 0) => `${value > 0 ? '+' : ''}${localizedNumber(value, { maximumFractionDigits: decimals })}`;
+    const record = player => player?.attackWins === undefined ? tr('player.recordUnavailable') : tr('player.winLoss', { wins: player.attackWins || 0, losses: player.attackLosses || 0 });
+    const defenseRecord = player => player?.defenseWins === undefined ? tr('player.recordUnavailable') : tr('player.winLoss', { wins: player.defenseWins || 0, losses: player.defenseLosses || 0 });
     const addPerformance = (title, currentRecord, previousRecord, change) => {
       const item = document.createElement('section'); item.className = 'ranked-insight-performance';
       const heading = document.createElement('div');
       const name = document.createElement('strong'); name.textContent = title;
-      const delta = document.createElement('span'); delta.className = change > 0 ? 'is-up' : change < 0 ? 'is-down' : 'is-steady'; delta.textContent = `${signedChange(change)} poin`;
+      const delta = document.createElement('span'); delta.className = change > 0 ? 'is-up' : change < 0 ? 'is-down' : 'is-steady'; delta.textContent = `${signedChange(change)} ${tr('player.pointsUnit')}`;
       heading.append(name, delta);
       const now = document.createElement('p'); now.textContent = currentRecord;
-      const before = document.createElement('small'); before.textContent = `Sebelumnya: ${previousRecord}`;
+      const before = document.createElement('small'); before.textContent = tr('player.previousRecord', { record: previousRecord });
       item.append(heading, now, before); root.appendChild(item);
     };
     const attackChange = battleTrophyPoints(current.attack?.logs) - battleTrophyPoints(previous.attack?.logs);
@@ -759,28 +759,28 @@
     addPerformance('Defense', defenseRecord(current.player), defenseRecord(previous.player), defenseChange);
 
     const distribution = document.createElement('section'); distribution.className = 'ranked-star-distribution';
-    const distributionTitle = document.createElement('strong'); distributionTitle.textContent = 'Distribusi bintang serangan';
+    const distributionTitle = document.createElement('strong'); distributionTitle.textContent = tr('player.attackStarsDistribution');
     const distributionLegend = document.createElement('div'); distributionLegend.className = 'ranked-star-legend';
     [['is-low', '0–1'], ['is-two', '2'], ['is-triple', '3']].forEach(([type, label]) => {
-      const key = document.createElement('span'); key.className = type; key.textContent = `${label} bintang`; distributionLegend.appendChild(key);
+      const key = document.createElement('span'); key.className = type; key.textContent = tr('player.starLabel', { count: label }); distributionLegend.appendChild(key);
     });
     distribution.append(distributionTitle, distributionLegend);
-    [['Sebelumnya', starDistribution(previous.attack?.logs)], ['Saat ini', starDistribution(current.attack?.logs)]].forEach(([label, data]) => {
+    [[tr('player.previous'), starDistribution(previous.attack?.logs)], [tr('player.current'), starDistribution(current.attack?.logs)]].forEach(([label, data]) => {
       const series = document.createElement('div'); series.className = 'ranked-star-series';
       const caption = document.createElement('span'); caption.textContent = label;
       const bar = document.createElement('div'); bar.className = 'ranked-star-bar';
       [['low', 'is-low'], ['two', 'is-two'], ['triple', 'is-triple']].forEach(([key, type]) => {
-        const segment = document.createElement('i'); segment.className = type; segment.style.width = `${data.total ? data[key] / data.total * 100 : 0}%`; segment.title = `${data[key]} dari ${data.total} serangan`; bar.appendChild(segment);
+        const segment = document.createElement('i'); segment.className = type; segment.style.width = `${data.total ? data[key] / data.total * 100 : 0}%`; segment.title = tr('player.starSegment', { count: data[key], total: data.total }); bar.appendChild(segment);
       });
       const tripleRate = document.createElement('b'); tripleRate.textContent = data.total ? `${Math.round(data.triple / data.total * 100)}% 3★` : '—';
       series.append(caption, bar, tripleRate); distribution.appendChild(series);
     });
     root.appendChild(distribution);
 
-    const describe = (value, decimals = 0) => value === 0 ? 'tetap' : `${value > 0 ? 'naik' : 'turun'} ${Math.abs(value).toLocaleString('id-ID', { maximumFractionDigits: decimals })}`;
+    const describe = (value, decimals = 0) => value === 0 ? tr('player.steady') : `${tr(value > 0 ? 'player.increase' : 'player.decrease')} ${localizedNumber(Math.abs(value), { maximumFractionDigits: decimals })}`;
     const starsChange = Number(current.attack?.starsAverage || 0) - Number(previous.attack?.starsAverage || 0);
     const insight = document.createElement('p'); insight.className = 'ranked-insight-note';
-    insight.textContent = `Posisi ${rankChange === 0 ? 'tetap' : `${rankChange > 0 ? 'naik' : 'turun'} ${Math.abs(rankChange)}`}; poin defense ${describe(defenseChange)}, poin attack ${describe(attackChange)}, dan rata-rata bintang ${describe(starsChange, 2)}.`;
+    insight.textContent = tr('player.rankedInsight', { rank: describe(rankChange), defense: describe(defenseChange), attack: describe(attackChange), stars: describe(starsChange, 2) });
     root.appendChild(insight);
   }
 
@@ -788,16 +788,16 @@
     const chart = element('rankedComparisonChart');
     chart.replaceChildren();
     const metrics = [
-      { label: 'Posisi grup', previous: previous.playerRank, current: current.playerRank, rank: true },
-      { label: 'Poin attack', previous: battleTrophyPoints(previous.attack?.logs), current: battleTrophyPoints(current.attack?.logs) },
-      { label: 'Poin defense', previous: battleTrophyPoints(previous.defense?.logs), current: battleTrophyPoints(current.defense?.logs) },
-      { label: 'Rata-rata bintang', previous: previous.attack?.starsAverage, current: current.attack?.starsAverage, decimals: 2 },
-      { label: 'Total trofi', previous: previous.player?.trophies, current: current.player?.trophies }
+      { label: tr('player.groupPosition'), previous: previous.playerRank, current: current.playerRank, rank: true },
+      { label: tr('player.attackPoints'), previous: battleTrophyPoints(previous.attack?.logs), current: battleTrophyPoints(current.attack?.logs) },
+      { label: tr('player.defensePoints'), previous: battleTrophyPoints(previous.defense?.logs), current: battleTrophyPoints(current.defense?.logs) },
+      { label: tr('player.averageStars'), previous: previous.attack?.starsAverage, current: current.attack?.starsAverage, decimals: 2 },
+      { label: tr('player.totalTrophies'), previous: previous.player?.trophies, current: current.player?.trophies }
     ];
     const valueText = (metric, value) => {
       if (value === null || value === undefined || !Number.isFinite(Number(value))) return '—';
-      if (metric.rank) return `#${Number(value).toLocaleString('id-ID')}`;
-      return Number(value).toLocaleString('id-ID', { maximumFractionDigits: metric.decimals ?? 0 });
+      if (metric.rank) return `#${localizedNumber(Number(value))}`;
+      return localizedNumber(Number(value), { maximumFractionDigits: metric.decimals ?? 0 });
     };
     for (const metric of metrics) {
       const oldValue = Number(metric.previous);
@@ -808,12 +808,12 @@
       const title = document.createElement('strong'); title.textContent = metric.label;
       const delta = document.createElement('span');
       if (!available || oldValue === newValue) {
-        delta.className = 'is-steady'; delta.textContent = available ? 'Tetap' : 'Data tidak lengkap';
+        delta.className = 'is-steady'; delta.textContent = tr(available ? 'player.steadyLabel' : 'player.incompleteData');
       } else {
         const improvement = metric.rank ? oldValue - newValue : newValue - oldValue;
         delta.className = improvement > 0 ? 'is-up' : 'is-down';
-        const difference = Math.abs(newValue - oldValue).toLocaleString('id-ID', { maximumFractionDigits: metric.decimals ?? 0 });
-        delta.textContent = `${improvement > 0 ? 'Naik' : 'Turun'} ${difference}${metric.rank ? ' posisi' : ''}`;
+        const difference = localizedNumber(Math.abs(newValue - oldValue), { maximumFractionDigits: metric.decimals ?? 0 });
+        delta.textContent = tr(improvement > 0 ? 'player.deltaUp' : 'player.deltaDown', { difference, unit: metric.rank ? tr('player.positionUnit') : '' });
       }
       heading.append(title, delta);
       const bars = document.createElement('div'); bars.className = 'ranked-comparison-bars';
@@ -821,7 +821,7 @@
         ? [Math.max(1, Number(previous.totalMembers || 100) - oldValue + 1), Math.max(1, Number(current.totalMembers || 100) - newValue + 1)]
         : [Math.abs(oldValue), Math.abs(newValue)];
       const maximum = Math.max(...values.filter(Number.isFinite), 1);
-      [['Sebelumnya', metric.previous, values[0], 'previous'], ['Saat ini', metric.current, values[1], 'current']].forEach(([label, value, chartValue, type]) => {
+      [[tr('player.previous'), metric.previous, values[0], 'previous'], [tr('player.current'), metric.current, values[1], 'current']].forEach(([label, value, chartValue, type]) => {
         const series = document.createElement('div'); series.className = `ranked-comparison-series is-${type}`;
         const caption = document.createElement('span'); caption.textContent = label;
         const track = document.createElement('div'); track.className = 'ranked-comparison-track';
@@ -842,7 +842,7 @@
     const request = ++state.comparisonRequest;
     if (!currentSession || !previousSession) { root.hidden = true; chart.replaceChildren(); element('rankedComparisonInsights').replaceChildren(); return; }
     root.hidden = false;
-    chart.textContent = 'Memuat perbandingan sesi…';
+    chart.textContent = tr('player.loadingSessionComparison');
     try {
       const [previous, current] = await Promise.all([fetchPlayerBattleSession('previous'), fetchPlayerBattleSession('current')]);
       if (request !== state.comparisonRequest) return;
@@ -857,16 +857,16 @@
 
   async function loadPlayerBattleLog(sessionId) {
     const request = ++state.logRequest;
-    const status = element('rankedBattleStatus'); status.hidden = false; setLoading('rankedBattleStatus', 'Memuat battle log…');
+    const status = element('rankedBattleStatus'); status.hidden = false; setLoading('rankedBattleStatus', tr('player.loadingBattleLog'));
     try {
       const data = await fetchPlayerBattleSession(sessionId);
       if (request !== state.logRequest) return;
       renderPlayerBattleLog(data);
-      status.textContent = data.stale ? `Menampilkan data tersimpan · diperbarui ${new Date(data.lastUpdated).toLocaleString('id-ID')}` : `${sessionLabel(data.session)} · ${data.attack?.sampleSize || 0} serangan dan ${data.defense?.sampleSize || 0} pertahanan`;
+      status.textContent = data.stale ? tr('player.battleLogStale', { date: window.CocI18n.dateTime(new Date(data.lastUpdated)) }) : tr('player.battleLogSummary', { session: sessionLabel(data.session), attacks: localizedNumber(data.attack?.sampleSize || 0), defenses: localizedNumber(data.defense?.sampleSize || 0) });
     } catch (error) {
       if (request !== state.logRequest) return;
       element('rankedBattleSummary').replaceChildren();
-      renderBattleLogList('rankedAttackLogs', [], 'Battle log tidak tersedia.'); renderBattleLogList('rankedDefenseLogs', [], 'Battle log tidak tersedia.');
+      renderBattleLogList('rankedAttackLogs', [], tr('player.battleLogUnavailable')); renderBattleLogList('rankedDefenseLogs', [], tr('player.battleLogUnavailable'));
       status.textContent = error.message;
     }
   }
@@ -877,7 +877,7 @@
     const request = ++state.request;
     const status = element('leagueStatus');
     status.hidden = false;
-    setLoading('leagueStatus', 'Memuat peringkat grup…');
+    setLoading('leagueStatus', tr('player.loadingGroup'));
     state.members = [];
     state.leagueRule = null;
     state.leagueStats = null;
@@ -890,10 +890,10 @@
     renderStatistics();
     element('leaguePlayerRank').hidden = true;
     try {
-      const response = await fetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}`);
-      const data = await response.json().catch(() => ({ error: 'Server tidak mengembalikan data grup liga. Coba lagi nanti.' }));
+      const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(state.playerTag)}/league-group?session=${encodeURIComponent(sessionId)}`);
+      const data = await response.json().catch(() => ({ error: tr('player.groupInvalidResponse') }));
       if (request !== state.request) return;
-      if (!response.ok) throw new Error(data.error || 'Peringkat grup tidak dapat dimuat.');
+      if (!response.ok) throw new Error(data.error || tr('player.groupFailed'));
       state.members = Array.isArray(data.members) ? data.members : [];
       state.leagueRule = data.leagueRule || null;
       state.playerRank = data.playerRank || null;
@@ -901,10 +901,10 @@
       renderPage();
       renderStatistics();
       loadLeagueStatistics(sessionId);
-      const label = data.session.id === 'current' ? 'Sesi saat ini' : 'Sesi terakhir';
+      const label = tr(data.session.id === 'current' ? 'player.sessionCurrentLong' : 'player.sessionLast');
       setLeagueTitle(data.leagueTier);
       const tier = data.leagueTier ? `${data.leagueTier} · ` : '';
-      const rankText = data.playerRank ? `#${data.playerRank} dari ${data.totalMembers}` : 'Posisi tidak tersedia';
+      const rankText = data.playerRank ? tr('player.rankOf', { rank: data.playerRank, total: data.totalMembers }) : tr('player.rankUnavailable');
       setText('leagueRankSummary', `${tier}${label} · ${rankText}`);
       const card = element('leaguePlayerRank');
       card.hidden = false;
@@ -912,18 +912,18 @@
       const rank = document.createElement('strong');
       rank.textContent = data.playerRank ? `#${data.playerRank}` : '—';
       const description = document.createElement('span');
-      description.textContent = `${label} · ${data.totalMembers} anggota grup`;
+      description.textContent = `${label} · ${tr('player.groupMembersCount', { count: data.totalMembers })}`;
       card.append(rank, description);
       if (data.stale) {
-        const updated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleString('id-ID') : 'sebelumnya';
-        status.textContent = `Menampilkan data grup tersimpan dari ${updated}; API sedang tidak merespons.`;
+        const updated = data.lastUpdated ? window.CocI18n.dateTime(new Date(data.lastUpdated)) : tr('player.earlier');
+        status.textContent = tr('player.groupStale', { date: updated });
       } else {
         status.hidden = true;
       }
     } catch (error) {
       if (request !== state.request) return;
       status.textContent = error.message;
-      setText('leagueRankSummary', 'Peringkat grup liga belum tersedia.');
+      setText('leagueRankSummary', tr('player.leagueUnavailable'));
     }
   }
 
@@ -963,16 +963,14 @@
     select.disabled = sessions.length === 0;
     battleSelect.disabled = sessions.length === 0;
     if (!sessions.length) {
-      const message = player.leagueTier?.name === 'Legend I'
-        ? 'Legend I memakai leaderboard global; tidak ada grup 100 pemain untuk ditampilkan.'
-        : 'Belum ada grup liga untuk sesi saat ini atau sesi terakhir.';
+      const message = tr(player.leagueTier?.name === 'Legend I' ? 'player.legendGlobal' : 'player.noGroup');
       const status = element('leagueStatus');
       status.hidden = false;
       status.textContent = message;
       setText('leagueRankSummary', message);
       element('leaguePlayerRank').hidden = true;
       setText('rankedBattleStatus', message);
-      renderBattleLogList('rankedAttackLogs', [], 'Battle log tidak tersedia.'); renderBattleLogList('rankedDefenseLogs', [], 'Battle log tidak tersedia.');
+      renderBattleLogList('rankedAttackLogs', [], tr('player.battleLogUnavailable')); renderBattleLogList('rankedDefenseLogs', [], tr('player.battleLogUnavailable'));
       element('rankedSessionComparison').hidden = true;
       return;
     }

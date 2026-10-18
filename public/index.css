@@ -42,6 +42,10 @@ body.dashboard{margin:0;background:#0e1219;color:#e8edf5;font-family:Inter,ui-sa
 .dashboard #clanTagInput:focus{border-color:#67a5ff;box-shadow:0 0 0 2px #2d68db55;outline:0}
 .dashboard header a,.dashboard #healthCsvLink,.dashboard #performancePager button,.dashboard .roster-filter,.dashboard #warRounds button{border-radius:7px}
 .dashboard header a:hover,.dashboard #healthCsvLink:hover,.dashboard #performancePager button:hover,.dashboard .roster-filter:hover{background:#27384b}
+.dashboard .home-header-links{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.language-control{display:inline-flex;align-items:center;gap:7px;margin-left:5px;color:#a9bdd3;font-size:11px;font-weight:700;white-space:nowrap}
+.language-control select{min-height:31px;padding:5px 25px 5px 9px;border:1px solid #40536b;border-radius:7px;background:#172330;color:#e8edf5;font:inherit;cursor:pointer}
+.language-control select:focus-visible{outline:2px solid #67a5ff;outline-offset:2px}
 .dashboard #searchButton:hover,.dashboard #warRounds button.bg-blue-600:hover{background:#3c78eb}
 .dashboard .roster-filter.bg-blue-600:hover{background:#3c78eb}
 .dashboard table{color:#e8edf5}

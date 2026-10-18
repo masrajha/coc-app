@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/index.css">
     <link rel="stylesheet" href="/donation.css">
+    <script src="/i18n.js"></script>
     <script src="/rankings.js" defer></script>
     <script src="/recent.js" defer></script>
     <script src="/donation.js" defer></script>
@@ -20,13 +21,14 @@
                         <div class="h-9 w-9 rounded bg-slate-900 text-white grid place-items-center text-sm font-bold">CW</div>
                         <div>
                             <h1 class="text-lg font-bold leading-5">CoC Clan Command Center</h1>
-                            <p class="text-xs text-slate-500">Leaderboard global dan command center klan.</p>
+                            <p class="text-xs text-slate-500" data-i18n="home.tagline">Leaderboard global dan command center klan.</p>
                         </div>
                     </a>
                 </div>
                 <div class="home-header-links">
-                    <a href="/#player" data-home-tab-link="player">Cari pemain</a>
-                    <a id="comparePlayersLink" href="/#compare" data-home-tab-link="compare">Bandingkan</a>
+                    <a href="/#player" data-home-tab-link="player" data-i18n="nav.players">Cari pemain</a>
+                    <a id="comparePlayersLink" href="/#compare" data-home-tab-link="compare" data-i18n="nav.compare">Bandingkan</a>
+                    <label class="language-control"><span data-i18n="language.label">Bahasa</span><select data-language-switch aria-label="Bahasa / Language"><option value="id">Indonesia</option><option value="en">English</option></select></label>
                 </div>
             </div>
         </div>
@@ -38,178 +40,178 @@
                 <div class="landing-main">
             <div class="landing-copy">
                 <p class="landing-eyebrow">CLAN COMMAND CENTER</p>
-                <h2 id="landingTitle">Pantau clan, war, dan progres pemain.</h2>
-                <p class="landing-description">Masukkan tag clan untuk membuka war aktif, standings CWL, aktivitas anggota, dan performa pemain.</p>
+                <h2 id="landingTitle" data-i18n="home.heading">Pantau clan, war, dan progres pemain.</h2>
+                <p class="landing-description" data-i18n="home.description">Masukkan tag clan untuk membuka war aktif, standings CWL, aktivitas anggota, dan performa pemain.</p>
             </div>
 
-            <section class="quick-search" aria-label="Pencarian clan dan pemain">
-                <div class="quick-search-tabs" role="tablist" aria-label="Pilih tujuan">
+            <section class="quick-search" aria-label="Pencarian clan dan pemain" data-i18n-aria-label="home.searchLabel">
+                <div class="quick-search-tabs" role="tablist" aria-label="Pilih tujuan" data-i18n-aria-label="home.searchTabs">
                     <button type="button" class="quick-search-tab active" id="homeClanTab" role="tab" aria-selected="true" aria-controls="homeClanPanel" data-home-mode="clan">Clan</button>
                     <button type="button" class="quick-search-tab" id="homePlayerTab" role="tab" aria-selected="false" aria-controls="homePlayerPanel" data-home-mode="player">Player</button>
                     <button type="button" class="quick-search-tab" id="homeCompareTab" role="tab" aria-selected="false" aria-controls="homeComparePanel" data-home-mode="compare">Compare Player</button>
                 </div>
                 <form id="homeClanPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeClanTab">
-                    <label for="clanTagInput">Clan tag</label>
+                    <label for="clanTagInput" data-i18n="home.clanTag">Clan tag</label>
                     <div class="quick-search-input-row">
-                        <input type="text" id="clanTagInput" placeholder="Contoh: #2GPP802UU" autocomplete="off" spellcheck="false" aria-describedby="clanTagHint">
-                        <button id="searchButton" type="submit">Buka Clan <span aria-hidden="true">→</span></button>
+                        <input type="text" id="clanTagInput" placeholder="Contoh: #2GPP802UU" data-i18n-placeholder="home.clanPlaceholder" autocomplete="off" spellcheck="false" aria-describedby="clanTagHint">
+                        <button id="searchButton" type="submit"><span data-i18n="home.openClan">Buka Clan</span> <span aria-hidden="true">→</span></button>
                     </div>
-                    <small id="clanTagHint">Masukkan tag clan untuk membuka dashboard, perang, dan aktivitas.</small>
+                    <small id="clanTagHint" data-i18n="home.clanHint">Masukkan tag clan untuk membuka dashboard, perang, dan aktivitas.</small>
                 </form>
                 <form id="homePlayerPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homePlayerTab" hidden>
-                    <label for="playerTagInput">Player tag</label>
+                    <label for="playerTagInput" data-i18n="home.playerTag">Player tag</label>
                     <div class="quick-search-input-row">
-                        <input type="text" id="playerTagInput" placeholder="Contoh: #PYQYQL28G" autocomplete="off" spellcheck="false">
-                        <button type="submit">Buka Profil <span aria-hidden="true">→</span></button>
+                        <input type="text" id="playerTagInput" placeholder="Contoh: #PYQYQL28G" data-i18n-placeholder="home.playerPlaceholder" autocomplete="off" spellcheck="false">
+                        <button type="submit"><span data-i18n="home.openProfile">Buka Profil</span> <span aria-hidden="true">→</span></button>
                     </div>
-                    <small>Buka Army, progres, Ranked League, dan performa pemain.</small>
+                    <small data-i18n="home.playerHint">Buka Army, progres, Ranked League, dan performa pemain.</small>
                 </form>
                 <form id="homeComparePanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeCompareTab" hidden>
                     <div class="compare-search-fields">
-                        <div><label for="comparePlayerOne">Player 1</label><input type="text" id="comparePlayerOne" placeholder="Tag pemain pertama" autocomplete="off" spellcheck="false"></div>
-                        <div><label for="comparePlayerTwo">Player 2</label><input type="text" id="comparePlayerTwo" placeholder="Tag pemain kedua" autocomplete="off" spellcheck="false"></div>
+                        <div><label for="comparePlayerOne">Player 1</label><input type="text" id="comparePlayerOne" placeholder="Tag pemain pertama" data-i18n-placeholder="home.firstPlaceholder" autocomplete="off" spellcheck="false"></div>
+                        <div><label for="comparePlayerTwo">Player 2</label><input type="text" id="comparePlayerTwo" placeholder="Tag pemain kedua" data-i18n-placeholder="home.secondPlaceholder" autocomplete="off" spellcheck="false"></div>
                     </div>
-                    <div class="quick-search-submit-row"><small>Bandingkan progres, Army, dan performa War/CWL.</small><button type="submit">Bandingkan <span aria-hidden="true">→</span></button></div>
+                    <div class="quick-search-submit-row"><small data-i18n="home.compareHint">Bandingkan progres, Army, dan performa War/CWL.</small><button type="submit"><span data-i18n="home.compare">Bandingkan</span> <span aria-hidden="true">→</span></button></div>
                 </form>
             </section>
 
             <section class="landing-quick-access" aria-label="Akses cepat">
-                <div class="quick-access-heading"><span class="landing-eyebrow">QUICK ACCESS</span><span id="landingLastActivity">Siap digunakan</span></div>
+                <div class="quick-access-heading"><span class="landing-eyebrow" data-i18n="home.quickAccess">QUICK ACCESS</span><span id="landingLastActivity" data-i18n="home.ready">Siap digunakan</span></div>
                 <div class="quick-access-grid">
-                    <a id="quickRecentClan" href="/clan.html" class="quick-access-card"><span class="quick-access-icon">CL</span><span><strong>Clan terakhir</strong><small id="quickRecentClanText">Buka clan yang terakhir dilihat</small></span><b>→</b></a>
-                    <a id="quickRecentPlayer" href="/player.html" class="quick-access-card"><span class="quick-access-icon">PL</span><span><strong>Player terakhir</strong><small id="quickRecentPlayerText">Buka profil yang terakhir dilihat</small></span><b>→</b></a>
-                    <a href="/#compare" data-home-tab-link="compare" class="quick-access-card"><span class="quick-access-icon">VS</span><span><strong>Bandingkan player</strong><small>Progres, Army, War/CWL</small></span><b>→</b></a>
+                    <a id="quickRecentClan" href="/clan.html" class="quick-access-card"><span class="quick-access-icon">CL</span><span><strong data-i18n="home.lastClan">Clan terakhir</strong><small id="quickRecentClanText" data-i18n="home.lastClanHint">Buka clan yang terakhir dilihat</small></span><b>→</b></a>
+                    <a id="quickRecentPlayer" href="/player.html" class="quick-access-card"><span class="quick-access-icon">PL</span><span><strong data-i18n="home.lastPlayer">Player terakhir</strong><small id="quickRecentPlayerText" data-i18n="home.lastPlayerHint">Buka profil yang terakhir dilihat</small></span><b>→</b></a>
+                    <a href="/#compare" data-home-tab-link="compare" class="quick-access-card"><span class="quick-access-icon">VS</span><span><strong data-i18n="home.comparePlayers">Bandingkan player</strong><small>Progres, Army, War/CWL</small></span><b>→</b></a>
                 </div>
             </section>
             <section class="landing-features" aria-label="Fitur utama">
-                <div class="landing-feature-card"><span>01</span><strong>War Command Center</strong><p>Roster, serangan tersisa, CWL standings, dan target cleanup.</p><a href="/#clan" data-home-tab-link="clan">Buka dashboard →</a></div>
-                <div class="landing-feature-card"><span>02</span><strong>Player Progress</strong><p>Audit Army, rushed check, upgrade planner, dan battle log.</p><a href="/#player" data-home-tab-link="player">Cari player →</a></div>
-                <div class="landing-feature-card"><span>03</span><strong>Ranked League</strong><p>Riwayat serangan, pertahanan, bintang, dan destruksi.</p><a href="/player.html#ranked-battles">Lihat battle log →</a></div>
+                <div class="landing-feature-card"><span>01</span><strong>War Command Center</strong><p data-i18n="home.featureWar">Roster, serangan tersisa, CWL standings, dan target cleanup.</p><a href="/#clan" data-home-tab-link="clan"><span data-i18n="home.openDashboard">Buka dashboard</span> →</a></div>
+                <div class="landing-feature-card"><span>02</span><strong>Player Progress</strong><p data-i18n="home.featurePlayer">Audit Army, rushed check, upgrade planner, dan battle log.</p><a href="/#player" data-home-tab-link="player"><span data-i18n="home.findPlayer">Cari player</span> →</a></div>
+                <div class="landing-feature-card"><span>03</span><strong>Ranked League</strong><p data-i18n="home.featureRanked">Riwayat serangan, pertahanan, bintang, dan destruksi.</p><a href="/player.html#ranked-battles"><span data-i18n="home.viewBattleLog">Lihat battle log</span> →</a></div>
             </section>
             <section class="landing-stats" aria-label="Statistik akses">
-                <div><span>Clan tersimpan</span><strong id="landingClanCount">0</strong></div><div><span>Player tersimpan</span><strong id="landingPlayerCount">0</strong></div><div><span>Clan populer</span><strong id="landingPopularCount">0</strong></div><div><span>Mode tersedia</span><strong>3</strong></div>
+                <div><span data-i18n="home.savedClans">Clan tersimpan</span><strong id="landingClanCount">0</strong></div><div><span data-i18n="home.savedPlayers">Player tersimpan</span><strong id="landingPlayerCount">0</strong></div><div><span data-i18n="home.popularClans">Clan populer</span><strong id="landingPopularCount">0</strong></div><div><span data-i18n="home.availableModes">Mode tersedia</span><strong>3</strong></div>
             </section>
 
                 </div>
                 <aside class="landing-sidebar" aria-label="Riwayat dan clan populer">
             <section class="recent-overview" aria-label="Terakhir dibuka">
-                <div class="recent-panel"><div class="recent-heading"><h3>Clan terakhir dibuka</h3><span>Maks. 5 clan</span></div><ol id="recentClans" class="recent-list"><li class="recent-empty">Belum ada clan yang dibuka di browser ini.</li></ol></div>
-                <div class="recent-panel"><div class="recent-heading"><h3>Pemain terakhir dibuka</h3><span>Maks. 5 pemain</span></div><ol id="recentPlayers" class="recent-list"><li class="recent-empty">Belum ada profil pemain yang dibuka di browser ini.</li></ol></div>
-                <div class="recent-panel"><div class="recent-heading"><h3>Clan populer</h3><span>Arsip snapshot</span></div><ol id="popularClans" class="recent-list"><li class="recent-empty">Memuat clan dari arsip...</li></ol></div>
+                <div class="recent-panel"><div class="recent-heading"><h3 data-i18n="home.recentClans">Clan terakhir dibuka</h3><span data-i18n="home.maxClans">Maks. 5 clan</span></div><ol id="recentClans" class="recent-list"><li class="recent-empty" data-i18n="home.noClans">Belum ada clan yang dibuka di browser ini.</li></ol></div>
+                <div class="recent-panel"><div class="recent-heading"><h3 data-i18n="home.recentPlayers">Pemain terakhir dibuka</h3><span data-i18n="home.maxPlayers">Maks. 5 pemain</span></div><ol id="recentPlayers" class="recent-list"><li class="recent-empty" data-i18n="home.noPlayers">Belum ada profil pemain yang dibuka di browser ini.</li></ol></div>
+                <div class="recent-panel"><div class="recent-heading"><h3 data-i18n="home.popularClans">Clan populer</h3><span data-i18n="home.snapshotArchive">Arsip snapshot</span></div><ol id="popularClans" class="recent-list"><li class="recent-empty" data-i18n="home.loadingArchive">Memuat clan dari arsip...</li></ol></div>
             </section>
                 </aside>
             </div>
 
-            <section class="access-overview" aria-label="Akses cepat">
-                <a href="/#player" data-home-tab-link="player" class="access-item"><span class="access-index">01</span><span><strong>Cari pemain</strong><small>Audit akun, Army, dan performa.</small></span><b aria-hidden="true">→</b></a>
-                <a href="/#compare" data-home-tab-link="compare" class="access-item"><span class="access-index">02</span><span><strong>Bandingkan pemain</strong><small>Lihat selisih progres dan kekuatan akun.</small></span><b aria-hidden="true">→</b></a>
-                <a href="#rankingsPanel" class="access-item"><span class="access-index">03</span><span><strong>Leaderboard</strong><small>Lihat ranking pemain dan clan.</small></span><b aria-hidden="true">→</b></a>
+            <section class="access-overview" aria-label="Akses cepat" data-i18n-aria-label="home.quickAccess">
+                <a href="/#player" data-home-tab-link="player" class="access-item"><span class="access-index">01</span><span><strong data-i18n="home.accessPlayer">Cari pemain</strong><small data-i18n="home.accessPlayerHint">Audit akun, Army, dan performa.</small></span><b aria-hidden="true">→</b></a>
+                <a href="/#compare" data-home-tab-link="compare" class="access-item"><span class="access-index">02</span><span><strong data-i18n="home.accessCompare">Bandingkan pemain</strong><small data-i18n="home.accessCompareHint">Lihat selisih progres dan kekuatan akun.</small></span><b aria-hidden="true">→</b></a>
+                <a href="#rankingsPanel" class="access-item"><span class="access-index">03</span><span><strong>Leaderboard</strong><small data-i18n="home.accessRankingsHint">Lihat ranking pemain dan clan.</small></span><b aria-hidden="true">→</b></a>
             </section>
         </section>
 
         <section id="rankingsPanel" class="rankings-panel" aria-labelledby="rankingsTitle">
             <div class="rankings-heading">
                 <div>
-                    <p class="rankings-eyebrow">LEADERBOARD RESMI</p>
-                    <h2 id="rankingsTitle">Peringkat global</h2>
-                    <p class="rankings-description">Lihat pemain dan klan teratas berdasarkan trofi dan poin klan.</p>
+                    <p class="rankings-eyebrow" data-i18n="home.officialLeaderboard">LEADERBOARD RESMI</p>
+                    <h2 id="rankingsTitle" data-i18n="home.rankingsTitle">Peringkat global</h2>
+                    <p class="rankings-description" data-i18n="home.rankingsDescription">Lihat pemain dan klan teratas berdasarkan trofi dan poin klan.</p>
                 </div>
                 <div class="ranking-location-control">
-                    <label for="rankingLocation">Lokasi</label>
-                    <select id="rankingLocation" aria-label="Pilih lokasi ranking">
+                    <label for="rankingLocation" data-i18n="home.location">Lokasi</label>
+                    <select id="rankingLocation" aria-label="Pilih lokasi ranking" data-i18n-aria-label="home.selectLocation">
                         <option value="global">Global</option>
                     </select>
-                    <button id="refreshRankings" type="button" title="Muat ulang ranking" aria-label="Muat ulang ranking">↻</button>
+                    <button id="refreshRankings" type="button" title="Muat ulang ranking" aria-label="Muat ulang ranking" data-i18n-title="home.refreshRankings" data-i18n-aria-label="home.refreshRankings">↻</button>
                 </div>
             </div>
-            <div class="ranking-tabs" role="tablist" aria-label="Kategori ranking">
-                <button type="button" class="ranking-tab active" id="rankingPlayersTab" role="tab" aria-selected="true" data-ranking="players">Pemain · Home Village</button>
-                <button type="button" class="ranking-tab" id="rankingClansTab" role="tab" aria-selected="false" data-ranking="clans">Klan · Poin klan</button>
+            <div class="ranking-tabs" role="tablist" aria-label="Kategori ranking" data-i18n-aria-label="home.rankingCategories">
+                <button type="button" class="ranking-tab active" id="rankingPlayersTab" role="tab" aria-selected="true" data-ranking="players" data-i18n="home.rankingPlayers">Pemain · Home Village</button>
+                <button type="button" class="ranking-tab" id="rankingClansTab" role="tab" aria-selected="false" data-ranking="clans" data-i18n="home.rankingClans">Klan · Poin klan</button>
             </div>
             <div class="ranking-summary">
-                <strong id="rankingCaption">Top pemain Home Village</strong>
-                <span id="rankingUpdated">Memuat ranking…</span>
+                <strong id="rankingCaption" data-i18n="home.rankingCaption">Top pemain Home Village</strong>
+                <span id="rankingUpdated" data-i18n="home.loadingRankings">Memuat ranking…</span>
             </div>
-            <p id="rankingStatus" class="ranking-status" role="status" aria-live="polite">Mengambil leaderboard global…</p>
+            <p id="rankingStatus" class="ranking-status" role="status" aria-live="polite" data-i18n="home.loadingLeaderboard">Mengambil leaderboard global…</p>
             <div class="ranking-table-wrap" id="rankingTableWrap" hidden>
                 <table class="ranking-table">
                     <thead id="rankingHead"></thead>
                     <tbody id="rankingRows"></tbody>
                 </table>
             </div>
-            <p class="ranking-footnote">Data ranking diambil dari API Clash of Clans dan dapat berubah. Peringkat War/CWL tidak termasuk di leaderboard ini.</p>
+            <p class="ranking-footnote" data-i18n="home.rankingsFootnote">Data ranking diambil dari API Clash of Clans dan dapat berubah. Peringkat War/CWL tidak termasuk di leaderboard ini.</p>
         </section>
 
-        <div id="statusMessage" class="hidden loading-state" role="status"><span class="loading-spinner" aria-hidden="true"></span><span>Memuat data klan…</span></div>
+        <div id="statusMessage" class="hidden loading-state" role="status"><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="clan.loading">Memuat data klan…</span></div>
 
         <div id="clanResult" class="hidden space-y-4">
             <section class="rounded border border-slate-200 bg-white px-4 py-3">
                 <div class="grid gap-3 lg:grid-cols-[auto_1fr_auto] lg:items-center">
-                    <img id="clanBadge" src="" alt="Badge clan" class="h-14 w-14">
+                    <img id="clanBadge" src="" alt="Badge clan" data-i18n-alt="clan.badgeAlt" class="h-14 w-14">
                     <div class="min-w-0">
                         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
                             <h2 id="clanName" class="truncate text-xl font-bold"></h2>
-                            <span class="rounded bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700">Level <span id="clanLevel"></span></span>
-                            <span class="rounded bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700"><span id="clanPoints"></span> trofi</span>
-                            <span class="rounded bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700"><span id="clanMembersCount"></span>/50 anggota</span>
+                            <span class="rounded bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700"><span data-i18n="clan.levelWord">Level</span> <span id="clanLevel"></span></span>
+                            <span class="rounded bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700"><span id="clanPoints"></span> <span data-i18n="clan.trophiesWord">trofi</span></span>
+                            <span class="rounded bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700"><span id="clanMembersCount"></span>/50 <span data-i18n="clan.membersWord">anggota</span></span>
                         </div>
                         <p id="clanDesc" class="mt-1 line-clamp-2 text-sm text-slate-500"></p>
                     </div>
                     <div class="clan-actions text-xs text-slate-500 lg:text-right">
                         <div>
                             <p id="warUpdated"></p>
-                            <p>Penyegaran otomatis tiap 2 menit</p>
+                            <p data-i18n="clan.refreshInfo">Penyegaran otomatis tiap 2 menit</p>
                         </div>
-                        <a id="joinClanLink" class="join-clan-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Buka profil clan di Clash of Clans">Join Clan <span aria-hidden="true">↗</span></a>
+                        <a id="joinClanLink" class="join-clan-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Buka profil clan di Clash of Clans" data-i18n-aria-label="clan.openInGame"><span data-i18n="clan.join">Join Clan</span> <span aria-hidden="true">↗</span></a>
                     </div>
                 </div>
             </section>
 
-            <nav id="clanSectionNav" class="clan-section-nav" aria-label="Navigasi dashboard clan">
-                <a href="#clan-overview">Overview</a><a href="#clan-war">War</a><a href="#cwl-standings">CWL</a><a href="#war-roster">Roster</a><a href="#clan-performance">Performance</a><a href="#clan-activity">Aktivitas</a><a href="#clan-actions">Laporan</a>
+            <nav id="clanSectionNav" class="clan-section-nav" aria-label="Navigasi dashboard clan" data-i18n-aria-label="clan.dashboardNavigation">
+                <a href="#clan-overview" data-i18n="clan.nav.overview">Overview</a><a href="#clan-war">War</a><a href="#cwl-standings">CWL</a><a href="#war-roster">Roster</a><a href="#clan-performance" data-i18n="clan.nav.performance">Performance</a><a href="#clan-activity" data-i18n="clan.nav.activity">Aktivitas</a><a href="#clan-actions" data-i18n="clan.nav.reports">Laporan</a>
             </nav>
 
             <section id="clan-overview" class="clan-overview" aria-labelledby="clanOverviewTitle">
-                <div class="clan-overview-heading"><div><p class="clan-overview-eyebrow">CLAN OVERVIEW</p><h2 id="clanOverviewTitle">Ringkasan operasional</h2></div><span id="clanDataFreshness" class="data-freshness">Menunggu data…</span></div>
+                <div class="clan-overview-heading"><div><p class="clan-overview-eyebrow">CLAN OVERVIEW</p><h2 id="clanOverviewTitle" data-i18n="clan.overview">Ringkasan operasional</h2></div><span id="clanDataFreshness" class="data-freshness" data-i18n="clan.waiting">Menunggu data…</span></div>
                 <div class="clan-overview-grid">
-                    <div><span>Rata-rata TH</span><strong id="overviewAverageTh">—</strong><small id="overviewThRange">Belum tersedia</small></div>
-                    <div><span>War saat ini</span><strong id="overviewWarState">Memuat…</strong><small id="overviewWarScore">Menunggu data war</small></div>
-                    <div><span>Posisi CWL</span><strong id="overviewCwlPosition">—</strong><small id="overviewCwlMeta">Belum tersedia</small></div>
-                    <div><span>Perlu review</span><strong id="overviewReviewCount">—</strong><small id="overviewActiveCount">Menunggu snapshot</small></div>
-                    <div><span>Total donasi</span><strong id="overviewDonations">—</strong><small>Musim berjalan</small></div>
-                    <div><span>Komposisi anggota</span><strong id="overviewMembers">—</strong><small id="overviewRoles">Belum tersedia</small></div>
+                    <div><span data-i18n="clan.averageTh">Rata-rata TH</span><strong id="overviewAverageTh">—</strong><small id="overviewThRange" data-i18n="clan.notAvailable">Belum tersedia</small></div>
+                    <div><span data-i18n="clan.currentWar">War saat ini</span><strong id="overviewWarState" data-i18n="home.loadingShort">Memuat…</strong><small id="overviewWarScore" data-i18n="clan.waitingWar">Menunggu data war</small></div>
+                    <div><span data-i18n="clan.cwlPosition">Posisi CWL</span><strong id="overviewCwlPosition">—</strong><small id="overviewCwlMeta" data-i18n="clan.notAvailable">Belum tersedia</small></div>
+                    <div><span data-i18n="clan.review">Perlu review</span><strong id="overviewReviewCount">—</strong><small id="overviewActiveCount" data-i18n="clan.waitingSnapshot">Menunggu snapshot</small></div>
+                    <div><span data-i18n="clan.donations">Total donasi</span><strong id="overviewDonations">—</strong><small data-i18n="clan.currentSeason">Musim berjalan</small></div>
+                    <div><span data-i18n="clan.memberComposition">Komposisi anggota</span><strong id="overviewMembers">—</strong><small id="overviewRoles" data-i18n="clan.notAvailable">Belum tersedia</small></div>
                 </div>
-                <div class="clan-profile-grid" aria-label="Informasi profil klan">
+                <div class="clan-profile-grid" aria-label="Informasi profil klan" data-i18n-aria-label="clan.profileInformation">
                     <section class="clan-profile-card" aria-labelledby="clanIdentityTitle">
-                        <h3 id="clanIdentityTitle">Profil & keanggotaan</h3>
+                        <h3 id="clanIdentityTitle" data-i18n="clan.identity">Profil & keanggotaan</h3>
                         <dl>
-                            <div><dt>Pemimpin</dt><dd><a id="profileLeader" href="#">—</a></dd></div>
-                            <div><dt>Lokasi</dt><dd id="profileLocation">—</dd></div>
-                            <div><dt>Bahasa chat</dt><dd id="profileLanguage">—</dd></div>
-                            <div><dt>Tipe klan</dt><dd id="profileType">—</dd></div>
-                            <div><dt>Ramah keluarga</dt><dd id="profileFamilyFriendly">—</dd></div>
+                            <div><dt data-i18n="clan.leader">Pemimpin</dt><dd><a id="profileLeader" href="#">—</a></dd></div>
+                            <div><dt data-i18n="clan.location">Lokasi</dt><dd id="profileLocation">—</dd></div>
+                            <div><dt data-i18n="clan.chatLanguage">Bahasa chat</dt><dd id="profileLanguage">—</dd></div>
+                            <div><dt data-i18n="clan.type">Tipe klan</dt><dd id="profileType">—</dd></div>
+                            <div><dt data-i18n="clan.familyFriendly">Ramah keluarga</dt><dd id="profileFamilyFriendly">—</dd></div>
                         </dl>
                     </section>
                     <section class="clan-profile-card" aria-labelledby="clanEntryTitle">
-                        <h3 id="clanEntryTitle">Syarat bergabung</h3>
+                        <h3 id="clanEntryTitle" data-i18n="clan.joinRules">Syarat bergabung</h3>
                         <dl>
-                            <div><dt>Minimal Town Hall</dt><dd id="profileRequiredTh">—</dd></div>
-                            <div><dt>Minimal trofi</dt><dd id="profileRequiredTrophies">—</dd></div>
-                            <div><dt>Minimal trofi Builder Base</dt><dd id="profileRequiredBuilderTrophies">—</dd></div>
+                            <div><dt data-i18n="clan.minTh">Minimal Town Hall</dt><dd id="profileRequiredTh">—</dd></div>
+                            <div><dt data-i18n="clan.minTrophies">Minimal trofi</dt><dd id="profileRequiredTrophies">—</dd></div>
+                            <div><dt data-i18n="clan.minBuilderTrophies">Minimal trofi Builder Base</dt><dd id="profileRequiredBuilderTrophies">—</dd></div>
                         </dl>
-                        <p class="clan-profile-note">API memberikan batas trofi, bukan nama liga persyaratan.</p>
+                        <p class="clan-profile-note" data-i18n="clan.requirementNote">API memberikan batas trofi, bukan nama liga persyaratan.</p>
                     </section>
                     <section class="clan-profile-card" aria-labelledby="clanRecordTitle">
-                        <h3 id="clanRecordTitle">Rekam jejak & Capital</h3>
+                        <h3 id="clanRecordTitle" data-i18n="clan.recordCapital">Rekam jejak & Capital</h3>
                         <dl>
                             <div><dt>Clan War League</dt><dd id="profileWarLeague">—</dd></div>
-                            <div><dt>Menang / seri / kalah</dt><dd id="profileWarRecord">—</dd></div>
-                            <div><dt>Rentetan kemenangan</dt><dd id="profileWinStreak">—</dd></div>
-                            <div><dt>Frekuensi perang</dt><dd id="profileWarFrequency">—</dd></div>
-                            <div><dt>Log perang publik</dt><dd id="profileWarLogPublic">—</dd></div>
+                            <div><dt data-i18n="clan.warRecord">Menang / seri / kalah</dt><dd id="profileWarRecord">—</dd></div>
+                            <div><dt data-i18n="clan.winStreak">Rentetan kemenangan</dt><dd id="profileWinStreak">—</dd></div>
+                            <div><dt data-i18n="clan.warFrequency">Frekuensi perang</dt><dd id="profileWarFrequency">—</dd></div>
+                            <div><dt data-i18n="clan.publicWarLog">Log perang publik</dt><dd id="profileWarLogPublic">—</dd></div>
                             <div><dt>Capital Hall</dt><dd id="profileCapitalHall">—</dd></div>
-                            <div><dt>Liga Capital</dt><dd id="profileCapitalLeague">—</dd></div>
-                            <div><dt>Trofi Capital</dt><dd id="profileCapitalPoints">—</dd></div>
+                            <div><dt data-i18n="clan.capitalLeague">Liga Capital</dt><dd id="profileCapitalLeague">—</dd></div>
+                            <div><dt data-i18n="clan.capitalTrophies">Trofi Capital</dt><dd id="profileCapitalPoints">—</dd></div>
                         </dl>
                     </section>
                 </div>
@@ -220,21 +222,21 @@
                     <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                         <div>
                             <div class="flex flex-wrap items-center gap-2">
-                                <h2 id="warTitle" class="text-lg font-bold leading-6">Perang aktif</h2>
+                                <h2 id="warTitle" class="text-lg font-bold leading-6" data-i18n="clan.warActive">Perang aktif</h2>
                                 <span id="warPhase" class="rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700"></span>
                             </div>
                             <p id="warTimer" class="mt-1 text-sm font-semibold text-slate-700"></p>
                         </div>
-                        <nav id="warRounds" class="hidden flex flex-wrap gap-1.5" aria-label="Navigasi putaran CWL"></nav>
+                        <nav id="warRounds" class="hidden flex flex-wrap gap-1.5" aria-label="Navigasi putaran CWL" data-i18n-aria-label="clan.roundNavigation"></nav>
                     </div>
                 </div>
 
-                <p id="warStatus" class="loading-state px-4 py-4 text-sm" role="status"><span class="loading-spinner" aria-hidden="true"></span><span>Memuat data perang…</span></p>
+                <p id="warStatus" class="loading-state px-4 py-4 text-sm" role="status"><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="clan.loadingWar">Memuat data perang…</span></p>
 
                 <div id="warContent" class="hidden">
                     <div id="warCommandStrip" class="war-command-strip">
-                        <div><span id="warCommandTone" class="war-command-indicator"></span><div><strong id="warCommandText">Menilai kondisi perang…</strong><small id="warCommandDetail"></small></div></div>
-                        <button id="showPendingRoster" type="button">Tampilkan yang belum menyerang</button>
+                        <div><span id="warCommandTone" class="war-command-indicator"></span><div><strong id="warCommandText" data-i18n="clan.assessingWar">Menilai kondisi perang…</strong><small id="warCommandDetail"></small></div></div>
+                        <button id="showPendingRoster" type="button" data-i18n="clan.showPending">Tampilkan yang belum menyerang</button>
                     </div>
                     <div id="warProjection" class="war-projection"></div>
                     <div class="grid border-b border-slate-200 md:grid-cols-4">
@@ -244,17 +246,17 @@
                             <p id="warClanScore" class="text-sm font-semibold text-blue-700"></p>
                         </div>
                         <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
-                            <p class="text-xs font-semibold uppercase text-slate-500">Lawan</p>
+                            <p class="text-xs font-semibold uppercase text-slate-500" data-i18n="clan.opponent">Lawan</p>
                             <h3 class="mt-1 truncate text-base font-bold"><a id="warOpponentName" class="war-opponent-link"></a></h3>
                             <p id="warOpponentScore" class="text-sm font-semibold text-rose-700"></p>
                         </div>
                         <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
-                            <p class="text-xs font-semibold uppercase text-slate-500">Serangan</p>
+                            <p class="text-xs font-semibold uppercase text-slate-500" data-i18n="home.attacks">Serangan</p>
                             <p id="warRemaining" class="mt-1 text-base font-bold"></p>
                             <p id="warAttackUsage" class="text-xs text-slate-500"></p>
                         </div>
                         <div class="px-4 py-3">
-                            <p class="text-xs font-semibold uppercase text-slate-500">Perlu follow up</p>
+                            <p class="text-xs font-semibold uppercase text-slate-500" data-i18n="clan.followUp">Perlu follow up</p>
                             <p id="warPendingCount" class="mt-1 text-base font-bold"></p>
                             <p id="warPendingNames" class="truncate text-xs text-slate-500"></p>
                         </div>
@@ -266,7 +268,7 @@
                                 <span id="cwl-standings" class="anchor-target" aria-hidden="true"></span>
                                 <div class="mb-2 flex flex-wrap items-end justify-between gap-2">
                                     <div>
-                                        <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Peringkat CWL</h3>
+                                        <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600" data-i18n="clan.cwlStandings">Peringkat CWL</h3>
                                         <p id="cwlStandingsMeta" class="mt-0.5 text-xs text-slate-500"></p>
                                     </div>
                                     <span id="cwlStandingsLeague" class="cwl-league-badge" aria-live="polite"></span>
@@ -275,10 +277,10 @@
                                     <table class="w-full text-left text-xs">
                                         <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                             <tr>
-                                                <th class="px-3 py-2">Pos</th>
+                                                <th class="px-3 py-2" data-i18n="clan.positionShort">Pos</th>
                                                 <th class="px-3 py-2">Clan</th>
-                                                <th class="px-3 py-2 text-right">Bintang</th>
-                                                <th class="px-3 py-2 text-right">% Destruksi</th>
+                                                <th class="px-3 py-2 text-right" data-i18n="clan.stars">Bintang</th>
+                                                <th class="px-3 py-2 text-right" data-i18n="clan.destructionPercent">% Destruksi</th>
                                             </tr>
                                         </thead>
                                         <tbody id="cwlStandingsTable" class="divide-y divide-slate-200 bg-white"></tbody>
@@ -288,29 +290,29 @@
                             </section>
                             <section id="war-roster" class="clan-anchor-section">
                                 <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
-                                    <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Roster perang</h3>
+                                    <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600" data-i18n="clan.warRoster">Roster perang</h3>
                                     <div class="flex flex-wrap gap-1.5">
-                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="all">Semua</button>
-                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="pending">Belum</button>
-                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="done">Sudah</button>
+                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="all" data-i18n="clan.all">Semua</button>
+                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="pending" data-i18n="clan.pending">Belum</button>
+                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="done" data-i18n="clan.done">Sudah</button>
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="low">0–1★</button>
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="triple">3★</button>
-                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="missed">Missed</button>
-                                        <select id="rosterTownHall" class="roster-select" aria-label="Filter Town Hall"><option value="all">Semua TH</option></select>
-                                        <select id="rosterSort" class="roster-select" aria-label="Urutkan roster"><option value="position">Urut posisi</option><option value="remaining">Sisa serangan</option><option value="stars">Bintang</option><option value="destruction">Destruksi</option><option value="th">Town Hall</option></select>
+                                        <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="missed" data-i18n="clan.missed">Terlewat</button>
+                                        <select id="rosterTownHall" class="roster-select" aria-label="Filter Town Hall"><option value="all" data-i18n="clan.allTh">Semua TH</option></select>
+                                        <select id="rosterSort" class="roster-select" aria-label="Urutkan roster" data-i18n-aria-label="clan.sortRoster"><option value="position" data-i18n="clan.sortPosition">Urut posisi</option><option value="remaining" data-i18n="clan.remainingAttacks">Sisa serangan</option><option value="stars" data-i18n="clan.stars">Bintang</option><option value="destruction" data-i18n="clan.destruction">Destruksi</option><option value="th">Town Hall</option></select>
                                     </div>
                                 </div>
                                 <div class="max-h-[520px] overflow-auto rounded border border-slate-200">
                                     <table class="w-full text-left text-xs">
                                         <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                             <tr>
-                                                <th class="px-3 py-2">Pos</th>
-                                                <th class="px-3 py-2">Player</th>
+                                                <th class="px-3 py-2" data-i18n="clan.positionShort">Pos</th>
+                                                <th class="px-3 py-2" data-i18n="home.player">Pemain</th>
                                                 <th class="px-3 py-2">TH</th>
-                                                <th class="px-3 py-2">Atk</th>
-                                                <th class="px-3 py-2">Sisa</th>
-                                                <th class="px-3 py-2">Bintang</th>
-                                                <th class="px-3 py-2">% Destruksi</th>
+                                                <th class="px-3 py-2" data-i18n="clan.attackShort">Atk</th>
+                                                <th class="px-3 py-2" data-i18n="clan.remainingShort">Sisa</th>
+                                                <th class="px-3 py-2" data-i18n="clan.stars">Bintang</th>
+                                                <th class="px-3 py-2" data-i18n="clan.destructionPercent">% Destruksi</th>
                                                 <th class="px-3 py-2">Status</th>
                                             </tr>
                                         </thead>
@@ -322,17 +324,17 @@
                             <section id="matchup-map" class="clan-anchor-section">
                                 <div class="mb-2 flex items-center justify-between">
                                     <div><h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Matchup & cleanup map</h3><p id="targetSummary" class="text-xs text-slate-500"></p></div>
-                                    <div class="target-filters"><button type="button" data-target-filter="all">Semua</button><button type="button" data-target-filter="cleanup">Perlu cleanup</button><button type="button" data-target-filter="untouched">Belum disentuh</button></div>
+                                    <div class="target-filters"><button type="button" data-target-filter="all" data-i18n="clan.all">Semua</button><button type="button" data-target-filter="cleanup" data-i18n="clan.cleanupNeeded">Perlu cleanup</button><button type="button" data-target-filter="untouched" data-i18n="clan.untouched">Belum disentuh</button></div>
                                 </div>
                                 <div class="max-h-[360px] overflow-auto rounded border border-slate-200">
                                     <table class="w-full text-left text-xs">
                                         <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                             <tr>
-                                                <th class="px-3 py-2">Pos</th>
+                                                <th class="px-3 py-2" data-i18n="clan.positionShort">Pos</th>
                                                 <th class="px-3 py-2">Defender</th>
                                                 <th class="px-3 py-2">TH</th>
                                                 <th class="px-3 py-2">Best</th>
-                                                <th class="px-3 py-2">Diserang</th>
+                                                <th class="px-3 py-2" data-i18n="clan.attacked">Diserang</th>
                                                 <th class="px-3 py-2">Status / best attacker</th>
                                             </tr>
                                         </thead>
@@ -345,32 +347,32 @@
                         <aside class="space-y-4">
                             <section id="clan-performance" class="rounded border border-slate-200 p-3 clan-anchor-section">
                                 <div class="mb-3 flex items-center justify-between">
-                                    <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600">Performance</h3>
-                                    <span id="performanceScope" class="text-xs text-slate-500">War aktif</span>
+                                    <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600" data-i18n="clan.nav.performance">Performance</h3>
+                                    <span id="performanceScope" class="text-xs text-slate-500" data-i18n="clan.warActive">Perang aktif</span>
                                 </div>
                                 <div id="performanceKpis" class="performance-kpis"></div>
-                                <div id="performanceDistribution" class="performance-distribution" aria-label="Distribusi hasil serangan"></div>
+                                <div id="performanceDistribution" class="performance-distribution" aria-label="Distribusi hasil serangan" data-i18n-aria-label="clan.attackDistribution"></div>
                                 <div id="performanceChart" class="space-y-3"></div>
                                 <div id="performancePager" class="mt-3 hidden items-center justify-between border-t border-slate-200 pt-3">
-                                    <button id="performancePrev" type="button" class="rounded border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">Prev</button>
+                                    <button id="performancePrev" type="button" class="rounded border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" data-i18n="player.previousPage">Sebelumnya</button>
                                     <span id="performancePageInfo" class="text-xs font-semibold text-slate-500"></span>
-                                    <button id="performanceNext" type="button" class="rounded border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">Next</button>
+                                    <button id="performanceNext" type="button" class="rounded border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40" data-i18n="player.nextPage">Berikutnya</button>
                                 </div>
                             </section>
 
                             <section class="rounded border border-slate-200 p-3">
                                 <div class="mb-2 flex items-center justify-between gap-2">
-                                    <h3 id="roundRecapTitle" class="text-sm font-bold uppercase tracking-wide text-slate-600">Rekap CWL</h3>
+                                    <h3 id="roundRecapTitle" class="text-sm font-bold uppercase tracking-wide text-slate-600" data-i18n="clan.cwlRecap">Rekap CWL</h3>
                                     <span id="roundRecapMeta" class="text-xs text-slate-500"></span>
                                 </div>
                                 <div class="max-h-[420px] overflow-auto rounded border border-slate-200">
                                     <table class="w-full text-left text-xs">
                                         <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                             <tr>
-                                                <th class="px-3 py-2">Player</th>
-                                                <th class="px-3 py-2">Round detail</th>
-                                                <th class="px-3 py-2">Bintang</th>
-                                                <th class="px-3 py-2">Destruksi</th>
+                                                <th class="px-3 py-2" data-i18n="home.player">Pemain</th>
+                                                <th class="px-3 py-2" data-i18n="clan.roundDetail">Detail ronde</th>
+                                                <th class="px-3 py-2" data-i18n="clan.stars">Bintang</th>
+                                                <th class="px-3 py-2" data-i18n="clan.destruction">Destruksi</th>
                                             </tr>
                                         </thead>
                                         <tbody id="roundPerformanceTable" class="divide-y divide-slate-200 bg-white"></tbody>
@@ -385,10 +387,10 @@
             <section id="clan-activity" class="rounded border border-slate-200 bg-white clan-anchor-section">
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h2 class="text-lg font-bold leading-6">Anggota Klan</h2>
-                        <p id="healthMeta" class="mt-1 text-sm text-slate-500">Snapshot harian dan tren aktivitas anggota.</p>
+                        <h2 class="text-lg font-bold leading-6" data-i18n="clan.membersTitle">Anggota Klan</h2>
+                        <p id="healthMeta" class="mt-1 text-sm text-slate-500" data-i18n="clan.activityIntro">Snapshot harian dan tren aktivitas anggota.</p>
                     </div>
-                    <a id="healthCsvLink" href="#" class="hidden rounded border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Export CSV</a>
+                    <a id="healthCsvLink" href="#" class="hidden rounded border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" data-i18n="compare.exportCsv">Ekspor CSV</a>
                 </div>
                 <div class="grid border-b border-slate-200 md:grid-cols-3">
                     <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
@@ -397,24 +399,24 @@
                         <p id="healthLatest" class="text-xs text-slate-500"></p>
                     </div>
                     <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
-                        <p class="text-xs font-semibold uppercase text-slate-500">Perlu review</p>
+                        <p class="text-xs font-semibold uppercase text-slate-500" data-i18n="clan.review">Perlu review</p>
                         <p id="healthReviewCount" class="mt-1 text-base font-bold">-</p>
-                        <p class="text-xs text-slate-500">Donasi nol atau tren stagnan</p>
+                        <p class="text-xs text-slate-500" data-i18n="clan.reviewHint">Donasi nol atau tren stagnan</p>
                     </div>
                     <div class="px-4 py-3">
                         <p class="text-xs font-semibold uppercase text-slate-500">Baseline</p>
                         <p id="healthBaseline" class="mt-1 text-base font-bold">-</p>
-                        <p class="text-xs text-slate-500">Perbandingan 7 dan 30 hari</p>
+                        <p class="text-xs text-slate-500" data-i18n="clan.baselineHint">Perbandingan 7 dan 30 hari</p>
                     </div>
                 </div>
                 <div class="p-4">
                     <div class="health-toolbar">
-                        <label><span class="sr-only">Cari anggota</span><input id="healthSearch" type="search" placeholder="Cari nama atau role…" autocomplete="off"></label>
-                        <div class="health-segments" aria-label="Filter status anggota">
-                            <button type="button" data-health-filter="all" class="active">Semua</button>
-                            <button type="button" data-health-filter="review">Perlu review</button>
-                            <button type="button" data-health-filter="stable">Stabil</button>
-                            <button type="button" data-health-filter="zeroDonation">Donasi nol</button>
+                        <label><span class="sr-only" data-i18n="clan.searchMembers">Cari anggota</span><input id="healthSearch" type="search" placeholder="Cari nama atau role…" data-i18n-placeholder="clan.searchMembersPlaceholder" autocomplete="off"></label>
+                        <div class="health-segments" aria-label="Filter status anggota" data-i18n-aria-label="clan.filterMemberStatus">
+                            <button type="button" data-health-filter="all" class="active" data-i18n="clan.all">Semua</button>
+                            <button type="button" data-health-filter="review" data-i18n="clan.review">Perlu review</button>
+                            <button type="button" data-health-filter="stable" data-i18n="clan.stable">Stabil</button>
+                            <button type="button" data-health-filter="zeroDonation" data-i18n="clan.zeroDonation">Donasi nol</button>
                         </div>
                         <span id="healthVisibleCount" class="health-visible-count"></span>
                     </div>
@@ -422,12 +424,12 @@
                         <table class="w-full text-left text-xs">
                             <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                 <tr>
-                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="name">Anggota</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="name" data-i18n="home.membersHeading">Anggota</button></th>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="role">Role</button></th>
-                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="trophies">Trofi</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="trophies" data-i18n="player.trophies">Trofi</button></th>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="delta">Delta 7h</button></th>
-                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="donations">Donasi</button></th>
-                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="ratio">Rasio</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="donations" data-i18n="player.donations">Donasi</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="ratio" data-i18n="clan.ratio">Rasio</button></th>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="status">Status</button></th>
                                 </tr>
                             </thead>
@@ -438,18 +440,18 @@
             </section>
 
             <section id="clan-actions" class="clan-actions-card clan-anchor-section">
-                <div><p class="clan-overview-eyebrow">CLAN REPORT</p><h2>Bagikan ringkasan operasional</h2><p id="clanReportSummary">Ringkasan tersedia setelah data klan dan perang dimuat.</p></div>
-                <div class="clan-actions-buttons"><button id="copyClanSummary" type="button">Salin ringkasan</button><button id="exportWarRoster" type="button" disabled>Export roster CSV</button></div>
+                <div><p class="clan-overview-eyebrow">CLAN REPORT</p><h2 data-i18n="clan.shareSummary">Bagikan ringkasan operasional</h2><p id="clanReportSummary" data-i18n="clan.summaryPending">Ringkasan tersedia setelah data klan dan perang dimuat.</p></div>
+                <div class="clan-actions-buttons"><button id="copyClanSummary" type="button" data-i18n="clan.copySummary">Salin ringkasan</button><button id="exportWarRoster" type="button" disabled data-i18n="clan.exportRoster">Ekspor roster CSV</button></div>
                 <span id="clanActionStatus" role="status" aria-live="polite"></span>
             </section>
 
         </div>
     </main>
     <dialog id="warMemberDialog" class="war-member-dialog">
-        <div class="war-dialog-head"><div><span id="warMemberPosition"></span><h2 id="warMemberName">Detail pemain</h2></div><button id="closeWarMemberDialog" type="button" aria-label="Tutup">×</button></div>
+        <div class="war-dialog-head"><div><span id="warMemberPosition"></span><h2 id="warMemberName" data-i18n="clan.playerDetail">Detail pemain</h2></div><button id="closeWarMemberDialog" type="button" aria-label="Tutup" data-i18n-aria-label="donation.close">×</button></div>
         <div id="warMemberDialogBody" class="war-dialog-body"></div>
     </dialog>
-    <footer class="mx-auto max-w-7xl px-4 py-5 text-center text-xs text-slate-500">Dikembangkan oleh Amerta Buana #28P08PG0G · <a data-donation-trigger href="https://saweria.co/masrajha">Dukung pengembangan</a></footer>
+    <footer class="mx-auto max-w-7xl px-4 py-5 text-center text-xs text-slate-500"><span data-i18n="player.footerDeveloper">Dikembangkan oleh Amerta Buana #28P08PG0G</span> · <a data-donation-trigger href="https://saweria.co/masrajha" data-i18n="player.footerSupport">Dukung pengembangan</a></footer>
 
     <script>
         let activeTag = null;
@@ -464,9 +466,11 @@
         let latestClanData = null;
         const freshness = { clan: null, war: null, health: null, cwl: null };
         const PERFORMANCE_PAGE_SIZE = 5;
+        const tr = (key, variables) => window.CocI18n.t(key, variables);
+        const formatLocalizedNumber = (value, options) => window.CocI18n.number(value, options);
         let performancePlayers = [];
         let performancePage = 1;
-        let performanceScopeLabel = 'War aktif';
+        let performanceScopeLabel = tr('clan.warActive');
         let healthMembers = [];
         let healthSort = { key: null, direction: 'asc' };
         let healthFilter = 'all';
@@ -543,7 +547,7 @@
                 compare.href = playerComparisonUrl(player.tag);
                 compare.className = 'ml-2 text-xs font-bold text-slate-500 hover:text-blue-700';
                 compare.textContent = '⇄';
-                compare.title = `Bandingkan ${player.name || player.tag} dengan pemain lain`;
+                compare.title = tr('clan.comparePlayer', { name: player.name || player.tag });
                 compare.setAttribute('aria-label', compare.title);
                 cell.appendChild(compare);
             } else {
@@ -580,8 +584,8 @@
             const newest = available.sort((a, b) => b[1] - a[1])[0];
             const missing = Object.values(freshness).filter(value => !value).length;
             setText('clanDataFreshness', newest
-                ? `${missing ? 'Data sebagian' : 'Data lengkap'} · terbaru ${newest[1].toLocaleString('id-ID')}`
-                : 'Belum ada data yang berhasil dimuat');
+                ? tr(missing ? 'clan.freshnessPartial' : 'clan.freshnessFull', { date: newest[1].toLocaleString(window.CocI18n.formatLocale) })
+                : tr('clan.freshnessUnknown'));
         }
 
         function renderClanOverview(data) {
@@ -589,20 +593,20 @@
             const members = data.memberList || [];
             const townHalls = members.map(member => Number(member.townHallLevel)).filter(Number.isFinite);
             const average = townHalls.length ? townHalls.reduce((sum, value) => sum + value, 0) / townHalls.length : null;
-            setText('overviewAverageTh', average === null ? '—' : average.toLocaleString('id-ID', { maximumFractionDigits: 1 }));
-            setText('overviewThRange', townHalls.length ? `TH ${Math.min(...townHalls)}–${Math.max(...townHalls)} · ${townHalls.length} profil` : 'Belum tersedia');
-            setText('overviewDonations', members.reduce((sum, member) => sum + Number(member.donations || 0), 0).toLocaleString('id-ID'));
+            setText('overviewAverageTh', average === null ? '—' : average.toLocaleString(window.CocI18n.formatLocale, { maximumFractionDigits: 1 }));
+            setText('overviewThRange', townHalls.length ? tr('clan.thRange', { min: Math.min(...townHalls), max: Math.max(...townHalls), count: townHalls.length }) : tr('clan.notAvailable'));
+            setText('overviewDonations', formatLocalizedNumber(members.reduce((sum, member) => sum + Number(member.donations || 0), 0)));
             setText('overviewMembers', `${data.members || members.length}/50`);
             const leadership = members.filter(member => ['leader', 'coLeader', 'admin'].includes(member.role)).length;
-            setText('overviewRoles', `${leadership} leader/co-leader/elder`);
+            setText('overviewRoles', tr('clan.leadershipCount', { count: leadership }));
             updateDataFreshness('clan', new Date().toISOString());
             refreshClanReport();
         }
 
         function renderClanProfile(data) {
             const number = value => value === null || value === undefined || value === ''
-                ? '—' : Number(value).toLocaleString('id-ID');
-            const yesNo = value => typeof value === 'boolean' ? (value ? 'Ya' : 'Tidak') : '—';
+                ? '—' : formatLocalizedNumber(Number(value));
+            const yesNo = value => typeof value === 'boolean' ? tr(value ? 'clan.yes' : 'clan.no') : '—';
             const leader = Array.isArray(data.memberList)
                 ? data.memberList.find(member => member.role === 'leader') : null;
             const leaderLink = document.getElementById('profileLeader');
@@ -610,15 +614,9 @@
             if (leader?.tag) leaderLink.href = playerProfileUrl(leader.tag);
             else leaderLink.removeAttribute('href');
 
-            const typeNames = { open: 'Terbuka', inviteOnly: 'Undangan', closed: 'Tertutup' };
-            const frequencyNames = {
-                always: 'Selalu', moreThanOncePerWeek: 'Lebih dari sekali seminggu',
-                oncePerWeek: 'Sekali seminggu', lessThanOncePerWeek: 'Kurang dari sekali seminggu',
-                never: 'Tidak pernah', unknown: 'Belum ditentukan'
-            };
             setText('profileLocation', data.location?.name || '—');
             setText('profileLanguage', data.chatLanguage?.name || '—');
-            setText('profileType', typeNames[data.type] || '—');
+            setText('profileType', data.type ? tr(`clan.type.${data.type}`) : '—');
             setText('profileFamilyFriendly', yesNo(data.isFamilyFriendly));
             setText('profileRequiredTh', number(data.requiredTownhallLevel));
             setText('profileRequiredTrophies', number(data.requiredTrophies));
@@ -626,7 +624,7 @@
             setText('profileWarLeague', data.warLeague?.name || '—');
             setText('profileWarRecord', [data.warWins, data.warTies, data.warLosses].map(number).join(' / '));
             setText('profileWinStreak', number(data.warWinStreak));
-            setText('profileWarFrequency', frequencyNames[data.warFrequency] || '—');
+            setText('profileWarFrequency', data.warFrequency ? tr(`clan.frequency.${data.warFrequency}`) : '—');
             setText('profileWarLogPublic', yesNo(data.isWarLogPublic));
             setText('profileCapitalHall', number(data.clanCapital?.capitalHallLevel));
             setText('profileCapitalLeague', data.capitalLeague?.name || '—');
@@ -637,12 +635,12 @@
             if (!latestClanData) return;
             const parts = [
                 `${latestClanData.name} (#${activeTag})`,
-                `Level ${latestClanData.clanLevel || '—'} · ${latestClanData.members || 0}/50 anggota`,
-                `Total donasi ${(latestClanData.memberList || []).reduce((sum, member) => sum + Number(member.donations || 0), 0).toLocaleString('id-ID')}`
+                tr('clan.reportMembers', { level: latestClanData.clanLevel || '—', count: latestClanData.members || 0 }),
+                tr('clan.reportDonations', { count: formatLocalizedNumber((latestClanData.memberList || []).reduce((sum, member) => sum + Number(member.donations || 0), 0)) })
             ];
             if (latestWarData?.clan && latestWarData?.opponent) parts.push(`${latestWarData.type || 'War'}: ${latestWarData.clan.stars}–${latestWarData.opponent.stars}★ vs ${latestWarData.opponent.name}`);
             const review = healthMembers.filter(member => member.status === 'review').length;
-            if (healthMembers.length) parts.push(`${review} anggota perlu review dari ${healthMembers.length}`);
+            if (healthMembers.length) parts.push(tr('clan.reportReview', { review, total: healthMembers.length }));
             setText('clanReportSummary', parts.join(' · '));
             document.getElementById('exportWarRoster').disabled = !latestWarData?.members?.length;
         }
@@ -655,16 +653,16 @@
             const totalQuota = data.attacksPerMember == null ? null : Number(data.teamSize || 0) * Number(data.attacksPerMember || 0);
             const opponentRemaining = totalQuota === null ? 0 : Math.max(0, totalQuota - Number(data.opponent?.attacks || 0));
             const hours = deadline ? Math.max(0, (deadline - new Date()) / 3600000) : null;
-            let tone = 'neutral'; let headline = 'Perang sedang dipantau';
-            if (data.state === 'preparation') { tone = 'info'; headline = 'Fase persiapan · roster belum menyerang'; }
-            else if (data.state === 'warEnded') { tone = clanStars > opponentStars ? 'safe' : clanStars < opponentStars ? 'danger' : 'warning'; headline = `Perang selesai · ${clanStars > opponentStars ? 'unggul' : clanStars < opponentStars ? 'tertinggal' : 'imbang'} ${Math.abs(clanStars - opponentStars)} bintang`; }
-            else if (hours !== null && hours <= 2 && pending.length) { tone = 'danger'; headline = `${pending.length} pemain belum selesai · waktu kurang dari 2 jam`; }
-            else if (pending.length || remaining) { tone = 'warning'; headline = `${remaining} serangan tersisa · ${pending.length} pemain perlu follow up`; }
-            else { tone = 'safe'; headline = 'Semua kuota serangan sudah digunakan'; }
+            let tone = 'neutral'; let headline = tr('clan.warMonitoring');
+            if (data.state === 'preparation') { tone = 'info'; headline = tr('clan.warPreparationHeadline'); }
+            else if (data.state === 'warEnded') { tone = clanStars > opponentStars ? 'safe' : clanStars < opponentStars ? 'danger' : 'warning'; headline = clanStars === opponentStars ? tr('clan.warEndedTied') : tr('clan.warEndedHeadline', { result: tr(clanStars > opponentStars ? 'clan.ahead' : 'clan.behind'), stars: Math.abs(clanStars - opponentStars) }); }
+            else if (hours !== null && hours <= 2 && pending.length) { tone = 'danger'; headline = tr('clan.warUrgent', { count: pending.length }); }
+            else if (pending.length || remaining) { tone = 'warning'; headline = tr('clan.warFollowUp', { attacks: remaining, players: pending.length }); }
+            else { tone = 'safe'; headline = tr('clan.warQuotaUsed'); }
             document.getElementById('warCommandStrip').dataset.tone = tone;
             document.getElementById('warCommandTone').className = `war-command-indicator ${tone}`;
             setText('warCommandText', headline);
-            setText('warCommandDetail', `${clanStars}–${opponentStars} bintang · ${data.clan?.attacks || 0}/${totalQuota ?? '—'} serangan · lawan masih memiliki ${opponentRemaining} kuota`);
+            setText('warCommandDetail', tr('clan.warCommandDetail', { ours: clanStars, theirs: opponentStars, used: data.clan?.attacks || 0, quota: totalQuota ?? '—', opponent: opponentRemaining }));
 
             const needed = Math.max(0, opponentStars + 1 - clanStars);
             const maxAdditional = remaining * 3;
@@ -679,23 +677,23 @@
             const ourReachableMaximum = Math.min(ourTheoreticalLimit, clanStars + maxAdditional);
             const opponentReachableMaximum = Math.min(opponentTheoreticalLimit, opponentStars + opponentRemaining * 3);
             let status;
-            if (data.state === 'warEnded') status = clanStars > opponentStars ? 'Menang berdasarkan bintang saat ini.' : clanStars < opponentStars ? 'Kalah berdasarkan bintang saat ini.' : 'Bintang seimbang; destruksi menjadi penentu.';
-            else if (ourReachableMaximum < opponentStars) status = 'Tidak dapat mengejar secara matematis dengan kuota tersisa.';
-            else if (clanStars > opponentReachableMaximum) status = 'Posisi aman secara matematis terhadap kuota lawan.';
-            else if (!remaining && clanStars <= opponentStars) status = 'Tidak ada serangan tersisa untuk menambah bintang.';
-            else status = needed ? `Butuh minimal ${needed} bintang tambahan, rata-rata ${(needed / Math.max(1, remaining)).toLocaleString('id-ID', { maximumFractionDigits: 2 })} per serangan.` : 'Sedang unggul, tetapi lawan masih dapat menambah bintang.';
+            if (data.state === 'warEnded') status = tr(clanStars > opponentStars ? 'clan.winByStars' : clanStars < opponentStars ? 'clan.lossByStars' : 'clan.tieByStars');
+            else if (ourReachableMaximum < opponentStars) status = tr('clan.cannotCatchUp');
+            else if (clanStars > opponentReachableMaximum) status = tr('clan.mathematicallySafe');
+            else if (!remaining && clanStars <= opponentStars) status = tr('clan.noAttacksLeft');
+            else status = needed ? tr('clan.starsNeeded', { stars: needed, average: formatLocalizedNumber(needed / Math.max(1, remaining), { maximumFractionDigits: 2 }) }) : tr('clan.leadNotSafe');
             const projection = document.getElementById('warProjection');
             projection.replaceChildren();
-            for (const [label, value] of [['Batas teoretis clan', `${ourTheoreticalLimit}★`], ['Batas teoretis lawan', `${opponentTheoreticalLimit}★`], ['Kebutuhan', status]]) {
+            for (const [label, value] of [[tr('clan.ourTheoreticalLimit'), `${ourTheoreticalLimit}★`], [tr('clan.opponentTheoreticalLimit'), `${opponentTheoreticalLimit}★`], [tr('clan.requirement'), status]]) {
                 const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); projection.appendChild(item);
             }
         }
 
-        function showWarStatus(message, preserveContent = false) {
+        function showWarStatus(message, preserveContent = false, loading = false) {
             const status = document.getElementById('warStatus');
             status.replaceChildren();
-            status.classList.toggle('loading-state', /^Memuat/i.test(message));
-            if (/^Memuat/i.test(message)) { const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); status.appendChild(spinner); }
+            status.classList.toggle('loading-state', loading);
+            if (loading) { const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); status.appendChild(spinner); }
             status.appendChild(document.createTextNode(message));
             document.getElementById('warStatus').classList.remove('hidden');
             if (!preserveContent) document.getElementById('warContent').classList.add('hidden');
@@ -707,7 +705,7 @@
             nav.classList.toggle('hidden', rounds.length === 0);
             if (!rounds.length) return;
 
-            const choices = [{ value: null, label: 'Aktif' },
+            const choices = [{ value: null, label: tr('clan.active') },
                 ...rounds.map(round => ({ value: round, label: `R${round}` }))];
 
             for (const choice of choices) {
@@ -723,7 +721,7 @@
                 button.addEventListener('click', () => {
                     selectedRound = choice.value;
                     renderRounds(rounds);
-                    showWarStatus('Memuat data perang...', true);
+                    showWarStatus(tr('clan.loadingWar'), true, true);
                     loadWar(activeTag);
                 });
                 nav.appendChild(button);
@@ -736,7 +734,7 @@
             const thSelect = document.getElementById('rosterTownHall');
             const selectedTh = thSelect.value || rosterTownHall;
             const townHalls = [...new Set((data.members || []).map(member => member.townhallLevel).filter(Boolean))].sort((a, b) => b - a);
-            thSelect.replaceChildren(new Option('Semua TH', 'all'), ...townHalls.map(th => new Option(`TH ${th}`, String(th))));
+            thSelect.replaceChildren(new Option(tr('clan.allTh'), 'all'), ...townHalls.map(th => new Option(`TH ${th}`, String(th))));
             thSelect.value = townHalls.map(String).includes(String(selectedTh)) ? String(selectedTh) : 'all';
             rosterTownHall = thSelect.value;
             const members = (data.members || []).filter(member => {
@@ -762,7 +760,7 @@
                 row.className = 'hover:bg-slate-50 roster-member-row';
                 row.tabIndex = 0;
                 const missed = data.state === 'warEnded' && member.attacksRemaining > 0;
-                const status = missed ? 'Missed' : member.attacksRemaining > 0 ? 'Belum' : 'Done';
+                const status = tr(missed ? 'clan.missed' : member.attacksRemaining > 0 ? 'clan.pending' : 'clan.done');
                 addCell(row, member.mapPosition);
                 addPlayerLinkCell(row, member);
                 addCell(row, member.townhallLevel);
@@ -776,14 +774,14 @@
                 roster.appendChild(row);
             }
             if (!members.length) {
-                const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 8; cell.className = 'px-3 py-5 text-center text-slate-500'; cell.textContent = 'Tidak ada anggota yang cocok dengan filter.'; row.appendChild(cell); roster.appendChild(row);
+                const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 8; cell.className = 'px-3 py-5 text-center text-slate-500'; cell.textContent = tr('clan.noRosterMatches'); row.appendChild(cell); roster.appendChild(row);
             }
         }
 
         function targetStatus(target) {
-            if (Number(target.bestStars) >= 3) return { key: 'cleared', label: 'Rata' };
-            if (Number(target.attacksReceived) > 0) return { key: 'cleanup', label: `Perlu cleanup · best ${target.bestStars || 0}★ ${formatPercent(target.bestDestruction)}%` };
-            return { key: 'untouched', label: 'Belum disentuh' };
+            if (Number(target.bestStars) >= 3) return { key: 'cleared', label: tr('clan.cleared') };
+            if (Number(target.attacksReceived) > 0) return { key: 'cleanup', label: tr('clan.cleanupStatus', { stars: target.bestStars || 0, destruction: formatPercent(target.bestDestruction) }) };
+            return { key: 'untouched', label: tr('clan.untouched') };
         }
 
         function renderTargets(data) {
@@ -792,7 +790,7 @@
             const targets = data.opponentMembers || [];
             const cleanup = targets.filter(target => targetStatus(target).key === 'cleanup').length;
             const untouched = targets.filter(target => targetStatus(target).key === 'untouched').length;
-            setText('targetSummary', `${cleanup} perlu cleanup · ${untouched} belum disentuh · ${targets.length - cleanup - untouched} rata`);
+            setText('targetSummary', tr('clan.targetSummary', { cleanup, untouched, cleared: targets.length - cleanup - untouched }));
             const visibleTargets = targets.filter(target => targetFilter === 'all' || targetStatus(target).key === targetFilter);
             for (const target of visibleTargets) {
                 const row = document.createElement('tr');
@@ -812,7 +810,7 @@
                 const cell = document.createElement('td');
                 cell.colSpan = 6;
                 cell.className = 'px-3 py-5 text-center text-slate-500';
-                cell.textContent = 'Tidak ada target dengan status ini.';
+                cell.textContent = tr('clan.noTargetMatches');
                 row.appendChild(cell);
                 tbody.appendChild(row);
             }
@@ -820,30 +818,30 @@
 
         function openWarMemberDialog(member, data) {
             const dialog = document.getElementById('warMemberDialog');
-            setText('warMemberName', member.name || member.tag || 'Pemain');
-            setText('warMemberPosition', `Posisi #${member.mapPosition || '—'} · TH ${member.townhallLevel || '—'}`);
+            setText('warMemberName', member.name || member.tag || tr('home.player'));
+            setText('warMemberPosition', tr('clan.memberPosition', { position: member.mapPosition || '—', th: member.townhallLevel || '—' }));
             const body = document.getElementById('warMemberDialogBody'); body.replaceChildren();
             const summary = document.createElement('div'); summary.className = 'war-dialog-summary';
-            for (const [label, value] of [['Serangan', `${member.attacksUsed}/${data.attacksPerMember ?? '—'}`], ['Bintang', member.starsEarned || 0], ['Destruksi', `${formatPercent(member.destructionAverage)}%`]]) {
+            for (const [label, value] of [[tr('home.attacks'), `${member.attacksUsed}/${data.attacksPerMember ?? '—'}`], [tr('clan.stars'), member.starsEarned || 0], [tr('clan.destruction'), `${formatPercent(member.destructionAverage)}%`]]) {
                 const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); summary.appendChild(item);
             }
             body.appendChild(summary);
             const targets = new Map((data.opponentMembers || []).map(target => [String(target.tag || '').toUpperCase(), target]));
             const list = document.createElement('div'); list.className = 'war-dialog-attacks';
-            if (!(member.attacks || []).length) list.appendChild(Object.assign(document.createElement('p'), { textContent: 'Belum ada serangan pada perang ini.' }));
+            if (!(member.attacks || []).length) list.appendChild(Object.assign(document.createElement('p'), { textContent: tr('clan.noWarAttacks') }));
             for (const [index, attack] of (member.attacks || []).entries()) {
                 const target = targets.get(String(attack.defenderTag || '').toUpperCase());
                 const item = document.createElement('article');
-                const label = document.createElement('span'); label.textContent = `Serangan ${index + 1}`;
+                const label = document.createElement('span'); label.textContent = tr('clan.attackOrdinal', { number: index + 1 });
                 const result = document.createElement('strong'); result.textContent = `${attack.stars || 0}★ · ${formatPercent(attack.destructionPercentage)}%`;
-                const detail = document.createElement('small'); detail.textContent = `Target #${target?.mapPosition || '—'} · ${target?.name || attack.defenderTag || 'Tidak diketahui'} · TH ${target?.townhallLevel || '—'}`;
+                const detail = document.createElement('small'); detail.textContent = tr('clan.attackTarget', { position: target?.mapPosition || '—', name: target?.name || attack.defenderTag || tr('clan.unknown'), th: target?.townhallLevel || '—' });
                 item.append(label, result, detail);
                 list.appendChild(item);
             }
             body.appendChild(list);
             const actions = document.createElement('div'); actions.className = 'war-dialog-actions';
-            const profile = document.createElement('a'); profile.href = playerProfileUrl(member.tag); profile.textContent = 'Buka profil';
-            const compare = document.createElement('a'); compare.href = playerComparisonUrl(member.tag); compare.textContent = 'Bandingkan pemain'; actions.append(profile, compare); body.appendChild(actions);
+            const profile = document.createElement('a'); profile.href = playerProfileUrl(member.tag); profile.textContent = tr('home.openProfile');
+            const compare = document.createElement('a'); compare.href = playerComparisonUrl(member.tag); compare.textContent = tr('home.accessCompare'); actions.append(profile, compare); body.appendChild(actions);
             if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
         }
 
@@ -853,7 +851,7 @@
             setText('cwlStandingsMeta', '');
             renderCwlLeagueBadge('');
             setText('overviewCwlPosition', '—');
-            setText('overviewCwlMeta', 'Standings tidak tersedia');
+            setText('overviewCwlMeta', tr('clan.standingsUnavailable'));
         }
 
         const cwlLeagueIcons = {
@@ -892,12 +890,12 @@
                 section.classList.add('hidden');
                 return;
             }
-            const rounds = data.loadedRounds?.length ? `Data R${data.loadedRounds.join(', R')}` : 'Belum ada war yang tersedia';
-            setText('cwlStandingsMeta', `${rounds} dari ${data.roundCount || 0} ronde`);
+            const rounds = data.loadedRounds?.length ? `Data R${data.loadedRounds.join(', R')}` : tr('clan.noWarsAvailable');
+            setText('cwlStandingsMeta', tr('clan.roundCoverage', { rounds, total: data.roundCount || 0 }));
             renderCwlLeagueBadge(data.league || 'CWL');
             const currentClan = data.standings.find(clan => clan.isCurrentClan);
             setText('overviewCwlPosition', currentClan ? `#${currentClan.rank}` : '—');
-            setText('overviewCwlMeta', currentClan ? `${currentClan.stars}★ · ${data.league || 'CWL'}` : 'Clan tidak ditemukan di standings');
+            setText('overviewCwlMeta', currentClan ? `${currentClan.stars}★ · ${data.league || 'CWL'}` : tr('clan.notInStandings'));
             updateDataFreshness('cwl', new Date().toISOString());
             const insight = document.getElementById('cwlPositionInsight');
             insight.replaceChildren();
@@ -905,9 +903,9 @@
                 const above = data.standings.find(clan => clan.rank === currentClan.rank - 1);
                 const below = data.standings.find(clan => clan.rank === currentClan.rank + 1);
                 const cards = [
-                    ['Posisi', `#${currentClan.rank} dari ${data.standings.length}`],
-                    ['Ke posisi atas', above ? `${Math.max(0, Number(above.stars) - Number(currentClan.stars))}★ menuju ${above.name}` : 'Sudah di posisi teratas'],
-                    ['Jarak ke bawah', below ? `${Math.max(0, Number(currentClan.stars) - Number(below.stars))}★ dari ${below.name}` : 'Posisi terakhir']
+                    [tr('clan.position'), tr('clan.rankOf', { rank: currentClan.rank, total: data.standings.length })],
+                    [tr('clan.toHigherRank'), above ? tr('clan.starsToClan', { stars: Math.max(0, Number(above.stars) - Number(currentClan.stars)), name: above.name }) : tr('clan.topRank')],
+                    [tr('clan.gapBelow'), below ? tr('clan.starsAheadOf', { stars: Math.max(0, Number(currentClan.stars) - Number(below.stars)), name: below.name }) : tr('clan.lastRank')]
                 ];
                 for (const [label, value] of cards) {
                     const card = document.createElement('div');
@@ -952,10 +950,10 @@
 
         async function loadCwlStandings(tag) {
             try {
-                const response = await fetch(`/api/clan/${encodeURIComponent(tag)}/cwl/standings`);
+                const response = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/cwl/standings`);
                 const data = await response.json();
                 if (tag !== activeTag || latestWarData?.type !== 'CWL') return;
-                if (!response.ok) throw new Error(data.error || 'Peringkat CWL tidak dapat dimuat.');
+                if (!response.ok) throw new Error(data.error || tr('clan.cwlLoadFailed'));
                 renderCwlStandings(data);
             } catch {
                 if (tag === activeTag) hideCwlStandings();
@@ -1000,7 +998,7 @@
             if (!performancePlayers.length) {
                 const empty = document.createElement('p');
                 empty.className = 'text-sm text-slate-500';
-                empty.textContent = 'Belum ada serangan untuk dihitung.';
+                empty.textContent = tr('clan.noAttacksToCount');
                 chart.appendChild(empty);
                 pager.classList.add('hidden');
                 return;
@@ -1032,11 +1030,11 @@
                 }
                 const meta = document.createElement('p');
                 meta.className = 'text-[11px] text-slate-500';
-                meta.textContent = `${player.attacks} atk - ${player.starsPerAttack} b/atk - skor ${Math.round(player.score)}`;
+                meta.textContent = tr('clan.performanceMeta', { attacks: player.attacks, average: player.starsPerAttack, score: Math.round(player.score) });
                 name.append(title, meta);
                 const score = document.createElement('span');
                 score.className = 'rounded bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-700';
-                score.textContent = `${player.stars} bintang`;
+                score.textContent = tr('clan.starCount', { count: player.stars });
                 top.append(rank, name, score);
 
                 const starBar = document.createElement('div');
@@ -1059,9 +1057,9 @@
                 const footer = document.createElement('div');
                 footer.className = 'mt-1 flex justify-between text-[11px] text-slate-500';
                 const stars = document.createElement('span');
-                stars.textContent = `${player.stars} bintang`;
+                stars.textContent = tr('clan.starCount', { count: player.stars });
                 const destruction = document.createElement('span');
-                destruction.textContent = `${formatPercent(player.destructionAverage)}% destruksi`;
+                destruction.textContent = tr('clan.destructionValue', { value: formatPercent(player.destructionAverage) });
                 footer.append(stars, destruction);
 
                 item.append(top, bars, footer);
@@ -1070,7 +1068,7 @@
 
             document.getElementById('performancePrev').disabled = performancePage === 1;
             document.getElementById('performanceNext').disabled = performancePage === totalPages;
-            setText('performancePageInfo', `Hal ${performancePage}/${totalPages} - ${performancePlayers.length} pemain`);
+            setText('performancePageInfo', tr('clan.performancePage', { page: performancePage, total: totalPages, players: performancePlayers.length }));
             pager.classList.toggle('hidden', performancePlayers.length <= PERFORMANCE_PAGE_SIZE);
             pager.classList.toggle('flex', performancePlayers.length > PERFORMANCE_PAGE_SIZE);
         }
@@ -1090,7 +1088,7 @@
             const attacks = players.reduce((sum, player) => sum + Number(player.attacks || 0), 0);
             const stars = players.reduce((sum, player) => sum + Number(player.stars || 0), 0);
             const weightedDestruction = attacks ? players.reduce((sum, player) => sum + Number(player.destructionAverage || 0) * Number(player.attacks || 0), 0) / attacks : 0;
-            for (const [label, value] of [['Serangan', attacks], ['Bintang/atk', attacks ? (stars / attacks).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : '—'], ['Destruksi', attacks ? `${formatPercent(weightedDestruction)}%` : '—']]) {
+            for (const [label, value] of [[tr('home.attacks'), attacks], [tr('clan.starsPerAttackShort'), attacks ? formatLocalizedNumber(stars / attacks, { maximumFractionDigits: 2 }) : '—'], [tr('clan.destruction'), attacks ? `${formatPercent(weightedDestruction)}%` : '—']]) {
                 const card = document.createElement('div'); card.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); kpis.appendChild(card);
             }
             const groups = [
@@ -1121,12 +1119,12 @@
                     };
                 })
                 .sort(sortByStars);
-            renderPerformanceRows(players, data.type === 'CWL' ? `CWL R${data.round || '-'}` : 'War klasik');
+            renderPerformanceRows(players, data.type === 'CWL' ? `CWL R${data.round || '-'}` : tr('compare.classicWar'));
         }
 
         function renderClassicWarRecap(data) {
-            setText('roundRecapTitle', 'Rekap war klasik');
-            setText('roundRecapMeta', `${data.members?.length || 0} roster`);
+            setText('roundRecapTitle', tr('clan.classicWarRecap'));
+            setText('roundRecapMeta', tr('clan.rosterCount', { count: data.members?.length || 0 }));
             const tbody = document.getElementById('roundPerformanceTable');
             tbody.replaceChildren();
             const rows = [...(data.members || [])].sort((a, b) =>
@@ -1137,7 +1135,7 @@
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-slate-50';
                 addPlayerLinkCell(row, member);
-                addCell(row, 'Aktif');
+                addCell(row, tr('clan.active'));
                 addCell(row, member.starsEarned);
                 addCell(row, member.attacksUsed ? `${formatPercent(member.destructionAverage)}%` : '0%');
                 tbody.appendChild(row);
@@ -1159,10 +1157,10 @@
                 destructionAverage: player.totals.destructionAverage,
                 score: performanceScore(player.totals.starsPerAttack, player.totals.destructionAverage)
             })).sort(sortByStars);
-            renderPerformanceRows(players, 'CWL semua round');
+            renderPerformanceRows(players, tr('clan.allCwlRounds'));
 
-            setText('roundRecapTitle', 'Rekap performa CWL');
-            setText('roundRecapMeta', `${report.rounds.length} round`);
+            setText('roundRecapTitle', tr('clan.cwlPerformanceRecap'));
+            setText('roundRecapMeta', tr('clan.roundCount', { count: report.rounds.length }));
             const tbody = document.getElementById('roundPerformanceTable');
             tbody.replaceChildren();
             const rows = [...report.players]
@@ -1188,7 +1186,7 @@
 
         async function loadCwlPerformance(tag) {
             try {
-                const response = await fetch(`/api/clan/${encodeURIComponent(tag)}/cwl/performance`);
+                const response = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/cwl/performance`);
                 const report = await response.json();
                 if (tag !== activeTag) return;
                 if (!response.ok || !report.players?.length) {
@@ -1202,7 +1200,7 @@
         }
 
         function healthSortValue(member, key) {
-            if (key === 'name' || key === 'role') return String(member[key] || '').toLocaleLowerCase('id-ID');
+            if (key === 'name' || key === 'role') return String(member[key] || '').toLocaleLowerCase(window.CocI18n.formatLocale);
             if (key === 'delta') return member.trophyDelta7;
             if (key === 'donations') return Number(member.donations || 0);
             if (key === 'ratio') return member.donationRatio;
@@ -1212,7 +1210,7 @@
 
         function filteredHealthMembers() {
             return healthMembers.filter(member => {
-                const matchesQuery = !healthQuery || `${member.name || ''} ${member.role || ''}`.toLocaleLowerCase('id-ID').includes(healthQuery);
+                const matchesQuery = !healthQuery || `${member.name || ''} ${member.role || ''}`.toLocaleLowerCase(window.CocI18n.formatLocale).includes(healthQuery);
                 const matchesStatus = healthFilter === 'all' ||
                     (healthFilter === 'review' && member.status === 'review') ||
                     (healthFilter === 'stable' && member.status === 'stable') ||
@@ -1231,8 +1229,8 @@
                 const second = healthSortValue(b, key);
                 if (first === null || first === undefined) return 1;
                 if (second === null || second === undefined) return -1;
-                const result = typeof first === 'string' ? first.localeCompare(second, 'id') : first - second;
-                return result * multiplier || String(a.name || '').localeCompare(String(b.name || ''), 'id');
+                const result = typeof first === 'string' ? first.localeCompare(second, window.CocI18n.formatLocale) : first - second;
+                return result * multiplier || String(a.name || '').localeCompare(String(b.name || ''), window.CocI18n.formatLocale);
             });
         }
 
@@ -1250,7 +1248,7 @@
             const tbody = document.getElementById('healthTable');
             tbody.replaceChildren();
             const visibleMembers = sortedHealthMembers();
-            setText('healthVisibleCount', `${visibleMembers.length} dari ${healthMembers.length} anggota`);
+            setText('healthVisibleCount', tr('clan.membersVisible', { visible: visibleMembers.length, total: healthMembers.length }));
             for (const member of visibleMembers) {
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-slate-50';
@@ -1260,30 +1258,33 @@
                 addCell(row, member.trophyDelta7 === null ? '-' : member.trophyDelta7);
                 addCell(row, `${member.donations} / ${member.donationsReceived}`);
                 addCell(row, member.donationRatio === null ? '-' : member.donationRatio);
-                addBadgeCell(row, member.flags.length ? member.flags.join(', ') : 'Stabil', member.flags.length ? 'pending' : 'done');
+                addBadgeCell(row, member.flags.length ? member.flags.map(flag => {
+                    const key = `clan.flag.${flag}`;
+                    return window.CocI18n.hasTranslation(key, window.CocI18n.locale) ? tr(key) : flag;
+                }).join(', ') : tr('clan.stable'), member.flags.length ? 'pending' : 'done');
                 tbody.appendChild(row);
             }
             if (!visibleMembers.length) {
-                const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 7; cell.className = 'px-3 py-6 text-center text-slate-500'; cell.textContent = 'Tidak ada anggota yang cocok.'; row.appendChild(cell); tbody.appendChild(row);
+                const row = document.createElement('tr'); const cell = document.createElement('td'); cell.colSpan = 7; cell.className = 'px-3 py-6 text-center text-slate-500'; cell.textContent = tr('clan.noHealthMatches'); row.appendChild(cell); tbody.appendChild(row);
             }
             updateHealthSortHeaders();
         }
 
         function renderHealth(report) {
-            setText('healthMeta', `Diakses: ${new Date(report.generatedAt).toLocaleString('id-ID')}`);
-            setText('healthSnapshotCount', `${report.snapshots} snapshot`);
-            setText('healthLatest', report.latestSnapshot ? `Terbaru: ${report.latestSnapshot}` : 'Belum ada snapshot');
-            setText('healthReviewCount', `${report.summary.review} dari ${report.members.length} anggota`);
+            setText('healthMeta', tr('clan.accessedAt', { date: new Date(report.generatedAt).toLocaleString(window.CocI18n.formatLocale) }));
+            setText('healthSnapshotCount', tr('home.snapshots', { count: report.snapshots }));
+            setText('healthLatest', report.latestSnapshot ? tr('clan.latestSnapshot', { date: report.latestSnapshot }) : tr('clan.noSnapshot'));
+            setText('healthReviewCount', tr('clan.membersVisible', { visible: report.summary.review, total: report.members.length }));
             setText('healthBaseline', `7h: ${report.comparison?.sevenDayBaseline || '-'} / 30h: ${report.comparison?.thirtyDayBaseline || '-'}`);
 
             const csvLink = document.getElementById('healthCsvLink');
-            csvLink.href = `/api/clan/${encodeURIComponent(activeTag)}/health.csv`;
+            csvLink.href = window.CocI18n.apiUrl(`/api/clan/${encodeURIComponent(activeTag)}/health.csv`);
             csvLink.classList.remove('hidden');
 
             healthMembers = Array.isArray(report.members) ? report.members : [];
             const activeMembers = healthMembers.filter(member => member.status === 'stable').length;
             setText('overviewReviewCount', report.summary.review);
-            setText('overviewActiveCount', `${activeMembers} stabil dari ${healthMembers.length} anggota`);
+            setText('overviewActiveCount', tr('clan.stableMembers', { stable: activeMembers, total: healthMembers.length }));
             updateDataFreshness('health', report.generatedAt);
             refreshClanReport();
             renderHealthRows();
@@ -1291,10 +1292,10 @@
 
         async function loadHealth(tag) {
             try {
-                const response = await fetch(`/api/clan/${encodeURIComponent(tag)}/health`);
+                const response = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/health`);
                 const report = await response.json();
                 if (tag !== activeTag) return;
-                if (!response.ok) throw new Error(report.error || 'Gagal memuat laporan aktivitas.');
+                if (!response.ok) throw new Error(report.error || tr('clan.activityLoadFailed'));
                 renderHealth(report);
             } catch (error) {
                 if (tag !== activeTag) return;
@@ -1313,60 +1314,61 @@
             const round = selectedRound;
             try {
                 const url = `/api/clan/${encodeURIComponent(tag)}/war${round === null ? '' : `?round=${round}`}`;
-                const response = await fetch(url);
+                const response = await window.CocI18n.apiFetch(url);
                 const data = await response.json();
                 if (tag !== activeTag || requestId !== warRequestId) return;
-                if (!response.ok) throw new Error(data.error || 'Gagal memuat data perang.');
+                if (!response.ok) throw new Error(data.error || tr('clan.warLoadError'));
 
                 latestWarData = data;
                 refreshClanReport();
-                setText('warUpdated', `Update: ${new Date(data.lastUpdated).toLocaleString('id-ID')}`);
+                setText('warUpdated', tr('clan.warUpdate', { date: new Date(data.lastUpdated).toLocaleString(window.CocI18n.formatLocale) }));
                 updateDataFreshness('war', data.lastUpdated);
                 renderRounds(data.availableRounds || []);
-                setText('warTitle', selectedRound === null ? 'Perang aktif' : `CWL putaran ${selectedRound}`);
+                setText('warTitle', selectedRound === null ? tr('clan.warActive') : tr('clan.warRound', { round: selectedRound }));
 
                 if (data.state === 'notInWar') {
-                    setText('warPhase', 'Tidak dalam perang');
-                    setText('overviewWarState', 'Tidak dalam perang');
-                    setText('overviewWarScore', 'Tidak ada war aktif');
-                    showWarStatus('Klan sedang tidak mengikuti perang.');
+                    setText('warPhase', tr('clan.noWar'));
+                    setText('overviewWarState', tr('clan.noWar'));
+                    setText('overviewWarScore', tr('clan.noActiveWar'));
+                    showWarStatus(tr('clan.noWarDetail'));
                     return;
                 }
                 if (data.state === 'cwlWaiting') {
                     setText('warPhase', 'CWL');
-                    setText('overviewWarState', 'Menunggu CWL');
-                    setText('overviewWarScore', 'Detail ronde belum tersedia');
-                    showWarStatus('Klan mengikuti CWL, tetapi rincian perang putaran belum tersedia.');
+                    setText('overviewWarState', tr('clan.cwlWaiting'));
+                    setText('overviewWarScore', tr('clan.roundUnknown'));
+                    showWarStatus(tr('clan.cwlWaitingDetail'));
                     return;
                 }
 
-                const phases = { preparation: 'Persiapan', inWar: 'Sedang berlangsung', warEnded: 'Selesai' };
-                setText('warPhase', `${data.type}${data.round ? ` - R${data.round}` : ''} - ${phases[data.state] || data.state || 'Status tidak diketahui'}`);
+                const phases = { preparation: tr('clan.phase.preparation'), inWar: tr('clan.phase.inWar'), warEnded: tr('clan.phase.warEnded') };
+                const warTypeLabel = data.type === 'CWL' ? 'CWL' : tr('compare.classicWar');
+                setText('warPhase', `${warTypeLabel}${data.round ? ` - R${data.round}` : ''} - ${phases[data.state] || data.state || tr('clan.phase.unknown')}`);
                 const deadline = parseCoCTime(data.state === 'preparation' ? data.startTime : data.endTime);
-                setText('warTimer', deadline ? `${data.state === 'preparation' ? 'Mulai' : 'Berakhir'}: ${deadline.toLocaleString('id-ID')} (${deadline > new Date() ? 'tersisa ' + formatDuration(deadline - new Date()) : 'waktu terlewati'})` : 'Waktu perang belum tersedia');
+                setText('warTimer', deadline ? tr('clan.warTimer', { action: tr(data.state === 'preparation' ? 'clan.starts' : 'clan.ends'), date: deadline.toLocaleString(window.CocI18n.formatLocale), remaining: deadline > new Date() ? tr('clan.timeRemaining', { duration: formatDuration(deadline - new Date()) }) : tr('clan.timePassed') }) : tr('clan.warTimeUnavailable'));
                 setText('warClanName', data.clan.name);
-                setText('warClanScore', `${data.clan.stars} bintang - ${formatPercent(data.clan.destructionPercentage)}% destruksi - ${data.clan.attacks} atk`);
+                setText('warClanScore', tr('clan.warScore', { stars: data.clan.stars, destruction: formatPercent(data.clan.destructionPercentage), attacks: data.clan.attacks }));
                 setText('warOpponentName', data.opponent.name);
                 const opponentLink = document.getElementById('warOpponentName');
                 const opponentTag = String(data.opponent.tag || '').replace(/^#/, '').toUpperCase();
                 if (opponentTag) {
                     opponentLink.href = `/clan.html?tag=${encodeURIComponent(opponentTag)}`;
-                    opponentLink.title = `Buka profil klan ${data.opponent.name}`;
+                    opponentLink.title = tr('clan.opponentProfile', { name: data.opponent.name });
                 } else {
                     opponentLink.removeAttribute('href');
                     opponentLink.removeAttribute('title');
                 }
-                setText('warOpponentScore', `${data.opponent.stars} bintang - ${formatPercent(data.opponent.destructionPercentage)}% destruksi - ${data.opponent.attacks} atk`);
-                setText('overviewWarState', `${data.type}${data.round ? ` R${data.round}` : ''}`);
+                setText('warOpponentScore', tr('clan.warScore', { stars: data.opponent.stars, destruction: formatPercent(data.opponent.destructionPercentage), attacks: data.opponent.attacks }));
+                setText('overviewWarState', `${warTypeLabel}${data.round ? ` R${data.round}` : ''}`);
                 setText('overviewWarScore', `${data.clan.stars}–${data.opponent.stars}★ · ${phases[data.state] || data.state}`);
 
                 const totalQuota = data.attacksPerMember === null ? null : data.teamSize * data.attacksPerMember;
-                setText('warRemaining', data.attacksRemaining === null ? `${data.attacksUsed} atk tercatat` : `${data.attacksRemaining}/${totalQuota} sisa`);
-                setText('warAttackUsage', data.attacksRemaining === null ? 'Kuota serangan tidak tersedia' : `${data.attacksUsed} terpakai dari ${totalQuota} kuota`);
+                setText('warRemaining', data.attacksRemaining === null ? tr('clan.attacksRecorded', { count: data.attacksUsed }) : tr('clan.attacksRemainingValue', { remaining: data.attacksRemaining, total: totalQuota }));
+                setText('warAttackUsage', data.attacksRemaining === null ? tr('clan.attackQuotaUnavailable') : tr('clan.attackQuotaUsed', { used: data.attacksUsed, total: totalQuota }));
 
                 const pending = (data.members || []).filter(member => member.attacksRemaining > 0);
-                setText('warPendingCount', pending.length ? `${pending.length} pemain` : 'Aman');
-                setText('warPendingNames', pending.length ? pending.slice(0, 5).map(member => member.name).join(', ') : 'Semua jatah serangan sudah dipakai');
+                setText('warPendingCount', pending.length ? tr('home.members', { count: pending.length }) : tr('clan.safe'));
+                setText('warPendingNames', pending.length ? pending.slice(0, 5).map(member => member.name).join(', ') : tr('clan.allAttacksUsed'));
 
                 renderWarCommand(data, deadline);
                 renderRoster(data);
@@ -1391,11 +1393,11 @@
             const days = Math.floor(minutes / 1440);
             const hours = Math.floor((minutes % 1440) / 60);
             const remainingMinutes = minutes % 60;
-            return [days && `${days} hari`, hours && `${hours} jam`, `${remainingMinutes} menit`].filter(Boolean).join(' ');
+            return [days && tr('clan.days', { count: days }), hours && tr('clan.hours', { count: hours }), tr('clan.minutes', { count: remainingMinutes })].filter(Boolean).join(' ');
         }
 
         function formatPercent(value) {
-            return Number(value || 0).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+            return formatLocalizedNumber(Number(value || 0), { maximumFractionDigits: 2 });
         }
 
         async function searchClan() {
@@ -1403,7 +1405,7 @@
             const resultDiv = document.getElementById('clanResult');
             const statusMsg = document.getElementById('statusMessage');
 
-            if (!tagInput) return alert('Masukkan Clan Tag!');
+            if (!tagInput) return alert(tr('home.invalidClan'));
 
             const cleanTag = tagInput.replace(/^#/, '').toUpperCase();
             activeTag = cleanTag;
@@ -1437,27 +1439,27 @@
             document.getElementById('searchButton').disabled = true;
 
             resultDiv.classList.add('hidden');
-            statusMsg.replaceChildren(); statusMsg.classList.add('loading-state'); const statusSpinner = document.createElement('span'); statusSpinner.className = 'loading-spinner'; statusSpinner.setAttribute('aria-hidden', 'true'); statusMsg.append(statusSpinner, document.createTextNode('Mencari data klan…'));
+            statusMsg.replaceChildren(); statusMsg.classList.add('loading-state'); const statusSpinner = document.createElement('span'); statusSpinner.className = 'loading-spinner'; statusSpinner.setAttribute('aria-hidden', 'true'); statusMsg.append(statusSpinner, document.createTextNode(tr('clan.searching')));
             statusMsg.classList.remove('hidden');
 
             try {
-                const response = await fetch(`/api/clan/${encodeURIComponent(cleanTag)}`);
+                const response = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(cleanTag)}`);
                 const data = await response.json();
 
                 if (cleanTag !== activeTag) return;
-                if (!response.ok) throw new Error(data.error || 'Klan tidak ditemukan');
+                if (!response.ok) throw new Error(data.error || tr('clan.notFound'));
 
                 document.getElementById('clanBadge').src = data.badgeUrls.large;
                 document.getElementById('clanName').textContent = data.name;
                 document.getElementById('clanDesc').textContent = data.description;
                 document.getElementById('clanLevel').textContent = data.clanLevel;
-                document.getElementById('clanPoints').textContent = data.clanPoints;
+                document.getElementById('clanPoints').textContent = formatLocalizedNumber(data.clanPoints);
                 document.getElementById('clanMembersCount').textContent = data.members;
                 document.getElementById('joinClanLink').href = `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${encodeURIComponent(cleanTag)}`;
                 document.getElementById('comparePlayersLink').href = '/#compare';
                 renderClanOverview(data);
                 renderClanProfile(data);
-                window.RecentlyOpened?.clan({ tag: cleanTag, name: data.name, badgeUrl: data.badgeUrls?.small || data.badgeUrls?.medium || data.badgeUrls?.large, meta: `Level ${data.clanLevel || '-'}` });
+                window.RecentlyOpened?.clan({ tag: cleanTag, name: data.name, badgeUrl: data.badgeUrls?.small || data.badgeUrls?.medium || data.badgeUrls?.large, level: data.clanLevel || '-' });
 
                 statusMsg.classList.add('hidden');
                 resultDiv.classList.remove('hidden');
@@ -1465,15 +1467,15 @@
                 if (requestedSection) requestAnimationFrame(() => document.getElementById(requestedSection)?.scrollIntoView({ block: 'start' }));
                 setText('warUpdated', '');
                 setText('warPhase', '');
-                setText('warTitle', 'Perang aktif');
+                setText('warTitle', tr('clan.warActive'));
                 setText('warTimer', '');
                 renderRounds([]);
-                showWarStatus('Memuat data perang...');
+                showWarStatus(tr('clan.loadingWar'), false, true);
                 loadWar(cleanTag);
                 loadHealth(cleanTag);
                 warRefreshTimer = setInterval(() => loadWar(cleanTag), 120000);
             } catch (error) {
-                if (cleanTag === activeTag) statusMsg.textContent = `Error: ${error.message}`;
+                if (cleanTag === activeTag) statusMsg.textContent = tr('clan.errorMessage', { message: error.message });
             } finally {
                 document.getElementById('searchButton').disabled = false;
             }
@@ -1536,7 +1538,7 @@
         });
 
         document.getElementById('healthSearch').addEventListener('input', event => {
-            healthQuery = event.target.value.trim().toLocaleLowerCase('id-ID');
+            healthQuery = event.target.value.trim().toLocaleLowerCase(window.CocI18n.formatLocale);
             renderHealthRows();
         });
         document.querySelectorAll('[data-health-filter]').forEach(button => button.addEventListener('click', () => {
@@ -1549,21 +1551,21 @@
             const summary = document.getElementById('clanReportSummary').textContent;
             try {
                 await navigator.clipboard.writeText(`${summary}\n${window.location.href}`);
-                setText('clanActionStatus', 'Ringkasan berhasil disalin.');
+                setText('clanActionStatus', tr('clan.summaryCopied'));
             } catch {
-                setText('clanActionStatus', 'Browser tidak mengizinkan akses clipboard.');
+                setText('clanActionStatus', tr('clan.clipboardDenied'));
             }
         });
 
         document.getElementById('exportWarRoster').addEventListener('click', () => {
             if (!latestWarData?.members?.length) return;
             const escapeCsv = value => `"${String(value ?? '').replaceAll('"', '""')}"`;
-            const rows = [['Posisi', 'Nama', 'Tag', 'TH', 'Serangan', 'Sisa', 'Bintang', 'Destruksi']];
+            const rows = [[tr('clan.position'), tr('player.name'), 'Tag', 'TH', tr('home.attacks'), tr('clan.remainingShort'), tr('clan.stars'), tr('clan.destruction')]];
             for (const member of latestWarData.members) rows.push([member.mapPosition, member.name, member.tag, member.townhallLevel, member.attacksUsed, member.attacksRemaining, member.starsEarned, member.destructionAverage]);
             const csv = `\uFEFF${rows.map(row => row.map(escapeCsv).join(',')).join('\r\n')}`;
             const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
             const link = document.createElement('a'); link.href = url; link.download = `war-roster-${activeTag}-${latestWarData.round || 'active'}.csv`; link.click(); URL.revokeObjectURL(url);
-            setText('clanActionStatus', 'Roster war berhasil diekspor.');
+            setText('clanActionStatus', tr('clan.rosterExported'));
         });
 
         document.getElementById('performancePrev').addEventListener('click', () => {
@@ -1588,7 +1590,7 @@
             if (!entries.length) {
                 const empty = document.createElement('li');
                 empty.className = 'recent-empty';
-                empty.textContent = type === 'clan' ? 'Belum ada clan yang dibuka di browser ini.' : 'Belum ada profil pemain yang dibuka di browser ini.';
+                empty.textContent = tr(type === 'clan' ? 'home.noClans' : 'home.noPlayers');
                 list.appendChild(empty);
                 return;
             }
@@ -1609,7 +1611,9 @@
                 const copy = document.createElement('span');
                 copy.className = 'recent-copy';
                 const name = document.createElement('strong'); name.textContent = entry.name || `#${entry.tag}`;
-                const meta = document.createElement('small'); meta.textContent = `#${entry.tag}${entry.meta ? ` · ${entry.meta}` : ''}`;
+                const legacyLevel = type === 'clan' ? /^Level\s+(\d+)$/i.exec(String(entry.meta || '')) : null;
+                const detail = type === 'clan' && (entry.level || legacyLevel) ? tr('clan.level', { level: entry.level || legacyLevel[1] }) : entry.meta;
+                const meta = document.createElement('small'); meta.textContent = `#${entry.tag}${detail ? ` · ${detail}` : ''}`;
                 copy.append(name, meta); link.appendChild(copy); item.appendChild(link); list.appendChild(item);
             }
         }
@@ -1620,7 +1624,7 @@
             setText('landingClanCount', clans.length); setText('landingPlayerCount', players.length);
             const latestClan = clans[0]; const latestPlayer = players[0];
             const clanLink = document.getElementById('quickRecentClan'); const playerLink = document.getElementById('quickRecentPlayer'); clanLink.href = '/clan.html';
-            if (latestClan) { clanLink.href = `/clan.html?tag=${encodeURIComponent(latestClan.tag)}`; setText('quickRecentClanText', latestClan.name || `#${latestClan.tag}`); setText('landingLastActivity', `Terakhir: ${latestClan.name || latestClan.tag}`); }
+            if (latestClan) { clanLink.href = `/clan.html?tag=${encodeURIComponent(latestClan.tag)}`; setText('quickRecentClanText', latestClan.name || `#${latestClan.tag}`); setText('landingLastActivity', tr('home.recentPrefix', { name: latestClan.name || latestClan.tag })); }
             if (latestPlayer) { playerLink.href = `/player.html?tag=${encodeURIComponent(latestPlayer.tag)}`; setText('quickRecentPlayerText', latestPlayer.name || `#${latestPlayer.tag}`); }
         }
 
@@ -1631,7 +1635,7 @@
             if (!items.length) {
                 const empty = document.createElement('li');
                 empty.className = 'recent-empty';
-                empty.textContent = 'Belum ada snapshot clan yang dapat ditampilkan.';
+                empty.textContent = tr('home.noArchive');
                 list.appendChild(empty);
                 return;
             }
@@ -1646,8 +1650,8 @@
                 const name = document.createElement('strong'); name.textContent = clan.name || clan.tag;
                 const meta = document.createElement('small');
                 const count = Number(clan.snapshotCount || 0);
-                const members = Number.isFinite(Number(clan.members)) ? ` · ${clan.members} anggota` : '';
-                meta.textContent = `${count} snapshot${members}`;
+                const members = Number.isFinite(Number(clan.members)) ? ` · ${tr('home.members', { count: formatLocalizedNumber(clan.members) })}` : '';
+                meta.textContent = `${tr('home.snapshots', { count: formatLocalizedNumber(count) })}${members}`;
                 copy.append(name, meta); link.append(avatar, copy); item.appendChild(link); list.appendChild(item);
             }
         }
@@ -1655,15 +1659,15 @@
         async function loadPopularClans() {
             const list = document.getElementById('popularClans');
             try {
-                const response = await fetch('/api/clans/popular');
-                if (!response.ok) throw new Error('Tidak dapat membaca arsip snapshot.');
+                const response = await window.CocI18n.apiFetch('/api/clans/popular');
+                if (!response.ok) throw new Error(tr('home.archiveFetchError'));
                 const data = await response.json();
                 renderPopularClans(Array.isArray(data.items) ? data.items : []);
             } catch (error) {
                 list.replaceChildren();
                 const failed = document.createElement('li');
                 failed.className = 'recent-empty';
-                failed.textContent = 'Arsip snapshot belum dapat dimuat.';
+                failed.textContent = tr('home.archiveError');
                 list.appendChild(failed);
             }
         }
@@ -1713,14 +1717,14 @@
         document.getElementById('homeClanPanel').addEventListener('submit', event => {
             event.preventDefault();
             const tag = normalizeHomeTag(document.getElementById('clanTagInput').value);
-            if (!tag) return alert('Masukkan Clan Tag yang valid.');
+            if (!tag) return alert(tr('home.invalidClan'));
             location.href = `/clan.html?tag=${encodeURIComponent(tag)}`;
         });
 
         document.getElementById('homePlayerPanel').addEventListener('submit', event => {
             event.preventDefault();
             const tag = normalizeHomeTag(document.getElementById('playerTagInput').value);
-            if (!tag) return alert('Masukkan Player Tag yang valid.');
+            if (!tag) return alert(tr('home.invalidPlayer'));
             location.href = `/player.html?tag=${encodeURIComponent(tag)}`;
         });
 
@@ -1728,7 +1732,7 @@
             event.preventDefault();
             const first = normalizeHomeTag(document.getElementById('comparePlayerOne').value);
             const second = normalizeHomeTag(document.getElementById('comparePlayerTwo').value);
-            if (!first || !second) return alert('Masukkan dua Player Tag yang valid untuk dibandingkan.');
+            if (!first || !second) return alert(tr('home.invalidCompare'));
             const query = new URLSearchParams({ player1: first, player2: second });
             location.href = `/compare.html?${query}`;
         });

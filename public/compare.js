@@ -9,14 +9,16 @@ let sharedTrend = [];
 let displayedWars = [];
 let rosterTag = null;
 const leagueRequestId = { left: 0, right: 0 };
+const tr = (key, variables) => window.CocI18n.t(key, variables);
+const locale = () => window.CocI18n.formatLocale;
 
 function normalizeTag(value) {
   const tag = String(value || '').trim().replace(/^#/, '').toUpperCase();
   return /^[0289PYLQGRJCUV]{3,15}$/.test(tag) ? tag : null;
 }
 
-function formatNumber(value) { return value == null ? '—' : Number(value).toLocaleString('id-ID'); }
-function formatPercent(value) { return value == null ? '—' : `${Number(value).toLocaleString('id-ID')}%`; }
+function formatNumber(value) { return value == null ? '—' : window.CocI18n.number(Number(value)); }
+function formatPercent(value) { return value == null ? '—' : `${window.CocI18n.number(Number(value))}%`; }
 function textNode(tag, value, className) {
   const element = document.createElement(tag);
   element.textContent = value;
@@ -24,10 +26,10 @@ function textNode(tag, value, className) {
   return element;
 }
 
-function showStatus(side, message, error = false) {
+function showStatus(side, message, error = false, loading = false) {
   const status = document.getElementById(side === 'left' ? 'status1' : 'status2');
   status.replaceChildren();
-  if (!error && message.toLowerCase().startsWith('memuat')) { const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); status.append(spinner); status.classList.add('loading-state'); } else status.classList.remove('loading-state');
+  if (loading) { const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden', 'true'); status.append(spinner); status.classList.add('loading-state'); } else status.classList.remove('loading-state');
   status.appendChild(document.createTextNode(message));
   status.classList.toggle('error', error);
   status.hidden = false;
@@ -55,20 +57,20 @@ function renderCard(side, data) {
   const link = textNode('a', data.player.tag, 'player-tag-link');
   link.href = profileHref(data);
   identity.appendChild(link);
-  identity.appendChild(textNode('div', `${data.player.clan?.name || 'Tanpa klan'} · TH ${data.player.townHallLevel ?? '—'} · BH ${data.player.builderHallLevel ?? '—'}`, 'compare-card-meta'));
+  identity.appendChild(textNode('div', `${data.player.clan?.name || tr('player.noClan')} · TH ${data.player.townHallLevel ?? '—'} · BH ${data.player.builderHallLevel ?? '—'}`, 'compare-card-meta'));
   top.appendChild(identity);
   card.appendChild(top);
   const stats = textNode('div', '', 'compare-card-stats');
   for (const [label, value] of [
-    ['Trofi', formatNumber(data.player.trophies)], ['War Stars', formatNumber(data.player.warStars)],
-    ['XP', formatNumber(data.player.expLevel)], ['Cakupan', coverage(data.progress)]
+    [tr('player.trophies'), formatNumber(data.player.trophies)], ['War Stars', formatNumber(data.player.warStars)],
+    ['XP', formatNumber(data.player.expLevel)], [tr('player.coverage'), coverage(data.progress)]
   ]) {
     const box = document.createElement('div');
     box.append(textNode('span', label), textNode('strong', value));
     stats.appendChild(box);
   }
   card.appendChild(stats);
-  card.appendChild(textNode('div', `Diperbarui ${new Date(data.lastUpdated).toLocaleString('id-ID')}`, 'card-source'));
+  card.appendChild(textNode('div', tr('compare.updated', { date: new Date(data.lastUpdated).toLocaleString(locale()) }), 'card-source'));
   root.appendChild(card);
 }
 
@@ -82,7 +84,7 @@ function coverage(progress) {
 
 function comparisonMark(mark, className = 'level-mark') {
   const symbols = { higher: '★', equal: '=', lower: '▼', none: '—' };
-  const labels = { higher: 'Lebih unggul', equal: 'Setara', lower: 'Lebih rendah', none: 'Tidak dapat dibandingkan' };
+  const labels = { higher: tr('compare.higher'), equal: tr('compare.equal'), lower: tr('compare.lower'), none: tr('compare.uncomparable') };
   const node = textNode('span', symbols[mark] || symbols.none, `${className} ${mark === 'none' ? 'unavailable' : mark}-mark`);
   node.title = labels[mark] || labels.none;
   node.setAttribute('aria-label', node.title);
@@ -96,7 +98,7 @@ function renderStickyCompareHeader() {
     const profile = profiles[side];
     const item = textNode('div', '', `sticky-player ${side}`);
     if (!profile) {
-      item.appendChild(textNode('span', side === 'left' ? 'Pemain A belum tersedia' : 'Pemain B belum tersedia'));
+      item.appendChild(textNode('span', tr('compare.playerUnavailable', { player: tr(side === 'left' ? 'compare.playerA' : 'compare.playerB') })));
       root.appendChild(item); continue;
     }
     const badgeUrl = profile.player.clan?.badgeUrls?.small || profile.player.clan?.badgeUrls?.medium;
@@ -105,7 +107,7 @@ function renderStickyCompareHeader() {
     }
     const identity = document.createElement('div');
     const link = textNode('a', profile.player.name); link.href = profileHref(profile);
-    identity.append(link, textNode('small', `TH ${profile.player.townHallLevel ?? '—'} · ${formatPercent(profile.progress?.score?.overall)} progres`));
+    identity.append(link, textNode('small', tr('compare.stickyProgress', { th: profile.player.townHallLevel ?? '—', progress: formatPercent(profile.progress?.score?.overall) })));
     item.appendChild(identity); root.appendChild(item);
   }
 }
@@ -115,23 +117,23 @@ function renderComparisonOverview() {
   const conclusion = document.getElementById('overviewConclusion');
   root.replaceChildren();
   if (!profiles.left || !profiles.right) {
-    conclusion.textContent = 'Lengkapi kedua pemain untuk menghitung hasil kategori progres.';
+    conclusion.textContent = tr('compare.completeForOverview');
     return;
   }
   const score = model.progressCategorySummary(profiles.left, profiles.right);
   for (const [label, value, side] of [
-    [sideName('left'), score.left, 'left'], ['Setara', score.equal, 'equal'], [sideName('right'), score.right, 'right']
+    [sideName('left'), score.left, 'left'], [tr('compare.equal'), score.equal, 'equal'], [sideName('right'), score.right, 'right']
   ]) {
     const tile = textNode('div', '', `overview-score-item ${side}`);
     tile.append(textNode('strong', value), textNode('span', label)); root.appendChild(tile);
   }
   const quality = profiles.left.progress?.complete && profiles.right.progress?.complete
-    ? '' : ' Hasil memakai data yang tersedia dan salah satu atau kedua profil masih memiliki cakupan parsial.';
-  if (!score.compared) conclusion.textContent = 'Belum ada kategori progres yang dapat dibandingkan.';
-  else if (score.left === score.right) conclusion.textContent = `${score.compared} kategori terukur menghasilkan posisi seimbang.${quality}`;
+    ? '' : tr('compare.partialQuality');
+  if (!score.compared) conclusion.textContent = tr('compare.noComparableCategories');
+  else if (score.left === score.right) conclusion.textContent = tr('compare.categoryTie', { count: score.compared, quality });
   else {
     const winner = score.left > score.right ? sideName('left') : sideName('right');
-    conclusion.textContent = `${winner} unggul pada ${Math.max(score.left, score.right)} dari ${score.compared} kategori progres terukur.${quality}`;
+    conclusion.textContent = tr('compare.categoryWinner', { winner, won: Math.max(score.left, score.right), total: score.compared, quality });
   }
 }
 
@@ -141,30 +143,31 @@ function renderScore() {
   const overallMarks = model.comparableProgress(profiles.left, profiles.right)
     ? model.numberMarks(profiles.left?.progress?.score?.overall, profiles.right?.progress?.score?.overall)
     : { left: 'none', right: 'none' };
-  for (const [label, profile, side] of [['Pemain A', profiles.left, 'left'], ['Pemain B', profiles.right, 'right']]) {
+  for (const [label, profile, side] of [[tr('compare.playerA'), profiles.left, 'left'], [tr('compare.playerB'), profiles.right, 'right']]) {
     const tile = textNode('div', '', 'score-tile');
-    tile.appendChild(textNode('span', `${label} · ${profile?.player.name || 'Belum tersedia'}`));
+    tile.appendChild(textNode('span', `${label} · ${profile?.player.name || tr('player.unavailable')}`));
     const score = textNode('strong', formatPercent(profile?.progress?.score?.overall));
     if (overallMarks[side] !== 'none') score.appendChild(comparisonMark(overallMarks[side]));
     tile.appendChild(score);
-    const tag = profile?.progress?.complete ? 'Cakupan memadai' : 'Data parsial';
+    const tag = tr(profile?.progress?.complete ? 'compare.coverageEnough' : 'compare.partialData');
     tile.appendChild(textNode('small', `${tag} · ${coverage(profile?.progress)}`));
-    tile.appendChild(textNode('div', `Status rushed: ${profile?.progress?.rushed?.label || 'Belum dapat dinilai'}`, 'card-source'));
-    tile.appendChild(textNode('div', profile?.progress?.baselineSource || 'Baseline belum tersedia', 'card-source'));
+    const rushed = !profile?.progress?.complete ? tr('player.rushed.unknown') : tr(profile.progress.rushed.rushed ? 'player.rushed.yes' : 'player.rushed.no');
+    tile.appendChild(textNode('div', tr('compare.rushedStatus', { status: rushed }), 'card-source'));
+    tile.appendChild(textNode('div', profile?.progress ? tr(profile.progress.tableExactMatch ? 'player.apiMaxSource' : 'player.localTableSource', { th: profile.progress.tableTownHallLevel }) : tr('compare.baselineUnavailable'), 'card-source'));
     root.appendChild(tile);
   }
   const note = document.getElementById('compareNotice');
   const left = profiles.left;
   const right = profiles.right;
-  if (!left || !right) note.textContent = 'Satu profil belum tersedia. Data pemain yang berhasil dimuat tetap dapat dilihat.';
-  else if (left.player.tag === right.player.tag) note.textContent = 'Pilih dua tag pemain yang berbeda untuk membandingkan.';
-  else if (left.player.townHallLevel !== right.player.townHallLevel) note.textContent = `TH berbeda (${left.player.townHallLevel} dan ${right.player.townHallLevel}). Skor ditampilkan terhadap batas TH masing-masing tanpa peringkat atau selisih keseluruhan.`;
-  else if (!model.comparableProgress(left, right)) note.textContent = 'Cakupan atau sumber batas level belum setara. Angka ditampilkan per pemain; selisih skor dan pemenang kategori tidak dihitung.';
+  if (!left || !right) note.textContent = tr('compare.oneProfileMissing');
+  else if (left.player.tag === right.player.tag) note.textContent = tr('compare.chooseDifferent');
+  else if (left.player.townHallLevel !== right.player.townHallLevel) note.textContent = tr('compare.differentTh', { left: left.player.townHallLevel, right: right.player.townHallLevel });
+  else if (!model.comparableProgress(left, right)) note.textContent = tr('compare.incomparableBaseline');
   else {
     const a = left.progress.score.overall;
     const b = right.progress.score.overall;
     const difference = a == null || b == null ? null : Math.abs(a - b);
-    note.textContent = `Kedua pemain memiliki TH dan baseline yang sebanding.${difference === null ? '' : ` Selisih skor pasukan dan hero: ${difference.toLocaleString('id-ID')} poin persentase.`} Skor tidak mencakup bangunan atau tembok.`;
+    note.textContent = tr('compare.comparableBaseline', { difference: difference === null ? '' : tr('compare.scoreDifference', { value: formatNumber(difference) }) });
   }
 }
 
@@ -178,7 +181,7 @@ function categoryCell(value, side, mark) {
   fill.style.width = `${Math.max(0, Math.min(100, value?.percent || 0))}%`;
   track.appendChild(fill);
   cell.appendChild(track);
-  cell.appendChild(textNode('small', value ? `${value.knownItems}/${value.expectedItems} item terpetakan${value.unmappedItems?.length ? ` · ${value.unmappedItems.length} tanpa batas` : ''}` : 'Tidak tersedia'));
+  cell.appendChild(textNode('small', value ? tr('compare.mappedItems', { known: value.knownItems, total: value.expectedItems, unmapped: value.unmappedItems?.length ? tr('compare.unmappedItems', { count: value.unmappedItems.length }) : '' }) : tr('player.unavailable')));
   return cell;
 }
 
@@ -198,13 +201,13 @@ function renderDifferences() {
   root.replaceChildren();
   const rows = model.levelDifferences(profiles.left, profiles.right);
   if (!rows.length) {
-    root.appendChild(textNode('p', 'Belum ada selisih item yang dapat dibandingkan.', 'empty-section'));
+    root.appendChild(textNode('p', tr('compare.noLevelDifferences'), 'empty-section'));
     return;
   }
   for (const row of rows) {
     const item = textNode('div', '', 'difference-row');
     item.append(textNode('b', row.name), textNode('span', `${row.category}${row.equipmentHero ? ` · ${row.equipmentHero}` : ''}`),
-      textNode('strong', `A ${row.leftLevel} · B ${row.rightLevel} · selisih ${row.difference} level`));
+      textNode('strong', tr('compare.levelDifference', { left: row.leftLevel, right: row.rightLevel, difference: row.difference })));
     root.appendChild(item);
   }
 }
@@ -235,16 +238,16 @@ function armyIcon(item, section) {
 }
 
 function itemLevel(item, mark, mode) {
-  if (!item) return textNode('span', 'Tidak tersedia', 'missing-level');
+  if (!item) return textNode('span', tr('player.unavailable'), 'missing-level');
   const wrapper = textNode('span', '', `item-level ${mark}`);
   const progress = model.itemProgress(item);
   const progressLimit = item.progressMaxLevel;
   const limitLabel = progressLimit != null
-    ? `max ${item.progressMaxSource || 'baseline'} ${progressLimit}`
-    : (item.maxLevel != null ? `max API global ${item.maxLevel}` : 'batas tidak tersedia');
+    ? tr('compare.maxSource', { source: item.progressMaxSource || tr('compare.baseline'), limit: progressLimit })
+    : (item.maxLevel != null ? tr('compare.maxApi', { limit: item.maxLevel }) : tr('compare.capUnavailable'));
   const value = mode === 'progress'
-    ? (progress == null ? `Level ${item.level ?? '—'} · batas TH/BH belum tersedia` : `${formatPercent(progress)} · ${item.level}/${progressLimit}`)
-    : `Level ${item.level ?? '—'} / ${limitLabel}`;
+    ? (progress == null ? tr('compare.levelCapMissing', { level: item.level ?? '—' }) : `${formatPercent(progress)} · ${item.level}/${progressLimit}`)
+    : tr('compare.levelAndCap', { level: item.level ?? '—', cap: limitLabel });
   wrapper.appendChild(textNode('span', value));
   if (mark !== 'none') wrapper.appendChild(comparisonMark(mark));
   return wrapper;
@@ -258,8 +261,8 @@ function renderArmy() {
   const order = document.getElementById('armySort').value;
   const differencesOnly = document.getElementById('armyDifferencesOnly').checked;
   document.getElementById('armyModeNote').textContent = mode === 'progress'
-    ? 'Mode progres membandingkan level sebagai persentase dari batas TH/BH masing-masing pemain. Item tanpa baseline khusus TH/BH tidak diberi pemenang.'
-    : 'Mode level aktual membandingkan angka level secara langsung. Pada TH berbeda, hasil ini bukan ukuran kematangan akun.';
+    ? tr('compare.armyProgressNote')
+    : tr('compare.armyActualNote');
   let count = 0;
   for (const section of model.armyRows(profiles.left, profiles.right)) {
     if (filter !== 'all' && filter !== section.key) continue;
@@ -270,11 +273,11 @@ function renderArmy() {
     const group = textNode('section', '', 'army-section');
     group.appendChild(textNode('h3', `${section.label} · ${rows.length}`));
     count += rows.length;
-    if (!rows.length) { group.appendChild(textNode('p', differencesOnly ? 'Tidak ada perbedaan yang dapat dibandingkan pada kategori ini.' : 'Belum ada item untuk kategori ini.', 'empty-section')); root.appendChild(group); continue; }
+    if (!rows.length) { group.appendChild(textNode('p', tr(differencesOnly ? 'compare.noCategoryDifferences' : 'compare.noCategoryItems'), 'empty-section')); root.appendChild(group); continue; }
     const table = textNode('table', '', 'army-table');
     const head = document.createElement('thead');
     const header = document.createElement('tr');
-    for (const title of ['Item', profiles.left?.player.name || 'Pemain A', profiles.right?.player.name || 'Pemain B']) header.appendChild(textNode('th', title));
+    for (const title of [tr('compare.item'), profiles.left?.player.name || tr('compare.playerA'), profiles.right?.player.name || tr('compare.playerB')]) header.appendChild(textNode('th', title));
     head.appendChild(header); table.appendChild(head);
     const body = document.createElement('tbody');
     for (const row of rows) {
@@ -286,7 +289,7 @@ function renderArmy() {
     }
     table.appendChild(body); group.appendChild(table); root.appendChild(group);
   }
-  document.getElementById('armyCount').textContent = `${count} item unik`;
+  document.getElementById('armyCount').textContent = tr('compare.uniqueItems', { count: formatNumber(count) });
 }
 
 function renderHeadToHead() {
@@ -298,21 +301,21 @@ function renderHeadToHead() {
   const leftCwl = model.warSummary(rows, 'left', 'CWL');
   const rightCwl = model.warSummary(rows, 'right', 'CWL');
   const metrics = [
-    ['Progres', profiles.left.progress?.score?.overall, profiles.right.progress?.score?.overall],
+    [tr('player.progress'), profiles.left.progress?.score?.overall, profiles.right.progress?.score?.overall],
     ['Hero', profiles.left.progress?.score?.categories?.heroes?.percent, profiles.right.progress?.score?.categories?.heroes?.percent],
     ['Troop', profiles.left.progress?.score?.categories?.troops?.percent, profiles.right.progress?.score?.categories?.troops?.percent],
     ['CWL ★', leftCwl.starsPerAttack == null ? null : leftCwl.starsPerAttack / 3 * 100, rightCwl.starsPerAttack == null ? null : rightCwl.starsPerAttack / 3 * 100],
-    ['CWL destruksi', leftCwl.destructionAverage, rightCwl.destructionAverage]
+    [tr('compare.cwlDestruction'), leftCwl.destructionAverage, rightCwl.destructionAverage]
   ].filter(metric => metric[1] !== null && metric[1] !== undefined && metric[2] !== null && metric[2] !== undefined
     && Number.isFinite(Number(metric[1])) && Number.isFinite(Number(metric[2])));
   const heading = textNode('div', '', 'head-to-head-heading');
-  heading.append(textNode('h3', 'Head-to-head'), textNode('span', `${metrics.length} metrik pada skala 0–100`));
+  heading.append(textNode('h3', 'Head-to-head'), textNode('span', tr('compare.headToHeadMetrics', { count: metrics.length })));
   root.appendChild(heading);
   if (metrics.length < 3) {
-    root.appendChild(textNode('p', 'Sedikitnya tiga metrik bersama diperlukan untuk membuat grafik.', 'empty-section'));
+    root.appendChild(textNode('p', tr('compare.chartNeedsMetrics'), 'empty-section'));
     return;
   }
-  const svg = svgNode('svg', { viewBox: '0 0 560 330', role: 'img', 'aria-label': 'Grafik radar perbandingan kedua pemain' });
+  const svg = svgNode('svg', { viewBox: '0 0 560 330', role: 'img', 'aria-label': tr('compare.radarChartLabel') });
   const cx = 280; const cy = 155; const radius = 112;
   const point = (index, value) => {
     const angle = -Math.PI / 2 + index * Math.PI * 2 / metrics.length;
@@ -349,18 +352,22 @@ function renderComparison() {
 
 function warDate(value) {
   const date = model.parseWarDate(value);
-  return date ? date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Tanggal tidak tersedia';
+  return date ? date.toLocaleDateString(locale(), { day: 'numeric', month: 'short', year: 'numeric' }) : tr('compare.dateUnavailable');
 }
 
-function sideName(side) { return profiles[side]?.player?.name || (side === 'left' ? 'Pemain A' : 'Pemain B'); }
+function sideName(side) { return profiles[side]?.player?.name || tr(side === 'left' ? 'compare.playerA' : 'compare.playerB'); }
 
 function warStatusLabel(war) {
   const status = model.warStatus(war);
-  if (status === 'notRoster') return 'Tidak ada arsip cocok · status roster tidak diketahui';
-  if (status === 'missed') return 'Kuota terlewat';
-  if (status === 'partialMissed') return 'Sebagian kuota terlewat';
-  if (status === 'pending') return war.state === 'preparation' ? 'Persiapan' : 'Belum menyerang';
-  return `${war.attacks?.length || 0} serangan`;
+  if (status === 'notRoster') return tr('compare.rosterUnknown');
+  if (status === 'missed') return tr('compare.missedQuota');
+  if (status === 'partialMissed') return tr('compare.partialMissed');
+  if (status === 'pending') return tr(war.state === 'preparation' ? 'compare.preparation' : 'compare.noAttacksYet');
+  return tr('compare.attackCount', { count: war.attacks?.length || 0 });
+}
+
+function warStateLabel(state) {
+  return tr(({ preparation: 'compare.statePreparation', inWar: 'compare.stateInWar', warEnded: 'compare.stateEnded' })[state] || 'player.unavailable');
 }
 
 function warSide(row, side) {
@@ -372,7 +379,7 @@ function warSide(row, side) {
   fill.style.width = `${war ? Math.max(0, Math.min(100, war.stars / Math.max(1, (war.quota || 1) * 3) * 100)) : 0}%`;
   track.appendChild(fill);
   wrapper.appendChild(track);
-  const metric = !performances[side] ? 'Arsip belum tersedia' : war ? `${war.stars}★ · ${war.attacks?.length || 0}/${war.quota || '—'} · ${war.attacks?.length ? `${formatPercent(war.destructionAverage)} destruksi${model.warStatus(war) === 'partialMissed' ? ' · kuota terlewat' : ''}` : warStatusLabel(war)}` : warStatusLabel(null);
+  const metric = !performances[side] ? tr('compare.archiveUnavailable') : war ? `${war.stars}★ · ${war.attacks?.length || 0}/${war.quota || '—'} · ${war.attacks?.length ? `${formatPercent(war.destructionAverage)} ${tr('player.destruction').toLowerCase()}${model.warStatus(war) === 'partialMissed' ? ` · ${tr('compare.missedQuota').toLowerCase()}` : ''}` : warStatusLabel(war)}` : warStatusLabel(null);
   wrapper.appendChild(textNode('span', metric, 'metric'));
   return wrapper;
 }
@@ -384,27 +391,27 @@ function renderWar() {
   displayedWars = model.combineWars(performances.left, performances.right, period);
   const note = document.getElementById('warNote');
   const archiveCount = leftWars.length + rightWars.length;
-  note.textContent = `${leftWars.length} arsip untuk ${sideName('left')} dan ${rightWars.length} arsip untuk ${sideName('right')} pada periode ini. Riwayat diambil secara independen dari arsip clan masing-masing pemain. Ketiadaan arsip tidak berarti tidak masuk roster atau melewatkan serangan.${performanceErrors.length ? ` ${performanceErrors.join(' ')}` : ''}`;
+  note.textContent = tr('compare.warArchiveNote', { leftCount: leftWars.length, left: sideName('left'), rightCount: rightWars.length, right: sideName('right'), errors: performanceErrors.length ? ` ${performanceErrors.join(' ')}` : '' });
   const summaries = document.getElementById('warSummary');
   summaries.replaceChildren();
   for (const type of ['CWL', 'War']) {
     const card = textNode('div', '', 'war-type-card');
-    card.appendChild(textNode('h3', type === 'CWL' ? 'Clan War League' : 'War klasik'));
+    card.appendChild(textNode('h3', type === 'CWL' ? 'Clan War League' : tr('compare.classicWar')));
     const pair = textNode('div', '', 'war-type-players');
     for (const side of ['left', 'right']) {
       const player = textNode('div', '', 'war-type-player');
       player.appendChild(textNode('b', sideName(side)));
       if (!performances[side]) {
-        player.appendChild(textNode('span', 'Arsip belum tersedia.'));
+        player.appendChild(textNode('span', tr('compare.archiveUnavailableSentence')));
         pair.appendChild(player); continue;
       }
       const sideWars = side === 'left' ? leftWars : rightWars;
       const sideRows = sideWars.map(war => ({ type: war.type, [side]: war }));
       const sum = model.warSummary(sideRows, side, type);
-      player.appendChild(textNode('span', `${sum.wars} arsip saat masuk roster · ${sum.attacks} serangan · ${sum.stars} bintang`));
-      player.appendChild(textNode('span', `${formatNumber(sum.starsPerAttack)} bintang/serangan · ${formatPercent(sum.destructionAverage)} destruksi`));
-      player.appendChild(textNode('span', `${sum.missedQuota} kuota terlewat pada perang selesai`));
-      if (sum.wars && sum.limitedSample) player.appendChild(textNode('small', 'Sampel terbatas (<5 serangan)', 'sample-badge'));
+      player.appendChild(textNode('span', tr('compare.warSummaryCounts', { wars: sum.wars, attacks: sum.attacks, stars: sum.stars })));
+      player.appendChild(textNode('span', tr('compare.warSummaryAverages', { stars: formatNumber(sum.starsPerAttack), destruction: formatPercent(sum.destructionAverage) })));
+      player.appendChild(textNode('span', tr('compare.warSummaryMissed', { count: sum.missedQuota })));
+      if (sum.wars && sum.limitedSample) player.appendChild(textNode('small', tr('compare.limitedSample'), 'sample-badge'));
       pair.appendChild(player);
     }
     card.appendChild(pair); summaries.appendChild(card);
@@ -413,20 +420,20 @@ function renderWar() {
   advanced.replaceChildren();
   for (const type of ['CWL', 'War']) {
     const card = textNode('section', '', 'war-advanced-card');
-    card.appendChild(textNode('h3', type === 'CWL' ? 'Kualitas serangan CWL' : 'Kualitas serangan War klasik'));
+    card.appendChild(textNode('h3', tr(type === 'CWL' ? 'compare.cwlAttackQuality' : 'compare.classicAttackQuality')));
     for (const side of ['left', 'right']) {
       const sideWars = side === 'left' ? leftWars : rightWars;
       const rows = sideWars.map(war => ({ type: war.type, [side]: war }));
       const sum = model.warSummary(rows, side, type);
       const block = textNode('div', '', `war-advanced-player ${side}`);
-      const quality = textNode('span', `Sampel ${sum.sampleQuality}`, `quality-badge quality-${sum.sampleQuality}`);
+      const quality = textNode('span', tr('compare.sampleQuality', { quality: tr(`compare.quality.${sum.sampleQuality}`) }), `quality-badge quality-${sum.sampleQuality}`);
       const head = textNode('div', '', 'war-advanced-head'); head.append(textNode('b', sideName(side)), quality); block.appendChild(head);
       const metrics = textNode('div', '', 'war-metric-grid');
       for (const [label, value] of [
-        ['3 bintang', sum.tripleRate == null ? '—' : `${formatPercent(sum.tripleRate)} (${sum.triples}/${sum.attacks})`],
-        ['Pemakaian kuota', sum.quotaUsage == null ? 'Belum ada war selesai' : `${formatPercent(sum.quotaUsage)} (${sum.completedAttacks}/${sum.completedQuota})`],
-        ['Konsistensi destruksi', sum.destructionDeviation == null ? 'Butuh ≥2 serangan' : `deviasi ${formatPercent(sum.destructionDeviation)}`],
-        ['Distribusi bintang', sum.attacks ? `0★ ${sum.starDistribution[0]} · 1★ ${sum.starDistribution[1]} · 2★ ${sum.starDistribution[2]} · 3★ ${sum.starDistribution[3]}` : 'Belum ada serangan']
+        [tr('compare.threeStars'), sum.tripleRate == null ? '—' : `${formatPercent(sum.tripleRate)} (${sum.triples}/${sum.attacks})`],
+        [tr('compare.quotaUse'), sum.quotaUsage == null ? tr('compare.noCompletedWars') : `${formatPercent(sum.quotaUsage)} (${sum.completedAttacks}/${sum.completedQuota})`],
+        [tr('compare.destructionConsistency'), sum.destructionDeviation == null ? tr('compare.needTwoAttacks') : tr('compare.deviation', { value: formatPercent(sum.destructionDeviation) })],
+        [tr('compare.starDistribution'), sum.attacks ? `0★ ${sum.starDistribution[0]} · 1★ ${sum.starDistribution[1]} · 2★ ${sum.starDistribution[2]} · 3★ ${sum.starDistribution[3]}` : tr('compare.noAttacks')]
       ]) { const metric = textNode('div', '', 'war-advanced-metric'); metric.append(textNode('span', label), textNode('strong', value)); metrics.appendChild(metric); }
       block.appendChild(metrics); card.appendChild(block);
     }
@@ -435,32 +442,32 @@ function renderWar() {
   const charts = document.getElementById('warCharts');
   charts.replaceChildren();
   if (!archiveCount) {
-    charts.appendChild(textNode('p', 'Belum ada arsip perang untuk kedua pemain pada periode ini. Ini bukan indikator bahwa pemain tidak masuk roster atau melewatkan serangan.', 'empty-section'));
+    charts.appendChild(textNode('p', tr('compare.noWarArchive'), 'empty-section'));
     return;
   }
   for (const [side, wars] of [['left', leftWars], ['right', rightWars]]) {
     const history = textNode('section', '', `war-player-history ${side}`);
     const heading = textNode('div', '', 'war-player-history-heading');
-    heading.append(textNode('h3', sideName(side)), textNode('span', `${wars.length} arsip`));
+    heading.append(textNode('h3', sideName(side)), textNode('span', tr('compare.archiveCount', { count: wars.length })));
     history.appendChild(heading);
     if (!performances[side]) {
-      history.appendChild(textNode('p', 'Arsip riwayat pemain tidak dapat dimuat.', 'empty-section'));
+      history.appendChild(textNode('p', tr('compare.playerArchiveFailed'), 'empty-section'));
     } else if (!wars.length) {
-      history.appendChild(textNode('p', 'Belum ada riwayat yang direkam untuk pemain ini pada periode terpilih. Status roster tidak diketahui.', 'empty-section'));
+      history.appendChild(textNode('p', tr('compare.noPlayerWarHistory'), 'empty-section'));
     } else {
       const clans = [...new Set(wars.map(war => war.clanName || war.clanTag).filter(Boolean))];
-      if (clans.length) history.appendChild(textNode('p', `Arsip clan: ${clans.join(' · ')}`, 'war-history-clans'));
+      if (clans.length) history.appendChild(textNode('p', tr('compare.clanArchives', { clans: clans.join(' · ') }), 'war-history-clans'));
       const list = textNode('div', '', 'war-player-history-list');
       for (const war of wars) {
         const card = textNode('article', '', 'war-chart-card');
         const head = textNode('div', '', 'war-chart-head');
-        const round = war.type === 'CWL' ? `CWL · Putaran ${war.round || '—'}` : 'War klasik';
-        head.append(textNode('b', `${round} · ${war.opponent?.name || 'Musuh'}`), textNode('small', `${warDate(war.startTime || war.endTime)} · ${war.state || '—'}`));
+        const round = war.type === 'CWL' ? tr('compare.cwlRound', { round: war.round || '—' }) : tr('compare.classicWar');
+        head.append(textNode('b', `${round} · ${war.opponent?.name || tr('player.enemy')}`), textNode('small', `${warDate(war.startTime || war.endTime)} · ${warStateLabel(war.state)}`));
         const row = textNode('div', '', 'war-own-result');
         const status = war.state === 'warEnded'
-          ? war.missed ? 'Kuota terlewat' : `${war.attacks?.length || 0} serangan selesai`
-          : war.attacks?.length ? `${war.attacks.length}/${war.quota || '—'} serangan` : (war.state === 'preparation' ? 'Persiapan · belum menyerang' : 'Belum menyerang');
-        row.append(textNode('strong', `${war.stars ?? 0}★`), textNode('span', `${war.attacks?.length || 0}/${war.quota || '—'} serangan · ${war.attacks?.length ? `${formatPercent(war.destructionAverage)}% destruksi` : status}`), textNode('small', status));
+          ? war.missed ? tr('compare.missedQuota') : tr('compare.attacksComplete', { count: war.attacks?.length || 0 })
+          : war.attacks?.length ? tr('compare.attacksOfQuota', { count: war.attacks.length, quota: war.quota || '—' }) : tr(war.state === 'preparation' ? 'compare.preparingNoAttack' : 'compare.noAttacksYet');
+        row.append(textNode('strong', `${war.stars ?? 0}★`), textNode('span', tr('compare.warResult', { attacks: war.attacks?.length || 0, quota: war.quota || '—', detail: war.attacks?.length ? `${formatPercent(war.destructionAverage)} ${tr('player.destruction').toLowerCase()}` : status })), textNode('small', status));
         card.append(head, row);
         list.appendChild(card);
       }
@@ -472,7 +479,7 @@ function renderWar() {
 
 function leagueMetric(label, value, detail = '', mark = '') {
   const box = textNode('div', '', 'league-metric');
-  const number = textNode('strong', value == null ? 'Tidak tersedia' : String(value));
+  const number = textNode('strong', value == null ? tr('player.unavailable') : String(value));
   if (mark) number.appendChild(comparisonMark(mark, 'league-mark'));
   box.append(textNode('span', label), number);
   if (detail) box.appendChild(textNode('small', detail));
@@ -510,27 +517,27 @@ function renderLeagueSide(side, data, error = null) {
     return;
   }
   if (!data) {
-    root.appendChild(textNode('p', 'Memuat data Ranked League…', 'empty-section'));
+    root.appendChild(textNode('p', tr('compare.loadingRanked'), 'empty-section'));
     return;
   }
-  const badge = textNode('div', data.leagueTier || 'Tier liga tidak tersedia', 'league-tier-label');
-  const sessionName = data.session?.label || 'Sesi tidak diketahui';
+  const badge = textNode('div', data.leagueTier || tr('compare.tierUnavailable'), 'league-tier-label');
+  const sessionName = data.session?.id === 'current' ? tr('player.sessionCurrent') : data.session?.id === 'previous' ? tr('player.sessionPrevious') : tr('compare.sessionUnknown');
   const date = Number(data.session?.seasonId) > 0
-    ? new Date(Number(data.session.seasonId) * 1000).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }) : '';
-  const meta = textNode('p', `${sessionName}${date ? ` · ${date}` : ''} · ${data.totalMembers ?? 0} pemain dalam grup`, 'league-session-meta');
+    ? new Date(Number(data.session.seasonId) * 1000).toLocaleDateString(locale(), { month: 'long', year: 'numeric' }) : '';
+  const meta = textNode('p', tr('compare.leagueSessionMeta', { session: sessionName, date: date ? ` · ${date}` : '', count: data.totalMembers ?? 0 }), 'league-session-meta');
   const rank = textNode('div', '', 'league-rank-highlight');
-  rank.append(textNode('strong', data.playerRank ? `#${data.playerRank}` : '—'), textNode('span', 'Peringkat grup berdasarkan trofi liga'));
+  rank.append(textNode('strong', data.playerRank ? `#${data.playerRank}` : '—'), textNode('span', tr('compare.groupRankByTrophies')));
   const player = data.player || {};
   const grid = textNode('div', '', 'league-stat-grid');
   grid.append(
-    leagueMetric('Trofi liga', formatNumber(player.trophies)),
-    leagueMetric('Peringkat grup', data.playerRank ? `#${data.playerRank} / ${data.totalMembers}` : null, '', leagueMetricMark(side, 'rank', data.playerRank, true)),
-    leagueMetric('Serangan', player.attackCount == null ? null : player.attackCount, `${player.attackWins ?? '—'} menang · ${player.attackLosses ?? '—'} kalah`),
-    leagueMetric('Bintang / serangan', formatNumber(data.attack?.starsAverage), `${data.attack?.sampleSize ?? 0} log serangan`, leagueMetricMark(side, 'attackStars', data.attack?.starsAverage)),
-    leagueMetric('Destruksi serangan', formatPercent(data.attack?.destructionAverage), `${data.attack?.sampleSize ?? 0} log serangan`, leagueMetricMark(side, 'attackDestruction', data.attack?.destructionAverage)),
-    leagueMetric('Pertahanan', player.defenseCount == null ? null : player.defenseCount, `${player.defenseWins ?? '—'} menang · ${player.defenseLosses ?? '—'} kalah`),
-    leagueMetric('Bintang lawan / pertahanan', formatNumber(data.defense?.starsAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`, leagueMetricMark(side, 'defenseStars', data.defense?.starsAverage, true)),
-    leagueMetric('Destruksi saat bertahan', formatPercent(data.defense?.destructionAverage), `${data.defense?.sampleSize ?? 0} log pertahanan`, leagueMetricMark(side, 'defenseDestruction', data.defense?.destructionAverage, true))
+    leagueMetric(tr('player.leagueTrophies'), formatNumber(player.trophies)),
+    leagueMetric(tr('compare.groupRank'), data.playerRank ? `#${data.playerRank} / ${data.totalMembers}` : null, '', leagueMetricMark(side, 'rank', data.playerRank, true)),
+    leagueMetric(tr('compare.attacks'), player.attackCount == null ? null : player.attackCount, tr('compare.winLoss', { wins: player.attackWins ?? '—', losses: player.attackLosses ?? '—' })),
+    leagueMetric(tr('compare.starsPerAttack'), formatNumber(data.attack?.starsAverage), tr('compare.attackLogs', { count: data.attack?.sampleSize ?? 0 }), leagueMetricMark(side, 'attackStars', data.attack?.starsAverage)),
+    leagueMetric(tr('compare.attackDestruction'), formatPercent(data.attack?.destructionAverage), tr('compare.attackLogs', { count: data.attack?.sampleSize ?? 0 }), leagueMetricMark(side, 'attackDestruction', data.attack?.destructionAverage)),
+    leagueMetric(tr('compare.defenses'), player.defenseCount == null ? null : player.defenseCount, tr('compare.winLoss', { wins: player.defenseWins ?? '—', losses: player.defenseLosses ?? '—' })),
+    leagueMetric(tr('compare.opponentStarsPerDefense'), formatNumber(data.defense?.starsAverage), tr('compare.defenseLogs', { count: data.defense?.sampleSize ?? 0 }), leagueMetricMark(side, 'defenseStars', data.defense?.starsAverage, true)),
+    leagueMetric(tr('compare.defenseDestruction'), formatPercent(data.defense?.destructionAverage), tr('compare.defenseLogs', { count: data.defense?.sampleSize ?? 0 }), leagueMetricMark(side, 'defenseDestruction', data.defense?.destructionAverage, true))
   );
   root.append(badge, meta, rank, grid);
 }
@@ -540,17 +547,17 @@ function renderLeagueComparisonNote() {
   const right = leaguePerformance.right;
   const note = document.getElementById('leagueComparisonNote');
   if (!left || !right) {
-    note.textContent = 'Peringkat grup tiap pemain ditampilkan terpisah. Grup berbeda tidak membentuk satu leaderboard bersama.';
+    note.textContent = tr('compare.leagueSeparateGroups');
     return;
   }
   const tiersDiffer = left.leagueTier && right.leagueTier && left.leagueTier !== right.leagueTier;
   const groupsDiffer = left.session?.groupTag && right.session?.groupTag
     && String(left.session.groupTag).toUpperCase() !== String(right.session.groupTag).toUpperCase();
-  const leagueNotice = tiersDiffer ? `Level liga berbeda: ${left.leagueTier} dan ${right.leagueTier}. ` : '';
-  const groupNotice = groupsDiffer ? 'Kedua pemain berada di grup yang berbeda. ' : '';
+  const leagueNotice = tiersDiffer ? tr('compare.differentTiers', { left: left.leagueTier, right: right.leagueTier }) : '';
+  const groupNotice = groupsDiffer ? tr('compare.differentGroups') : '';
   note.textContent = sameLeagueSeason()
-    ? `${leagueNotice}${groupNotice}Keduanya mengikuti musim Ranked League yang sama. Tanda ★ menunjukkan nilai unggul, sedangkan = menunjukkan nilai sama untuk metrik yang dibandingkan.`
-    : `${leagueNotice}Musim Ranked League kedua pemain berbeda atau tidak lengkap. Angka ditampilkan per pemain tanpa tanda keunggulan.`;
+    ? `${leagueNotice}${groupNotice}${tr('compare.sameLeagueSeason')}`
+    : `${leagueNotice}${tr('compare.differentLeagueSeason')}`;
 }
 
 function refreshLeagueComparison() {
@@ -564,16 +571,16 @@ async function loadLeagueSide(side, sessionId, requestId) {
   const profile = profiles[side];
   if (!profile || !sessionId) {
     leaguePerformance[side] = null;
-    renderLeagueSide(side, null, 'Tidak ada sesi Ranked League yang tersedia untuk pemain ini.');
+    renderLeagueSide(side, null, tr('compare.noLeagueSession'));
     renderLeagueComparisonNote();
     return;
   }
   renderLeagueSide(side, null);
   try {
     const tag = normalizeTag(profile.player.tag);
-    const response = await fetch(`/api/player/${encodeURIComponent(tag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=battle&memberTag=${encodeURIComponent(tag)}`);
+    const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(tag)}/league-group?session=${encodeURIComponent(sessionId)}&detail=battle&memberTag=${encodeURIComponent(tag)}`);
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Data sesi Ranked League tidak tersedia.');
+    if (!response.ok) throw new Error(data.error || tr('compare.leagueSessionUnavailable'));
     if (requestId !== leagueRequestId[side]) return;
     leaguePerformance[side] = data;
     refreshLeagueComparison();
@@ -598,13 +605,14 @@ function initializeLeagueComparison() {
     head.append(textNode('h3', sideName(side)));
     const select = document.createElement('select');
     select.id = `leagueSession${side}`;
-    select.setAttribute('aria-label', `Pilih sesi Ranked League ${sideName(side)}`);
+    select.setAttribute('aria-label', tr('compare.chooseLeagueSession', { player: sideName(side) }));
     const sessions = profile?.player?.leagueSessions || [];
-    if (!sessions.length) select.add(new Option('Sesi tidak tersedia', ''));
+    if (!sessions.length) select.add(new Option(tr('compare.sessionUnavailable'), ''));
     else {
       for (const session of sessions) {
-        const date = Number(session.seasonId) > 0 ? new Date(Number(session.seasonId) * 1000).toLocaleDateString('id-ID', { month: 'short', year: 'numeric' }) : '';
-        select.add(new Option(`${session.label}${date ? ` · ${date}` : ''}`, session.id));
+        const date = Number(session.seasonId) > 0 ? new Date(Number(session.seasonId) * 1000).toLocaleDateString(locale(), { month: 'short', year: 'numeric' }) : '';
+        const sessionName = tr(session.id === 'current' ? 'player.sessionCurrent' : 'player.sessionPrevious');
+        select.add(new Option(`${sessionName}${date ? ` · ${date}` : ''}`, session.id));
       }
       select.value = sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
     }
@@ -630,9 +638,9 @@ function renderActivity() {
   const allSharedTrend = model.sharedSnapshots(performances.left, performances.right);
   const period = document.getElementById('activityPeriod').value;
   const metricKey = document.getElementById('activityMetric').value;
-  const metricLabel = metricKey === 'donations' ? 'donasi' : 'trofi';
+  const metricLabel = tr(metricKey === 'donations' ? 'player.donations' : 'player.trophies').toLowerCase();
   sharedTrend = model.filterSnapshots(allSharedTrend, period);
-  document.getElementById('activityCount').textContent = `${sharedTrend.length} tanggal bersama`;
+  document.getElementById('activityCount').textContent = tr('compare.sharedDates', { count: sharedTrend.length });
   const note = document.getElementById('activityNote');
   const chart = document.getElementById('activityChart');
   const tableRoot = document.getElementById('donationTable');
@@ -642,19 +650,19 @@ function renderActivity() {
   document.getElementById('exportPng').disabled = !profiles.left || !profiles.right || !enough;
   if (!enough) {
     note.textContent = !performances.left || !performances.right
-      ? 'Arsip salah satu pemain belum tersedia. Tren memerlukan dua snapshot pada tanggal yang sama untuk kedua pemain.'
-      : 'Tren memerlukan sedikitnya dua snapshot pada tanggal yang sama untuk kedua pemain. Snapshot sebelum aplikasi merekam data tidak tersedia.';
-    chart.appendChild(textNode('p', 'Grafik akan tampil setelah ada riwayat bersama yang cukup.', 'empty-section'));
+      ? tr('compare.trendArchiveMissing')
+      : tr('compare.trendNeedsSnapshots');
+    chart.appendChild(textNode('p', tr('compare.trendChartPending'), 'empty-section'));
     return;
   }
   const leftChanges = model.donationChanges(sharedTrend, 'left');
   const rightChanges = model.donationChanges(sharedTrend, 'right');
   const resets = leftChanges.some(point => point.reset) || rightChanges.some(point => point.reset);
-  note.textContent = `${metricLabel[0].toUpperCase()}${metricLabel.slice(1)} ditampilkan pada ${sharedTrend.length} tanggal yang sama dalam periode terpilih. Donasi adalah counter profil; penurunan counter ditandai sebagai reset/perubahan dan tidak dihitung sebagai delta negatif.${resets ? ' Reset/perubahan counter terdeteksi pada periode ini.' : ''}`;
+  note.textContent = tr('compare.activityNote', { metric: metricLabel[0].toUpperCase() + metricLabel.slice(1), count: sharedTrend.length, reset: resets ? tr('compare.resetDetected') : '' });
   const legend = textNode('div', '', 'activity-legend');
   legend.append(textNode('b', sideName('left')), textNode('b', sideName('right')));
   chart.appendChild(legend);
-  const svg = svgNode('svg', { viewBox: '0 0 900 240', role: 'img', 'aria-label': `Grafik ${metricLabel} kedua pemain pada tanggal snapshot yang sama` });
+  const svg = svgNode('svg', { viewBox: '0 0 900 240', role: 'img', 'aria-label': tr('compare.activityChartLabel', { metric: metricLabel }) });
   const all = sharedTrend.flatMap(point => [Number(point.left[metricKey] || 0), Number(point.right[metricKey] || 0)]);
   const min = Math.min(...all); const max = Math.max(...all);
   const y = value => 195 - (max === min ? .5 : (value - min) / (max - min)) * 150;
@@ -680,7 +688,7 @@ function renderActivity() {
   chart.appendChild(svg);
   const table = document.createElement('table');
   const head = document.createElement('thead'); const headRow = document.createElement('tr');
-  for (const label of ['Tanggal', `${sideName('left')} · donasi`, 'Delta A', `${sideName('right')} · donasi`, 'Delta B']) headRow.appendChild(textNode('th', label));
+  for (const label of [tr('compare.date'), `${sideName('left')} · ${tr('player.donations').toLowerCase()}`, 'Delta A', `${sideName('right')} · ${tr('player.donations').toLowerCase()}`, 'Delta B']) headRow.appendChild(textNode('th', label));
   head.appendChild(headRow); table.appendChild(head);
   const body = document.createElement('tbody');
   sharedTrend.forEach((point, index) => {
@@ -688,7 +696,7 @@ function renderActivity() {
     row.appendChild(textNode('td', point.date));
     for (const [side, change] of [['left', leftChanges[index]], ['right', rightChanges[index]]]) {
       row.appendChild(textNode('td', formatNumber(point[side].donations)));
-      row.appendChild(textNode('td', change.reset ? 'Reset/perubahan' : change.delta === null ? '—' : `+${change.delta}`, change.reset ? 'reset-badge' : ''));
+      row.appendChild(textNode('td', change.reset ? tr('compare.resetChange') : change.delta === null ? '—' : `+${change.delta}`, change.reset ? 'reset-badge' : ''));
     }
     body.appendChild(row);
   });
@@ -699,7 +707,7 @@ function renderResume() {
   const root = document.getElementById('resumeText');
   root.replaceChildren();
   if (!profiles.left || !profiles.right) {
-    root.appendChild(textNode('p', 'Lengkapi kedua profil untuk membuat resume perbandingan.', 'empty-section'));
+    root.appendChild(textNode('p', tr('compare.resumeNeedsProfiles'), 'empty-section'));
     return;
   }
   const names = { left: sideName('left'), right: sideName('right') };
@@ -708,7 +716,7 @@ function renderResume() {
     const marks = model.numberMarks(category.left?.percent, category.right?.percent);
     if (marks.left === 'higher') advantages.left.push(`${category.label} ${formatPercent(category.left.percent)} vs ${formatPercent(category.right.percent)}`);
     else if (marks.right === 'higher') advantages.right.push(`${category.label} ${formatPercent(category.right.percent)} vs ${formatPercent(category.left.percent)}`);
-    else if (marks.left === 'equal') advantages.equal.push(`${category.label} setara di ${formatPercent(category.left.percent)}`);
+    else if (marks.left === 'equal') advantages.equal.push(tr('compare.categoryEqual', { category: category.label, value: formatPercent(category.left.percent) }));
   }
   const armyCounts = { left: 0, right: 0, equal: 0 };
   for (const section of model.armyRows(profiles.left, profiles.right)) for (const row of section.rows) {
@@ -717,26 +725,26 @@ function renderResume() {
     else if (marks.right === 'higher') armyCounts.right++;
     else if (marks.left === 'equal') armyCounts.equal++;
   }
-  advantages.left.push(`${armyCounts.left} item Army memiliki level aktual lebih tinggi`);
-  advantages.right.push(`${armyCounts.right} item Army memiliki level aktual lebih tinggi`);
-  if (armyCounts.equal) advantages.equal.push(`${armyCounts.equal} item Army memiliki level sama`);
+  advantages.left.push(tr('compare.armyHigherCount', { count: armyCounts.left }));
+  advantages.right.push(tr('compare.armyHigherCount', { count: armyCounts.right }));
+  if (armyCounts.equal) advantages.equal.push(tr('compare.armyEqualCount', { count: armyCounts.equal }));
 
   const cwl = { left: model.warSummary(displayedWars, 'left', 'CWL'), right: model.warSummary(displayedWars, 'right', 'CWL') };
   if (cwl.left.attacks && cwl.right.attacks) {
-    if (cwl.left.starsPerAttack > cwl.right.starsPerAttack) advantages.left.push(`CWL ${cwl.left.starsPerAttack} bintang/serangan`);
-    else if (cwl.right.starsPerAttack > cwl.left.starsPerAttack) advantages.right.push(`CWL ${cwl.right.starsPerAttack} bintang/serangan`);
-    else advantages.equal.push(`CWL setara ${cwl.left.starsPerAttack} bintang/serangan`);
+    if (cwl.left.starsPerAttack > cwl.right.starsPerAttack) advantages.left.push(tr('compare.cwlStars', { value: formatNumber(cwl.left.starsPerAttack) }));
+    else if (cwl.right.starsPerAttack > cwl.left.starsPerAttack) advantages.right.push(tr('compare.cwlStars', { value: formatNumber(cwl.right.starsPerAttack) }));
+    else advantages.equal.push(tr('compare.cwlStarsEqual', { value: formatNumber(cwl.left.starsPerAttack) }));
     const recommended = cwl.left.starsPerAttack === cwl.right.starsPerAttack ? null
       : cwl.left.starsPerAttack > cwl.right.starsPerAttack ? 'left' : 'right';
-    if (recommended) advantages.recommendations.push(`${names[recommended]} lebih layak dipertimbangkan untuk roster CWL berdasarkan rata-rata bintang pada periode terpilih.`);
-    if (cwl.left.sampleQuality === 'rendah' || cwl.right.sampleQuality === 'rendah') advantages.quality.push('Kesimpulan CWL memiliki sampel rendah; gunakan sebagai indikasi awal.');
-  } else advantages.quality.push('Perbandingan CWL belum lengkap karena salah satu pemain belum memiliki serangan terarsip pada periode ini.');
+    if (recommended) advantages.recommendations.push(tr('compare.cwlRecommendation', { player: names[recommended] }));
+    if (cwl.left.sampleQuality === 'rendah' || cwl.right.sampleQuality === 'rendah') advantages.quality.push(tr('compare.cwlLowSample'));
+  } else advantages.quality.push(tr('compare.cwlIncomplete'));
 
   const leftProgress = profiles.left.progress?.score?.overall;
   const rightProgress = profiles.right.progress?.score?.overall;
   if (leftProgress != null && rightProgress != null) {
     const mature = leftProgress === rightProgress ? null : leftProgress > rightProgress ? 'left' : 'right';
-    if (mature) advantages.recommendations.push(`${names[mature]} memiliki progres pasukan dan hero yang lebih tinggi terhadap baseline akun yang tersedia.`);
+    if (mature) advantages.recommendations.push(tr('compare.progressRecommendation', { player: names[mature] }));
   }
   if (sharedTrend.length >= 2) {
     const first = sharedTrend[0]; const last = sharedTrend.at(-1);
@@ -744,22 +752,22 @@ function renderResume() {
     const rightDelta = last.right.trophies - first.right.trophies;
     if (leftDelta !== rightDelta) {
       const active = leftDelta > rightDelta ? 'left' : 'right';
-      advantages.recommendations.push(`${names[active]} menunjukkan kenaikan trofi lebih besar pada snapshot bersama periode aktivitas.`);
+      advantages.recommendations.push(tr('compare.activityRecommendation', { player: names[active] }));
     }
-  } else advantages.quality.push('Rekomendasi aktivitas memerlukan minimal dua snapshot pada tanggal yang sama.');
-  if (!profiles.left.progress?.complete || !profiles.right.progress?.complete) advantages.quality.push('Salah satu atau kedua profil memakai baseline parsial; skor progres bukan persentase seluruh akun.');
+  } else advantages.quality.push(tr('compare.activityNeedsSnapshots'));
+  if (!profiles.left.progress?.complete || !profiles.right.progress?.complete) advantages.quality.push(tr('compare.partialBaselineQuality'));
 
   const sections = [
-    [`Keunggulan ${names.left}`, advantages.left, 'left'],
-    [`Keunggulan ${names.right}`, advantages.right, 'right'],
-    ['Hasil seimbang', advantages.equal, 'equal'],
-    ['Rekomendasi konteks', advantages.recommendations, 'recommendation'],
-    ['Kualitas data', advantages.quality, 'quality']
+    [tr('compare.advantagesFor', { player: names.left }), advantages.left, 'left'],
+    [tr('compare.advantagesFor', { player: names.right }), advantages.right, 'right'],
+    [tr('compare.balancedResult'), advantages.equal, 'equal'],
+    [tr('compare.contextRecommendations'), advantages.recommendations, 'recommendation'],
+    [tr('compare.dataQuality'), advantages.quality, 'quality']
   ];
   for (const [title, lines, className] of sections) {
     const card = textNode('section', '', `resume-section ${className}`);
     card.appendChild(textNode('h3', title));
-    if (!lines.length) card.appendChild(textNode('p', 'Belum ada indikator yang cukup.', 'empty-section'));
+    if (!lines.length) card.appendChild(textNode('p', tr('compare.notEnoughIndicators'), 'empty-section'));
     else { const list = document.createElement('ul'); for (const line of lines) list.appendChild(textNode('li', line)); card.appendChild(list); }
     root.appendChild(card);
   }
@@ -771,20 +779,20 @@ async function copyComparisonLink() {
   if (!url.hash) url.hash = '#progress';
   try {
     await navigator.clipboard.writeText(url.toString());
-    status.textContent = 'Tautan disalin.';
+    status.textContent = tr('compare.linkCopied');
   } catch {
     const input = document.createElement('textarea'); input.value = url.toString(); input.style.position = 'fixed'; input.style.opacity = '0';
     document.body.appendChild(input); input.select();
-    status.textContent = document.execCommand('copy') ? 'Tautan disalin.' : 'Tidak dapat menyalin tautan.';
+    status.textContent = tr(document.execCommand('copy') ? 'compare.linkCopied' : 'compare.copyFailed');
     input.remove();
   }
   setTimeout(() => { status.textContent = ''; }, 2500);
 }
 
 async function fetchPerformance(tag, context) {
-  const response = await fetch(`/api/player/${encodeURIComponent(tag)}/war-history`);
+  const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(tag)}/war-history`);
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Arsip pemain tidak dapat dimuat.');
+  if (!response.ok) throw new Error(data.error || tr('compare.playerArchiveFailed'));
   return data;
 }
 
@@ -808,10 +816,10 @@ async function loadPerformances() {
       .map(profile => normalizeTag(profile?.player?.clan?.tag))
       .filter(Boolean))];
     await Promise.allSettled(tags.map(async tag => {
-      const response = await fetch(`/api/clan/${encodeURIComponent(tag)}/war`);
+      const response = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/war`);
       if (!response.ok) return;
       const war = await response.json();
-      if (war.type === 'CWL') await fetch(`/api/clan/${encodeURIComponent(tag)}/cwl/performance`);
+      if (war.type === 'CWL') await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}/cwl/performance`);
     }));
     await readBoth();
   } catch { /* Arsip lama tetap ditampilkan saat pembaruan API gagal. */ }
@@ -835,7 +843,7 @@ function downloadFile(blob, filename) {
 function exportCsv() {
   if (!profiles.left || !profiles.right || (!displayedWars.length && sharedTrend.length < 2)) return;
   const rows = [
-    ['Bagian', 'Periode/tanggal', 'Pemain', 'Tipe', 'Lawan', 'Putaran', 'Serangan', 'Bintang', 'Destruksi rata-rata', 'Trofi', 'Donasi', 'Perubahan donasi', 'Status'],
+    [tr('compare.csvSection'), tr('compare.csvPeriodDate'), tr('compare.csvPlayer'), tr('compare.csvType'), tr('compare.csvOpponent'), tr('compare.csvRound'), tr('compare.attacks'), tr('compare.csvStars'), tr('compare.csvAverageDestruction'), tr('player.trophies'), tr('player.donations'), tr('compare.csvDonationChange'), tr('player.status')],
     ['Info', document.getElementById('warPeriod').selectedOptions[0].textContent, sideName('left'), '', '', '', '', '', '', '', '', '', ''],
     ['Info', '', sideName('right'), '', '', '', '', '', '', '', '', '', '']
   ];
@@ -849,7 +857,7 @@ function exportCsv() {
   sharedTrend.forEach((point, index) => {
     for (const [side, change] of [['left', leftChanges[index]], ['right', rightChanges[index]]]) {
       rows.push(['Snapshot', point.date, sideName(side), '', '', '', '', '', '', point[side].trophies,
-        point[side].donations, change.reset ? 'Reset/perubahan' : change.delta ?? '', '']);
+        point[side].donations, change.reset ? tr('compare.resetChange') : change.delta ?? '', '']);
     }
   });
   const csv = `\ufeff${rows.map(row => row.map(csvCell).join(',')).join('\r\n')}\r\n`;
@@ -863,21 +871,21 @@ function exportPng() {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   ctx.fillStyle = '#101820'; ctx.fillRect(0, 0, 1200, 770);
-  ctx.fillStyle = '#eef5ff'; ctx.font = 'bold 30px sans-serif'; ctx.fillText('Player Comparison', 56, 68);
+  ctx.fillStyle = '#eef5ff'; ctx.font = 'bold 30px sans-serif'; ctx.fillText(tr('compare.heading'), 56, 68);
   ctx.font = '16px sans-serif'; ctx.fillStyle = '#a9bdd4';
   ctx.fillText(`${sideName('left')}  vs  ${sideName('right')}`, 56, 100);
-  ctx.fillText(`Periode: ${document.getElementById('warPeriod').selectedOptions[0].textContent}  ·  Snapshot bersama: ${sharedTrend.length} tanggal`, 56, 127);
+  ctx.fillText(tr('compare.pngPeriod', { period: document.getElementById('warPeriod').selectedOptions[0].textContent, count: sharedTrend.length }), 56, 127);
   for (const [side, x, color] of [['left', 56, '#79adff'], ['right', 615, '#40d3bd']]) {
     const profile = profiles[side];
     ctx.fillStyle = '#192b3d'; ctx.fillRect(x, 158, 529, 130);
     ctx.fillStyle = color; ctx.font = 'bold 22px sans-serif'; ctx.fillText(profile.player.name.slice(0, 34), x + 18, 194);
     ctx.fillStyle = '#dbe8f8'; ctx.font = '16px sans-serif';
-    ctx.fillText(`TH ${profile.player.townHallLevel} · Skor ${formatPercent(profile.progress?.score?.overall)}`, x + 18, 226);
+    ctx.fillText(tr('compare.pngScore', { th: profile.player.townHallLevel, score: formatPercent(profile.progress?.score?.overall) }), x + 18, 226);
     const cwl = model.warSummary(displayedWars, side, 'CWL');
     const classic = model.warSummary(displayedWars, side, 'War');
-    ctx.fillText(`CWL ${cwl.stars}★/${cwl.attacks} serangan · War ${classic.stars}★/${classic.attacks} serangan`, x + 18, 257);
+    ctx.fillText(tr('compare.pngWars', { cwlStars: cwl.stars, cwlAttacks: cwl.attacks, classicStars: classic.stars, classicAttacks: classic.attacks }), x + 18, 257);
   }
-  ctx.fillStyle = '#eef5ff'; ctx.font = 'bold 19px sans-serif'; ctx.fillText('Tren trofi pada tanggal yang sama', 56, 335);
+  ctx.fillStyle = '#eef5ff'; ctx.font = 'bold 19px sans-serif'; ctx.fillText(tr('compare.pngTrend'), 56, 335);
   const values = sharedTrend.flatMap(point => [point.left.trophies, point.right.trophies]);
   const min = Math.min(...values); const max = Math.max(...values);
   const x = index => 70 + index / (sharedTrend.length - 1) * 1050;
@@ -891,27 +899,27 @@ function exportPng() {
   }
   ctx.fillStyle = '#a9bdd4'; ctx.font = '14px sans-serif';
   ctx.fillText(sharedTrend[0].date, 70, 600); ctx.textAlign = 'right'; ctx.fillText(sharedTrend.at(-1).date, 1120, 600); ctx.textAlign = 'left';
-  ctx.fillText('Data profil dan perang berasal dari arsip aplikasi. Level bangunan dan tembok tidak tercakup.', 56, 655);
-  ctx.fillText(`Dibuat ${new Date().toLocaleString('id-ID')}`, 56, 680);
+  ctx.fillText(tr('compare.pngSource'), 56, 655);
+  ctx.fillText(tr('compare.pngCreated', { date: new Date().toLocaleString(locale()) }), 56, 680);
   canvas.toBlob(blob => { if (blob) downloadFile(blob, `player-comparison-${normalizeTag(profiles.left.player.tag)}-${normalizeTag(profiles.right.player.tag)}.png`); }, 'image/png');
 }
 
 async function fetchProfile(tag) {
-  const response = await fetch(`/api/player/${encodeURIComponent(tag)}/profile`);
+  const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(tag)}/profile`);
   let data;
-  try { data = await response.json(); } catch { throw new Error('Respons profil tidak dapat dibaca.'); }
-  if (!response.ok) throw new Error(data.error || 'Profil tidak dapat dimuat.');
+  try { data = await response.json(); } catch { throw new Error(tr('compare.profileUnreadable')); }
+  if (!response.ok) throw new Error(data.error || tr('compare.profileFailed'));
   return data;
 }
 
 async function loadProfiles() {
-  const entries = [['left', 'player1', 'Pemain A'], ['right', 'player2', 'Pemain B']];
+  const entries = [['left', 'player1', tr('compare.playerA')], ['right', 'player2', tr('compare.playerB')]];
   const tasks = entries.map(async ([side, inputId, label]) => {
     const raw = document.getElementById(inputId).value.trim();
     const tag = normalizeTag(raw);
-    if (!raw) { showStatus(side, `Masukkan tag ${label}.`); return; }
-    if (!tag) { showStatus(side, `Tag ${label} tidak valid.`, true); return; }
-    showStatus(side, `Memuat ${label}...`);
+    if (!raw) { showStatus(side, tr('compare.enterPlayerTag', { player: label })); return; }
+    if (!tag) { showStatus(side, tr('compare.invalidPlayerTag', { player: label }), true); return; }
+    showStatus(side, tr('compare.loadingPlayer', { player: label }), false, true);
     try {
       const data = await fetchProfile(tag);
       window.RecentlyOpened?.player({ tag: data.player.tag, name: data.player.name, meta: data.player.townHallLevel ? `TH ${data.player.townHallLevel}` : '' });
@@ -930,20 +938,20 @@ async function loadRoster(tag) {
   if (!tag || rosterTag === tag) return;
   rosterTag = tag;
   const note = document.getElementById('clanPickerNote');
-  note.textContent = 'Memuat anggota klan...';
+  note.textContent = tr('compare.loadingMembers');
   try {
-    const response = await fetch(`/api/clan/${encodeURIComponent(tag)}`);
+    const response = await window.CocI18n.apiFetch(`/api/clan/${encodeURIComponent(tag)}`);
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Daftar anggota tidak tersedia.');
+    if (!response.ok) throw new Error(data.error || tr('compare.memberListUnavailable'));
     const members = [...(data.memberList || [])].sort((a, b) => a.name.localeCompare(b.name));
     for (const id of ['member1', 'member2']) {
       const select = document.getElementById(id);
-      select.replaceChildren(new Option('Pilih dari anggota klan', ''));
+      select.replaceChildren(new Option(tr('compare.chooseMember'), ''));
       for (const member of members) select.add(new Option(`${member.name} · TH ${member.townHallLevel ?? '—'}`, normalizeTag(member.tag)));
       select.value = normalizeTag(document.getElementById(id === 'member1' ? 'player1' : 'player2').value) || '';
     }
-    note.textContent = `${members.length} anggota ${data.name} tersedia untuk dipilih.`;
-  } catch (error) { note.textContent = `Daftar anggota tidak tersedia: ${error.message} Tag tetap dapat diketik.`; }
+    note.textContent = tr('compare.membersAvailable', { count: members.length, clan: data.name });
+  } catch (error) { note.textContent = tr('compare.memberListError', { error: error.message }); }
 }
 
 function navigateToComparison() {
@@ -951,8 +959,8 @@ function navigateToComparison() {
   const rawSecond = document.getElementById('player2').value.trim();
   const first = normalizeTag(rawFirst);
   const second = normalizeTag(rawSecond);
-  if (rawFirst && !first) { showStatus('left', 'Tag pemain A tidak valid.', true); return; }
-  if (rawSecond && !second) { showStatus('right', 'Tag pemain B tidak valid.', true); return; }
+  if (rawFirst && !first) { showStatus('left', tr('compare.invalidPlayerTag', { player: tr('compare.playerA') }), true); return; }
+  if (rawSecond && !second) { showStatus('right', tr('compare.invalidPlayerTag', { player: tr('compare.playerB') }), true); return; }
   const query = new URLSearchParams();
   if (first) query.set('player1', first);
   if (second) query.set('player2', second);

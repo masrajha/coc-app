@@ -80,6 +80,32 @@ final class App
     private string $dataDir;
     private Client $http;
     private array $cache = [];
+    private string $locale = 'id';
+
+    private const ENGLISH_ERRORS = [
+        'Arsip data lokal tidak dapat dibaca. Periksa berkas di folder data/wars.' => 'The local archive could not be read. Check the files in data/wars.',
+        'Data perang tidak tersedia untuk klan ini.' => 'War data is unavailable for this clan.',
+        'Akses API ditolak. Periksa token dan alamat IP yang didaftarkan.' => 'API access was denied. Check the token and registered IP address.',
+        'Klan tidak ditemukan.' => 'Clan not found.',
+        'Batas permintaan API tercapai. Coba lagi sebentar.' => 'The API request limit has been reached. Please try again shortly.',
+        'API Clash of Clans tidak merespons tepat waktu. Coba lagi sebentar; jika terus terjadi, periksa koneksi server, token, dan IP yang didaftarkan di developer.clashofclans.com.' => 'The Clash of Clans API timed out. Please try again shortly; if this continues, check the server connection, token, and registered IP address at developer.clashofclans.com.',
+        'Gagal mengambil data dari API Clash of Clans.' => 'Could not fetch data from the Clash of Clans API.',
+        'Tag klan tidak valid.' => 'Invalid clan tag.',
+        'Tag pemain tidak valid.' => 'Invalid player tag.',
+        'Tag pemain dan klan harus valid.' => 'Player and clan tags must be valid.',
+        'Tag anggota tidak valid.' => 'Invalid member tag.',
+        'Jenis ranking tidak valid.' => 'Invalid ranking type.',
+        'Lokasi ranking tidak valid.' => 'Invalid ranking location.',
+        'Jumlah ranking tidak valid.' => 'Invalid ranking limit.',
+        'Sesi liga tidak valid.' => 'Invalid league session.',
+        'Pemain tidak memiliki grup pada sesi liga ini.' => 'The player has no group in this league session.',
+        'Pemain tidak ada dalam grup liga ini.' => 'The player is not in this league group.',
+        'Data grup liga untuk sesi ini tidak tersedia.' => 'League group data is unavailable for this session.',
+        'API Clash of Clans tidak merespons untuk grup liga sesi ini. Profil pemain tersedia; coba lagi nanti.' => 'The Clash of Clans API did not respond for this league group. The player profile is available; please try again later.',
+        'Nomor putaran tidak valid.' => 'Invalid round number.',
+        'Putaran CWL tidak tersedia.' => 'CWL round unavailable.',
+        'Data CWL tidak tersedia untuk klan ini.' => 'CWL data is unavailable for this clan.',
+    ];
 
     private function __construct()
     {
@@ -93,6 +119,14 @@ final class App
         $app = AppFactory::create();
         $app->addRoutingMiddleware();
         $app->addErrorMiddleware(false, true, true);
+        $app->add(function (ServerRequestInterface $request, $handler) use ($self): ResponseInterface {
+            $requested = $request->getQueryParams()['lang'] ?? null;
+            if (!is_string($requested) || !in_array($requested, ['id', 'en'], true)) {
+                $requested = preg_match('/^en(?:-|$)/i', $request->getHeaderLine('Accept-Language')) ? 'en' : 'id';
+            }
+            $self->locale = $requested;
+            return $handler->handle($request);
+        });
         $app->options('/{routes:.*}', fn($request, $response) => $response);
         $app->get('/api/rankings/locations', fn($req, $res) => $self->rankingLocations($res));
         $app->get('/api/rankings/{type}', fn($req, $res, $args) => $self->rankings($req, $res, $args['type']));
@@ -118,8 +152,11 @@ final class App
 
     private function respond(ResponseInterface $response, mixed $data, int $status = 200): ResponseInterface
     {
+        if (is_array($data) && is_string($data['error'] ?? null) && $this->locale === 'en') {
+            $data['error'] = self::ENGLISH_ERRORS[$data['error']] ?? $data['error'];
+        }
         $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE));
-        return $response->withHeader('Content-Type', 'application/json; charset=utf-8')->withStatus($status);
+        return $response->withHeader('Content-Type', 'application/json; charset=utf-8')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language')->withStatus($status);
     }
 
     private function empty(ResponseInterface $response, int $status): ResponseInterface { return $response->withStatus($status); }
@@ -299,15 +336,22 @@ final class App
     }
     private function healthCsv(ResponseInterface $res, string $rawTag): ResponseInterface
     {
-        $tag = $this->normalizeTag($rawTag); if (!$tag) { $res->getBody()->write('Tag klan tidak valid.'); return $res->withStatus(400)->withHeader('Content-Type', 'text/plain; charset=utf-8'); }
+        $tag = $this->normalizeTag($rawTag); if (!$tag) { $res->getBody()->write($this->locale === 'en' ? 'Invalid clan tag.' : 'Tag klan tidak valid.'); return $res->withStatus(400)->withHeader('Content-Type', 'text/plain; charset=utf-8')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language'); }
         try {
             $report = $this->healthReport($tag, $this->snapshots($tag));
-            $rows = [['Name','Tag','Role','Trophies','Delta 7d','Delta 30d','Donated','Received','Donation Ratio','Status','Flags']];
-            foreach ($report['members'] as $m) $rows[] = [$m['name'],$m['tag'],$m['role'],$m['trophies'],$m['trophyDelta7'],$m['trophyDelta30'],$m['donations'],$m['donationsReceived'],$m['donationRatio'],$m['status'],implode('; ', $m['flags'])];
+            $rows = [$this->locale === 'en'
+                ? ['Name','Tag','Role','Trophies','Delta 7d','Delta 30d','Donated','Received','Donation Ratio','Status','Flags']
+                : ['Nama','Tag','Peran','Trofi','Delta 7h','Delta 30h','Donasi','Diterima','Rasio Donasi','Status','Catatan']];
+            foreach ($report['members'] as $m) $rows[] = [$m['name'],$m['tag'],$m['role'],$m['trophies'],$m['trophyDelta7'],$m['trophyDelta30'],$m['donations'],$m['donationsReceived'],$m['donationRatio'],$this->locale === 'en' ? $m['status'] : ($m['status'] === 'review' ? 'perlu ditinjau' : 'stabil'),implode('; ', $this->locale === 'en' ? array_map(static fn($flag) => match ($flag) {
+                'Donasi nol' => 'No donations',
+                'Trofi 7 hari tidak berubah' => 'Trophies unchanged for 7 days',
+                'Donasi 7 hari tidak berubah' => 'Donations unchanged for 7 days',
+                default => $flag,
+            }, $m['flags']) : $m['flags'])];
             $csv = implode("\n", array_map(static fn($row) => implode(',', array_map(static function($value) { $value = (string)($value ?? ''); return preg_match('/[",\n]/', $value) ? '"' . str_replace('"', '""', $value) . '"' : $value; }, $row)), $rows));
             $res->getBody()->write($csv);
-            return $res->withHeader('Content-Type', 'text/csv; charset=utf-8')->withHeader('Content-Disposition', 'attachment; filename="clan-health-' . $tag . '-' . gmdate('Y-m-d') . '.csv"');
-        } catch (\Throwable) { $res->getBody()->write('Gagal membuat laporan CSV.'); return $res->withStatus(500)->withHeader('Content-Type', 'text/plain; charset=utf-8'); }
+            return $res->withHeader('Content-Type', 'text/csv; charset=utf-8')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language')->withHeader('Content-Disposition', 'attachment; filename="clan-health-' . $tag . '-' . gmdate('Y-m-d') . '.csv"');
+        } catch (\Throwable) { $res->getBody()->write($this->locale === 'en' ? 'Could not create the CSV report.' : 'Gagal membuat laporan CSV.'); return $res->withStatus(500)->withHeader('Content-Type', 'text/plain; charset=utf-8')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language'); }
     }
 
     private function staticFile(ResponseInterface $res, string $requested): ResponseInterface
