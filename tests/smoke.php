@@ -108,7 +108,11 @@ $seedApiCache($playerPath, [
     'leagueTier' => ['id' => 105000035, 'name' => 'Legend II'],
     'currentLeagueGroupTag' => '#8URPQL0', 'currentLeagueSeasonId' => 1791176400,
     'previousLeagueGroupTag' => '#8U89LYJ', 'previousLeagueSeasonId' => 1790571600,
-    'heroes' => [['name' => 'Test Icon', 'level' => 1, 'maxLevel' => 1, 'village' => 'home']]
+    'heroes' => [['name' => 'Test Icon', 'level' => 1, 'maxLevel' => 1, 'village' => 'home']],
+    'heroEquipment' => [
+        ['name' => 'Portal Pendant', 'level' => 1, 'maxLevel' => 27, 'village' => 'home'],
+        ['name' => 'Future Gear', 'level' => 1, 'maxLevel' => 18, 'village' => 'home']
+    ]
 ]);
 $currentMembers = [];
 for ($rank = 1; $rank <= 60; $rank++) {
@@ -436,6 +440,20 @@ try {
     $profile = json_decode((string)$profileResponse->getBody(), true);
     if ($profileResponse->getStatusCode() !== 200 || ($profile['army']['heroes'][0]['iconUrls'][0] ?? null) !== '/public/icons/' . basename($iconPath)) {
         throw new RuntimeException('Profil tidak memprioritaskan ikon lokal.');
+    }
+    $pendant = $profile['army']['heroEquipment'][0] ?? [];
+    if (($pendant['equipmentHero'] ?? null) !== 'Minion Prince' || ($pendant['maxLevel'] ?? null) !== 27
+        || ($pendant['iconUrls'][0] ?? null) !== '/public/icons/6670fe7511b1b140b321380d46c64f4194bb820a8cbe7b370ad33d5cbdf1135d.webp') {
+        throw new RuntimeException('Portal Pendant harus masuk ke Minion Prince dan memakai ikon lokal.');
+    }
+    if (($profile['army']['heroEquipment'][1]['name'] ?? null) !== 'Future Gear'
+        || ($profile['army']['heroEquipment'][1]['equipmentHero'] ?? null) !== null) {
+        throw new RuntimeException('Equipment baru dari API harus tetap tampil walau belum masuk katalog.');
+    }
+    $pendantIcon = $app->handle($factory->createServerRequest('GET', '/api/player-icon?name=Portal%20Pendant&section=heroEquipment'));
+    if ($pendantIcon->getStatusCode() !== 200 || $pendantIcon->getHeaderLine('Content-Type') !== 'image/webp'
+        || !str_starts_with((string)$pendantIcon->getBody(), 'RIFF')) {
+        throw new RuntimeException('Ikon Portal Pendant harus tersedia secara lokal sebagai WebP.');
     }
     if (($profile['player']['clan']['tag'] ?? null) !== '#9RU089PG') throw new RuntimeException('Profil API kehilangan tag clan pemain.');
     if (($profile['army']['heroes'][0]['progressMaxLevel'] ?? null) !== 1 || ($profile['army']['heroes'][0]['progressMaxSource'] ?? null) !== 'TH 18') {

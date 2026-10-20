@@ -66,8 +66,7 @@ function renderBaseLevel(id, level, type) {
 }
 
 const VERIFIED_WIKI_ICONS = {
-  'Heroes:Royal Champion': 'https://static.wikia.nocookie.net/clashofclans/images/8/8e/Avatar_Hero_Royal_Champion.png/revision/latest/scale-to-width-down/100?cb=20200913051659',
-  'Hero Equipment:Barbarian Puppet': 'https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430'
+  'Heroes:Royal Champion': 'https://static.wikia.nocookie.net/clashofclans/images/8/8e/Avatar_Hero_Royal_Champion.png/revision/latest/scale-to-width-down/100?cb=20200913051659'
 };
 
 function wikiIconCandidates(item, section) {

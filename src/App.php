@@ -59,13 +59,23 @@ final class App
         'Legend III' => ['battles' => 24, 'promoted' => 5, 'demoted' => 15],
         'Legend II' => ['battles' => 30, 'promoted' => 3, 'demoted' => 15]
     ];
+    // Equipment names must match the player API. Add new items here with their hero and, when needed, a verified icon URL.
     private const EQUIPMENT = [
-        'Barbarian King' => ['Barbarian Puppet', 'Rage Vial', 'Earthquake Boots', 'Vampstache', 'Giant Gauntlet', 'Spiky Ball', 'Snake Bracelet', 'Stick Horse'],
-        'Archer Queen' => ['Archer Puppet', 'Invisibility Vial', 'Giant Arrow', 'Healer Puppet', 'Frozen Arrow', 'Magic Mirror', 'Action Figure', 'Monolith Arrow'],
-        'Minion Prince' => ['Henchmen Puppet', 'Dark Orb', 'Metal Pants', 'Noble Iron', 'Dark Crown', 'Meteor Staff'],
-        'Grand Warden' => ['Eternal Tome', 'Life Gem', 'Rage Gem', 'Healing Tome', 'Fireball', 'Lavaloon Puppet', 'Heroic Torch'],
-        'Royal Champion' => ['Royal Gem', 'Seeking Shield', 'Hog Rider Puppet', 'Haste Vial', 'Rocket Spear', 'Electro Boots', 'Frost Flake'],
-        'Dragon Duke' => ['Fire Heart', 'Flame Blower', 'Stun Blaster', 'Electro Fangs', 'Rocket Backpack', 'Revenge Deck']
+        'Barbarian Puppet' => ['hero' => 'Barbarian King', 'iconUrl' => 'https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430'],
+        'Rage Vial' => ['hero' => 'Barbarian King'], 'Earthquake Boots' => ['hero' => 'Barbarian King'], 'Vampstache' => ['hero' => 'Barbarian King'],
+        'Giant Gauntlet' => ['hero' => 'Barbarian King'], 'Spiky Ball' => ['hero' => 'Barbarian King'], 'Snake Bracelet' => ['hero' => 'Barbarian King'], 'Stick Horse' => ['hero' => 'Barbarian King'],
+        'Archer Puppet' => ['hero' => 'Archer Queen'], 'Invisibility Vial' => ['hero' => 'Archer Queen'], 'Giant Arrow' => ['hero' => 'Archer Queen'],
+        'Healer Puppet' => ['hero' => 'Archer Queen'], 'Frozen Arrow' => ['hero' => 'Archer Queen'], 'Magic Mirror' => ['hero' => 'Archer Queen'],
+        'Action Figure' => ['hero' => 'Archer Queen'], 'Monolith Arrow' => ['hero' => 'Archer Queen'],
+        'Henchmen Puppet' => ['hero' => 'Minion Prince'], 'Dark Orb' => ['hero' => 'Minion Prince'], 'Metal Pants' => ['hero' => 'Minion Prince'],
+        'Noble Iron' => ['hero' => 'Minion Prince'], 'Dark Crown' => ['hero' => 'Minion Prince'], 'Meteor Staff' => ['hero' => 'Minion Prince'],
+        'Portal Pendant' => ['hero' => 'Minion Prince', 'iconUrl' => 'https://static.wikia.nocookie.net/clashofclans/images/c/cc/Portal_Pendant.png/revision/latest/scale-to-width-down/200?cb=20260906171322'],
+        'Eternal Tome' => ['hero' => 'Grand Warden'], 'Life Gem' => ['hero' => 'Grand Warden'], 'Rage Gem' => ['hero' => 'Grand Warden'],
+        'Healing Tome' => ['hero' => 'Grand Warden'], 'Fireball' => ['hero' => 'Grand Warden'], 'Lavaloon Puppet' => ['hero' => 'Grand Warden'], 'Heroic Torch' => ['hero' => 'Grand Warden'],
+        'Royal Gem' => ['hero' => 'Royal Champion'], 'Seeking Shield' => ['hero' => 'Royal Champion'], 'Hog Rider Puppet' => ['hero' => 'Royal Champion'],
+        'Haste Vial' => ['hero' => 'Royal Champion'], 'Rocket Spear' => ['hero' => 'Royal Champion'], 'Electro Boots' => ['hero' => 'Royal Champion'], 'Frost Flake' => ['hero' => 'Royal Champion'],
+        'Fire Heart' => ['hero' => 'Dragon Duke'], 'Flame Blower' => ['hero' => 'Dragon Duke'], 'Stun Blaster' => ['hero' => 'Dragon Duke'],
+        'Electro Fangs' => ['hero' => 'Dragon Duke'], 'Rocket Backpack' => ['hero' => 'Dragon Duke'], 'Revenge Deck' => ['hero' => 'Dragon Duke']
     ];
     private const MAX_LEVELS = [
         11 => ['heroes' => ['Barbarian King' => 50, 'Archer Queen' => 50, 'Grand Warden' => 20], 'troops' => ['Barbarian' => 8, 'Archer' => 8, 'Giant' => 8, 'Wizard' => 8, 'Dragon' => 6, 'P.E.K.K.A' => 7, 'Baby Dragon' => 5, 'Miner' => 5, 'Electro Dragon' => 2, 'Bowler' => 3], 'spells' => ['Lightning Spell' => 8, 'Healing Spell' => 7, 'Rage Spell' => 5, 'Jump Spell' => 3, 'Freeze Spell' => 6, 'Poison Spell' => 5, 'Haste Spell' => 5], 'pets' => []],
@@ -436,7 +446,7 @@ final class App
         if ($local !== null) $urls[] = $local['url'];
         foreach ($files as $file) { $hash = md5($file); $urls[] = 'https://static.wikia.nocookie.net/clashofclans/images/' . $hash[0] . '/' . substr($hash,0,2) . '/' . rawurlencode($file) . '/revision/latest/scale-to-width-down/100'; $urls[] = 'https://clashofclans.fandom.com/wiki/Special:FilePath/' . rawurlencode($file) . '?width=96'; }
         if ($section === 'heroes' && $name === 'Royal Champion') array_splice($urls, $local === null ? 0 : 1, 0, ['https://static.wikia.nocookie.net/clashofclans/images/8/8e/Avatar_Hero_Royal_Champion.png/revision/latest/scale-to-width-down/100?cb=20200913051659']);
-        if ($section === 'heroEquipment' && $name === 'Barbarian Puppet') array_splice($urls, $local === null ? 0 : 1, 0, ['https://static.wikia.nocookie.net/clashofclans/images/9/96/Barbarian_Puppet.png/revision/latest/scale-to-width-down/100?cb=20231211153430']);
+        if ($section === 'heroEquipment' && isset(self::EQUIPMENT[$name]['iconUrl'])) array_splice($urls, $local === null ? 0 : 1, 0, [self::EQUIPMENT[$name]['iconUrl']]);
         return array_values(array_unique($urls));
     }
     private function localIcon(string $name, string $section): ?array
@@ -450,8 +460,7 @@ final class App
     }
     private function playerItem(array $item): array
     {
-        $equipmentHero = null;
-        foreach (self::EQUIPMENT as $hero => $names) if (in_array($item['name'] ?? '', $names, true)) { $equipmentHero = $hero; break; }
+        $equipmentHero = self::EQUIPMENT[$item['name'] ?? '']['hero'] ?? null;
         return ['name' => $item['name'] ?? null, 'level' => $item['level'] ?? null, 'maxLevel' => $item['maxLevel'] ?? null, 'village' => $item['village'] ?? 'home', 'equipmentHero' => $equipmentHero];
     }
     private function scoreItems(array $items, array $table, bool $api, string $village = 'home'): array

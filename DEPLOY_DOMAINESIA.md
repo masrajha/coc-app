@@ -40,3 +40,9 @@ Pergantian backend ke PHP saja tidak menyelesaikan ikon yang gagal jika IP hosti
 4. Jika keluaran perintah masih mencatat ikon gagal, cek nama item dan jaringan komputer lokal. Ulangi perintah setelah koneksi pulih; file yang berhasil sebelumnya akan dilewati.
 
 `ICON_REMOTE_FETCH` tidak perlu diaktifkan di hosting. Bila disetel ke `1`, backend PHP kembali mencoba mengunduh ikon yang belum tersimpan saat menerima permintaan web; hal ini dapat membebani shared hosting.
+
+### Jika ada Hero Equipment baru
+
+Profil pemain menampilkan setiap equipment yang dikirim API, termasuk nama yang belum dikenal aplikasi. Item tanpa pemetaan akan masuk ke grup "Equipment lainnya". Untuk mengelompokkannya dengan benar, tambahkan nama persis dari API dan hero pemilik ke katalog `EQUIPMENT` di `src/App.php`. Jika URL ikon yang benar sudah diketahui, tambahkan sebagai `iconUrl` di entri yang sama. Level dan `maxLevel` tetap diambil dari API; jangan menuliskannya di katalog.
+
+Siapkan gambar di `public/icons/` dengan nama `<sha256 dari heroEquipment:Nama Equipment>.<ekstensi gambar sebenarnya>`. Contoh Portal Pendant: `6670fe7511b1b140b321380d46c64f4194bb820a8cbe7b370ad33d5cbdf1135d.webp` karena URL sumber mengirim berkas WebP. Alternatifnya, jalankan `prepare-icons.php` dengan tag pemain yang sudah memiliki item tersebut. Unggah gambar lokal bersama perubahan `src/App.php`, lalu periksa bahwa `/api/player/{tag}/profile` menempatkan ikon lokal di urutan pertama `iconUrls`.
