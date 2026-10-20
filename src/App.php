@@ -248,7 +248,17 @@ final class App
             429 => 'Batas permintaan API tercapai. Coba lagi sebentar.',
             504 => 'API Clash of Clans tidak merespons tepat waktu. Coba lagi sebentar; jika terus terjadi, periksa koneksi server, token, dan IP yang didaftarkan di developer.clashofclans.com.'
         ];
-        return $this->respond($res, ['error' => $messages[$status] ?? 'Gagal mengambil data dari API Clash of Clans.'], $status);
+        $message = $messages[$status] ?? 'Gagal mengambil data dari API Clash of Clans.';
+        if ($this->locale === 'en') $message = self::ENGLISH_ERRORS[$message] ?? $message;
+        $data = ['error' => $message];
+        if ($e instanceof UpstreamFailure) {
+            if ($e->apiReason !== null) $data['reason'] = $e->apiReason;
+            if ($e->apiMessage !== null) {
+                $data['message'] = $e->apiMessage;
+                $data['error'] .= ' ' . $e->apiMessage;
+            }
+        }
+        return $this->respond($res, $data, $status);
     }
 
     private function file(string $relative): string { return $this->dataDir . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative); }
@@ -1128,6 +1138,17 @@ final class App
 
 final class UpstreamFailure extends \RuntimeException
 {
-    public function __construct(public readonly int $status, ?\Throwable $previous = null, string $details = '') { parent::__construct('Upstream request failed' . ($details ? ': ' . $details : ''), $status, $previous); }
+    public readonly ?string $apiMessage;
+    public readonly ?string $apiReason;
+
+    public function __construct(public readonly int $status, ?\Throwable $previous = null, string $details = '')
+    {
+        $body = json_decode($details, true);
+        $message = is_array($body) ? ($body['message'] ?? null) : null;
+        $reason = is_array($body) ? ($body['reason'] ?? null) : null;
+        $this->apiMessage = is_string($message) && trim($message) !== '' ? trim($message) : null;
+        $this->apiReason = is_string($reason) && trim($reason) !== '' ? trim($reason) : null;
+        parent::__construct('Upstream request failed' . ($details ? ': ' . $details : ''), $status, $previous);
+    }
 }
 final class LocalDataFailure extends \RuntimeException {}

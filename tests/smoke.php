@@ -524,6 +524,25 @@ try {
     }
     $source = (new ReflectionClass(App::class))->newInstanceWithoutConstructor();
     $sourceType = new ReflectionClass(App::class);
+    $maintenanceMessage = 'API is currently in maintenance, please come back later';
+    $maintenanceFailure = new CocTracker\UpstreamFailure(503, null, json_encode(['reason' => 'inMaintenance', 'message' => $maintenanceMessage]));
+    foreach (['id' => 'Gagal mengambil data dari API Clash of Clans.', 'en' => 'Could not fetch data from the Clash of Clans API.'] as $locale => $prefix) {
+        $sourceType->getProperty('locale')->setValue($source, $locale);
+        $response = $sourceType->getMethod('failure')->invoke($source, new Slim\Psr7\Response(), $maintenanceFailure);
+        $errorData = json_decode((string)$response->getBody(), true);
+        if ($response->getStatusCode() !== 503 || $response->getHeaderLine('Content-Language') !== $locale
+            || ($errorData['error'] ?? null) !== $prefix . ' ' . $maintenanceMessage
+            || ($errorData['reason'] ?? null) !== 'inMaintenance' || ($errorData['message'] ?? null) !== $maintenanceMessage) {
+            throw new RuntimeException('Pesan JSON API harus terlihat di browser dan mempertahankan bahasa pesan aplikasi.');
+        }
+    }
+    $sourceType->getProperty('locale')->setValue($source, 'id');
+    $invalidFailure = new CocTracker\UpstreamFailure(503, null, '<html>Upstream unavailable</html>');
+    $invalidResponse = $sourceType->getMethod('failure')->invoke($source, new Slim\Psr7\Response(), $invalidFailure);
+    $invalidData = json_decode((string)$invalidResponse->getBody(), true);
+    if (($invalidData['error'] ?? null) !== 'Gagal mengambil data dari API Clash of Clans.' || isset($invalidData['message'])) {
+        throw new RuntimeException('Respons upstream selain JSON harus memakai pesan fallback tanpa meneruskan HTML.');
+    }
     $rankedRuleMethod = $sourceType->getMethod('rankedRule');
     $rankedRules = $sourceType->getReflectionConstant('RANKED_RULES')->getValue();
     foreach ($rankedRules as $tierName => $expectedRule) {
