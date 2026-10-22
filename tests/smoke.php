@@ -310,7 +310,7 @@ try {
         if (!str_contains($comparePage, $marker)) throw new RuntimeException('Panel perbandingan Ranked League tidak tersedia: ' . $marker);
     }
     $compareScript = (string)$app->handle($factory->createServerRequest('GET', '/compare.js'))->getBody();
-    foreach (['/war-history', 'leagueTier', 'attackWins', 'defenseWins', 'compare.starsPerAttack', 'compare.warArchiveNote', 'leagueSession${side}', 'leagueResult${side}', 'sameLeagueSeason', 'leagueMetricMark', 'defenseDestruction', 'compare.differentTiers', 'compare.differentGroups', 'renderComparisonOverview', 'renderStickyCompareHeader', 'itemComparison', 'activateCompareTab', "window.addEventListener('hashchange'", 'renderHeadToHead', 'sampleQuality', 'tripleRate', 'copyComparisonLink', 'compare.contextRecommendations'] as $marker) {
+    foreach (['/war-history', 'leagueTier', 'leagueSummary', 'renderLeagueMetrics', 'compare.starsPerAttack', 'compare.warArchiveNote', 'leagueSession${side}', 'leagueResult${side}', 'sameLeagueSeason', 'leagueMetricMark', 'defenseDestruction', 'compare.differentTiers', 'compare.differentGroups', 'renderComparisonOverview', 'renderStickyCompareHeader', 'itemComparison', 'activateCompareTab', "window.addEventListener('hashchange'", 'renderHeadToHead', 'sampleQuality', 'tripleRate', 'copyComparisonLink', 'compare.contextRecommendations'] as $marker) {
         if (!str_contains($compareScript, $marker)) throw new RuntimeException('Perbandingan War/Ranked League tidak lengkap: ' . $marker);
     }
     $compareStyles = (string)$app->handle($factory->createServerRequest('GET', '/compare.css'))->getBody();

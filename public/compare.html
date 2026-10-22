@@ -98,6 +98,9 @@
         <p class="section-note" data-i18n="compare.leagueScope">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
         <div id="leagueComparisonNote" class="league-comparison-note"></div>
         <div id="leagueComparisonGrid" class="league-comparison-grid"></div>
+        <p class="league-table-legend" data-i18n="compare.rankedLegend">Skor total menunjukkan hasil sesi; rata-rata membantu membandingkan kuota battle yang berbeda. Bonus defense hanya termasuk setelah sesi selesai.</p>
+        <div id="leagueMetricsTable" class="league-metrics-table-wrap" aria-live="polite"></div>
+        <section class="league-comparison-resume" aria-labelledby="leagueResumeTitle"><h3 id="leagueResumeTitle" data-i18n="compare.rankedResumeTitle">Ringkasan Ranked League</h3><p id="leagueResume" aria-live="polite"></p></section>
       </section>
       <section id="activity" class="panel compare-panel" hidden>
         <div class="section-head"><div><div class="eyebrow" data-i18n="compare.memberSnapshots">SNAPSHOT ANGGOTA</div><h2 data-i18n="compare.activityTrend">Tren aktivitas</h2></div><div class="activity-controls"><label for="activityPeriod"><span data-i18n="compare.period">Periode</span> <select id="activityPeriod"><option value="7" data-i18n="compare.sevenDays">7 hari</option><option value="30" selected data-i18n="compare.thirtyDays">30 hari</option><option value="all" data-i18n="compare.all">Semua</option></select></label><label for="activityMetric"><span data-i18n="compare.chart">Grafik</span> <select id="activityMetric"><option value="trophies" data-i18n="player.trophies">Trofi</option><option value="donations" data-i18n="player.donations">Donasi</option></select></label><span id="activityCount"></span></div></div>

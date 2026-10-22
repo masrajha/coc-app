@@ -228,7 +228,44 @@
     return lines;
   }
 
-  const api = { sections, categories, comparableProgress, armyRows, categoryRows, levelDifferences,
+  function sameLeagueSeason(left, right) {
+    const a = left?.session?.seasonId, b = right?.session?.seasonId;
+    return a != null && b != null && Number(a) > 0 && String(a) === String(b);
+  }
+
+  function leagueSummary(data) {
+    const numeric = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value) : null;
+    const quota = numeric(data?.leagueRule?.battles ?? data?.defense?.battleQuota);
+    const sides = {};
+    for (const side of ['attack', 'defense']) {
+      const logs = Array.isArray(data?.[side]?.logs) ? data[side].logs : [];
+      const count = numeric(data?.player?.[`${side}Count`]);
+      const points = logs.map(log => numeric(log.trophies)).filter(value => value !== null);
+      const stars = logs.map(log => numeric(log.stars)).filter(value => value !== null && value >= 0 && value <= 3);
+      const complete = count !== null && logs.length === count;
+      const pointDataComplete = complete && points.length === logs.length;
+      const total = points.length ? points.reduce((sum, value) => sum + value, 0) : count === 0 && !logs.length ? 0 : null;
+      const triples = stars.filter(value => value === 3).length;
+      sides[side] = { count, quota, logCount: logs.length, complete, pointDataComplete,
+        pointCount: points.length, points: total,
+        pointsAverage: points.length ? total / points.length : null,
+        starCount: stars.length, triples, tripleRate: stars.length ? triples / stars.length * 100 : null };
+    }
+    const bonus = numeric(data?.defense?.bonusPoints);
+    const bonusKnown = data?.session?.id === 'previous' && sides.attack.pointDataComplete && sides.defense.pointDataComplete
+      && quota !== null && bonus !== null;
+    const bonusApplied = bonusKnown && sides.defense.logCount < quota && bonus > 0;
+    sides.defense.bonusKnown = bonusKnown;
+    sides.defense.bonusPoints = bonusApplied ? bonus : 0;
+    sides.defense.totalPoints = sides.defense.points === null ? null : sides.defense.points + sides.defense.bonusPoints;
+    sides.defense.totalComplete = sides.defense.pointDataComplete && (data?.session?.id === 'current' || bonusKnown);
+    const officialTotal = numeric(data?.player?.trophies);
+    return { ...sides, ended: data?.session?.id === 'previous', stale: Boolean(data?.stale),
+      totalTrophies: officialTotal ?? (sides.attack.pointDataComplete && sides.defense.totalComplete
+        ? sides.attack.points + sides.defense.totalPoints : null) };
+  }
+
+  const api = { sections, categories, comparableProgress, armyRows, categoryRows, levelDifferences, sameLeagueSeason, leagueSummary,
     itemLevelMark, itemProgress, numberMarks, itemComparison, progressCategorySummary,
     parseWarDate, filterWars, combineWars, warStatus, warSummary, sharedSnapshots, filterSnapshots, donationChanges, resume };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

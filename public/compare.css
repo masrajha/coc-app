@@ -58,11 +58,20 @@
 .league-rank-highlight{display:flex;align-items:center;gap:10px;margin-bottom:11px;padding:10px;border:1px solid #38597b;border-radius:8px;background:linear-gradient(110deg,#1c3854,#172636);color:#b8d7ff}
 .league-rank-highlight strong{font-size:22px;line-height:1}
 .league-rank-highlight span{font-size:10px}
-.league-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.league-metric{display:grid;gap:4px;min-width:0;padding:9px;border:1px solid #2d4054;border-radius:7px;background:#15212e}
-.league-metric>span{color:#95abc2;font-size:10px}
-.league-metric>strong{display:flex;align-items:center;gap:5px;overflow-wrap:anywhere;color:#e6effb;font-size:14px;font-variant-numeric:tabular-nums}.league-mark{display:inline-grid;place-items:center;min-width:18px;height:18px;border-radius:5px;font-size:11px;font-weight:900}.league-metric .higher-mark{color:#052c20;background:#51ddb1}.league-metric .equal-mark{color:#c4d2e4;background:#33465b}
-.league-metric>small{color:#91a5bb;font-size:9px;line-height:1.35}
+.league-mark{display:inline-grid;place-items:center;min-width:18px;height:18px;border-radius:5px;font-size:11px;font-weight:900}
+.league-session-state{display:inline-block;padding:3px 7px;border:1px solid #38516b;border-radius:5px;color:#bcd5ef;font-size:10px}
+.league-quality-note{margin:8px 0 0;color:#a7bbcf;font-size:10px;line-height:1.6}.league-quality-note small{display:block;color:#d1b47e;font-size:10px}
+.league-table-legend{margin:14px 0 10px;color:#a5b9d0;font-size:11px;line-height:1.6}
+.league-metrics-table-wrap{overflow:hidden;border:1px solid #344a62;border-radius:9px}
+.league-metrics-table{width:100%;table-layout:fixed;border-collapse:collapse;color:#e5effb;font-size:12px}
+.league-metrics-table caption{padding:12px;text-align:left;background:#182635;color:#b8cce2;font-size:11px;font-weight:800}
+.league-metrics-table th,.league-metrics-table td{padding:11px 13px;border-top:1px solid #2d4054;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.league-metrics-table thead th{background:#203044;font-size:12px}.league-metrics-table th:first-child{width:36%}.league-metrics-table tbody th{color:#b6c8dc;font-size:11px;font-weight:600}
+.league-metrics-table td:nth-child(2){background:#78adff06}.league-metrics-table td:nth-child(3){background:#43d1bd06}
+.league-table-value{display:flex;align-items:center;flex-wrap:wrap;gap:6px;min-height:18px;font-size:13px;font-variant-numeric:tabular-nums}.league-table-value img{flex:0 0 16px;width:16px;height:16px;object-fit:contain}
+.league-metrics-table td small{display:block;margin-top:4px;color:#8fa7c0;font-size:10px;line-height:1.5}
+.league-comparison-resume{margin-top:13px;padding:13px 15px;border:1px solid #344a62;border-radius:9px;background:#111b27}.league-comparison-resume h3{margin:0 0 6px;color:#d9e8f8;font-size:13px}.league-comparison-resume p{margin:0;color:#afc3d9;font-size:11px;line-height:1.7}
+@media(max-width:520px){.league-metrics-table th,.league-metrics-table td{padding:9px 7px}.league-metrics-table th:first-child{width:32%}.league-metrics-table thead th,.league-metrics-table tbody th{font-size:10px}.league-table-value{gap:4px;font-size:11px}.league-metrics-table td small{font-size:9px}.league-metrics-table .league-mark{min-width:15px;height:15px;font-size:9px}.league-table-value img{width:13px;height:13px;flex-basis:13px}}
 @media(max-width:760px){.league-comparison-grid{grid-template-columns:1fr}.war-own-result{grid-template-columns:40px minmax(0,1fr)}.war-own-result small{grid-column:2;text-align:left}.league-player-card-head select{max-width:65%}}
 
 /* Comparison overview and focused comparison controls */
@@ -71,7 +80,6 @@
 .comparison-overview{display:grid;grid-template-columns:minmax(0,1fr) minmax(310px,.65fr);align-items:center;gap:20px;padding:15px 17px;border:1px solid #36516e;border-radius:10px;background:linear-gradient(120deg,#17283a,#15212d)}.comparison-overview h2{margin:3px 0 5px;font-size:18px}.comparison-overview p{margin:0;color:#afc1d6;font-size:11px;line-height:1.5}.overview-score{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:hidden;border:1px solid #3a4e64;border-radius:8px}.overview-score-item{display:grid;gap:3px;padding:10px;border-right:1px solid #3a4e64;text-align:center}.overview-score-item:last-child{border:0}.overview-score-item strong{font-size:21px}.overview-score-item span{overflow:hidden;color:#aabdd2;font-size:9px;text-overflow:ellipsis;white-space:nowrap}.overview-score-item.left strong{color:#78adff}.overview-score-item.right strong{color:#43d1bd}
 .comparison-legend{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:9px 2px;color:#9fb1c6;font-size:10px}.comparison-legend span{display:inline-flex;align-items:center;gap:5px}.comparison-legend .level-mark{min-width:18px;height:18px;font-size:10px}
 .army-filter{flex-wrap:wrap;gap:8px 9px}.army-filter select{width:auto;min-width:150px}.army-difference-toggle{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid #40536b;border-radius:7px;background:#111b27;color:#d2dfed;cursor:pointer}.army-difference-toggle input{accent-color:#4b8afa}.army-table th{position:sticky;top:101px;z-index:2}.lower-mark{color:#ffd5d1;background:#6a3035}.unavailable-mark{color:#92a4b8;background:#273747}.item-level.lower>span:first-child{color:#e0a3a8}
-.league-metric .lower-mark{color:#ffd5d1;background:#6a3035}
 .score-tile>strong,.category-cell>b{display:flex;align-items:center;gap:7px}.score-tile .level-mark,.category-cell .level-mark{display:inline-grid;color:inherit;font-size:11px;text-transform:none}.score-tile .higher-mark,.category-cell .higher-mark{color:#052c20}.score-tile .equal-mark,.category-cell .equal-mark{color:#c4d2e4}.score-tile .lower-mark,.category-cell .lower-mark{color:#ffd5d1}
 @media(max-width:700px){.sticky-compare-header{top:78px}.comparison-overview{grid-template-columns:1fr}.army-filter label:not(.army-difference-toggle){width:58px}.army-filter select{flex:1;min-width:calc(100% - 75px)}.army-difference-toggle{width:100%;justify-content:center}.army-table th{top:133px}}
 @media(max-width:480px){.sticky-player{padding:7px}.sticky-player img{width:25px;height:25px}.sticky-player small{font-size:8px}.comparison-overview{padding:12px}.overview-score-item{padding:8px 4px}}
