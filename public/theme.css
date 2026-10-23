@@ -1,43 +1,61 @@
-/* Existing colors are retained as fallbacks in dark mode. Shared semantic tokens
-   replace them in light mode, including components rendered after page load. */
+/* Sandstone Light and Royal Gold dark palettes. Gold is reserved for links and actions;
+   labels and data stay neutral. Components retain their original color fallbacks. */
 :root[data-theme=light]{
   --theme-scheme:light;
-  --theme-page:#f3f6fa;
-  --theme-inset:#f5f8fc;
-  --theme-panel:#ffffff;
-  --theme-raised:#e8eef5;
-  --theme-hover:#dce7f3;
-  --theme-track:#cbd7e5;
-  --theme-text:#172b42;
-  --theme-secondary:#3e5570;
-  --theme-muted:#52657c;
-  --theme-link:#245b9e;
-  --theme-success:#16634c;
-  --theme-danger:#a92d49;
-  --theme-warning:#795214;
-  --theme-purple:#71409c;
-  --theme-blue-soft:#e1edfc;
-  --theme-green-soft:#e3f4ed;
-  --theme-red-soft:#fce7ec;
-  --theme-gold-soft:#fff1cc;
-  --theme-purple-soft:#f0e7fa;
-  --theme-border:#ccd7e4;
-  --theme-blue-border:#8badd6;
-  --theme-green-border:#8cbea9;
-  --theme-red-border:#dda0ae;
-  --theme-gold-border:#d9b665;
-  --theme-purple-border:#bca1d5;
-  --theme-shadow:#172b4214;
-  --theme-grid:#ccd7e4;
-  --theme-chart-label:#52657c;
-  --theme-chart-blue:#2563a6;
-  --theme-chart-teal:#087d70;
-  --theme-chart-blue-fill:#2563a633;
-  --theme-chart-teal-fill:#087d7033;
+  --theme-page:#f4efe4;--theme-inset:#ece4d4;--theme-panel:#fffdf7;
+  --theme-raised:#e6dcc8;--theme-hover:#dccfb6;--theme-track:#cbbba0;
+  --theme-text:#2a2117;--theme-secondary:#4a3d2e;--theme-muted:#6e5f4c;
+  --theme-link:#785407;--theme-success:#356425;--theme-danger:#a83218;
+  --theme-warning:#81590c;--theme-purple:#5c2a7a;
+  --theme-blue-soft:#f0e7d5;--theme-green-soft:#e9f0dc;--theme-red-soft:#f7e4dc;
+  --theme-gold-soft:#fdf0c4;--theme-purple-soft:#eee3f0;
+  --theme-border:#d5c9b4;--theme-blue-border:#b5a17c;--theme-green-border:#a8bb91;
+  --theme-red-border:#d2a18e;--theme-gold-border:#c29a35;--theme-purple-border:#bca4c7;
+  --theme-shadow:#392b1814;--theme-grid:#d5c9b4;--theme-chart-label:#6e5f4c;
+  --theme-chart-blue:#90630b;--theme-chart-teal:#794198;
+  --theme-chart-blue-fill:#90630b33;--theme-chart-teal-fill:#79419833;
+  --theme-action-bg:#785407;--theme-action-hover:#614405;--theme-action-text:#fffdf7;
 }
-:root[data-theme=dark]{--theme-scheme:dark}
+:root[data-theme=dark]{
+  --theme-page:#101725;
+  --theme-inset:#0B101C;
+  --theme-panel:#1B2639;
+  --theme-raised:#27364C;
+  --theme-hover:#324560;
+  --theme-track:#566780;
+  --theme-text:#FFF5DD;
+  --theme-secondary:#D6C5A6;
+  --theme-muted:#A99C89;
+  --theme-link:#FFD166;
+  --theme-success:#70DDA3;
+  --theme-danger:#FF7B76;
+  --theme-warning:#FFBA55;
+  --theme-purple:#C19BFF;
+  --theme-border:#40516A;
+  --theme-action-bg:#E3AF35;
+  --theme-action-hover:#FFD166;
+  --theme-action-text:#201907;
+  --theme-chart-blue:#FFD166;
+  --theme-chart-teal:#61D9D0;
+  --theme-scheme:dark;
+  --theme-blue-soft:#25364b;
+  --theme-green-soft:#203e36;
+  --theme-red-soft:#472c36;
+  --theme-gold-soft:#352b16;
+  --theme-purple-soft:#302944;
+  --theme-blue-border:#627a9b;
+  --theme-green-border:#4d866e;
+  --theme-red-border:#a45c67;
+  --theme-gold-border:#957531;
+  --theme-purple-border:#80659f;
+  --theme-shadow:#03071166;
+  --theme-grid:#40516A;
+  --theme-chart-label:#A99C89;
+  --theme-chart-blue-fill:#FFD16633;
+  --theme-chart-teal-fill:#61D9D033;
+}
 html{color-scheme:var(--theme-scheme,dark)}
-html[data-theme=light],html[data-theme=light] body{background:var(--theme-page);color:var(--theme-text)}
+html[data-theme],html[data-theme] body{background:var(--theme-page);color:var(--theme-text)}
 /* Keep primary actions and tiny level markers legible on their saturated fills. */
 html[data-theme=light] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.join-clan-link,.cc-page button[type=submit]){color:#fff}
 html[data-theme=light] .dashboard .bg-blue-600{color:#fff}
@@ -78,18 +96,18 @@ html[data-theme=light] svg text{fill:var(--theme-chart-label)}
 
 /* Section accents are reserved for small labels and active-tab indicators. */
 :root{
-  --section-blue-bg:#1b3048;--section-blue-edge:#426f9c;--section-blue-ink:#b4d7ff;
-  --section-teal-bg:#183a35;--section-teal-edge:#3d7d6a;--section-teal-ink:#a6e3cf;
-  --section-amber-bg:#3a2e1b;--section-amber-edge:#92733b;--section-amber-ink:#f0cf89;
-  --section-purple-bg:#30243f;--section-purple-edge:#775b96;--section-purple-ink:#dcc3f3;
-  --section-slate-bg:#263341;--section-slate-edge:#526a81;--section-slate-ink:#c4d6e8;
+  --section-blue-bg:#25364b;--section-blue-edge:#a48645;--section-blue-ink:#ead4a7;
+  --section-teal-bg:#203e36;--section-teal-edge:#4d866e;--section-teal-ink:#9fd8c1;
+  --section-amber-bg:#352b16;--section-amber-edge:#957531;--section-amber-ink:#ffd166;
+  --section-purple-bg:#302944;--section-purple-edge:#80659f;--section-purple-ink:#c19bff;
+  --section-slate-bg:#27364c;--section-slate-edge:#627a9b;--section-slate-ink:#d6c5a6;
 }
 :root[data-theme=light]{
-  --section-blue-bg:#e5effc;--section-blue-edge:#9ab9de;--section-blue-ink:#24558b;
-  --section-teal-bg:#e1f3ed;--section-teal-edge:#9ec9b9;--section-teal-ink:#205f50;
-  --section-amber-bg:#fff3d7;--section-amber-edge:#d9ba76;--section-amber-ink:#755117;
-  --section-purple-bg:#f0e7fa;--section-purple-edge:#baa1d5;--section-purple-ink:#654186;
-  --section-slate-bg:#e9eff5;--section-slate-edge:#afbfce;--section-slate-ink:#40566e;
+  --section-blue-bg:#f0e7d5;--section-blue-edge:#b99b61;--section-blue-ink:#785407;
+  --section-teal-bg:#e9f0dc;--section-teal-edge:#a8bb91;--section-teal-ink:#446b37;
+  --section-amber-bg:#fdf0c4;--section-amber-edge:#c29a35;--section-amber-ink:#81590c;
+  --section-purple-bg:#eee3f0;--section-purple-edge:#bca4c7;--section-purple-ink:#633f72;
+  --section-slate-bg:#e6dcc8;--section-slate-edge:#b5a17c;--section-slate-ink:#665742;
 }
 [data-section-tone=blue]{--section-bg:var(--section-blue-bg);--section-edge:var(--section-blue-edge);--section-ink:var(--section-blue-ink)}
 [data-section-tone=teal]{--section-bg:var(--section-teal-bg);--section-edge:var(--section-teal-edge);--section-ink:var(--section-teal-ink)}
@@ -137,3 +155,25 @@ html .quick-search-tab[data-section-tone][aria-selected=true]{
   background:var(--theme-raised,#202c3a);border-bottom-color:var(--section-edge);color:var(--theme-text,#e8edf5);
 }
 @media(max-width:640px){html [data-section-tone]>.section-head,html [data-section-tone]>.cc-heading{gap:10px;flex-wrap:wrap}}
+
+/* Warm palette refinements. These apply after the shared component rules. */
+html[data-theme] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type=submit]),
+html[data-theme] .dashboard :is(.bg-blue-600,#searchButton){
+  background:var(--theme-action-bg);border-color:var(--theme-action-bg);color:var(--theme-action-text);
+}
+html[data-theme] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type=submit]):hover,
+html[data-theme] .dashboard :is(.bg-blue-600,#searchButton):hover{background:var(--theme-action-hover);border-color:var(--theme-action-hover);color:var(--theme-action-text)}
+html[data-theme] :is(.section-note,.section-head>span,.brand span,.updated,.identity-meta,.picker-note,.card-source,.raid-note,.raid-toolbar label,.raid-status:not(.is-error),.raid-eyebrow,.league-session-label,.league-list-heading,.league-member-rank,.league-member-meta,.data-freshness,.clan-overview-grid span,.clan-overview-grid small,.stats span,.progress-summary span,.player-overview-cards span,.score-tile span,.score-tile small,.compare-card-stats span,.army-item-name small,.ranked-battle-card small,.ranked-battle-card-top>span,.cc-muted,.cc-page p){color:var(--theme-muted)}
+html[data-theme] :is(.dashboard .text-slate-500,.dashboard .text-slate-600,.raid-metric>span,.performance-summary span){color:var(--theme-muted)}
+html[data-theme] :is(.dashboard .text-slate-700,.dashboard .text-slate-900,.ranking-identity strong){color:var(--theme-text)}
+html[data-theme] .dashboard .home-header-links>a:nth-of-type(1){--menu-bg:var(--theme-gold-soft);--menu-border:var(--theme-gold-border);--menu-text:var(--theme-link);--menu-hover:var(--theme-raised)}
+html[data-theme] .dashboard .home-header-links>a:nth-of-type(2){--menu-bg:var(--theme-purple-soft);--menu-border:var(--theme-purple-border);--menu-text:var(--theme-purple);--menu-hover:var(--theme-raised)}
+html[data-theme] .dashboard .home-header-links>a:nth-of-type(3){--menu-bg:var(--theme-green-soft);--menu-border:var(--theme-green-border);--menu-text:var(--theme-success);--menu-hover:var(--theme-raised)}
+html[data-theme] .dashboard .home-header-links>a:hover{color:var(--menu-text)}
+html[data-theme] :is(.league-member.is-current,.league-player-rank){background:var(--theme-gold-soft);border-color:var(--theme-gold-border);color:var(--theme-text)}
+html[data-theme] .league-player-rank strong{color:var(--theme-text)}
+html[data-theme] .dashboard table tbody tr:is(.bg-blue-50,[class*="bg-blue-"]){background:var(--theme-gold-soft);color:var(--theme-text)}
+html[data-theme] .donation-fab{background:var(--theme-panel);border-color:var(--theme-gold-border);color:var(--theme-text)}
+html[data-theme] .donation-fab:hover{background:var(--theme-raised);color:var(--theme-text)}
+
+html[data-theme] .cc-page p.cc-error{color:var(--theme-danger)}

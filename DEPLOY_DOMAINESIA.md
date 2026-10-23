@@ -92,3 +92,11 @@ Warna memakai variabel `--theme-*` dengan warna gelap sebelumnya sebagai fallbac
 Unggah ulang `public/theme.css` bersama `public/index.html`, `public/player.html`, `public/compare.html`, dan `public/compare-clan.html`. Bagian halaman memakai atribut `data-section-tone`: `blue` untuk ringkasan/progres, `teal` untuk anggota/aktivitas, `amber` untuk perang, `purple` untuk Capital, serta `slate` untuk laporan. Palet mengikuti tema aktif, termasuk mode Sistem. Isi tabel memakai warna netral; warna status dan battle log tetap memiliki maknanya sendiri.
 
 Aksen dibatasi pada label kecil dan garis tab aktif. Header, judul utama, kartu statistik, dan tabel memakai permukaan netral untuk menjaga fokus pada isi. Unggah ulang `public/theme.css` untuk penyempurnaan ini.
+
+### Percobaan palet pasir/navy (24 Oktober 2026)
+
+Palet terbaru hanya mengubah `public/theme.css`: light memakai pasir/krem, dark memakai navy dengan teks krem, aksi/link memakai gold, dan grafik memakai gold/ungu. Label pendukung tetap netral. Backup sebelum percobaan ada di `backups/theme-20261024-before-sand-navy.css`; untuk mengembalikan tampilan sebelumnya, salin isi backup ke `public/theme.css`. Preferensi Gelap/Terang/Sistem tetap berlaku.
+
+### Palet terpilih: Sandstone Light + Royal Gold
+
+Tema Light memakai Sandstone Light dan Dark memakai Royal Gold sesuai token di `coc_theme_palette_preview.html`. Token tambahan untuk status, border, grafik, dan aksen bagian telah dilengkapi. Grafik Royal Gold memakai gold dan teal; label pendukung tetap netral. Pilihan Sistem mengikuti pasangan ini sesuai perangkat. Cukup unggah ulang `public/theme.css` dan refresh cache browser. Backup awal di `backups/theme-20261024-before-sand-navy.css` tetap tersedia.
