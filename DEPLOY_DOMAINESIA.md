@@ -46,3 +46,35 @@ Pergantian backend ke PHP saja tidak menyelesaikan ikon yang gagal jika IP hosti
 Profil pemain menampilkan setiap equipment yang dikirim API, termasuk nama yang belum dikenal aplikasi. Item tanpa pemetaan akan masuk ke grup "Equipment lainnya". Untuk mengelompokkannya dengan benar, tambahkan nama persis dari API dan hero pemilik ke katalog `EQUIPMENT` di `src/App.php`. Jika URL ikon yang benar sudah diketahui, tambahkan sebagai `iconUrl` di entri yang sama. Level dan `maxLevel` tetap diambil dari API; jangan menuliskannya di katalog.
 
 Siapkan gambar di `public/icons/` dengan nama `<sha256 dari heroEquipment:Nama Equipment>.<ekstensi gambar sebenarnya>`. Contoh Portal Pendant: `6670fe7511b1b140b321380d46c64f4194bb820a8cbe7b370ad33d5cbdf1135d.webp` karena URL sumber mengirim berkas WebP. Alternatifnya, jalankan `prepare-icons.php` dengan tag pemain yang sudah memiliki item tersebut. Unggah gambar lokal bersama perubahan `src/App.php`, lalu periksa bahwa `/api/player/{tag}/profile` menempatkan ikon lokal di urutan pertama `iconUrls`.
+
+## 6. Clan Capital dan Raid Weekend
+
+Unggah `src/RaidReport.php`, perubahan `src/App.php`, `public/raids.js`, `public/raids.css`, `public/index.html`, `public/player.html`, `public/player.js`, dan `public/i18n.js`. Pastikan direktori data aplikasi dapat ditulis; subfolder `data/raids/` dibuat otomatis.
+
+Pada halaman clan, buka navigasi **Clan Capital** atau panel **Raid Weekend** untuk mengambil 10 weekend pertama. Tombol muat sebelumnya meneruskan cursor API. Setiap pengambilan menyimpan atau memperbarui arsip berdasarkan clan dan waktu mulai weekend, hingga 104 weekend per clan. Cache API menggunakan durasi yang sama dengan data lain; data tersimpan dapat ditampilkan dengan label khusus saat API maintenance atau timeout.
+
+Tab **Raid Weekend** pada halaman player mengambil data clan pemain saat ini, atau clan konteks jika pemain tidak memiliki clan, lalu menggabungkannya dengan partisipasi yang sudah tersimpan di arsip clan lain. Riwayat tidak diambil otomatis dari semua clan dan pencatatan tidak berjalan terjadwal. Data yang belum pernah diambil serta weekend di luar batas arsip tidak dijanjikan tersedia. Peserta yang tidak tercantum di respons API tidak otomatis dianggap tidak ikut.
+
+Jalankan `composer test` untuk smoke test dan pengujian raid. Pemeriksaan terjemahan: `node tests/i18n.test.js`.
+
+## 7. Compare Clan dan label pencarian
+
+Unggah `public/compare-clan.html`, `public/clan-compare.js`, `public/clan-compare-model.js`, `public/clan-compare.css`, dan `public/clan-labels.js`, bersama perubahan `public/index.html`, `public/i18n.js`, serta `src/App.php`. Buka **Bandingkan clan** dari header halaman utama atau profil clan. Tautan mendukung parameter `clan1`, `clan2`, `days`, dan `weekend`.
+
+Perbandingan menggunakan profil saat diakses, maksimal 50 entri war log terbaru dalam periode 30/90 hari, dan weekend bersama dari 10 weekend raid yang tersedia. War log privat hanya memengaruhi bagian terkait. TH dan donasi yang tidak tersedia tidak dianggap nol. Label pencarian diambil dari `/api/clans/labels` dengan cache satu hari dan maksimal tiga pilihan. Pencarian tetap bisa digunakan jika daftar label gagal dimuat.
+
+## 8. Leaderboard Builder Base, distrik Capital, dan pencapaian
+
+Unggah `src/ClanCapitalReport.php`, `public/account-features.js`, `public/account-features.css`, serta perubahan `src/App.php`, `public/rankings.js`, `public/index.html`, `public/player.html`, `public/player.js`, dan `public/i18n.js`.
+
+Leaderboard memakai filter negara yang sama untuk Home Village, Builder Base, dan Capital. Pada halaman clan, bagian Clan Capital menampilkan level distrik dan selisih terhadap snapshot harian sebelumnya yang memiliki data Capital. Snapshot lama tetap dapat dibaca; perubahan level baru tersedia setelah aplikasi menyimpan data Capital pada hari yang berbeda.
+
+Tab Pencapaian di profil pemain memakai data achievement dari API; nama dan deskripsi mengikuti teks API. Badge preferensi war membedakan ikut, tidak ikut, dan belum diketahui. Preferensi ini bukan status pemilihan roster. Daftar anggota memuat preferensi pemain yang terlihat melalui endpoint ringan `/api/player/{tag}/war-preference`, dengan maksimal empat permintaan bersamaan dan menggunakan cache profil API.
+
+## 9. Tab dashboard clan
+
+Unggah `public/clan-tabs.js`, `public/clan-tabs.css`, serta perubahan `public/index.html` dan `public/i18n.js`. Halaman `/clan.html` menggunakan dokumen dashboard yang sama. Urutan tab: Ringkasan, Anggota, War & CWL, Clan Capital, Riwayat & Laporan.
+
+Tautan tab mendukung `#overview`, `#members`, `#war-cwl`, `#capital`, dan `#history`; anchor lama seperti `#war-roster`, `#cwl-standings`, dan `#clan-capital` tetap membuka tab yang sesuai. Deskripsi/profil lengkap, roster, target, dan analisis dapat dilipat. Daftar anggota dipaginasi 25 baris dengan pencarian, filter, dan pengurutan untuk seluruh hasil.
+
+Data profil, ringkasan war, dan snapshot anggota tetap dimuat untuk mengisi Ringkasan. Detail standings/performa CWL dimuat saat tab War & CWL dibuka, riwayat perang saat tab Riwayat & Laporan dibuka, dan Raid Weekend saat tab Capital dibuka. Preferensi war anggota tetap dimuat hanya untuk baris yang terlihat.

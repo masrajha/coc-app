@@ -120,6 +120,7 @@ final class App
         'Jumlah anggota minimal tidak boleh melebihi maksimal.' => 'Minimum members cannot exceed maximum members.',
         'Gunakan hanya salah satu cursor after atau before.' => 'Use either the after or before cursor, not both.',
         'Parameter riwayat perang tidak valid.' => 'Invalid war log parameter.',
+        'Parameter Raid Weekend tidak valid.' => 'Invalid Raid Weekend parameter.',
     ];
 
     private function __construct()
@@ -146,9 +147,11 @@ final class App
         $app->get('/api/rankings/locations', fn($req, $res) => $self->rankingLocations($res));
         $app->get('/api/rankings/{type}', fn($req, $res, $args) => $self->rankings($req, $res, $args['type']));
         $app->get('/api/clans/search', fn($req, $res) => $self->searchClans($req, $res));
+        $app->get('/api/clans/labels', fn($req, $res) => $self->clanLabels($res));
         $app->get('/api/clans/popular', fn($req, $res) => $self->popularClans($res));
         $app->get('/api/clan/{tag}/war', fn($req, $res, $args) => $self->war($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/war-log', fn($req, $res, $args) => $self->clanWarLog($req, $res, $args['tag']));
+        $app->get('/api/clan/{tag}/raids', fn($req, $res, $args) => $self->clanRaids($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/standings', fn($req, $res, $args) => $self->cwlStandings($res, $args['tag']));
         $app->get('/api/clan/{tag}/cwl/performance', fn($req, $res, $args) => $self->cwlPerformance($req, $res, $args['tag']));
         $app->get('/api/clan/{tag}/health.csv', fn($req, $res, $args) => $self->healthCsv($res, $args['tag']));
@@ -157,8 +160,10 @@ final class App
         $app->get('/api/clan/{tag}', fn($req, $res, $args) => $self->clan($res, $args['tag']));
         $app->get('/api/player-icon', fn($req, $res) => $self->playerIcon($req, $res));
         $app->get('/api/player/{tag}/progress', fn($req, $res, $args) => $self->playerProgress($res, $args['tag']));
+        $app->get('/api/player/{tag}/war-preference', fn($req, $res, $args) => $self->warPreference($res, $args['tag']));
         $app->get('/api/player/{tag}/profile', fn($req, $res, $args) => $self->playerProfile($res, $args['tag']));
         $app->get('/api/player/{tag}/war-history', fn($req, $res, $args) => $self->playerWarHistory($res, $args['tag']));
+        $app->get('/api/player/{tag}/raids', fn($req, $res, $args) => $self->playerRaids($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/league-group', fn($req, $res, $args) => $self->playerLeagueGroup($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html'));
@@ -320,8 +325,9 @@ final class App
     {
         $snapshots = $this->snapshots($tag);
         $date = gmdate('Y-m-d');
-        $members = array_map(static fn($m) => ['tag' => $m['tag'] ?? null, 'name' => $m['name'] ?? null, 'role' => $m['role'] ?? null, 'expLevel' => $m['expLevel'] ?? null, 'trophies' => $m['trophies'] ?? 0, 'donations' => $m['donations'] ?? 0, 'donationsReceived' => $m['donationsReceived'] ?? 0, 'leagueTier' => isset($m['leagueTier']) ? ['name' => $m['leagueTier']['name'] ?? null] : null], $clan['memberList'] ?? []);
+        $members = array_map(static fn($m) => ['tag' => $m['tag'] ?? null, 'name' => $m['name'] ?? null, 'role' => $m['role'] ?? null, 'warPreference' => $m['warPreference'] ?? null, 'expLevel' => $m['expLevel'] ?? null, 'trophies' => $m['trophies'] ?? 0, 'donations' => $m['donations'] ?? 0, 'donationsReceived' => $m['donationsReceived'] ?? 0, 'leagueTier' => isset($m['leagueTier']) ? ['name' => $m['leagueTier']['name'] ?? null] : null], $clan['memberList'] ?? []);
         $snapshot = ['date' => $date, 'capturedAt' => gmdate('c'), 'clan' => ['tag' => '#' . $tag, 'name' => $clan['name'] ?? null, 'level' => $clan['clanLevel'] ?? null, 'points' => $clan['clanPoints'] ?? null, 'members' => $clan['members'] ?? null], 'members' => $members];
+        if (is_array($clan['clanCapital'] ?? null)) $snapshot['clanCapital'] = $clan['clanCapital'];
         $snapshots = array_values(array_filter($snapshots, static fn($s) => ($s['date'] ?? '') !== $date));
         $snapshots[] = $snapshot;
         usort($snapshots, static fn($a, $b) => strcmp($a['date'] ?? '', $b['date'] ?? ''));
@@ -350,7 +356,7 @@ final class App
             if (($member['donations'] ?? 0) === 0) $flags[] = 'Donasi nol';
             if ($delta7 === 0) $flags[] = 'Trofi 7 hari tidak berubah';
             if ($week && ($member['donations'] ?? 0) === ($week['donations'] ?? 0) && $received === ($week['donationsReceived'] ?? 0)) $flags[] = 'Donasi 7 hari tidak berubah';
-            $members[] = ['tag' => $tagKey, 'name' => $member['name'] ?? '', 'role' => $member['role'] ?? null, 'leagueTier' => $member['leagueTier'] ?? null, 'trophies' => $member['trophies'] ?? 0, 'donations' => $member['donations'] ?? 0, 'donationsReceived' => $received, 'donationRatio' => $received === 0 ? null : round(($member['donations'] ?? 0) / $received, 2), 'trophyDelta7' => $delta7, 'trophyDelta30' => $delta30, 'flags' => $flags, 'status' => $flags ? 'review' : 'stable'];
+            $members[] = ['tag' => $tagKey, 'name' => $member['name'] ?? '', 'role' => $member['role'] ?? null, 'warPreference' => $member['warPreference'] ?? null, 'leagueTier' => $member['leagueTier'] ?? null, 'trophies' => $member['trophies'] ?? 0, 'donations' => $member['donations'] ?? 0, 'donationsReceived' => $received, 'donationRatio' => $received === 0 ? null : round(($member['donations'] ?? 0) / $received, 2), 'trophyDelta7' => $delta7, 'trophyDelta30' => $delta30, 'flags' => $flags, 'status' => $flags ? 'review' : 'stable'];
         }
         usort($members, static fn($a, $b) => count($b['flags']) <=> count($a['flags']) ?: strcasecmp($a['name'], $b['name']));
         return ['clanTag' => '#' . $tag, 'clanName' => $latest['clan']['name'] ?? null, 'generatedAt' => gmdate('c'), 'latestSnapshot' => $latest['date'], 'snapshots' => count($snapshots), 'comparison' => ['sevenDayBaseline' => $seven['date'] ?? null, 'thirtyDayBaseline' => $thirty['date'] ?? null], 'summary' => ['review' => count(array_filter($members, static fn($m) => $m['status'] === 'review')), 'stable' => count(array_filter($members, static fn($m) => $m['status'] === 'stable'))], 'members' => $members];
@@ -533,15 +539,28 @@ final class App
         }
         unset($item);
         foreach($army as $section=>&$items)foreach($items as &$item)$item['iconUrls']=$this->iconCandidates($item['name'],$section);unset($items,$item);
-        $fields=['tag','name','townHallLevel','builderHallLevel','expLevel','trophies','bestTrophies','builderBaseTrophies','warStars','donations','donationsReceived','role'];$player=[];foreach($fields as $f)$player[$f]=$p[$f]??null;
+        $fields=['tag','name','townHallLevel','builderHallLevel','expLevel','trophies','bestTrophies','builderBaseTrophies','warStars','donations','donationsReceived','role','warPreference'];$player=[];foreach($fields as $f)$player[$f]=$p[$f]??null;
         $player['league']=isset($p['league'])?['name'=>$p['league']['name']??null,'iconUrls'=>$p['league']['iconUrls']??null]:null;
         $player['leagueTier']=isset($p['leagueTier'])?['id'=>$p['leagueTier']['id']??null,'name'=>$p['leagueTier']['name']??null]:null;
         $player['leagueSessions']=$this->leagueSessions($p);
         $player['clan']=isset($p['clan'])?['tag'=>$p['clan']['tag']??null,'name'=>$p['clan']['name']??null,'badgeUrls'=>$p['clan']['badgeUrls']??null]:null;
-        return ['player'=>$player,'army'=>$army,'progress'=>$progress,'lastUpdated'=>$updated];
+        return ['player'=>$player,'army'=>$army,'progress'=>$progress,'achievements'=>is_array($p['achievements']??null)?$p['achievements']:null,'lastUpdated'=>$updated];
     }
 
-    private function clan(ResponseInterface $res,string $raw):ResponseInterface{$tag=$this->normalizeTag($raw);if(!$tag)return $this->tagError($res,'Tag klan tidak valid.');try{$e=$this->upstream('/clans/'.rawurlencode('#'.$tag));$snapshot=$this->saveSnapshot($tag,$e['data']);$data=$e['data'];$data['snapshotDate']=$snapshot['date'];return $this->respond($res,$data);}catch(\Throwable $e){return $this->failure($res,$e);}}
+    private function clan(ResponseInterface $res,string $raw):ResponseInterface{$tag=$this->normalizeTag($raw);if(!$tag)return $this->tagError($res,'Tag klan tidak valid.');try{$e=$this->upstream('/clans/'.rawurlencode('#'.$tag));$capitalProgress=ClanCapitalReport::progress($e['data']['clanCapital']??[],$this->snapshots($tag),gmdate('Y-m-d'));$snapshot=$this->saveSnapshot($tag,$e['data']);$data=$e['data'];$data['capitalProgress']=$capitalProgress;$data['snapshotDate']=$snapshot['date'];return $this->respond($res,$data);}catch(\Throwable $e){return $this->failure($res,$e);}}
+
+    private function warPreference(ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag pemain tidak valid.');
+        try {
+            $entry = $this->upstream('/players/' . rawurlencode('#' . $tag));
+            $preference = $entry['data']['warPreference'] ?? null;
+            return $this->respond($res, ['tag' => '#' . $tag, 'warPreference' => in_array($preference, ['in', 'out'], true) ? $preference : null, 'lastUpdated' => $entry['lastUpdated']]);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
 
     private function clanWarLog(ServerRequestInterface $req, ResponseInterface $res, string $raw): ResponseInterface
     {
@@ -569,6 +588,16 @@ final class App
                 'paging' => $entry['data']['paging'] ?? null,
                 'lastUpdated' => $entry['lastUpdated']
             ]);
+        } catch (\Throwable $e) {
+            return $this->failure($res, $e);
+        }
+    }
+
+    private function clanLabels(ResponseInterface $res): ResponseInterface
+    {
+        try {
+            $entry = $this->upstream('/labels/clans?limit=100', null, null, 86400);
+            return $this->respond($res, ['items' => $entry['data']['items'] ?? [], 'lastUpdated' => $entry['lastUpdated']]);
         } catch (\Throwable $e) {
             return $this->failure($res, $e);
         }
@@ -650,6 +679,116 @@ final class App
         }
     }
 
+    private function raidParams(array $query): ?array
+    {
+        $limit = $query['limit'] ?? '10';
+        if (!is_string($limit) || !ctype_digit($limit) || (int)$limit < 1 || (int)$limit > 50) return null;
+        if (isset($query['after'], $query['before'])) return null;
+        $params = ['limit' => (int)$limit];
+        foreach (['after', 'before'] as $key) {
+            if (!isset($query[$key])) continue;
+            if (!is_string($query[$key]) || !preg_match('/^[^\x00-\x1F\x7F]{1,512}$/', $query[$key])) return null;
+            $params[$key] = $query[$key];
+        }
+        return $params;
+    }
+
+    private function raidPage(string $tag, array $params, ?string $clanName = null): array
+    {
+        $archivePath = 'raids/' . $tag . '.json';
+        $saved = $this->readJson($archivePath, []);
+        $archived = $saved['items'] ?? [];
+        $clanName ??= $saved['clanName'] ?? null;
+        if (!$clanName) {
+            $snapshots = $this->snapshots($tag);
+            $clanName = $snapshots ? ($snapshots[array_key_last($snapshots)]['clan']['name'] ?? null) : null;
+        }
+        try {
+            $entry = $this->upstream('/clans/' . rawurlencode('#' . $tag) . '/capitalraidseasons?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986), null, null, self::CACHE_TTL, true);
+        } catch (UpstreamFailure $e) {
+            if (!$archived || ($e->status !== 0 && !in_array($e->status, [502, 503, 504], true))) throw $e;
+            return ['clanTag' => '#' . $tag, 'items' => array_slice($archived, 0, $params['limit']),
+                'paging' => null, 'lastUpdated' => $archived[0]['lastUpdated'] ?? null,
+                'stale' => true, 'refreshError' => $e->apiMessage];
+        }
+        $items = [];
+        foreach ($entry['data']['items'] ?? [] as $raw) {
+            if (!is_array($raw) || !preg_match('/^\d{8}T\d{6}\.\d{3}Z$/', (string)($raw['startTime'] ?? ''))) continue;
+            $items[] = RaidReport::season($raw, '#' . $tag, $clanName, $entry['lastUpdated']);
+        }
+        if (!($entry['stale'] ?? false) && $items) {
+            $byId = [];
+            foreach (array_merge($archived, $items) as $item) {
+                $previous = $byId[$item['id']] ?? null;
+                if ($previous && strcmp((string)$previous['lastUpdated'], (string)$item['lastUpdated']) > 0) continue;
+                if ($previous && $previous['membersAvailable'] && !$item['membersAvailable']) continue;
+                $byId[$item['id']] = $item;
+            }
+            $all = array_values($byId);
+            usort($all, static fn($a, $b) => strcmp($b['startTime'], $a['startTime']));
+            $this->writeJson($archivePath, ['clanTag' => '#' . $tag, 'clanName' => $clanName, 'items' => array_slice($all, 0, 104)], true);
+        }
+        return ['clanTag' => '#' . $tag, 'items' => $items, 'paging' => $entry['data']['paging'] ?? null,
+            'lastUpdated' => $entry['lastUpdated'], 'stale' => $entry['stale'] ?? false];
+    }
+
+    private function clanRaids(ServerRequestInterface $req, ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag klan tidak valid.');
+        $params = $this->raidParams($req->getQueryParams());
+        if ($params === null) return $this->tagError($res, 'Parameter Raid Weekend tidak valid.');
+        try { return $this->respond($res, $this->raidPage($tag, $params)); }
+        catch (\Throwable $e) { return $this->failure($res, $e); }
+    }
+
+    private function playerRaids(ServerRequestInterface $req, ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag pemain tidak valid.');
+        $query = $req->getQueryParams();
+        $params = $this->raidParams($query);
+        if ($params === null) return $this->tagError($res, 'Parameter Raid Weekend tidak valid.');
+        $clan = isset($query['clan']) && is_string($query['clan']) ? $this->normalizeTag($query['clan']) : null;
+        if (isset($query['clan']) && !$clan) return $this->tagError($res, 'Tag klan tidak valid.');
+        $page = null; $refreshFailure = null;
+        try {
+            try {
+                $name = null;
+                if (!$clan) {
+                    $profile = $this->upstream('/players/' . rawurlencode('#' . $tag));
+                    $clan = $this->normalizeTag($profile['data']['clan']['tag'] ?? '');
+                    $name = $profile['data']['clan']['name'] ?? null;
+                }
+                if ($clan) $page = $this->raidPage($clan, $params, $name);
+            } catch (UpstreamFailure $e) {
+                if ($e->status !== 0 && !in_array($e->status, [502, 503, 504], true)) throw $e;
+                $refreshFailure = $e;
+            }
+            $seasons = [];
+            foreach (glob($this->file('raids/*.json')) ?: [] as $path) {
+                $archiveClan = $this->normalizeTag(pathinfo($path, PATHINFO_FILENAME));
+                if (!$archiveClan) continue;
+                foreach ($this->readJson('raids/' . $archiveClan . '.json', [])['items'] ?? [] as $item) $seasons[$item['id']] = $item;
+            }
+            $olderMemberData = false;
+            foreach ($page['items'] ?? [] as $item) {
+                $previous = $seasons[$item['id']] ?? null;
+                if ($previous && $previous['membersAvailable'] && !$item['membersAvailable']) { $olderMemberData = true; continue; }
+                if ($previous && strcmp((string)$previous['lastUpdated'], (string)$item['lastUpdated']) > 0) continue;
+                $seasons[$item['id']] = $item;
+            }
+            $report = RaidReport::player(array_values($seasons), '#' . $tag);
+            if ($refreshFailure && !$report['items']) throw $refreshFailure;
+            return $this->respond($res, array_merge($report, [
+                'playerTag' => '#' . $tag, 'contextClanTag' => $clan ? '#' . $clan : null,
+                'paging' => $page['paging'] ?? null, 'stale' => $refreshFailure !== null || $olderMemberData || ($page['stale'] ?? false),
+                'refreshError' => $refreshFailure?->apiMessage ?? ($page['refreshError'] ?? null),
+                'lastUpdated' => $page['lastUpdated'] ?? ($report['items'][0]['lastUpdated'] ?? null)
+            ]));
+        } catch (\Throwable $e) { return $this->failure($res, $e); }
+    }
+
     private function rankingLocations(ResponseInterface $res): ResponseInterface
     {
         try {
@@ -677,7 +816,7 @@ final class App
 
     private function rankings(ServerRequestInterface $req, ResponseInterface $res, string $type): ResponseInterface
     {
-        if (!in_array($type, ['players', 'clans'], true)) return $this->tagError($res, 'Jenis ranking tidak valid.');
+        if (!in_array($type, ['players', 'clans', 'players-builder-base', 'clans-builder-base', 'capitals'], true)) return $this->tagError($res, 'Jenis ranking tidak valid.');
         $query = $req->getQueryParams();
         $location = $query['location'] ?? 'global';
         if (!is_string($location) || !preg_match('/^(?:global|[A-Za-z0-9_-]{1,32})$/', $location)) {

@@ -43,6 +43,7 @@ $seedApiCache = static function (string $path, array $data) use ($cacheDir): voi
         'entry' => ['lastUpdated' => gmdate('c'), 'data' => $data]
     ]));
 };
+$seedApiCache('/labels/clans?limit=100', ['items' => [['id' => 56000000, 'name' => 'Clan Wars', 'iconUrls' => ['small' => 'https://example.com/label.png']]]]);
 $seedApiCache('/locations?limit=100', ['items' => [
     ['id' => '32000066', 'name' => 'Grenada', 'isCountry' => true]
 ], 'paging' => ['cursors' => ['after' => 'eyJwb3MiOjEwMH0']]]);
@@ -191,6 +192,8 @@ $checks = [
     '/api/player/2R92VJG0U/league-group?session=current' => [404, 'application/json'],
     '/api/player-icon?name=Giant%20Arrow&section=invalid' => [400, ''],
     '/api/rankings/locations' => [200, 'application/json'],
+    '/api/clans/labels?lang=en' => [200, 'application/json'],
+    '/compare-clan.html' => [200, 'text/html'],
     '/api/rankings/players?location=global&limit=25' => [200, 'application/json'],
     '/api/rankings/clans?location=global&limit=25' => [200, 'application/json'],
     '/api/rankings/unknown' => [400, 'application/json'],
@@ -224,6 +227,10 @@ try {
     $englishHeaderError = $app->handle($factory->createServerRequest('GET', '/api/clan/INVALID')->withHeader('Accept-Language', 'en-US,en;q=0.9'));
     if ($englishHeaderError->getHeaderLine('Content-Language') !== 'en') {
         throw new RuntimeException('The API must honor Accept-Language when lang is absent.');
+    }
+    $labels = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clans/labels'))->getBody(), true);
+    if (($labels['items'][0]['id'] ?? null) !== 56000000 || empty($labels['items'][0]['iconUrls']['small'])) {
+        throw new RuntimeException('Clan labels must preserve API IDs and icon URLs.');
     }
     $clanSearch = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clans/search?name=Elite&minMembers=30'))->getBody(), true);
     $warLog = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/war-log'))->getBody(), true);
@@ -284,7 +291,7 @@ try {
     foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
     }
-    foreach (['clanSectionNav', 'clan-overview', 'warCommandStrip', 'warProjection', 'rosterTownHall', 'rosterSort', 'matchup-map', 'warMemberDialog', 'renderWarCommand', 'rosterTheoreticalLimit', 'ourReachableMaximum', 'openWarMemberDialog', 'updateClanSectionNav'] as $marker) {
+    foreach (['clanSectionNav', 'clan-overview', 'warCommandStrip', 'warProjection', 'rosterTownHall', 'rosterSort', 'matchup-map', 'warMemberDialog', 'renderWarCommand', 'rosterTheoreticalLimit', 'ourReachableMaximum', 'openWarMemberDialog', 'window.ClanTabs.activateFromHash'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Command center clan CL1-CL3 belum lengkap: ' . $marker);
     }
     if (!str_contains($home, 'return rosterSize * 3;') || str_contains($home, 'const ourMaximum = clanStars + maxAdditional;')) {

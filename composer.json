@@ -16,6 +16,6 @@
     }
   },
   "scripts": {
-    "test": "php tests/smoke.php"
+    "test": ["php tests/smoke.php", "php tests/raids.php", "php tests/account-features.php"]
   }
 }

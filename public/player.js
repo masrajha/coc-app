@@ -424,6 +424,8 @@ function renderProfile(data) {
     clanName.textContent = tr('player.noClan');
   }
   setText('role', player.role || '');
+  window.AccountFeatures.renderWarPreference(document.getElementById('playerWarPreference'), player.warPreference);
+  window.AccountFeatures.renderAchievements(data.achievements);
   renderBaseLevel('townHall', player.townHallLevel, 'th');
   renderBaseLevel('builderHall', player.builderHallLevel, 'bh');
   setText('exp', player.expLevel);
@@ -441,6 +443,7 @@ function renderProfile(data) {
   renderPlayerOverview(player, data.progress, data.lastUpdated);
   renderPlayerResume(player, data.progress);
   PlayerLeague.initialize(player);
+  window.PlayerRaids.initialize(player, clanTag);
   loadPerformance(player);
   document.getElementById('profile').hidden = false;
   document.getElementById('status').hidden = true;
@@ -483,7 +486,8 @@ document.getElementById('itemDialog').addEventListener('click', event => {
 });
 document.querySelectorAll('.tabs button').forEach(button => button.addEventListener('click', () => {
   for (const tab of document.querySelectorAll('.tabs button')) tab.setAttribute('aria-selected', String(tab === button));
-  for (const section of ['army', 'progress', 'performance', 'ranked-battles']) document.getElementById(section).hidden = section !== button.dataset.tab;
+  for (const section of ['army', 'progress', 'performance', 'ranked-battles', 'capital-raids', 'achievements']) document.getElementById(section).hidden = section !== button.dataset.tab;
+  if (button.dataset.tab === 'capital-raids') window.PlayerRaids.activate();
   history.replaceState(null, '', `#${button.dataset.tab}`);
 }));
 ['progressSearch', 'progressFilter', 'progressSort'].forEach(id => document.getElementById(id)?.addEventListener(id === 'progressSearch' ? 'input' : 'change', () => currentProgress && renderProgressTools(currentProgress)));

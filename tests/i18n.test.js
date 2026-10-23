@@ -6,12 +6,12 @@ const source = fs.readFileSync('public/i18n.js', 'utf8');
 const inlineDashboard = fs.readFileSync('public/index.html', 'utf8').match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(inlineDashboard, 'Dashboard script is missing');
 new vm.Script(inlineDashboard[1], { filename: 'public/index.html' });
-const pages = ['public/index.html', 'public/player.html', 'public/compare.html'];
+const pages = ['public/index.html', 'public/player.html', 'public/compare.html', 'public/compare-clan.html'];
 const keys = pages.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/data-i18n(?:-placeholder|-aria-label|-title|-alt)?="([^"]+)"/g)].map(match => match[1]));
-const scripts = ['public/index.html', 'public/rankings.js', 'public/player.js', 'public/player-league.js', 'public/compare.js', 'public/donation.js'];
+const scripts = ['public/index.html', 'public/rankings.js', 'public/player.js', 'public/player-league.js', 'public/compare.js', 'public/donation.js', 'public/raids.js', 'public/clan-compare.js', 'public/clan-labels.js', 'public/account-features.js', 'public/clan-tabs.js'];
 const scriptKeys = scripts.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/\btr\(['"]([^'"]+)['"]/g)].map(match => match[1]));
 const translationKeys = [...new Set([...keys, ...scriptKeys])];
-const computedKeys = ['compare.quality.rendah', 'compare.quality.cukup', 'compare.quality.baik', 'clan.flag.Donasi nol', 'clan.flag.Trofi 7 hari tidak berubah', 'clan.flag.Donasi 7 hari tidak berubah'];
+const computedKeys = [...['wars','cwl','trophies','friendly','games','builder','design','farming','donator','social','talkative','underdog','relaxed','competitive','capital','newbie'].map(key => 'labels.name.' + key), 'compare.quality.rendah', 'compare.quality.cukup', 'compare.quality.baik', 'clan.flag.Donasi nol', 'clan.flag.Trofi 7 hari tidak berubah', 'clan.flag.Donasi 7 hari tidak berubah'];
 
 function createContext(initialLocale) {
   const storage = new Map(initialLocale ? [['coc-language', initialLocale]] : []);
@@ -61,6 +61,14 @@ assert.equal(english.context.window.CocI18n.apiUrl('/api/clan/ABC/war?round=2'),
 english.context.window.CocI18n.apiFetch('/api/clan/ABC/war?round=2');
 assert.equal(english.requests[0].url, '/api/clan/ABC/war?round=2&lang=en');
 const indonesian = createContext('id');
+const raidScript = fs.readFileSync('public/raids.js', 'utf8');
+const raidDate = raidScript.slice(raidScript.indexOf('  function date('), raidScript.indexOf('  function stateName('));
+for (const context of [indonesian.context, english.context]) {
+  const formatted = vm.runInNewContext(`${raidDate}; date('20261023T070000.000Z')`, context);
+  assert.notEqual(formatted, '—', 'Raid dates must parse the complete Clash timestamp, including hours and minutes');
+  assert.match(formatted, /2026/);
+}
+assert.equal(vm.runInNewContext(`${raidDate}; date(null)`, indonesian.context), '—');
 for (const key of ['home.noClans', 'home.noPlayers', 'clan.loading', 'clan.loadingWar', 'player.noWars', 'compare.enterA']) {
   assert.notEqual(indonesian.context.window.CocI18n.t(key), english.context.window.CocI18n.t(key), `The empty/loading state must be translated: ${key}`);
 }

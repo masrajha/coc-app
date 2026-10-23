@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title data-i18n="player.pageTitle">Profil Pemain · CoC Clan Command Center</title>
   <link rel="stylesheet" href="/player.css">
+  <link rel="stylesheet" href="/raids.css">
+  <link rel="stylesheet" href="/account-features.css">
   <link rel="stylesheet" href="/player-league.css">
   <link rel="stylesheet" href="/donation.css">
   <script src="/i18n.js"></script>
   <script src="/player-league.js" defer></script>
   <script src="/recent.js" defer></script>
+  <script src="/raids.js" defer></script>
+  <script src="/account-features.js" defer></script>
   <script src="/player.js" defer></script>
   <script src="/donation.js" defer></script>
 </head>
@@ -38,7 +42,7 @@
           <div>
             <div class="eyebrow">PLAYER PROFILE</div>
             <div class="player-name-row"><h1 id="playerName"></h1><div id="playerLeagueBadge" class="player-league-badge" hidden></div></div>
-            <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag" data-i18n-title="player.copyTag"></button><span id="clanName"></span><span id="role"></span></div>
+            <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag" data-i18n-title="player.copyTag"></button><span id="clanName"></span><span id="role"></span><span id="playerWarPreference" class="war-preference"></span></div>
             <div id="leagueRankSummary" class="league-rank-summary" data-i18n="player.leagueUnavailable">Peringkat grup liga belum tersedia.</div>
           </div>
         </div>
@@ -61,7 +65,7 @@
       </section>
 
       <nav class="tabs" aria-label="Bagian profil" data-i18n-aria-label="player.profileSections">
-        <button type="button" data-tab="army" aria-selected="true">Army</button><button type="button" data-tab="progress" aria-selected="false" data-i18n="player.progress">Progres</button><button type="button" data-tab="performance" aria-selected="false" data-i18n="player.warPerformance">Performa War/CWL</button><button type="button" data-tab="ranked-battles" aria-selected="false">Ranked League</button>
+        <button type="button" data-tab="army" aria-selected="true">Army</button><button type="button" data-tab="progress" aria-selected="false" data-i18n="player.progress">Progres</button><button type="button" data-tab="performance" aria-selected="false" data-i18n="player.warPerformance">Performa War/CWL</button><button type="button" data-tab="ranked-battles" aria-selected="false">Ranked League</button><button type="button" data-tab="capital-raids" aria-selected="false" data-i18n="raid.title">Raid Weekend</button><button type="button" data-tab="achievements" aria-selected="false" data-i18n="feature.achievements">Pencapaian</button>
       </nav>
 
       <section id="army" class="panel">
@@ -109,6 +113,22 @@
           <section><div class="ranked-battle-heading"><h3 data-i18n="player.attacks">Attacks</h3><span><b id="rankedAttackTotal"></b><b id="rankedAttackTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedAttackLogs" class="ranked-battle-list"></div></section>
           <section><div class="ranked-battle-heading"><h3 data-i18n="player.defenses">Defenses</h3><span><b id="rankedDefenseTotal"></b><b id="rankedDefenseTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedDefenseLogs" class="ranked-battle-list"></div></section>
         </div>
+      </section>
+      <section id="capital-raids" class="panel" hidden>
+        <div class="section-head"><div><div class="eyebrow">CLAN CAPITAL</div><h2 data-i18n="raid.title">Raid Weekend</h2></div><button id="raidPlayerReload" class="raid-button" type="button" disabled data-i18n="raid.refresh">Muat ulang</button></div>
+        <p id="raidPlayerStatus" class="raid-status" role="status" aria-live="polite"></p>
+        <p class="raid-note" data-i18n="raid.playerScope">Riwayat hanya mencakup clan dan weekend yang berhasil diambil atau diarsipkan aplikasi, bukan seluruh riwayat akun.</p>
+        <div id="raidPlayerMetrics" class="raid-metrics"></div>
+        <div class="raid-toolbar"><label for="raidPlayerClan" data-i18n="raid.clanFilter">Clan</label><select id="raidPlayerClan"><option value="" data-i18n="raid.allClans">Semua clan</option></select></div>
+        <div id="raidPlayerTable" class="raid-table-wrap"></div><div id="raidPlayerPager" class="raid-pager"></div>
+        <button id="raidPlayerMore" class="raid-button" type="button" hidden data-i18n="raid.moreContext">Muat weekend lebih lama dari clan konteks</button>
+        <p class="raid-note" data-i18n="raid.averageNote">Loot per serangan dipengaruhi target dan peran cleanup. Rata-rata ini bukan penilaian mutlak kualitas pemain.</p>
+      </section>
+      <section id="achievements" class="panel" hidden>
+        <div class="section-head"><h2 data-i18n="feature.achievements">Pencapaian</h2><span id="achievementSummary" class="feature-caption"></span></div>
+        <p class="section-note" data-i18n="feature.achievementNote">Nama dan deskripsi mengikuti teks API. Progres menunjukkan target tahap yang dikirim API, bukan seluruh target tahap selanjutnya.</p>
+        <div class="achievement-toolbar"><input id="achievementSearch" type="search" placeholder="Cari pencapaian" data-i18n-placeholder="feature.searchAchievements" aria-label="Cari pencapaian" data-i18n-aria-label="feature.searchAchievements"><select id="achievementVillage" aria-label="Desa" data-i18n-aria-label="feature.village"><option value="all" data-i18n="feature.allVillages">Semua desa</option><option value="home" data-i18n="feature.homeVillage">Home Village</option><option value="builderBase" data-i18n="feature.builderVillage">Builder Base</option></select><select id="achievementFilter" aria-label="Status pencapaian" data-i18n-aria-label="feature.achievementStatus"><option value="all" data-i18n="feature.allAchievements">Semua pencapaian</option><option value="complete" data-i18n="feature.complete">Selesai</option><option value="incomplete" data-i18n="feature.incomplete">Belum selesai</option></select></div>
+        <div id="achievementList" class="achievement-list"></div>
       </section>
       <section id="player-resume" class="panel player-resume-panel">
         <div class="section-head"><div><div class="eyebrow">PROFILE REPORT</div><h2 data-i18n="player.resume">Resume pemain</h2></div><span id="dataSourceNote"></span></div>

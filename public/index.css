@@ -42,7 +42,17 @@ body.dashboard{margin:0;background:#0e1219;color:#e8edf5;font-family:Inter,ui-sa
 .dashboard #clanTagInput:focus{border-color:#67a5ff;box-shadow:0 0 0 2px #2d68db55;outline:0}
 .dashboard header a,.dashboard #healthCsvLink,.dashboard #performancePager button,.dashboard .roster-filter,.dashboard #warRounds button{border-radius:7px}
 .dashboard header a:hover,.dashboard #healthCsvLink:hover,.dashboard #performancePager button:hover,.dashboard .roster-filter:hover{background:#27384b}
-.dashboard .home-header-links{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.dashboard .home-header-links{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px;min-width:0}
+.dashboard .home-header-links>a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 12px;border:1px solid var(--menu-border,#3974b6);border-radius:7px;background:var(--menu-bg,#1d4572);color:var(--menu-text,#d8ebff);font-size:12px;font-weight:650;line-height:1.3;text-align:center;text-decoration:none;transition:background .15s,color .15s,border-color .15s}
+.dashboard .home-header-links>a:nth-of-type(1){--menu-bg:#1d4572;--menu-border:#3974b6;--menu-text:#d8ebff;--menu-hover:#285d96}
+.dashboard .home-header-links>a:nth-of-type(2){--menu-bg:#463064;--menu-border:#8056ad;--menu-text:#efddff;--menu-hover:#604184}
+.dashboard .home-header-links>a:nth-of-type(3){--menu-bg:#174e51;--menu-border:#328487;--menu-text:#ccf7f0;--menu-hover:#216a6c}
+.dashboard .home-header-links>a:hover{border-color:var(--menu-border);background:var(--menu-hover);color:#fff}
+.dashboard .home-header-links>a:focus-visible{outline:2px solid #82b6ff;outline-offset:3px}
+.dashboard .home-header-links .language-control{min-height:40px;margin-left:8px;padding-left:14px;border-left:1px solid #334457}
+.dashboard .home-header-links .language-control select{min-height:36px;background:#111c28;font-size:12px}
+@media(max-width:1023px){.dashboard .home-header-links{justify-content:flex-start;padding-top:10px;border-top:1px solid #26384b}.dashboard .home-header-links .language-control{margin-left:auto}}
+@media(max-width:640px){.dashboard .home-header-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.dashboard .home-header-links>a{min-height:44px;padding:8px 5px;font-size:11px}.dashboard .home-header-links .language-control{grid-column:1/-1;justify-self:end;min-height:36px;margin:1px 0 0;padding-left:0;border-left:0}.dashboard .home-header-links .language-control select{min-height:38px}}
 .language-control{display:inline-flex;align-items:center;gap:7px;margin-left:5px;color:#a9bdd3;font-size:11px;font-weight:700;white-space:nowrap}
 .language-control select{min-height:31px;padding:5px 25px 5px 9px;border:1px solid #40536b;border-radius:7px;background:#172330;color:#e8edf5;font:inherit;cursor:pointer}
 .language-control select:focus-visible{outline:2px solid #67a5ff;outline-offset:2px}
@@ -123,8 +133,8 @@ body.dashboard{margin:0;background:#0e1219;color:#e8edf5;font-family:Inter,ui-sa
 .landing-copy h2{margin:0;color:#f1f6fd;font-size:clamp(27px,4vw,38px);font-weight:800;line-height:1.12;letter-spacing:-.025em}
 .landing-description{max-width:650px;margin:10px 0 0;color:#a6b8cd;font-size:13px;line-height:1.6}
 .quick-search{max-width:800px;margin:0;border:1px solid #344a62;border-radius:10px;background:#101923;box-shadow:none;overflow:hidden}
-.quick-search-tabs{display:flex;gap:4px;padding:8px 10px 0;border-bottom:1px solid #2a3a4d;background:#151f2b}
-.quick-search-tab{position:relative;flex:1;padding:12px 9px;border:0;border-bottom:2px solid transparent;border-radius:7px 7px 0 0;background:transparent;color:#9fb2c8;font-size:13px;font-weight:800;cursor:pointer;transition:color .15s,background .15s,border-color .15s}
+.quick-search-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:8px 10px 0;border-bottom:1px solid #2a3a4d;background:#151f2b}
+.quick-search-tab{position:relative;min-width:0;padding:12px 9px;border:0;border-bottom:2px solid transparent;border-radius:7px 7px 0 0;background:transparent;color:#9fb2c8;font-size:13px;font-weight:800;cursor:pointer;transition:color .15s,background .15s,border-color .15s}
 .quick-search-tab:hover{background:#1b2a3a;color:#e5f1ff}
 .quick-search-tab.active{border-bottom-color:#64a5ff;background:#1b2d40;color:#d7e9ff}
 .quick-search-form{padding:17px 19px 18px}
@@ -199,3 +209,5 @@ body.dashboard{margin:0;background:#0e1219;color:#e8edf5;font-family:Inter,ui-sa
 .health-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:10px}.health-toolbar input{width:210px;padding:7px 9px;border:1px solid #40546b;border-radius:7px;background:#111a25;color:#e7f0fa;font-size:10px}.health-segments{display:flex;flex-wrap:wrap;gap:4px}.health-segments button{padding:6px 8px;border:1px solid #40546b;border-radius:6px;background:#182431;color:#abc0d5;font-size:9px;font-weight:800;cursor:pointer}.health-segments button.active,.health-segments button:hover{border-color:#4d8eff;background:#24476e;color:#fff}.health-visible-count{margin-left:auto;color:#8fa6bd;font-size:9px;white-space:nowrap}
 .clan-actions-card{display:flex;align-items:center;gap:20px;padding:15px 16px;border:1px solid #30445a;border-radius:10px;background:#151e29}.clan-actions-card>div:first-child{min-width:0}.clan-actions-card h2{margin:0 0 3px;font-size:16px}.clan-actions-card p:last-child{margin:0;color:#96aac0;font-size:10px;line-height:1.45}.clan-actions-buttons{display:flex;flex:0 0 auto;gap:7px;margin-left:auto}.clan-actions-buttons button{padding:8px 10px;border:1px solid #486582;border-radius:7px;background:#213a54;color:#e2efff;font-size:10px;font-weight:800;cursor:pointer}.clan-actions-buttons button:disabled{cursor:not-allowed;opacity:.4}.clan-actions-card>span{flex:0 0 auto;color:#74dcb6;font-size:9px}
 @media(max-width:760px){.cwl-position-insight{grid-template-columns:1fr}.cwl-position-insight>div{border-right:0;border-bottom:1px solid #33485d}.health-toolbar,.clan-actions-card{align-items:stretch;flex-direction:column}.health-toolbar input{width:100%}.health-visible-count,.clan-actions-buttons{margin-left:0}.clan-actions-buttons button{flex:1}.clan-actions-card>span{min-height:12px}}
+
+@media(max-width:520px){.quick-search-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}

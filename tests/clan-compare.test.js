@@ -1,0 +1,17 @@
+const assert = require('node:assert/strict');
+const model = require('../public/clan-compare-model.js');
+const profile = model.profile({members:4,memberList:[{townHallLevel:18,donations:0},{townHallLevel:16,donations:10},{townHallLevel:null},{}]});
+assert.equal(profile.average,17);assert.equal(profile.known,2);assert.equal(profile.donations,10);assert.equal(profile.donationKnown,2);assert.equal(profile.donors,1);
+assert.equal(model.profile({members:5}).average,null);assert.equal(model.profile({}).donations,null);
+const now = Date.parse('2026-10-23T00:00:00Z');
+const war = (result,teamSize,stars,endTime='20261022T070000.000Z')=>({result,teamSize,endTime,clan:{stars,destructionPercentage:90}});
+const report=model.wars([war('win',15,45),war('lose',30,45),war('tie',15,45,'20260101T070000.000Z'),war(undefined,15,40),war('win',15,45,'20261101T070000.000Z')],30,now);
+assert.equal(report.count,2);assert.equal(report.winRate,50);assert.equal(report.starRate,90/135*100);
+assert.equal(model.wars([],30,now).winRate,null);
+assert.deepEqual(model.sharedRaids([{id:'A:1',startTime:'20261016T070000.000Z'},{startTime:'20261009T070000.000Z'}],[{id:'B:1',startTime:'20261016T070000.000Z'}]),['20261016T070000.000Z']);
+assert.deepEqual(model.sharedRaids([],[]),[]);
+assert.equal(model.raid({totalAttacks:4,loot:100}).lootPerAttack,25);
+assert.equal(model.raid({totalAttacks:0,loot:0}).lootPerAttack,null);
+assert.equal(model.raid({totalAttacks:4}).lootPerAttack,null);
+assert.equal(model.date('20261023T070000.000Z').toISOString(),'2026-10-23T07:00:00.000Z');
+console.log('Clan comparison tests passed.');

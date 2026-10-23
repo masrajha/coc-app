@@ -11,6 +11,8 @@
   const tabs = [...document.querySelectorAll('.ranking-tab')];
   const tr = (key, variables) => window.CocI18n.t(key, variables);
   let rankingType = 'players';
+  const isPlayer = () => rankingType.startsWith('players');
+  const categoryCaption = () => ({players:'home.rankingCaption',clans:'home.rankingClanCaption','players-builder-base':'feature.rankPlayersBuilder','clans-builder-base':'feature.rankClansBuilder',capitals:'feature.rankCapital'})[rankingType];
   let requestNumber = 0;
   let clanLocationObserver = null;
   let clanLocationQueue = [];
@@ -25,7 +27,7 @@
   };
 
   function displayNumber(value) {
-    return window.CocI18n.number(Number(value || 0));
+    return value == null ? '?' : window.CocI18n.number(Number(value));
   }
 
   function cleanTag(tag) {
@@ -63,7 +65,7 @@
     status.textContent = tr('home.loadingLeaderboard');
     tableWrap.hidden = true;
     updated.textContent = '';
-    caption.textContent = tr(rankingType === 'players' ? 'home.rankingCaption' : 'home.rankingClanCaption');
+    caption.textContent = tr(categoryCaption());
   }
 
   function appendCell(row, content, className = '') {
@@ -100,10 +102,12 @@
     appendCell(row, clan?.name || '—', 'secondary-cell');
     const countryCell = appendCell(row, tr(clan?.tag ? 'home.loadingShort' : 'home.notAvailable'), 'secondary-cell player-location-cell');
     if (clan?.tag) countryCell.dataset.clanTag = cleanTag(clan.tag);
-    appendCell(row, item.leagueTier?.name || item.league?.name || '—', 'secondary-cell league-cell');
-    appendCell(row, displayNumber(item.trophies), 'score-cell');
-    appendCell(row, displayNumber(item.attackWins), 'secondary-cell');
-    appendCell(row, displayNumber(item.defenseWins), 'secondary-cell');
+    appendCell(row, (rankingType === 'players-builder-base' ? item.builderBaseLeague?.name : item.leagueTier?.name || item.league?.name) || '—', 'secondary-cell league-cell');
+    appendCell(row, displayNumber(rankingType === 'players-builder-base' ? item.builderBaseTrophies : item.trophies), 'score-cell');
+    if (rankingType === 'players') {
+      appendCell(row, displayNumber(item.attackWins), 'secondary-cell');
+      appendCell(row, displayNumber(item.defenseWins), 'secondary-cell');
+    }
     return row;
   }
 
@@ -114,7 +118,7 @@
 
     const clan = document.createElement('a');
     clan.className = 'ranking-name-link';
-    clan.href = `/?clan=${encodeURIComponent(cleanTag(item.tag))}`;
+    clan.href = `/clan.html?clan=${encodeURIComponent(cleanTag(item.tag))}`;
     const badgeUrl = item.badgeUrls?.small || item.badgeUrls?.medium || item.badgeUrls?.large;
     if (badgeUrl) {
       const image = document.createElement('img');
@@ -136,23 +140,23 @@
     appendCell(row, item.clanLevel ? `Level ${item.clanLevel}` : '—', 'secondary-cell');
     appendCell(row, item.members == null ? '—' : `${item.members}/50`, 'secondary-cell');
     appendCell(row, item.location?.name || '—', 'secondary-cell');
-    appendCell(row, displayNumber(item.clanPoints), 'score-cell');
+    appendCell(row, displayNumber(rankingType === 'clans-builder-base' ? item.clanBuilderBasePoints : item.clanPoints), 'score-cell');
     return row;
   }
 
   function render(data) {
     tableHead.replaceChildren();
     tableRows.replaceChildren();
-    const headings = rankingType === 'players'
-      ? ['home.rank', 'home.player', 'home.clan', 'home.location', 'home.league', 'home.trophies', 'home.attacks', 'home.defenses']
-      : ['home.rank', 'home.clan', 'clan.levelWord', 'home.membersHeading', 'home.location', 'home.clanPoints'];
+    const headings = isPlayer()
+      ? ['home.rank', 'home.player', 'home.clan', 'home.location', 'home.league', 'home.trophies', ...(rankingType === 'players' ? ['home.attacks', 'home.defenses'] : [])]
+      : ['home.rank', 'home.clan', 'clan.levelWord', 'home.membersHeading', 'home.location', rankingType === 'capitals' ? 'feature.capitalPoints' : rankingType === 'clans-builder-base' ? 'feature.builderPoints' : 'home.clanPoints'];
     const headRow = document.createElement('tr');
     for (const key of headings) headRow.appendChild(text('th', tr(key)));
     tableHead.appendChild(headRow);
 
     const items = Array.isArray(data.items) ? data.items : [];
     items.forEach((item, index) => tableRows.appendChild(
-      rankingType === 'players' ? renderPlayer(item, index) : renderClan(item, index)
+      isPlayer() ? renderPlayer(item, index) : renderClan(item, index)
     ));
     if (!items.length) {
       const row = document.createElement('tr');
