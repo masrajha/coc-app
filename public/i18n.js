@@ -2,6 +2,11 @@
   const STORAGE_KEY = 'coc-language';
   const messages = {
     id: {
+      "theme.label": "Tema",
+      "theme.dark": "Gelap",
+      "theme.light": "Terang",
+      "theme.system": "Sistem",
+
       "clan.tabs.overview": "Ringkasan",
       "clan.tabs.members": "Anggota",
       "clan.tabs.war": "War & CWL",
@@ -1080,6 +1085,11 @@
       'player.loadingSessionComparison': 'Memuat perbandingan sesi…'
     },
     en: {
+      "theme.label": "Theme",
+      "theme.dark": "Dark",
+      "theme.light": "Light",
+      "theme.system": "System",
+
       "clan.tabs.overview": "Overview",
       "clan.tabs.members": "Members",
       "clan.tabs.war": "War & CWL",

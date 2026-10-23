@@ -324,18 +324,18 @@ function renderHeadToHead() {
   };
   for (const scale of [.25, .5, .75, 1]) {
     const points = metrics.map((_, index) => point(index, scale * 100).join(',')).join(' ');
-    svg.appendChild(svgNode('polygon', { points, fill: 'none', stroke: '#33475d', 'stroke-width': 1 }));
+    svg.appendChild(svgNode('polygon', { points, fill: 'none', stroke: 'var(--theme-grid,#33475d)', 'stroke-width': 1 }));
   }
   metrics.forEach((metric, index) => {
     const [x, y] = point(index, 100);
-    svg.appendChild(svgNode('line', { x1: cx, y1: cy, x2: x, y2: y, stroke: '#33475d', 'stroke-width': 1 }));
+    svg.appendChild(svgNode('line', { x1: cx, y1: cy, x2: x, y2: y, stroke: 'var(--theme-grid,#33475d)', 'stroke-width': 1 }));
     const [lx, ly] = point(index, 125);
-    const label = svgNode('text', { x: lx, y: ly, fill: '#aebfd2', 'font-size': 11, 'text-anchor': lx < cx - 8 ? 'end' : lx > cx + 8 ? 'start' : 'middle' });
+    const label = svgNode('text', { x: lx, y: ly, fill: 'var(--theme-chart-label,#aebfd2)', 'font-size': 11, 'text-anchor': lx < cx - 8 ? 'end' : lx > cx + 8 ? 'start' : 'middle' });
     label.textContent = metric[0]; svg.appendChild(label);
   });
-  for (const [valueIndex, color] of [[1, '#79adff'], [2, '#40d3bd']]) {
+  for (const [valueIndex, color] of [[1, 'var(--theme-chart-blue,#79adff)'], [2, 'var(--theme-chart-teal,#40d3bd)']]) {
     const points = metrics.map((metric, index) => point(index, metric[valueIndex]).join(',')).join(' ');
-    svg.appendChild(svgNode('polygon', { points, fill: `${color}33`, stroke: color, 'stroke-width': 3 }));
+    svg.appendChild(svgNode('polygon', { points, fill: valueIndex === 1 ? 'var(--theme-chart-blue-fill,#79adff33)' : 'var(--theme-chart-teal-fill,#40d3bd33)', stroke: color, 'stroke-width': 3 }));
   }
   root.appendChild(svg);
   const legend = textNode('div', '', 'activity-legend');
@@ -725,9 +725,9 @@ function renderActivity() {
   const x = index => 55 + index / (sharedTrend.length - 1) * 790;
   for (let index = 0; index <= 3; index++) {
     const yy = 45 + index * 50;
-    svg.appendChild(svgNode('line', { x1: 55, y1: yy, x2: 845, y2: yy, stroke: '#33475d', 'stroke-width': 1 }));
+    svg.appendChild(svgNode('line', { x1: 55, y1: yy, x2: 845, y2: yy, stroke: 'var(--theme-grid,#33475d)', 'stroke-width': 1 }));
   }
-  for (const [side, color] of [['left', '#79adff'], ['right', '#40d3bd']]) {
+  for (const [side, color] of [['left', 'var(--theme-chart-blue,#79adff)'], ['right', 'var(--theme-chart-teal,#40d3bd)']]) {
     const points = sharedTrend.map((point, index) => `${x(index)},${y(Number(point[side][metricKey] || 0))}`).join(' ');
     svg.appendChild(svgNode('polyline', { points, fill: 'none', stroke: color, 'stroke-width': 3, 'stroke-linejoin': 'round' }));
     sharedTrend.forEach((point, index) => {
@@ -738,7 +738,7 @@ function renderActivity() {
     });
   }
   for (const [position, label] of [[0, sharedTrend[0].date], [sharedTrend.length - 1, sharedTrend.at(-1).date]]) {
-    const text = svgNode('text', { x: x(position), y: 220, fill: '#9eb2c8', 'font-size': 11, 'text-anchor': position ? 'end' : 'start' });
+    const text = svgNode('text', { x: x(position), y: 220, fill: 'var(--theme-chart-label,#9eb2c8)', 'font-size': 11, 'text-anchor': position ? 'end' : 'start' });
     text.textContent = label; svg.appendChild(text);
   }
   chart.appendChild(svg);
@@ -926,34 +926,35 @@ function exportPng() {
   canvas.width = 1200; canvas.height = 770;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  ctx.fillStyle = '#101820'; ctx.fillRect(0, 0, 1200, 770);
-  ctx.fillStyle = '#eef5ff'; ctx.font = 'bold 30px sans-serif'; ctx.fillText(tr('compare.heading'), 56, 68);
-  ctx.font = '16px sans-serif'; ctx.fillStyle = '#a9bdd4';
+  const themeColor = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  ctx.fillStyle = themeColor('--theme-page', '#101820'); ctx.fillRect(0, 0, 1200, 770);
+  ctx.fillStyle = themeColor('--theme-text', '#eef5ff'); ctx.font = 'bold 30px sans-serif'; ctx.fillText(tr('compare.heading'), 56, 68);
+  ctx.font = '16px sans-serif'; ctx.fillStyle = themeColor('--theme-secondary', '#a9bdd4');
   ctx.fillText(`${sideName('left')}  vs  ${sideName('right')}`, 56, 100);
   ctx.fillText(tr('compare.pngPeriod', { period: document.getElementById('warPeriod').selectedOptions[0].textContent, count: sharedTrend.length }), 56, 127);
-  for (const [side, x, color] of [['left', 56, '#79adff'], ['right', 615, '#40d3bd']]) {
+  for (const [side, x, color] of [['left', 56, themeColor('--theme-chart-blue', '#79adff')], ['right', 615, themeColor('--theme-chart-teal', '#40d3bd')]]) {
     const profile = profiles[side];
-    ctx.fillStyle = '#192b3d'; ctx.fillRect(x, 158, 529, 130);
+    ctx.fillStyle = themeColor('--theme-inset', '#192b3d'); ctx.fillRect(x, 158, 529, 130);
     ctx.fillStyle = color; ctx.font = 'bold 22px sans-serif'; ctx.fillText(profile.player.name.slice(0, 34), x + 18, 194);
-    ctx.fillStyle = '#dbe8f8'; ctx.font = '16px sans-serif';
+    ctx.fillStyle = themeColor('--theme-text', '#dbe8f8'); ctx.font = '16px sans-serif';
     ctx.fillText(tr('compare.pngScore', { th: profile.player.townHallLevel, score: formatPercent(profile.progress?.score?.overall) }), x + 18, 226);
     const cwl = model.warSummary(displayedWars, side, 'CWL');
     const classic = model.warSummary(displayedWars, side, 'War');
     ctx.fillText(tr('compare.pngWars', { cwlStars: cwl.stars, cwlAttacks: cwl.attacks, classicStars: classic.stars, classicAttacks: classic.attacks }), x + 18, 257);
   }
-  ctx.fillStyle = '#eef5ff'; ctx.font = 'bold 19px sans-serif'; ctx.fillText(tr('compare.pngTrend'), 56, 335);
+  ctx.fillStyle = themeColor('--theme-text', '#eef5ff'); ctx.font = 'bold 19px sans-serif'; ctx.fillText(tr('compare.pngTrend'), 56, 335);
   const values = sharedTrend.flatMap(point => [point.left.trophies, point.right.trophies]);
   const min = Math.min(...values); const max = Math.max(...values);
   const x = index => 70 + index / (sharedTrend.length - 1) * 1050;
   const y = value => 565 - (max === min ? .5 : (value - min) / (max - min)) * 190;
-  ctx.strokeStyle = '#34495e'; ctx.lineWidth = 1;
+  ctx.strokeStyle = themeColor('--theme-grid', '#34495e'); ctx.lineWidth = 1;
   for (let index = 0; index < 4; index++) { const yy = 375 + index * 63; ctx.beginPath(); ctx.moveTo(70, yy); ctx.lineTo(1120, yy); ctx.stroke(); }
-  for (const [side, color] of [['left', '#79adff'], ['right', '#40d3bd']]) {
+  for (const [side, color] of [['left', themeColor('--theme-chart-blue', '#79adff')], ['right', themeColor('--theme-chart-teal', '#40d3bd')]]) {
     ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.beginPath();
     sharedTrend.forEach((point, index) => { if (index) ctx.lineTo(x(index), y(point[side].trophies)); else ctx.moveTo(x(index), y(point[side].trophies)); });
     ctx.stroke();
   }
-  ctx.fillStyle = '#a9bdd4'; ctx.font = '14px sans-serif';
+  ctx.fillStyle = themeColor('--theme-secondary', '#a9bdd4'); ctx.font = '14px sans-serif';
   ctx.fillText(sharedTrend[0].date, 70, 600); ctx.textAlign = 'right'; ctx.fillText(sharedTrend.at(-1).date, 1120, 600); ctx.textAlign = 'left';
   ctx.fillText(tr('compare.pngSource'), 56, 655);
   ctx.fillText(tr('compare.pngCreated', { date: new Date().toLocaleString(locale()) }), 56, 680);

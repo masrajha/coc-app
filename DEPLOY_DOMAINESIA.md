@@ -78,3 +78,11 @@ Unggah `public/clan-tabs.js`, `public/clan-tabs.css`, serta perubahan `public/in
 Tautan tab mendukung `#overview`, `#members`, `#war-cwl`, `#capital`, dan `#history`; anchor lama seperti `#war-roster`, `#cwl-standings`, dan `#clan-capital` tetap membuka tab yang sesuai. Deskripsi/profil lengkap, roster, target, dan analisis dapat dilipat. Daftar anggota dipaginasi 25 baris dengan pencarian, filter, dan pengurutan untuk seluruh hasil.
 
 Data profil, ringkasan war, dan snapshot anggota tetap dimuat untuk mengisi Ringkasan. Detail standings/performa CWL dimuat saat tab War & CWL dibuka, riwayat perang saat tab Riwayat & Laporan dibuka, dan Raid Weekend saat tab Capital dibuka. Preferensi war anggota tetap dimuat hanya untuk baris yang terlihat.
+
+## 10. Tema Gelap, Terang, dan Sistem
+
+Unggah `public/theme.js`, `public/theme.css`, seluruh stylesheet di `public/` yang diperbarui, `public/index.html`, `public/player.html`, `public/compare.html`, `public/compare-clan.html`, `public/compare.js`, dan `public/i18n.js`. Bersihkan cache browser setelah upload agar HTML, CSS, dan JavaScript menggunakan versi yang sama.
+
+Pemilih tema tersedia di samping bahasa pada semua halaman. Default awal tetap Gelap. Pilihan disimpan pada `localStorage` dengan key `coc-theme`; mode Sistem mengikuti `prefers-color-scheme` dan perubahan perangkat tanpa reload. Inisialisasi tema berjalan sebelum stylesheet dimuat. Jika penyimpanan browser diblokir, tema tetap dapat diganti untuk halaman aktif.
+
+Warna memakai variabel `--theme-*` dengan warna gelap sebelumnya sebagai fallback. Tambahan komponen sebaiknya mengikuti pola variabel tersebut. Grafik SVG berubah melalui variabel CSS, sedangkan ekspor gambar perbandingan membaca palet tema saat ekspor. Jalankan `node tests/theme.test.js`, `node tests/i18n.test.js`, dan `composer test` untuk memeriksa perilaku dasar serta integrasinya.
