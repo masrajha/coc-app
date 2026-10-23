@@ -75,3 +75,65 @@ html[data-theme=light] svg text{fill:var(--theme-chart-label)}
 .site-header .header-inner{flex-wrap:wrap;gap:12px 16px}
 .cc-page header nav{flex-wrap:wrap}
 @media(max-width:640px){.dashboard .home-header-links .appearance-controls{grid-column:1/-1;justify-self:stretch;margin:2px 0 0;padding:0;border:0}.appearance-controls{gap:10px}.site-header .appearance-controls{margin-left:auto}.theme-control select{min-height:38px}}
+
+/* Section accents are reserved for small labels and active-tab indicators. */
+:root{
+  --section-blue-bg:#1b3048;--section-blue-edge:#426f9c;--section-blue-ink:#b4d7ff;
+  --section-teal-bg:#183a35;--section-teal-edge:#3d7d6a;--section-teal-ink:#a6e3cf;
+  --section-amber-bg:#3a2e1b;--section-amber-edge:#92733b;--section-amber-ink:#f0cf89;
+  --section-purple-bg:#30243f;--section-purple-edge:#775b96;--section-purple-ink:#dcc3f3;
+  --section-slate-bg:#263341;--section-slate-edge:#526a81;--section-slate-ink:#c4d6e8;
+}
+:root[data-theme=light]{
+  --section-blue-bg:#e5effc;--section-blue-edge:#9ab9de;--section-blue-ink:#24558b;
+  --section-teal-bg:#e1f3ed;--section-teal-edge:#9ec9b9;--section-teal-ink:#205f50;
+  --section-amber-bg:#fff3d7;--section-amber-edge:#d9ba76;--section-amber-ink:#755117;
+  --section-purple-bg:#f0e7fa;--section-purple-edge:#baa1d5;--section-purple-ink:#654186;
+  --section-slate-bg:#e9eff5;--section-slate-edge:#afbfce;--section-slate-ink:#40566e;
+}
+[data-section-tone=blue]{--section-bg:var(--section-blue-bg);--section-edge:var(--section-blue-edge);--section-ink:var(--section-blue-ink)}
+[data-section-tone=teal]{--section-bg:var(--section-teal-bg);--section-edge:var(--section-teal-edge);--section-ink:var(--section-teal-ink)}
+[data-section-tone=amber]{--section-bg:var(--section-amber-bg);--section-edge:var(--section-amber-edge);--section-ink:var(--section-amber-ink)}
+[data-section-tone=purple]{--section-bg:var(--section-purple-bg);--section-edge:var(--section-purple-edge);--section-ink:var(--section-purple-ink)}
+[data-section-tone=slate]{--section-bg:var(--section-slate-bg);--section-edge:var(--section-slate-edge);--section-ink:var(--section-slate-ink)}
+/* Keep large surfaces neutral; section color appears only in small accents. */
+html :is(.panel,.cc-panel,.clan-overview,.clan-war-log,.clan-actions-card,.capital-district-panel,.rankings-panel,.landing-panel,.raid-panel)[data-section-tone],
+html .dashboard :is(#clan-war,#clan-activity){border-top:1px solid var(--theme-border,#304053)}
+html [data-section-tone]>.section-head,
+html [data-section-tone]>.cc-heading,
+html [data-section-tone]>.clan-war-log-head,
+html [data-section-tone]>.clan-overview-heading,
+html [data-section-tone]>.rankings-heading,
+html .dashboard :is(#clan-war,#clan-activity)>.border-b:first-child,
+html .raid-panel[data-section-tone]>summary{
+  background:transparent;border-bottom:1px solid var(--theme-border,#304053);
+}
+html [data-section-tone]>.section-head,html [data-section-tone]>.cc-heading{
+  padding:0 0 12px;margin-bottom:14px;border-radius:0;align-items:center;
+}
+html [data-section-tone]>.section-head h2,
+html [data-section-tone]>.cc-heading h2,
+html [data-section-tone]>.clan-war-log-head h2,
+html [data-section-tone]>.clan-overview-heading h2,
+html [data-section-tone]>.rankings-heading h2,
+html .dashboard :is(#clan-war,#clan-activity)>.border-b:first-child h2,
+html .raid-panel[data-section-tone]>summary strong{color:var(--theme-text,#e8edf5)}
+html [data-section-tone]>.section-head .eyebrow,
+html [data-section-tone]>.clan-overview-heading .clan-overview-eyebrow,
+html [data-section-tone]>.clan-war-log-head .clan-war-log-eyebrow{color:var(--section-ink)}
+html :is(.cc-panel,.capital-district-panel)[data-section-tone]>h2{
+  padding:0 0 12px;margin:0 0 14px;border-radius:0;border-bottom:1px solid var(--theme-border,#304053);background:transparent;color:var(--theme-text,#e8edf5);
+}
+html [data-section-tone] :is(.clan-profile-details,.clan-detail-panel)>summary{
+  background:transparent;color:var(--theme-text,#c9ddf6);
+}
+html .tabs [data-section-tone][aria-selected=true]{
+  background:transparent;border-bottom-color:var(--section-edge);color:var(--theme-text,#e8edf5);
+}
+html .clan-primary-tabs a[data-section-tone][aria-selected=true]{
+  background:var(--theme-inset,#172330);border-color:var(--theme-border,#40536b);box-shadow:inset 0 -2px var(--section-edge);color:var(--theme-text,#e8edf5);
+}
+html .quick-search-tab[data-section-tone][aria-selected=true]{
+  background:var(--theme-raised,#202c3a);border-bottom-color:var(--section-edge);color:var(--theme-text,#e8edf5);
+}
+@media(max-width:640px){html [data-section-tone]>.section-head,html [data-section-tone]>.cc-heading{gap:10px;flex-wrap:wrap}}

@@ -42,7 +42,7 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-4">
-        <section id="landingPanel" class="landing-panel" aria-labelledby="landingTitle">
+        <section id="landingPanel" class="landing-panel" aria-labelledby="landingTitle" data-section-tone="blue">
             <div class="landing-layout">
                 <div class="landing-main">
             <div class="landing-copy">
@@ -53,10 +53,10 @@
 
             <section class="quick-search" aria-label="Pencarian clan dan pemain" data-i18n-aria-label="home.searchLabel">
                 <div class="quick-search-tabs" role="tablist" aria-label="Pilih tujuan" data-i18n-aria-label="home.searchTabs">
-                    <button type="button" class="quick-search-tab active" id="homeClanTab" role="tab" aria-selected="true" aria-controls="homeClanPanel" data-home-mode="clan">Clan</button>
-                    <button type="button" class="quick-search-tab" id="homePlayerTab" role="tab" aria-selected="false" aria-controls="homePlayerPanel" data-home-mode="player">Player</button>
-                    <button type="button" class="quick-search-tab" id="homeCompareTab" role="tab" aria-selected="false" aria-controls="homeComparePanel" data-home-mode="compare">Compare Player</button>
-                    <button type="button" class="quick-search-tab" id="homeCompareClanTab" role="tab" aria-selected="false" aria-controls="homeCompareClanPanel" data-home-mode="compare-clan">Compare Clan</button>
+                    <button type="button" class="quick-search-tab active" id="homeClanTab" role="tab" aria-selected="true" aria-controls="homeClanPanel" data-home-mode="clan" data-section-tone="blue">Clan</button>
+                    <button type="button" class="quick-search-tab" id="homePlayerTab" role="tab" aria-selected="false" aria-controls="homePlayerPanel" data-home-mode="player" data-section-tone="blue">Player</button>
+                    <button type="button" class="quick-search-tab" id="homeCompareTab" role="tab" aria-selected="false" aria-controls="homeComparePanel" data-home-mode="compare" data-section-tone="teal">Compare Player</button>
+                    <button type="button" class="quick-search-tab" id="homeCompareClanTab" role="tab" aria-selected="false" aria-controls="homeCompareClanPanel" data-home-mode="compare-clan" data-section-tone="purple">Compare Clan</button>
                 </div>
                 <form id="homeClanPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeClanTab" novalidate>
                     <div class="clan-search-modes" role="group" aria-label="Cari clan berdasarkan" data-i18n-aria-label="home.clanSearchMode">
@@ -159,7 +159,7 @@
             </section>
         </section>
 
-        <section id="rankingsPanel" class="rankings-panel" aria-labelledby="rankingsTitle">
+        <section id="rankingsPanel" class="rankings-panel" aria-labelledby="rankingsTitle" data-section-tone="blue">
             <div class="rankings-heading">
                 <div>
                     <p class="rankings-eyebrow" data-i18n="home.officialLeaderboard">LEADERBOARD RESMI</p>
@@ -222,22 +222,22 @@
             </section>
 
             <nav id="clanSectionNav" class="clan-section-nav clan-primary-tabs" role="tablist" aria-label="Navigasi dashboard clan" data-i18n-aria-label="clan.dashboardNavigation">
-                <a id="clanTab-overview" role="tab" href="#overview" aria-controls="overview" aria-selected="true" tabindex="0" data-clan-tab="overview" data-i18n="clan.tabs.overview">Ringkasan</a>
-                <a id="clanTab-members" role="tab" href="#members" aria-controls="members" aria-selected="false" tabindex="-1" data-clan-tab="members" data-i18n="clan.tabs.members">Anggota</a>
-                <a id="clanTab-war-cwl" role="tab" href="#war-cwl" aria-controls="war-cwl" aria-selected="false" tabindex="-1" data-clan-tab="war-cwl" data-i18n="clan.tabs.war">War &amp; CWL</a>
-                <a id="clanTab-capital" role="tab" href="#capital" aria-controls="capital" aria-selected="false" tabindex="-1" data-clan-tab="capital" data-i18n="clan.tabs.capital">Clan Capital</a>
-                <a id="clanTab-history" role="tab" href="#history" aria-controls="history" aria-selected="false" tabindex="-1" data-clan-tab="history" data-i18n="clan.tabs.history">Riwayat &amp; Laporan</a>
+                <a id="clanTab-overview" role="tab" href="#overview" aria-controls="overview" aria-selected="true" tabindex="0" data-clan-tab="overview" data-section-tone="blue" data-i18n="clan.tabs.overview">Ringkasan</a>
+                <a id="clanTab-members" role="tab" href="#members" aria-controls="members" aria-selected="false" tabindex="-1" data-clan-tab="members" data-section-tone="teal" data-i18n="clan.tabs.members">Anggota</a>
+                <a id="clanTab-war-cwl" role="tab" href="#war-cwl" aria-controls="war-cwl" aria-selected="false" tabindex="-1" data-clan-tab="war-cwl" data-section-tone="amber" data-i18n="clan.tabs.war">War &amp; CWL</a>
+                <a id="clanTab-capital" role="tab" href="#capital" aria-controls="capital" aria-selected="false" tabindex="-1" data-clan-tab="capital" data-section-tone="purple" data-i18n="clan.tabs.capital">Clan Capital</a>
+                <a id="clanTab-history" role="tab" href="#history" aria-controls="history" aria-selected="false" tabindex="-1" data-clan-tab="history" data-section-tone="slate" data-i18n="clan.tabs.history">Riwayat &amp; Laporan</a>
             </nav>
 
-            <div id="overview" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-overview"><section id="clan-overview" class="clan-overview" aria-labelledby="clanOverviewTitle">
+            <div id="overview" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-overview"><section id="clan-overview" class="clan-overview" aria-labelledby="clanOverviewTitle" data-section-tone="blue">
                 <div class="clan-overview-heading"><div><p class="clan-overview-eyebrow">CLAN OVERVIEW</p><h2 id="clanOverviewTitle" data-i18n="clan.overview">Ringkasan operasional</h2></div><span id="clanDataFreshness" class="data-freshness" data-i18n="clan.waiting">Menunggu data…</span></div>
                 <div class="clan-overview-grid">
-                    <div><span data-i18n="clan.averageTh">Rata-rata TH</span><strong id="overviewAverageTh">—</strong><small id="overviewThRange" data-i18n="clan.notAvailable">Belum tersedia</small></div>
-                    <div><span data-i18n="clan.currentWar">War saat ini</span><strong id="overviewWarState" data-i18n="home.loadingShort">Memuat…</strong><small id="overviewWarScore" data-i18n="clan.waitingWar">Menunggu data war</small></div>
-                    <div><span data-i18n="clan.cwlPosition">Posisi CWL</span><strong id="overviewCwlPosition">—</strong><small id="overviewCwlMeta" data-i18n="clan.notAvailable">Belum tersedia</small></div>
-                    <div><span data-i18n="clan.review">Perlu review</span><strong id="overviewReviewCount">—</strong><small id="overviewActiveCount" data-i18n="clan.waitingSnapshot">Menunggu snapshot</small></div>
-                    <div><span data-i18n="clan.donations">Total donasi</span><strong id="overviewDonations">—</strong><small data-i18n="clan.currentSeason">Musim berjalan</small></div>
-                    <div><span data-i18n="clan.memberComposition">Komposisi anggota</span><strong id="overviewMembers">—</strong><small id="overviewRoles" data-i18n="clan.notAvailable">Belum tersedia</small></div>
+                    <div data-section-tone="blue"><span data-i18n="clan.averageTh">Rata-rata TH</span><strong id="overviewAverageTh">—</strong><small id="overviewThRange" data-i18n="clan.notAvailable">Belum tersedia</small></div>
+                    <div data-section-tone="amber"><span data-i18n="clan.currentWar">War saat ini</span><strong id="overviewWarState" data-i18n="home.loadingShort">Memuat…</strong><small id="overviewWarScore" data-i18n="clan.waitingWar">Menunggu data war</small></div>
+                    <div data-section-tone="amber"><span data-i18n="clan.cwlPosition">Posisi CWL</span><strong id="overviewCwlPosition">—</strong><small id="overviewCwlMeta" data-i18n="clan.notAvailable">Belum tersedia</small></div>
+                    <div data-section-tone="slate"><span data-i18n="clan.review">Perlu review</span><strong id="overviewReviewCount">—</strong><small id="overviewActiveCount" data-i18n="clan.waitingSnapshot">Menunggu snapshot</small></div>
+                    <div data-section-tone="teal"><span data-i18n="clan.donations">Total donasi</span><strong id="overviewDonations">—</strong><small data-i18n="clan.currentSeason">Musim berjalan</small></div>
+                    <div data-section-tone="teal"><span data-i18n="clan.memberComposition">Komposisi anggota</span><strong id="overviewMembers">—</strong><small id="overviewRoles" data-i18n="clan.notAvailable">Belum tersedia</small></div>
                 </div>
                 <details class="clan-profile-details"><summary data-i18n="clan.tabs.details">Detail clan</summary><div class="clan-profile-grid" aria-label="Informasi profil klan" data-i18n-aria-label="clan.profileInformation">
                     <section class="clan-profile-card" aria-labelledby="clanIdentityTitle">
@@ -277,7 +277,7 @@
                 <div class="clan-overview-shortcuts"><a href="#members" data-i18n="clan.tabs.openMembers">Lihat anggota</a><a href="#war-cwl" data-i18n="clan.tabs.openWar">Buka War &amp; CWL</a><a href="#capital" data-i18n="clan.tabs.openCapital">Buka Clan Capital</a></div>
             </section></div>
 
-            <div id="members" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-members" hidden><section id="clan-activity" class="rounded border border-slate-200 bg-white clan-anchor-section">
+            <div id="members" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-members" hidden><section id="clan-activity" class="rounded border border-slate-200 bg-white clan-anchor-section" data-section-tone="teal">
                 <div class="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 md:flex-row md:items-center md:justify-between">
                     <div>
                         <h2 class="text-lg font-bold leading-6" data-i18n="clan.membersTitle">Anggota Klan</h2>
@@ -333,7 +333,7 @@
                 </div>
             </section></div>
 
-            <div id="war-cwl" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-war-cwl" hidden><section id="clan-war" class="rounded border border-slate-200 bg-white clan-anchor-section" aria-labelledby="warTitle">
+            <div id="war-cwl" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-war-cwl" hidden><section id="clan-war" class="rounded border border-slate-200 bg-white clan-anchor-section" aria-labelledby="warTitle" data-section-tone="amber">
                 <div class="border-b border-slate-200 px-4 py-3">
                     <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
                         <div>
@@ -461,7 +461,7 @@
                         </div>
 
                         <aside class="space-y-4">
-                            <details class="clan-detail-panel"><summary data-i18n="clan.nav.performance">Analisis perang</summary><section id="clan-performance" class="rounded border border-slate-200 p-3 clan-anchor-section">
+                            <details class="clan-detail-panel"><summary data-i18n="clan.nav.performance">Analisis perang</summary><section id="clan-performance" class="rounded border border-slate-200 p-3 clan-anchor-section" data-section-tone="amber">
                                 <div class="mb-3 flex items-center justify-between">
                                     <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600" data-i18n="clan.nav.performance">Performance</h3>
                                     <span id="performanceScope" class="text-xs text-slate-500" data-i18n="clan.warActive">Perang aktif</span>
@@ -500,9 +500,9 @@
                 </div>
             </section></div>
 
-            <div id="capital" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-capital" hidden><section id="clan-capital" class="clan-anchor-section">
-                <div class="capital-district-panel"><h2 data-i18n="feature.capitalDistricts">Distrik Clan Capital</h2><p id="capitalDistrictNote" class="feature-caption"></p><div id="capitalDistricts"></div></div>
-                <details id="raidClanPanel" class="raid-panel">
+            <div id="capital" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-capital" hidden><section id="clan-capital" class="clan-anchor-section" data-section-tone="purple">
+                <div class="capital-district-panel" data-section-tone="purple"><h2 data-i18n="feature.capitalDistricts">Distrik Clan Capital</h2><p id="capitalDistrictNote" class="feature-caption"></p><div id="capitalDistricts"></div></div>
+                <details id="raidClanPanel" data-section-tone="purple" class="raid-panel">
                     <summary><span class="raid-eyebrow">CLAN CAPITAL</span><strong data-i18n="raid.title">Raid Weekend</strong><span data-i18n="raid.openDashboard">Buka statistik dan partisipasi raid</span></summary>
                     <div class="raid-body">
                         <div class="raid-toolbar"><label for="raidWeekend" data-i18n="raid.weekend">Weekend</label><select id="raidWeekend" disabled></select><button id="raidClanReload" type="button" data-i18n="raid.refresh">Muat ulang</button><button id="raidClanMore" type="button" hidden data-i18n="raid.more">Muat weekend sebelumnya</button></div>
@@ -520,7 +520,7 @@
                 </details>
             </section></div>
 
-            <div id="history" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-history" hidden><section id="clan-war-log" class="clan-war-log clan-anchor-section" aria-labelledby="clanWarLogTitle">
+            <div id="history" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-history" hidden><section id="clan-war-log" class="clan-war-log clan-anchor-section" aria-labelledby="clanWarLogTitle" data-section-tone="slate">
                 <div class="clan-war-log-head">
                     <div><p class="clan-war-log-eyebrow" data-i18n="clan.warLogEyebrow">WAR KLASIK</p><h2 id="clanWarLogTitle" data-i18n="clan.warLogTitle">Riwayat perang</h2><p id="clanWarLogMeta" data-i18n="clan.warLogIntro">Tiga perang terbaru ditampilkan.</p></div>
                     <button id="clanWarLogToggle" type="button" aria-expanded="false" aria-controls="clanWarLogList" hidden></button>
@@ -528,7 +528,7 @@
                 <p id="clanWarLogStatus" class="clan-war-log-status loading-state" role="status" aria-live="polite"><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="clan.warLogLoading">Memuat riwayat perang…</span></p>
                 <div id="clanWarLogList" class="clan-war-log-list" role="list"></div>
                 <div id="clanWarLogPager" class="clan-war-log-pager" hidden><button id="clanWarLogMore" type="button" data-i18n="clan.warLogMore">Muat war sebelumnya</button></div>
-            </section><section id="clan-actions" class="clan-actions-card clan-anchor-section">
+            </section><section id="clan-actions" class="clan-actions-card clan-anchor-section" data-section-tone="slate">
                 <div><p class="clan-overview-eyebrow">CLAN REPORT</p><h2 data-i18n="clan.shareSummary">Bagikan ringkasan operasional</h2><p id="clanReportSummary" data-i18n="clan.summaryPending">Ringkasan tersedia setelah data klan dan perang dimuat.</p></div>
                 <div class="clan-actions-buttons"><button id="copyClanSummary" type="button" data-i18n="clan.copySummary">Salin ringkasan</button><button id="exportWarRoster" type="button" disabled data-i18n="clan.exportRoster">Ekspor roster CSV</button></div>
                 <span id="clanActionStatus" role="status" aria-live="polite"></span>

@@ -62,13 +62,13 @@
       </div>
       <div id="compareNotice" class="compare-notice"></div>
       <nav class="tabs compare-tabs" aria-label="Bagian perbandingan" data-i18n-aria-label="compare.sections">
-        <a href="#progress" data-tab="progress" aria-selected="true" data-i18n="player.progress">Progres</a>
-        <a href="#army" data-tab="army" aria-selected="false">Army</a>
-        <a href="#war-cwl" data-tab="war-cwl" aria-selected="false">War/CWL</a>
-        <a href="#ranked-league" data-tab="ranked-league" aria-selected="false">Ranked League</a>
-        <a href="#activity" data-tab="activity" aria-selected="false" data-i18n="compare.activity">Aktivitas</a>
+        <a href="#progress" data-tab="progress" data-section-tone="blue" aria-selected="true" data-i18n="player.progress">Progres</a>
+        <a href="#army" data-tab="army" data-section-tone="blue" aria-selected="false">Army</a>
+        <a href="#war-cwl" data-tab="war-cwl" data-section-tone="amber" aria-selected="false">War/CWL</a>
+        <a href="#ranked-league" data-tab="ranked-league" data-section-tone="amber" aria-selected="false">Ranked League</a>
+        <a href="#activity" data-tab="activity" data-section-tone="teal" aria-selected="false" data-i18n="compare.activity">Aktivitas</a>
       </nav>
-      <section id="progress" class="panel compare-panel">
+      <section id="progress" class="panel compare-panel" data-section-tone="blue">
         <div class="section-head"><div><div class="eyebrow" data-i18n="compare.progressEyebrow">PROGRES PASUKAN DAN HERO</div><h2 data-i18n="compare.scoresAndCategories">Skor & kategori</h2></div></div>
         <p class="section-note" data-i18n="compare.scoreScope">Skor hanya mencakup item yang memiliki batas level. Ini bukan persentase maksimal seluruh akun.</p>
         <div id="headToHeadChart" class="head-to-head-chart"></div>
@@ -77,7 +77,7 @@
         <h3 data-i18n="compare.largestLevelGaps">Selisih level terbesar</h3><p class="section-note" data-i18n="compare.levelGapScope">Hanya item yang ada pada kedua profil, dengan TH dan batas level API yang sama. Selisih level bukan ukuran kekuatan serangan.</p>
         <div id="levelDifferences" class="difference-list"></div>
       </section>
-      <section id="army" class="panel compare-panel" hidden>
+      <section id="army" class="panel compare-panel" hidden data-section-tone="blue">
         <div class="section-head"><div><div class="eyebrow" data-i18n="compare.actualLevel">LEVEL AKTUAL</div><h2 data-i18n="compare.armyMatrix">Matriks Army</h2></div><span id="armyCount"></span></div>
         <p id="armyModeNote" class="section-note" data-i18n="compare.armyActualNote">Mode level aktual membandingkan angka level secara langsung. Pada TH berbeda, hasil ini bukan ukuran kematangan akun.</p>
         <div class="army-filter">
@@ -88,14 +88,14 @@
         </div>
         <div id="armyComparison" class="army-comparison"></div>
       </section>
-      <section id="war-cwl" class="panel compare-panel" hidden>
+      <section id="war-cwl" class="panel compare-panel" hidden data-section-tone="amber">
         <div class="section-head"><div><div class="eyebrow" data-i18n="compare.warArchive">ARSIP PERANG</div><h2 data-i18n="player.warPerformance">Performa War/CWL</h2></div><label class="war-period-label" for="warPeriod"><span data-i18n="compare.period">Periode</span> <select id="warPeriod"><option value="cwl-current" data-i18n="compare.cwlThisMonth">CWL bulan ini</option><option value="30d" data-i18n="compare.thirtyDays">30 hari</option><option value="90d" data-i18n="compare.ninetyDays">90 hari</option><option value="all" data-i18n="compare.allArchive">Semua arsip</option></select></label></div>
         <p id="warNote" class="section-note" data-i18n="compare.loadingWarArchive">Memuat arsip perang…</p>
         <div id="warSummary" class="war-summary-grid"></div>
         <div id="warAdvanced" class="war-advanced-grid"></div>
         <div id="warCharts" class="war-summary-grid"></div>
       </section>
-      <section id="ranked-league" class="panel compare-panel" hidden>
+      <section id="ranked-league" class="panel compare-panel" hidden data-section-tone="amber">
         <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2 data-i18n="compare.leaguePerformance">Performa liga</h2></div></div>
         <p class="section-note" data-i18n="compare.leagueScope">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
         <div id="leagueComparisonNote" class="league-comparison-note"></div>
@@ -104,7 +104,7 @@
         <div id="leagueMetricsTable" class="league-metrics-table-wrap" aria-live="polite"></div>
         <section class="league-comparison-resume" aria-labelledby="leagueResumeTitle"><h3 id="leagueResumeTitle" data-i18n="compare.rankedResumeTitle">Ringkasan Ranked League</h3><p id="leagueResume" aria-live="polite"></p></section>
       </section>
-      <section id="activity" class="panel compare-panel" hidden>
+      <section id="activity" class="panel compare-panel" hidden data-section-tone="teal">
         <div class="section-head"><div><div class="eyebrow" data-i18n="compare.memberSnapshots">SNAPSHOT ANGGOTA</div><h2 data-i18n="compare.activityTrend">Tren aktivitas</h2></div><div class="activity-controls"><label for="activityPeriod"><span data-i18n="compare.period">Periode</span> <select id="activityPeriod"><option value="7" data-i18n="compare.sevenDays">7 hari</option><option value="30" selected data-i18n="compare.thirtyDays">30 hari</option><option value="all" data-i18n="compare.all">Semua</option></select></label><label for="activityMetric"><span data-i18n="compare.chart">Grafik</span> <select id="activityMetric"><option value="trophies" data-i18n="player.trophies">Trofi</option><option value="donations" data-i18n="player.donations">Donasi</option></select></label><span id="activityCount"></span></div></div>
         <p id="activityNote" class="section-note"></p>
         <div id="activityChart" class="activity-chart"></div>

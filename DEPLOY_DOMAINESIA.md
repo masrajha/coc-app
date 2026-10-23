@@ -86,3 +86,9 @@ Unggah `public/theme.js`, `public/theme.css`, seluruh stylesheet di `public/` ya
 Pemilih tema tersedia di samping bahasa pada semua halaman. Default awal tetap Gelap. Pilihan disimpan pada `localStorage` dengan key `coc-theme`; mode Sistem mengikuti `prefers-color-scheme` dan perubahan perangkat tanpa reload. Inisialisasi tema berjalan sebelum stylesheet dimuat. Jika penyimpanan browser diblokir, tema tetap dapat diganti untuk halaman aktif.
 
 Warna memakai variabel `--theme-*` dengan warna gelap sebelumnya sebagai fallback. Tambahan komponen sebaiknya mengikuti pola variabel tersebut. Grafik SVG berubah melalui variabel CSS, sedangkan ekspor gambar perbandingan membaca palet tema saat ekspor. Jalankan `node tests/theme.test.js`, `node tests/i18n.test.js`, dan `composer test` untuk memeriksa perilaku dasar serta integrasinya.
+
+### Aksen warna per bagian
+
+Unggah ulang `public/theme.css` bersama `public/index.html`, `public/player.html`, `public/compare.html`, dan `public/compare-clan.html`. Bagian halaman memakai atribut `data-section-tone`: `blue` untuk ringkasan/progres, `teal` untuk anggota/aktivitas, `amber` untuk perang, `purple` untuk Capital, serta `slate` untuk laporan. Palet mengikuti tema aktif, termasuk mode Sistem. Isi tabel memakai warna netral; warna status dan battle log tetap memiliki maknanya sendiri.
+
+Aksen dibatasi pada label kecil dan garis tab aktif. Header, judul utama, kartu statistik, dan tabel memakai permukaan netral untuk menjaga fokus pada isi. Unggah ulang `public/theme.css` untuk penyempurnaan ini.
