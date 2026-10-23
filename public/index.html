@@ -576,7 +576,7 @@
         let performancePage = 1;
         let performanceScopeLabel = tr('clan.warActive');
         let healthMembers = [];
-        let healthSort = { key: null, direction: 'asc' };
+        let healthSort = { key: 'league', direction: 'desc' };
         let healthFilter = 'all';
         let healthQuery = '';
         let healthPage = 1;
@@ -1333,7 +1333,16 @@
             }
         }
 
+        function memberLeagueOrder(member) {
+            const name = String(member.leagueTier?.name || '').trim();
+            const legend = name.match(/^Legend(?: League)?\s+(III|II|I)$/i);
+            if (legend) return 37 - legend[1].length;
+            const level = name.match(/\b(\d+)\s*$/);
+            return level ? Number(level[1]) : null;
+        }
+
         function healthSortValue(member, key) {
+            if (key === 'league') return memberLeagueOrder(member);
             if (key === 'name' || key === 'role') return String(member[key] || '').toLocaleLowerCase(window.CocI18n.formatLocale);
             if (key === 'delta') return member.trophyDelta7;
             if (key === 'donations') return Number(member.donations || 0);
@@ -1361,10 +1370,12 @@
             return [...visibleMembers].sort((a, b) => {
                 const first = healthSortValue(a, key);
                 const second = healthSortValue(b, key);
-                if (first === null || first === undefined) return 1;
-                if (second === null || second === undefined) return -1;
+                const firstMissing = first === null || first === undefined;
+                const secondMissing = second === null || second === undefined;
+                if (firstMissing !== secondMissing) return firstMissing ? 1 : -1;
+                if (firstMissing && secondMissing) return String(a.name || '').localeCompare(String(b.name || ''), window.CocI18n.formatLocale);
                 const result = typeof first === 'string' ? first.localeCompare(second, window.CocI18n.formatLocale) : first - second;
-                return result * multiplier || String(a.name || '').localeCompare(String(b.name || ''), window.CocI18n.formatLocale);
+                return result * multiplier || (key === 'league' ? Number(b.trophies || 0) - Number(a.trophies || 0) : 0) || String(a.name || '').localeCompare(String(b.name || ''), window.CocI18n.formatLocale);
             });
         }
 
@@ -1655,6 +1666,7 @@
             targetFilter = 'all';
             healthFilter = 'all';
             healthQuery = '';
+            healthSort = { key: 'league', direction: 'desc' };
             healthMembers = [];
             healthPage = 1;
             clanHistoryLoaded = false;
