@@ -24,7 +24,17 @@ function normalizeTag(value) {
 function setText(id, value) {
   document.getElementById(id).textContent = value ?? '—';
 }
-function setLoading(id, message) { const el = document.getElementById(id); el.replaceChildren(); const spin = document.createElement('span'); spin.className = 'loading-spinner'; spin.setAttribute('aria-hidden', 'true'); const text = document.createElement('span'); text.textContent = message; el.append(spin, text); el.classList.add('loading-state'); }
+function setLoading(id, message) {
+  const el = document.getElementById(id);
+  const spin = document.createElement('span');
+  spin.className = 'loading-spinner';
+  spin.setAttribute('aria-hidden', 'true');
+  const text = document.createElement('span');
+  text.textContent = message;
+  el.replaceChildren(spin, text);
+  el.classList.add('loading-state');
+  el.setAttribute('aria-busy', 'true');
+}
 
 function rushedLabel(progress) {
   return tr(!progress.complete ? 'player.rushed.unknown' : progress.rushed.rushed ? 'player.rushed.yes' : 'player.rushed.no');
@@ -453,6 +463,10 @@ async function loadProfile(rawTag) {
     if (!response.ok) throw new Error(data.error || tr('player.fetchFailed'));
     renderProfile(data);
   } catch (error) { status.textContent = error.message; }
+  finally {
+    status.removeAttribute('aria-busy');
+    status.classList.remove('loading-state');
+  }
 }
 
 document.getElementById('playerSearch').addEventListener('submit', event => {
