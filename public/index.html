@@ -291,7 +291,7 @@
                             <p id="warAttackUsage" class="text-xs text-slate-500"></p>
                         </div>
                         <div class="px-4 py-3">
-                            <p class="text-xs font-semibold uppercase text-slate-500" data-i18n="clan.followUp">Perlu follow up</p>
+                            <p id="warPendingLabel" class="text-xs font-semibold uppercase text-slate-500" data-i18n="clan.followUp">Perlu follow up</p>
                             <p id="warPendingCount" class="mt-1 text-base font-bold"></p>
                             <p id="warPendingNames" class="truncate text-xs text-slate-500"></p>
                         </div>
@@ -697,40 +697,61 @@
 
         function renderWarCommand(data, deadline) {
             const pending = (data.members || []).filter(member => Number(member.attacksRemaining) > 0);
-            const remaining = Number(data.attacksRemaining || 0);
+            const remaining = data.attacksRemaining == null ? null : Number(data.attacksRemaining);
             const clanStars = Number(data.clan?.stars || 0);
             const opponentStars = Number(data.opponent?.stars || 0);
             const totalQuota = data.attacksPerMember == null ? null : Number(data.teamSize || 0) * Number(data.attacksPerMember || 0);
-            const opponentRemaining = totalQuota === null ? 0 : Math.max(0, totalQuota - Number(data.opponent?.attacks || 0));
-            const hours = deadline ? Math.max(0, (deadline - new Date()) / 3600000) : null;
-            let tone = 'neutral'; let headline = tr('clan.warMonitoring');
-            if (data.state === 'preparation') { tone = 'info'; headline = tr('clan.warPreparationHeadline'); }
-            else if (data.state === 'warEnded') { tone = clanStars > opponentStars ? 'safe' : clanStars < opponentStars ? 'danger' : 'warning'; headline = clanStars === opponentStars ? tr('clan.warEndedTied') : tr('clan.warEndedHeadline', { result: tr(clanStars > opponentStars ? 'clan.ahead' : 'clan.behind'), stars: Math.abs(clanStars - opponentStars) }); }
-            else if (hours !== null && hours <= 2 && pending.length) { tone = 'danger'; headline = tr('clan.warUrgent', { count: pending.length }); }
-            else if (pending.length || remaining) { tone = 'warning'; headline = tr('clan.warFollowUp', { attacks: remaining, players: pending.length }); }
-            else { tone = 'safe'; headline = tr('clan.warQuotaUsed'); }
-            document.getElementById('warCommandStrip').dataset.tone = tone;
-            document.getElementById('warCommandTone').className = `war-command-indicator ${tone}`;
-            setText('warCommandText', headline);
-            setText('warCommandDetail', tr('clan.warCommandDetail', { ours: clanStars, theirs: opponentStars, used: data.clan?.attacks || 0, quota: totalQuota ?? '—', opponent: opponentRemaining }));
-
-            const needed = Math.max(0, opponentStars + 1 - clanStars);
-            const maxAdditional = remaining * 3;
+            const opponentRemaining = totalQuota === null || data.opponent?.attacks == null ? null : Math.max(0, totalQuota - Number(data.opponent.attacks));
             const rosterTheoreticalLimit = members => {
-                const rosterSize = Array.isArray(members) && members.length
-                    ? members.length
-                    : Number(data.teamSize || 0);
+                const rosterSize = Math.max(Number(data.teamSize || 0), Array.isArray(members) ? members.length : 0);
                 return rosterSize * 3;
             };
             const ourTheoreticalLimit = rosterTheoreticalLimit(data.members);
             const opponentTheoreticalLimit = rosterTheoreticalLimit(data.opponentMembers);
-            const ourReachableMaximum = Math.min(ourTheoreticalLimit, clanStars + maxAdditional);
-            const opponentReachableMaximum = Math.min(opponentTheoreticalLimit, opponentStars + opponentRemaining * 3);
+            const destruction = value => value != null && Number.isFinite(Number(value)) ? Number(value) : null;
+            const ours = destruction(data.clan?.destructionPercentage);
+            const theirs = destruction(data.opponent?.destructionPercentage);
+            const destructionKnown = ours !== null && theirs !== null;
+            const ourPerfect = ourTheoreticalLimit > 0 && clanStars >= ourTheoreticalLimit && ours === 100;
+            const opponentPerfect = opponentTheoreticalLimit > 0 && opponentStars >= opponentTheoreticalLimit && theirs === 100;
+            const result = Math.sign(clanStars - opponentStars) || (destructionKnown ? Math.sign(ours - theirs) : 0);
+            const hours = deadline ? Math.max(0, (deadline - new Date()) / 3600000) : null;
+            let tone = 'neutral'; let headline = tr('clan.warMonitoring');
+            if (data.state === 'preparation') { tone = 'info'; headline = tr('clan.warPreparationHeadline'); }
+            else if (data.state === 'warEnded') {
+                tone = result > 0 ? 'safe' : result < 0 ? 'danger' : 'info';
+                headline = clanStars !== opponentStars ? tr('clan.warEndedHeadline', { result: tr(result > 0 ? 'clan.ahead' : 'clan.behind'), stars: Math.abs(clanStars - opponentStars) })
+                    : result ? tr(result > 0 ? 'clan.warWonDestruction' : 'clan.warLostDestruction') : tr(destructionKnown ? 'clan.warDrawHeadline' : 'clan.warEndedTied');
+            }
+            else if (ourPerfect) { tone = opponentPerfect ? 'info' : 'safe'; headline = tr(opponentPerfect ? 'clan.warPerfectDrawHeadline' : 'clan.warPerfectHeadline', { attacks: remaining ?? '—' }); }
+            else if (hours !== null && hours <= 2 && pending.length) { tone = 'danger'; headline = tr('clan.warUrgent', { count: pending.length }); }
+            else if (pending.length || remaining > 0) { tone = 'warning'; headline = tr('clan.warFollowUp', { attacks: remaining ?? '—', players: pending.length }); }
+            else if (remaining === 0) { tone = 'safe'; headline = tr('clan.warQuotaUsed'); }
+            document.getElementById('warCommandStrip').dataset.tone = tone;
+            document.getElementById('warCommandTone').className = `war-command-indicator ${tone}`;
+            setText('warCommandText', headline);
+            setText('warCommandDetail', tr('clan.warCommandDetail', { ours: clanStars, theirs: opponentStars, used: data.clan?.attacks || 0, quota: totalQuota ?? '—', opponent: opponentRemaining ?? '—' }));
+            document.getElementById('showPendingRoster').hidden = ourPerfect || data.state === 'warEnded';
+            setText('warPendingLabel', tr(ourPerfect || data.state === 'warEnded' ? 'clan.playersWithAttacksLeft' : 'clan.followUp'));
+
+            const needed = Math.max(0, opponentStars + 1 - clanStars);
+            const ourReachableMaximum = remaining === null ? ourTheoreticalLimit : Math.min(ourTheoreticalLimit, clanStars + remaining * 3);
+            const opponentReachableMaximum = opponentRemaining === null ? opponentTheoreticalLimit : Math.min(opponentTheoreticalLimit, opponentStars + opponentRemaining * 3);
             let status;
-            if (data.state === 'warEnded') status = tr(clanStars > opponentStars ? 'clan.winByStars' : clanStars < opponentStars ? 'clan.lossByStars' : 'clan.tieByStars');
+            if (data.state === 'preparation') status = tr('clan.warPreparationTarget');
+            else if (data.state === 'warEnded') status = tr(clanStars > opponentStars ? 'clan.winByStars' : clanStars < opponentStars ? 'clan.lossByStars' : result > 0 ? 'clan.winByDestruction' : result < 0 ? 'clan.lossByDestruction' : destructionKnown ? 'clan.warDrawResult' : 'clan.tieByStars');
+            else if (ourPerfect && opponentPerfect) status = tr('clan.warPerfectDraw');
+            else if (ourPerfect) status = tr('clan.warPerfectWaiting');
             else if (ourReachableMaximum < opponentStars) status = tr('clan.cannotCatchUp');
+            else if (opponentPerfect) status = tr('clan.warTargetDraw');
             else if (clanStars > opponentReachableMaximum) status = tr('clan.mathematicallySafe');
-            else if (!remaining && clanStars <= opponentStars) status = tr('clan.noAttacksLeft');
+            else if (remaining === 0) status = tr('clan.warNoAttacksResultPending');
+            else if (clanStars === opponentStars && destructionKnown) {
+                status = tr(ours > theirs ? 'clan.leadingDestruction' : clanStars >= ourTheoreticalLimit ? 'clan.equalStarsDestruction' : ours === theirs ? 'clan.equalScoreTarget' : 'clan.trailingDestructionTarget');
+            }
+            else if (ourReachableMaximum === opponentStars) status = tr('clan.equalStarsDestruction');
+            else if (clanStars >= ourTheoreticalLimit) status = tr('clan.warMaxStars');
+            else if (remaining === null) status = tr('clan.warQuotaUnknown');
             else status = needed ? tr('clan.starsNeeded', { stars: needed, average: formatLocalizedNumber(needed / Math.max(1, remaining), { maximumFractionDigits: 2 }) }) : tr('clan.leadNotSafe');
             const projection = document.getElementById('warProjection');
             projection.replaceChildren();
