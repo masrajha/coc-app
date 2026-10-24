@@ -1,0 +1,179 @@
+/* Sandstone Light and Royal Gold dark palettes. Gold is reserved for links and actions;
+   labels and data stay neutral. Components retain their original color fallbacks. */
+:root:where(:not([data-theme-variant=simple]))[data-theme=light]{
+  --theme-scheme:light;
+  --theme-page:#f4efe4;--theme-inset:#ece4d4;--theme-panel:#fffdf7;
+  --theme-raised:#e6dcc8;--theme-hover:#dccfb6;--theme-track:#cbbba0;
+  --theme-text:#2a2117;--theme-secondary:#4a3d2e;--theme-muted:#6e5f4c;
+  --theme-link:#785407;--theme-success:#356425;--theme-danger:#a83218;
+  --theme-warning:#81590c;--theme-purple:#5c2a7a;
+  --theme-blue-soft:#f0e7d5;--theme-green-soft:#e9f0dc;--theme-red-soft:#f7e4dc;
+  --theme-gold-soft:#fdf0c4;--theme-purple-soft:#eee3f0;
+  --theme-border:#d5c9b4;--theme-blue-border:#b5a17c;--theme-green-border:#a8bb91;
+  --theme-red-border:#d2a18e;--theme-gold-border:#c29a35;--theme-purple-border:#bca4c7;
+  --theme-shadow:#392b1814;--theme-grid:#d5c9b4;--theme-chart-label:#6e5f4c;
+  --theme-chart-blue:#90630b;--theme-chart-teal:#794198;
+  --theme-chart-blue-fill:#90630b33;--theme-chart-teal-fill:#79419833;
+  --theme-action-bg:#785407;--theme-action-hover:#614405;--theme-action-text:#fffdf7;
+}
+:root:where(:not([data-theme-variant=simple]))[data-theme=dark]{
+  --theme-page:#101725;
+  --theme-inset:#0B101C;
+  --theme-panel:#1B2639;
+  --theme-raised:#27364C;
+  --theme-hover:#324560;
+  --theme-track:#566780;
+  --theme-text:#FFF5DD;
+  --theme-secondary:#D6C5A6;
+  --theme-muted:#A99C89;
+  --theme-link:#FFD166;
+  --theme-success:#70DDA3;
+  --theme-danger:#FF7B76;
+  --theme-warning:#FFBA55;
+  --theme-purple:#C19BFF;
+  --theme-border:#40516A;
+  --theme-action-bg:#E3AF35;
+  --theme-action-hover:#FFD166;
+  --theme-action-text:#201907;
+  --theme-chart-blue:#FFD166;
+  --theme-chart-teal:#61D9D0;
+  --theme-scheme:dark;
+  --theme-blue-soft:#25364b;
+  --theme-green-soft:#203e36;
+  --theme-red-soft:#472c36;
+  --theme-gold-soft:#352b16;
+  --theme-purple-soft:#302944;
+  --theme-blue-border:#627a9b;
+  --theme-green-border:#4d866e;
+  --theme-red-border:#a45c67;
+  --theme-gold-border:#957531;
+  --theme-purple-border:#80659f;
+  --theme-shadow:#03071166;
+  --theme-grid:#40516A;
+  --theme-chart-label:#A99C89;
+  --theme-chart-blue-fill:#FFD16633;
+  --theme-chart-teal-fill:#61D9D033;
+}
+html:where(:not([data-theme-variant=simple])){color-scheme:var(--theme-scheme,dark)}
+html:where(:not([data-theme-variant=simple]))[data-theme],html:where(:not([data-theme-variant=simple]))[data-theme] body{background:var(--theme-page);color:var(--theme-text)}
+/* Keep primary actions and tiny level markers legible on their saturated fills. */
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.join-clan-link,.cc-page button[type=submit]){color:#fff}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .bg-blue-600{color:#fff}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .join-clan-link{background:#1d694e;border-color:#227a58;color:#fff}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .join-clan-link:hover{background:#237c5a;color:#fff}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .war-in{background:var(--theme-green-soft);border-color:var(--theme-green-border);color:var(--theme-success)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .war-out{background:var(--theme-red-soft);border-color:var(--theme-red-border);color:var(--theme-danger)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .war-unknown{background:var(--theme-raised);color:var(--theme-muted)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.quick-search-input-row button,.quick-search-submit-row button){background:#2563b8;border-color:#2563b8}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:nth-of-type(1){--menu-bg:#e1edfc;--menu-border:#8badd6;--menu-text:#214e85;--menu-hover:#cbdff8}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:nth-of-type(2){--menu-bg:#f0e7fa;--menu-border:#bca1d5;--menu-text:#623c88;--menu-hover:#e4d5f4}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:nth-of-type(3){--menu-bg:#e0f2ef;--menu-border:#85b8ae;--menu-text:#205f58;--menu-hover:#c9e9e3}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:hover{color:var(--menu-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-attack.ranked-triple){background:#fff0bf;border-color:#c49a36;box-shadow:inset 0 1px #fff8dd}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-defense.ranked-triple){background:#fce0e8;border-color:#d98fa4;box-shadow:inset 0 1px #fff2f6}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-defense-bonus){background:#e9e8fa;border-color:#aaa4cf}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .ranked-battle-stars .earned{color:#8c5f05;text-shadow:none}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .ranked-battle-card.ranked-defense.ranked-triple .ranked-battle-stars .earned{color:#9d3557;text-shadow:none}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-triple .ranked-battle-stars .earned){color:#8c5f05;text-shadow:none}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .donation-fab{background:#234d85;color:#fff}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .donation-fab:hover{background:#1d4ed8;color:#fff}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .donation-fab-icon{background:#fbbf24;color:#422006}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.higher-mark){background:#bcebd9;color:#14513e}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.item-level.higher>span:first-child){color:#16634c}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.league-member.is-current,.league-player-rank){background:#dceaff;color:#173c6b;border-color:#7b9fce}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .league-player-rank strong{color:#173c6b}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.dashboard table tbody tr.bg-blue-50,.dashboard table tbody tr[class*="bg-blue-"]){background:#dceaff;color:#173c6b}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] svg text{fill:var(--theme-chart-label)}
+:where(html:not([data-theme-variant=simple])) .appearance-controls{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;min-width:0;flex-shrink:0}
+:where(html:not([data-theme-variant=simple])) .theme-control{display:inline-flex;align-items:center;gap:7px;color:var(--theme-muted,#a9bdd3);font-size:11px;font-weight:700;white-space:nowrap}
+:where(html:not([data-theme-variant=simple])) .theme-control select{min-height:36px;max-width:120px;padding:6px 9px;border:1px solid var(--theme-border,#40536b);border-radius:7px;background:var(--theme-inset,#111c28);color:var(--theme-text,#e8edf5);font:inherit;cursor:pointer}
+:where(html:not([data-theme-variant=simple])) .theme-control select:focus-visible{outline:2px solid var(--theme-link,#82b6ff);outline-offset:2px}
+:where(html:not([data-theme-variant=simple])) .dashboard .home-header-links .appearance-controls{margin-left:8px;padding-left:14px;border-left:1px solid var(--theme-border,#334457)}
+:where(html:not([data-theme-variant=simple])) .dashboard .home-header-links .appearance-controls .language-control{margin:0;padding:0;border:0}
+:where(html:not([data-theme-variant=simple])) .site-header .header-inner{flex-wrap:wrap;gap:12px 16px}
+:where(html:not([data-theme-variant=simple])) .cc-page header nav{flex-wrap:wrap}
+@media(max-width:640px){:where(html:not([data-theme-variant=simple])) .dashboard .home-header-links .appearance-controls{grid-column:1/-1;justify-self:stretch;margin:2px 0 0;padding:0;border:0}:where(html:not([data-theme-variant=simple])) .appearance-controls{gap:10px}:where(html:not([data-theme-variant=simple])) .site-header .appearance-controls{margin-left:auto}:where(html:not([data-theme-variant=simple])) .theme-control select{min-height:38px}}
+
+/* Section accents are reserved for small labels and active-tab indicators. */
+:root:where(:not([data-theme-variant=simple])){
+  --section-blue-bg:#25364b;--section-blue-edge:#a48645;--section-blue-ink:#ead4a7;
+  --section-teal-bg:#203e36;--section-teal-edge:#4d866e;--section-teal-ink:#9fd8c1;
+  --section-amber-bg:#352b16;--section-amber-edge:#957531;--section-amber-ink:#ffd166;
+  --section-purple-bg:#302944;--section-purple-edge:#80659f;--section-purple-ink:#c19bff;
+  --section-slate-bg:#27364c;--section-slate-edge:#627a9b;--section-slate-ink:#d6c5a6;
+}
+:root:where(:not([data-theme-variant=simple]))[data-theme=light]{
+  --section-blue-bg:#f0e7d5;--section-blue-edge:#b99b61;--section-blue-ink:#785407;
+  --section-teal-bg:#e9f0dc;--section-teal-edge:#a8bb91;--section-teal-ink:#446b37;
+  --section-amber-bg:#fdf0c4;--section-amber-edge:#c29a35;--section-amber-ink:#81590c;
+  --section-purple-bg:#eee3f0;--section-purple-edge:#bca4c7;--section-purple-ink:#633f72;
+  --section-slate-bg:#e6dcc8;--section-slate-edge:#b5a17c;--section-slate-ink:#665742;
+}
+:where(html:not([data-theme-variant=simple])) [data-section-tone=blue]{--section-bg:var(--section-blue-bg);--section-edge:var(--section-blue-edge);--section-ink:var(--section-blue-ink)}
+:where(html:not([data-theme-variant=simple])) [data-section-tone=teal]{--section-bg:var(--section-teal-bg);--section-edge:var(--section-teal-edge);--section-ink:var(--section-teal-ink)}
+:where(html:not([data-theme-variant=simple])) [data-section-tone=amber]{--section-bg:var(--section-amber-bg);--section-edge:var(--section-amber-edge);--section-ink:var(--section-amber-ink)}
+:where(html:not([data-theme-variant=simple])) [data-section-tone=purple]{--section-bg:var(--section-purple-bg);--section-edge:var(--section-purple-edge);--section-ink:var(--section-purple-ink)}
+:where(html:not([data-theme-variant=simple])) [data-section-tone=slate]{--section-bg:var(--section-slate-bg);--section-edge:var(--section-slate-edge);--section-ink:var(--section-slate-ink)}
+/* Keep large surfaces neutral; section color appears only in small accents. */
+html:where(:not([data-theme-variant=simple])) :is(.panel,.cc-panel,.clan-overview,.clan-war-log,.clan-actions-card,.capital-district-panel,.rankings-panel,.landing-panel,.raid-panel)[data-section-tone],
+html:where(:not([data-theme-variant=simple])) .dashboard :is(#clan-war,#clan-activity){border-top:1px solid var(--theme-border,#304053)}
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.section-head,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.cc-heading,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.clan-war-log-head,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.clan-overview-heading,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.rankings-heading,
+html:where(:not([data-theme-variant=simple])) .dashboard :is(#clan-war,#clan-activity)>.border-b:first-child,
+html:where(:not([data-theme-variant=simple])) .raid-panel[data-section-tone]>summary{
+  background:transparent;border-bottom:1px solid var(--theme-border,#304053);
+}
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.section-head,html:where(:not([data-theme-variant=simple])) [data-section-tone]>.cc-heading{
+  padding:0 0 12px;margin-bottom:14px;border-radius:0;align-items:center;
+}
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.section-head h2,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.cc-heading h2,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.clan-war-log-head h2,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.clan-overview-heading h2,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.rankings-heading h2,
+html:where(:not([data-theme-variant=simple])) .dashboard :is(#clan-war,#clan-activity)>.border-b:first-child h2,
+html:where(:not([data-theme-variant=simple])) .raid-panel[data-section-tone]>summary strong{color:var(--theme-text,#e8edf5)}
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.section-head .eyebrow,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.clan-overview-heading .clan-overview-eyebrow,
+html:where(:not([data-theme-variant=simple])) [data-section-tone]>.clan-war-log-head .clan-war-log-eyebrow{color:var(--section-ink)}
+html:where(:not([data-theme-variant=simple])) :is(.cc-panel,.capital-district-panel)[data-section-tone]>h2{
+  padding:0 0 12px;margin:0 0 14px;border-radius:0;border-bottom:1px solid var(--theme-border,#304053);background:transparent;color:var(--theme-text,#e8edf5);
+}
+html:where(:not([data-theme-variant=simple])) [data-section-tone] :is(.clan-profile-details,.clan-detail-panel)>summary{
+  background:transparent;color:var(--theme-text,#c9ddf6);
+}
+html:where(:not([data-theme-variant=simple])) .tabs [data-section-tone][aria-selected=true]{
+  background:transparent;border-bottom-color:var(--section-edge);color:var(--theme-text,#e8edf5);
+}
+html:where(:not([data-theme-variant=simple])) .clan-primary-tabs a[data-section-tone][aria-selected=true]{
+  background:var(--theme-inset,#172330);border-color:var(--theme-border,#40536b);box-shadow:inset 0 -2px var(--section-edge);color:var(--theme-text,#e8edf5);
+}
+html:where(:not([data-theme-variant=simple])) .quick-search-tab[data-section-tone][aria-selected=true]{
+  background:var(--theme-raised,#202c3a);border-bottom-color:var(--section-edge);color:var(--theme-text,#e8edf5);
+}
+@media(max-width:640px){html:where(:not([data-theme-variant=simple])) [data-section-tone]>.section-head,html:where(:not([data-theme-variant=simple])) [data-section-tone]>.cc-heading{gap:10px;flex-wrap:wrap}}
+
+/* Warm palette refinements. These apply after the shared component rules. */
+html:where(:not([data-theme-variant=simple]))[data-theme] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type=submit]),
+html:where(:not([data-theme-variant=simple]))[data-theme] .dashboard :is(.bg-blue-600,#searchButton){
+  background:var(--theme-action-bg);border-color:var(--theme-action-bg);color:var(--theme-action-text);
+}
+html:where(:not([data-theme-variant=simple]))[data-theme] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type=submit]):hover,
+html:where(:not([data-theme-variant=simple]))[data-theme] .dashboard :is(.bg-blue-600,#searchButton):hover{background:var(--theme-action-hover);border-color:var(--theme-action-hover);color:var(--theme-action-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme] :is(.section-note,.section-head>span,.brand span,.updated,.identity-meta,.picker-note,.card-source,.raid-note,.raid-toolbar label,.raid-status:not(.is-error),.raid-eyebrow,.league-session-label,.league-list-heading,.league-member-rank,.league-member-meta,.data-freshness,.clan-overview-grid span,.clan-overview-grid small,.stats span,.progress-summary span,.player-overview-cards span,.score-tile span,.score-tile small,.compare-card-stats span,.army-item-name small,.ranked-battle-card small,.ranked-battle-card-top>span,.cc-muted,.cc-page p){color:var(--theme-muted)}
+html:where(:not([data-theme-variant=simple]))[data-theme] :is(.dashboard .text-slate-500,.dashboard .text-slate-600,.raid-metric>span,.performance-summary span){color:var(--theme-muted)}
+html:where(:not([data-theme-variant=simple]))[data-theme] :is(.dashboard .text-slate-700,.dashboard .text-slate-900,.ranking-identity strong){color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .dashboard .home-header-links>a:nth-of-type(1){--menu-bg:var(--theme-gold-soft);--menu-border:var(--theme-gold-border);--menu-text:var(--theme-link);--menu-hover:var(--theme-raised)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .dashboard .home-header-links>a:nth-of-type(2){--menu-bg:var(--theme-purple-soft);--menu-border:var(--theme-purple-border);--menu-text:var(--theme-purple);--menu-hover:var(--theme-raised)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .dashboard .home-header-links>a:nth-of-type(3){--menu-bg:var(--theme-green-soft);--menu-border:var(--theme-green-border);--menu-text:var(--theme-success);--menu-hover:var(--theme-raised)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .dashboard .home-header-links>a:hover{color:var(--menu-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme] :is(.league-member.is-current,.league-player-rank){background:var(--theme-gold-soft);border-color:var(--theme-gold-border);color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .league-player-rank strong{color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .dashboard table tbody tr:is(.bg-blue-50,[class*="bg-blue-"]){background:var(--theme-gold-soft);color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .donation-fab{background:var(--theme-panel);border-color:var(--theme-gold-border);color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme] .donation-fab:hover{background:var(--theme-raised);color:var(--theme-text)}
+
+html:where(:not([data-theme-variant=simple]))[data-theme] .cc-page p.cc-error{color:var(--theme-danger)}

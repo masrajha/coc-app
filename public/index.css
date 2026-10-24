@@ -211,3 +211,14 @@ body.dashboard{margin:0;background:var(--theme-inset,#0e1219);color:var(--theme-
 @media(max-width:760px){.cwl-position-insight{grid-template-columns:1fr}.cwl-position-insight>div{border-right:0;border-bottom:1px solid var(--theme-border,#33485d)}.health-toolbar,.clan-actions-card{align-items:stretch;flex-direction:column}.health-toolbar input{width:100%}.health-visible-count,.clan-actions-buttons{margin-left:0}.clan-actions-buttons button{flex:1}.clan-actions-card>span{min-height:12px}}
 
 @media(max-width:520px){.quick-search-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Keep history headings and long names inside their sidebar cards in every theme. */
+.landing-sidebar .recent-panel{box-sizing:border-box;padding:12px;border:1px solid var(--theme-border,#314254);border-radius:9px;background:var(--theme-inset,#111a25)}
+.recent-heading{min-width:0;flex-wrap:wrap;gap:4px 10px;line-height:1.4}
+.recent-heading h3{min-width:0;flex:1 1 130px;overflow-wrap:anywhere}
+.recent-heading>span{max-width:100%;overflow-wrap:anywhere}
+.recent-list,.recent-list>li{min-width:0}
+.landing-sidebar .recent-item{box-sizing:border-box;width:100%;padding:9px 8px;gap:9px;border-radius:5px}
+.recent-copy{flex:1 1 0;grid-template-columns:minmax(0,1fr);line-height:1.4}
+.recent-copy strong,.recent-copy small{display:block;max-width:100%}
+.landing-sidebar .recent-empty{padding:10px 8px;line-height:1.5;overflow-wrap:anywhere}

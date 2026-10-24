@@ -1,4 +1,5 @@
-/* Sandstone Light and Royal Gold dark palettes. Gold is reserved for links and actions;
+/* Theme v2 — Royal Gold Dark + Royal Sandstone Light. Original component mappings preserved. */
+/* Sandstone light and navy dark palettes. Gold is reserved for links and actions;
    labels and data stay neutral. Components retain their original color fallbacks. */
 :root:where(:not([data-theme-variant=simple]))[data-theme=light]{
   --theme-scheme:light;
@@ -17,42 +18,20 @@
   --theme-action-bg:#785407;--theme-action-hover:#614405;--theme-action-text:#fffdf7;
 }
 :root:where(:not([data-theme-variant=simple]))[data-theme=dark]{
-  --theme-page:#101725;
-  --theme-inset:#0B101C;
-  --theme-panel:#1B2639;
-  --theme-raised:#27364C;
-  --theme-hover:#324560;
-  --theme-track:#566780;
-  --theme-text:#FFF5DD;
-  --theme-secondary:#D6C5A6;
-  --theme-muted:#A99C89;
-  --theme-link:#FFD166;
-  --theme-success:#70DDA3;
-  --theme-danger:#FF7B76;
-  --theme-warning:#FFBA55;
-  --theme-purple:#C19BFF;
-  --theme-border:#40516A;
-  --theme-action-bg:#E3AF35;
-  --theme-action-hover:#FFD166;
-  --theme-action-text:#201907;
-  --theme-chart-blue:#FFD166;
-  --theme-chart-teal:#61D9D0;
   --theme-scheme:dark;
-  --theme-blue-soft:#25364b;
-  --theme-green-soft:#203e36;
-  --theme-red-soft:#472c36;
-  --theme-gold-soft:#352b16;
-  --theme-purple-soft:#302944;
-  --theme-blue-border:#627a9b;
-  --theme-green-border:#4d866e;
-  --theme-red-border:#a45c67;
-  --theme-gold-border:#957531;
-  --theme-purple-border:#80659f;
-  --theme-shadow:#03071166;
-  --theme-grid:#40516A;
-  --theme-chart-label:#A99C89;
-  --theme-chart-blue-fill:#FFD16633;
-  --theme-chart-teal-fill:#61D9D033;
+  --theme-page:#1a2233;--theme-inset:#0d1420;--theme-panel:#222c3f;
+  --theme-raised:#2c3850;--theme-hover:#38465f;--theme-track:#47566f;
+  --theme-text:#f2e9d8;--theme-secondary:#c9b89a;--theme-muted:#b5a58e;
+  --theme-link:#f5c542;--theme-success:#6fd36a;--theme-danger:#f08060;
+  --theme-warning:#e0b84a;--theme-purple:#c08ce0;
+  --theme-blue-soft:#2c3548;--theme-green-soft:#233b2a;--theme-red-soft:#472d2a;
+  --theme-gold-soft:#3a2f14;--theme-purple-soft:#392d48;
+  --theme-border:#43516b;--theme-blue-border:#64718a;--theme-green-border:#4e7650;
+  --theme-red-border:#986151;--theme-gold-border:#8a6f1f;--theme-purple-border:#826298;
+  --theme-shadow:#03071155;--theme-grid:#43516b;--theme-chart-label:#b5a58e;
+  --theme-chart-blue:#f5c542;--theme-chart-teal:#c08ce0;
+  --theme-chart-blue-fill:#f5c54233;--theme-chart-teal-fill:#c08ce033;
+  --theme-action-bg:#e0b84a;--theme-action-hover:#f0cc69;--theme-action-text:#2a2117;
 }
 html:where(:not([data-theme-variant=simple])){color-scheme:var(--theme-scheme,dark)}
 html:where(:not([data-theme-variant=simple]))[data-theme],html:where(:not([data-theme-variant=simple]))[data-theme] body{background:var(--theme-page);color:var(--theme-text)}
@@ -96,11 +75,11 @@ html:where(:not([data-theme-variant=simple]))[data-theme=light] svg text{fill:va
 
 /* Section accents are reserved for small labels and active-tab indicators. */
 :root:where(:not([data-theme-variant=simple])){
-  --section-blue-bg:#25364b;--section-blue-edge:#a48645;--section-blue-ink:#ead4a7;
-  --section-teal-bg:#203e36;--section-teal-edge:#4d866e;--section-teal-ink:#9fd8c1;
-  --section-amber-bg:#352b16;--section-amber-edge:#957531;--section-amber-ink:#ffd166;
-  --section-purple-bg:#302944;--section-purple-edge:#80659f;--section-purple-ink:#c19bff;
-  --section-slate-bg:#27364c;--section-slate-edge:#627a9b;--section-slate-ink:#d6c5a6;
+  --section-blue-bg:#2c3548;--section-blue-edge:#9a7b3f;--section-blue-ink:#e7ce9b;
+  --section-teal-bg:#233b2a;--section-teal-edge:#5f7d56;--section-teal-ink:#a5c89b;
+  --section-amber-bg:#3a2f14;--section-amber-edge:#8a6f1f;--section-amber-ink:#e0b84a;
+  --section-purple-bg:#392d48;--section-purple-edge:#826298;--section-purple-ink:#c8a2df;
+  --section-slate-bg:#2c3850;--section-slate-edge:#64718a;--section-slate-ink:#c9b89a;
 }
 :root:where(:not([data-theme-variant=simple]))[data-theme=light]{
   --section-blue-bg:#f0e7d5;--section-blue-edge:#b99b61;--section-blue-ink:#785407;
@@ -177,3 +156,281 @@ html:where(:not([data-theme-variant=simple]))[data-theme] .donation-fab{backgrou
 html:where(:not([data-theme-variant=simple]))[data-theme] .donation-fab:hover{background:var(--theme-raised);color:var(--theme-text)}
 
 html:where(:not([data-theme-variant=simple]))[data-theme] .cc-page p.cc-error{color:var(--theme-danger)}
+
+/* ================================================================
+   ROYAL GOLD REFINEMENT v1.0
+   Additive override for existing dark theme. The original light
+   theme remains unchanged. Append after all existing component CSS.
+   ================================================================ */
+:root:where(:not([data-theme-variant=simple]))[data-theme="dark"] {
+  --theme-scheme: dark;
+  --theme-page: #101725;
+  --theme-inset: #0C1320;
+  --theme-panel: #1B2639;
+  --theme-raised: #243248;
+  --theme-hover: #2C3B52;
+  --theme-track: #40516A;
+  --theme-text: #FFF1D1;
+  --theme-secondary: #D7E0ED;
+  --theme-muted: #AAB9CE;
+  --theme-link: #B7D3F5;
+  --theme-accent: #F2C35B;
+  --theme-success: #70D5A1;
+  --theme-danger: #FF8B81;
+  --theme-warning: #F2C35B;
+  --theme-purple: #CA9CF0;
+  --theme-blue-soft: #22334B;
+  --theme-green-soft: #183D34;
+  --theme-red-soft: #482D36;
+  --theme-gold-soft: #392D1A;
+  --theme-purple-soft: #332842;
+  --theme-border: #35465D;
+  --theme-blue-border: #587394;
+  --theme-green-border: #397B64;
+  --theme-red-border: #A65C60;
+  --theme-gold-border: #90712F;
+  --theme-purple-border: #795C96;
+  --theme-shadow: #03071155;
+  --theme-grid: #35465D;
+  --theme-chart-label: #AAB9CE;
+  --theme-chart-blue: #E3AF35;
+  --theme-chart-teal: #76C6D4;
+  --theme-chart-blue-fill: #E3AF3533;
+  --theme-chart-teal-fill: #76C6D433;
+  --theme-action-bg: #E3AF35;
+  --theme-action-hover: #F2C35B;
+  --theme-action-text: #23190A;
+  --section-blue-bg: #22334B;
+  --section-blue-edge: #7595BB;
+  --section-blue-ink: #B7D3F5;
+  --section-teal-bg: #183D34;
+  --section-teal-edge: #438D78;
+  --section-teal-ink: #91E0C5;
+  --section-amber-bg: #392D1A;
+  --section-amber-edge: #B98E31;
+  --section-amber-ink: #F2C35B;
+  --section-purple-bg: #332842;
+  --section-purple-edge: #9776BD;
+  --section-purple-ink: #D8B6F3;
+  --section-slate-bg: #243248;
+  --section-slate-edge: #647C9B;
+  --section-slate-ink: #D7E0ED;
+}
+
+/* Typography and visual hierarchy: dark only. */
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] body { color: var(--theme-secondary); }
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(h1,h2,h3,h4,h5,h6) { color: var(--theme-text); line-height: 1.22; }
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.section-note,.card-source,.picker-note,.identity-meta,.updated,.cc-muted,.raid-note,.data-freshness) {
+  color: var(--theme-muted);
+  line-height: 1.5;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) :is(button,input,select,textarea) { font: inherit; }
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) {
+  background-color: var(--theme-inset);
+  color: var(--theme-secondary);
+  border-color: var(--theme-border);
+  border-radius: 9px;
+  min-height: 40px;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) :is(input,textarea)::placeholder { color: var(--theme-muted); opacity: 1; }
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) :is(input,select,textarea,button,a):focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 3px;
+}
+
+/* Cards: soft depth rather than heavy outlines. */
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.panel,.cc-panel,.clan-overview,.clan-war-log,.clan-actions-card,.capital-district-panel,.rankings-panel,.landing-panel,.raid-panel) {
+  border-color: var(--theme-border);
+  box-shadow: 0 8px 28px #0307111c;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type="submit"]),
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] .dashboard :is(.bg-blue-600,#searchButton) {
+  background: var(--theme-action-bg);
+  border-color: var(--theme-action-bg);
+  color: var(--theme-action-text);
+  font-weight: 700;
+  border-radius: 9px;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type="submit"]):hover,
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] .dashboard :is(.bg-blue-600,#searchButton):hover {
+  background: var(--theme-action-hover);
+  border-color: var(--theme-action-hover);
+  color: var(--theme-action-text);
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] .dashboard .home-header-links>a:not(:hover) { text-decoration: none; }
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) a,
+html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) button {
+  transition: background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease;
+}
+
+/* Small screen layout adjustments without changing desktop structure. */
+@media (max-width: 640px) {
+  html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea,button) { min-height: 42px; }
+  html:where(:not([data-theme-variant=simple]))[data-theme="dark"] .appearance-controls { gap: 8px; }
+  html:where(:not([data-theme-variant=simple]))[data-theme="dark"] .theme-control select { min-height: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) a,
+  html:where(:not([data-theme-variant=simple]))[data-theme="dark"] :is(.dashboard,.cc-page) button { transition: none; }
+}
+
+
+/* Dark text hierarchy: cream headings, cool neutral copy, selective gold accents. */
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] .dashboard .home-header-links>a:nth-of-type(n){
+  --menu-bg:var(--theme-raised);--menu-border:var(--theme-border);
+  --menu-text:var(--theme-text);--menu-hover:var(--theme-hover);
+}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] :is(.landing-description,.landing-feature-card p){color:var(--theme-secondary)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] :is(.quick-search-form small,.quick-search-submit-row small,.clan-search-mode-panel>small,.quick-access-heading>span:last-child,.quick-access-card small,.landing-stats span,.recent-item small,.recent-heading>span){color:var(--theme-muted)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] :is(.quick-search-tab,.clan-search-modes button){color:var(--theme-secondary)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] :is(.quick-search-tab.active,.clan-search-modes button.active){color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] .quick-search-tab.active{border-bottom-color:var(--theme-accent)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] :is(.quick-access-card strong,.landing-feature-card strong){color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] :is(.landing-eyebrow,.landing-feature-card>span,.landing-stats strong,.quick-access-icon,.quick-access-card>b){color:var(--theme-accent)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] .dashboard header .home-brand>.bg-slate-900{color:var(--theme-accent)}
+html:where(:not([data-theme-variant=simple]))[data-theme=dark] .landing-quick-access .landing-eyebrow{color:var(--theme-text)}
+
+/* ================================================================
+   ROYAL SANDSTONE LIGHT v2.0
+   Warm ivory surfaces, restrained gold, accessible controls.
+   Works with the existing data-theme="light" toggle.
+   ================================================================ */
+:root:where(:not([data-theme-variant=simple]))[data-theme="light"] {
+  --theme-scheme: light;
+  --theme-page: #F6F4EE;
+  --theme-inset: #F0EBE1;
+  --theme-panel: #FFFEFA;
+  --theme-raised: #F3EDE2;
+  --theme-hover: #EAE2D3;
+  --theme-track: #D8CDBB;
+  --theme-text: #27231D;
+  --theme-secondary: #51483E;
+  --theme-muted: #756C5F;
+  --theme-link: #51483E;
+  --theme-accent: #976611;
+  --theme-success: #317451;
+  --theme-danger: #B84535;
+  --theme-warning: #8B6115;
+  --theme-purple: #76529A;
+  --theme-blue-soft: #EBF1F8;
+  --theme-green-soft: #E4F1E7;
+  --theme-red-soft: #FBE9E5;
+  --theme-gold-soft: #FFF2D1;
+  --theme-purple-soft: #F1E9F8;
+  --theme-border: #DED7CA;
+  --theme-blue-border: #A5BBD3;
+  --theme-green-border: #A6C7B3;
+  --theme-red-border: #DFB0A7;
+  --theme-gold-border: #D8B15D;
+  --theme-purple-border: #C7B3DC;
+  --theme-shadow: #392B1812;
+  --theme-grid: #DED7CA;
+  --theme-chart-label: #756C5F;
+  --theme-chart-blue: #B98216;
+  --theme-chart-teal: #397C7F;
+  --theme-chart-blue-fill: #B9821633;
+  --theme-chart-teal-fill: #397C7F33;
+  --theme-action-bg: #B98216;
+  --theme-action-hover: #96660F;
+  --theme-action-text: #FFFFFF;
+  --section-blue-bg: #EBF1F8;
+  --section-blue-edge: #A5BBD3;
+  --section-blue-ink: #395C84;
+  --section-teal-bg: #E4F1E7;
+  --section-teal-edge: #A6C7B3;
+  --section-teal-ink: #317451;
+  --section-amber-bg: #FFF2D1;
+  --section-amber-edge: #D8B15D;
+  --section-amber-ink: #8B6115;
+  --section-purple-bg: #F1E9F8;
+  --section-purple-edge: #C7B3DC;
+  --section-purple-ink: #76529A;
+  --section-slate-bg: #F3EDE2;
+  --section-slate-edge: #D8CDBB;
+  --section-slate-ink: #51483E;
+}
+
+/* Text rhythm and comfortable light-mode readability. */
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:nth-of-type(n){
+  --menu-bg:var(--theme-panel);--menu-border:var(--theme-border);
+  --menu-text:var(--theme-text);--menu-hover:var(--theme-raised);
+}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.landing-panel,.landing-feature-card,.quick-access-card){box-shadow:none}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.landing-feature-card,.quick-access-card){background:#fff}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .quick-search{background:#F8F6F0;border-color:#E7DFD0}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .quick-search-tabs{display:flex;flex-wrap:wrap;gap:8px;padding:12px 12px 0;background:transparent;border-bottom:0}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .quick-search-tab{padding:8px 12px;border:1px solid transparent;border-radius:8px;color:var(--theme-muted);font-size:12px;font-weight:500}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .quick-search-tab.active{background:var(--theme-gold-soft);border-color:var(--theme-gold-border);color:var(--theme-accent)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .quick-search-tab:hover{background:var(--theme-raised);color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard :is(#clanTagInput,.quick-search-input-row input,.compare-search-fields input){background:#fff;border-color:#D7CEBD;color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.quick-search-form small,.quick-search-submit-row small,.clan-search-mode-panel>small,.quick-access-card small,.landing-feature-card p,.landing-description,.quick-access-heading>span:last-child,.landing-stats span,.recent-item small){color:var(--theme-muted)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.landing-feature-card strong,.quick-access-card strong,.landing-quick-access .landing-eyebrow){color:var(--theme-text)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.landing-eyebrow,.landing-feature-card>span,.quick-access-icon,.quick-access-card>b,.landing-stats strong){color:var(--theme-accent)}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard header .home-brand>.bg-slate-900{color:var(--theme-accent);background:var(--theme-raised)}
+@media(min-width:701px){html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.landing-features,.quick-access-grid){grid-template-columns:repeat(2,minmax(0,1fr))}}
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] body { color: var(--theme-secondary); }
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(h1,h2,h3,h4,h5,h6) { color: var(--theme-text); line-height: 1.22; }
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.section-note,.card-source,.picker-note,.identity-meta,.updated,.cc-muted,.raid-note,.data-freshness) {
+  color: var(--theme-muted);
+  line-height: 1.5;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.dashboard,.cc-page) :is(button,input,select,textarea) { font: inherit; }
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.dashboard,.cc-page) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) {
+  background-color: #FFFFFF;
+  color: var(--theme-text);
+  border-color: #D7CEBD;
+  border-radius: 9px;
+  min-height: 40px;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.dashboard,.cc-page) :is(input,textarea)::placeholder {
+  color: var(--theme-muted);
+  opacity: 1;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.dashboard,.cc-page) :is(input,select,textarea,button,a):focus-visible {
+  outline: 2px solid #B98216;
+  outline-offset: 3px;
+}
+
+/* Softer panels; neutral cards help the content stand out. */
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.panel,.cc-panel,.clan-overview,.clan-war-log,.clan-actions-card,.capital-district-panel,.rankings-panel,.landing-panel,.raid-panel) {
+  border-color: var(--theme-border);
+  box-shadow: 0 5px 20px #392B180A;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.search-form,.quick-search-panel) {
+  background-color: #F8F5EE;
+  border-color: #E7DFD0;
+}
+
+/* Accent buttons: keep contrast even on bright backgrounds. */
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type="submit"]),
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] .dashboard :is(.bg-blue-600,#searchButton) {
+  background: var(--theme-action-bg);
+  border-color: var(--theme-action-bg);
+  color: var(--theme-action-text);
+  font-weight: 700;
+  border-radius: 9px;
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.compare-button,.search-form button,.quick-search-input-row button,.quick-search-submit-row button,.donation-dialog-link,.cc-page button[type="submit"]):hover,
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] .dashboard :is(.bg-blue-600,#searchButton):hover {
+  background: var(--theme-action-hover);
+  border-color: var(--theme-action-hover);
+  color: var(--theme-action-text);
+}
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] .dashboard .home-header-links>a:not(:hover) { text-decoration: none; }
+html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.dashboard,.cc-page) :is(a,button) {
+  transition: background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease;
+}
+@media (hover: hover) {
+  html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.clan-actions-card,.score-tile):hover {
+    border-color: var(--theme-gold-border);
+    box-shadow: 0 5px 16px #392B1810;
+  }
+}
+@media (max-width: 640px) {
+  html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.dashboard,.cc-page) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea,button) { min-height: 42px; }
+  html:where(:not([data-theme-variant=simple]))[data-theme="light"] .appearance-controls { gap: 8px; }
+  html:where(:not([data-theme-variant=simple]))[data-theme="light"] .theme-control select { min-height: 42px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:where(:not([data-theme-variant=simple]))[data-theme="light"] :is(.dashboard,.cc-page) :is(a,button) { transition: none; }
+}
