@@ -835,8 +835,8 @@ function renderResume() {
   }
 }
 
-async function copyComparisonLink() {
-  const status = document.getElementById('shareStatus');
+async function copyComparisonLink(event) {
+  const status = document.getElementById(event?.currentTarget?.id === 'copyActiveTabLink' ? 'tabShareStatus' : 'shareStatus');
   const url = new URL(window.CocShare.url());
   try {
     await navigator.clipboard.writeText(url.toString());
@@ -1070,6 +1070,7 @@ document.getElementById('activityMetric').addEventListener('change', renderActiv
 document.getElementById('exportCsv').addEventListener('click', exportCsv);
 document.getElementById('exportPng').addEventListener('click', exportPng);
 document.getElementById('copyCompareLink').addEventListener('click', copyComparisonLink);
+document.getElementById('copyActiveTabLink').addEventListener('click', copyComparisonLink);
 for (const link of document.querySelectorAll('.compare-tabs a')) link.addEventListener('click', () => activateCompareTab(link.hash));
 window.addEventListener('hashchange', () => activateCompareTab());
 activateCompareTab();

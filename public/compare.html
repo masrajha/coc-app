@@ -63,6 +63,7 @@
         <span><b class="level-mark unavailable-mark">—</b> <span data-i18n="compare.uncomparable">Tidak dapat dibandingkan</span></span>
       </div>
       <div id="compareNotice" class="compare-notice"></div>
+      <div class="compare-tab-toolbar">
       <nav class="tabs compare-tabs" aria-label="Bagian perbandingan" data-i18n-aria-label="compare.sections">
         <a href="#progress" data-tab="progress" data-section-tone="blue" aria-selected="true" data-i18n="player.progress">Progres</a>
         <a href="#army" data-tab="army" data-section-tone="blue" aria-selected="false">Army</a>
@@ -70,6 +71,8 @@
         <a href="#ranked-league" data-tab="ranked-league" data-section-tone="amber" aria-selected="false">Ranked League</a>
         <a href="#activity" data-tab="activity" data-section-tone="teal" aria-selected="false" data-i18n="compare.activity">Aktivitas</a>
       </nav>
+      <div class="share-actions compare-tab-share"><button id="copyActiveTabLink" type="button" aria-label="Salin tautan tab" title="Salin tautan tab" data-i18n-aria-label="compare.copyActiveTabLink" data-i18n-title="compare.copyActiveTabLink" aria-describedby="tabShareStatus"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><span id="tabShareStatus" role="status" aria-live="polite"></span></div>
+      </div>
       <section id="progress" class="panel compare-panel" data-section-tone="blue">
         <div class="section-head"><div><div class="eyebrow" data-i18n="compare.progressEyebrow">PROGRES PASUKAN DAN HERO</div><h2 data-i18n="compare.scoresAndCategories">Skor & kategori</h2></div></div>
         <p class="section-note" data-i18n="compare.scoreScope">Skor hanya mencakup item yang memiliki batas level. Ini bukan persentase maksimal seluruh akun.</p>

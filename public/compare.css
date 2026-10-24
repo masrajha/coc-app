@@ -85,6 +85,14 @@
 @media(max-width:480px){.sticky-player{padding:7px}.sticky-player img{width:25px;height:25px}.sticky-player small{font-size:8px}.comparison-overview{padding:12px}.overview-score-item{padding:8px 4px}}
 
 /* Shareable tab anchors */
+.compare-tab-toolbar{display:flex;align-items:center;gap:12px;margin-top:16px;border-bottom:1px solid var(--theme-border,#304053)}
+.compare-tab-toolbar .compare-tabs{flex:1;min-width:0;margin-top:0;margin-bottom:0;border-bottom:0;overflow-x:auto}
+.compare-tab-share{flex-wrap:wrap;justify-content:flex-end;padding:6px 0}
+.compare-tab-share button{white-space:nowrap}
+.compare-tab-share #copyActiveTabLink{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;flex-shrink:0}
+.compare-tab-share span:empty{display:none}
+.compare-tab-share button:focus-visible{outline:2px solid var(--theme-link,#84b4ff);outline-offset:3px}
+@media(max-width:700px){.compare-tab-toolbar{flex-wrap:wrap;gap:0}.compare-tab-toolbar .compare-tabs{flex-basis:100%}.compare-tab-share{width:100%;justify-content:flex-start;padding:8px 0}}
 .compare-tabs a{color:var(--theme-secondary,#a8b9ca);border-bottom:2px solid transparent}
 .compare-tabs a:first-child{color:var(--theme-secondary,#a8b9ca);border-bottom-color:transparent}
 .compare-tabs a[aria-selected=true]{color:var(--theme-link,#84b4ff);border-bottom-color:var(--theme-blue-border,#4b8afa)}
