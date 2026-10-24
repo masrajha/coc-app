@@ -6,6 +6,8 @@
       "theme.dark": "Gelap",
       "theme.light": "Terang",
       "theme.system": "Sistem",
+      "theme.dark-simple": "Gelap Simple",
+      "theme.light-simple": "Terang Simple",
 
       "clan.tabs.overview": "Ringkasan",
       "clan.tabs.members": "Anggota",
@@ -1089,6 +1091,8 @@
       "theme.dark": "Dark",
       "theme.light": "Light",
       "theme.system": "System",
+      "theme.dark-simple": "Dark Simple",
+      "theme.light-simple": "Light Simple",
 
       "clan.tabs.overview": "Overview",
       "clan.tabs.members": "Members",

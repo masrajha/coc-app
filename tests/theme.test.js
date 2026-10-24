@@ -40,9 +40,26 @@ assert.equal(blocked.root.dataset.theme,'light','Blocked storage must not preven
 blocked.context.window.CocTheme.setMode('invalid');
 assert.equal(blocked.root.dataset.theme,'light');
 assert.equal(setup('invalid').root.dataset.theme,'dark');
+for (const mode of ['dark-simple', 'light-simple']) {
+  const simple = setup(mode, true);
+  const base = mode.replace('-simple', '');
+  assert.equal(simple.root.dataset.theme, base);
+  assert.equal(simple.root.dataset.themeVariant, 'simple');
+  assert.equal(simple.root.style.colorScheme, base);
+  simple.media.matches = false; simple.mediaEvents.change();
+  assert.equal(simple.context.window.CocTheme.mode, mode);
+  simple.context.window.CocTheme.setMode('dark');
+  assert.equal(simple.root.dataset.themeVariant, 'default');
+  simple.events.storage({key:'coc-theme',newValue:mode});
+  assert.equal(simple.root.dataset.themeVariant, 'simple');
+  simple.context.window.CocTheme.setMode('system');
+  assert.equal(simple.root.dataset.themeVariant, 'default');
+  assert.equal(simple.root.dataset.theme, 'light');
+}
 for(const page of ['index','player','compare','compare-clan']) {
   const html=fs.readFileSync(`public/${page}.html`,'utf8');
   assert.ok(html.indexOf('/theme.js')<html.indexOf('rel="stylesheet"'),`${page}: theme must be applied before styles.`);
   assert.ok(html.includes('/theme.css'),`${page}: missing shared theme styles.`);
+  assert.ok(html.includes('/theme-simple.css'),`${page}: missing backup theme styles.`);
 }
 console.log('Theme tests passed: startup, persistence, system changes, storage failures, cross-tab sync and page wiring.');

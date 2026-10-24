@@ -100,3 +100,9 @@ Palet terbaru hanya mengubah `public/theme.css`: light memakai pasir/krem, dark 
 ### Palet terpilih: Sandstone Light + Royal Gold
 
 Tema Light memakai Sandstone Light dan Dark memakai Royal Gold sesuai token di `coc_theme_palette_preview.html`. Token tambahan untuk status, border, grafik, dan aksen bagian telah dilengkapi. Grafik Royal Gold memakai gold dan teal; label pendukung tetap netral. Pilihan Sistem mengikuti pasangan ini sesuai perangkat. Cukup unggah ulang `public/theme.css` dan refresh cache browser. Backup awal di `backups/theme-20261024-before-sand-navy.css` tetap tersedia.
+
+### Pilihan tambahan Dark Simple / Light Simple
+
+Unggah `public/theme-simple.css` beserta perubahan `public/theme.css`, `public/theme.js`, `public/i18n.js`, dan keempat HTML halaman (`index.html`, `player.html`, `compare.html`, `compare-clan.html`). Stylesheet Simple disalin dari `backups/theme-20261024-before-sand-navy.css` dengan pembatas selector agar tidak bercampur dengan Royal Gold/Sandstone. File backup asli tidak diubah.
+
+Kelima opsi disimpan melalui key `coc-theme`: `dark`, `light`, `dark-simple`, `light-simple`, dan `system`. Atribut `data-theme` tetap memakai `dark`/`light` agar komponen dan kontrol native bekerja; `data-theme-variant` membedakan `simple`/`default`. Mode Sistem mengikuti Royal Gold atau Sandstone sesuai perangkat.

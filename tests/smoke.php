@@ -180,6 +180,7 @@ $checks = [
     '/rankings.js' => [200, 'text/javascript'],
     '/theme.js' => [200, 'text/javascript'],
     '/theme.css' => [200, 'text/css'],
+    '/theme-simple.css' => [200, 'text/css'],
     '/api/clan/INVALID' => [400, 'application/json'],
     '/api/clan/2GPP802UU/summary' => [200, 'application/json'],
     '/api/clan/INVALID/summary' => [400, 'application/json'],

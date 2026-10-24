@@ -11,7 +11,7 @@ const keys = pages.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/d
 const scripts = ['public/index.html', 'public/rankings.js', 'public/player.js', 'public/player-league.js', 'public/compare.js', 'public/donation.js', 'public/raids.js', 'public/clan-compare.js', 'public/clan-labels.js', 'public/account-features.js', 'public/clan-tabs.js'];
 const scriptKeys = scripts.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/\btr\(['"]([^'"]+)['"]/g)].map(match => match[1]));
 const translationKeys = [...new Set([...keys, ...scriptKeys])];
-const computedKeys = ['theme.label', 'theme.dark', 'theme.light', 'theme.system', ...['wars','cwl','trophies','friendly','games','builder','design','farming','donator','social','talkative','underdog','relaxed','competitive','capital','newbie'].map(key => 'labels.name.' + key), 'compare.quality.rendah', 'compare.quality.cukup', 'compare.quality.baik', 'clan.flag.Donasi nol', 'clan.flag.Trofi 7 hari tidak berubah', 'clan.flag.Donasi 7 hari tidak berubah'];
+const computedKeys = ['theme.label', 'theme.dark', 'theme.light', 'theme.system', 'theme.dark-simple', 'theme.light-simple', ...['wars','cwl','trophies','friendly','games','builder','design','farming','donator','social','talkative','underdog','relaxed','competitive','capital','newbie'].map(key => 'labels.name.' + key), 'compare.quality.rendah', 'compare.quality.cukup', 'compare.quality.baik', 'clan.flag.Donasi nol', 'clan.flag.Trofi 7 hari tidak berubah', 'clan.flag.Donasi 7 hari tidak berubah'];
 
 function createContext(initialLocale) {
   const storage = new Map(initialLocale ? [['coc-language', initialLocale]] : []);

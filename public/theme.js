@@ -1,17 +1,20 @@
 (() => {
   const storageKey = 'coc-theme';
-  const valid = value => ['dark', 'light', 'system'].includes(value);
+  const modes = ['dark', 'light', 'dark-simple', 'light-simple', 'system'];
+  const valid = value => modes.includes(value);
   const root = document.documentElement;
   const media = window.matchMedia('(prefers-color-scheme: dark)');
   let mode = 'dark';
   try { const saved = localStorage.getItem(storageKey); if (valid(saved)) mode = saved; } catch { /* The current page still supports themes without storage. */ }
   function apply() {
-    const theme = mode === 'system' ? (media.matches ? 'dark' : 'light') : mode;
+    const variant = mode.endsWith('-simple') ? 'simple' : 'default';
+    const theme = mode === 'system' ? (media.matches ? 'dark' : 'light') : mode.replace('-simple', '');
+    root.dataset.themeVariant = variant;
     root.dataset.theme = theme;
     root.dataset.themeMode = mode;
     root.style.colorScheme = theme;
     document.querySelectorAll('[data-theme-switch]').forEach(select => { select.value = mode; });
-    window.dispatchEvent(new CustomEvent('coc-theme-changed', {detail: {mode, theme}}));
+    window.dispatchEvent(new CustomEvent('coc-theme-changed', {detail: {mode, theme, variant}}));
   }
   function setMode(next) {
     if (!valid(next)) return;
@@ -27,7 +30,7 @@
     if (event.key !== storageKey && event.key !== null) return;
     mode = valid(event.newValue) ? event.newValue : 'dark'; apply();
   });
-  window.CocTheme = {setMode, get mode() { return mode; }, get theme() { return root.dataset.theme; }};
+  window.CocTheme = {setMode, get mode() { return mode; }, get theme() { return root.dataset.theme; }, get variant() { return root.dataset.themeVariant; }};
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-language-switch]').forEach(language => {
       const languageLabel = language.closest('label'); if (!languageLabel) return;
@@ -36,7 +39,7 @@
       const label = document.createElement('label'); label.className = 'theme-control';
       const text = document.createElement('span'); text.dataset.i18n = 'theme.label'; text.textContent = 'Tema';
       const select = document.createElement('select'); select.dataset.themeSwitch = ''; select.dataset.i18nAriaLabel = 'theme.label'; select.setAttribute('aria-label', 'Tema');
-      for (const value of ['dark', 'light', 'system']) {
+      for (const value of modes) {
         const option = document.createElement('option'); option.value = value; option.dataset.i18n = 'theme.' + value; option.textContent = value; select.append(option);
       }
       select.value = mode; select.addEventListener('change', () => setMode(select.value));
