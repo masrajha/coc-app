@@ -11,6 +11,7 @@ let rosterTag = null;
 const leagueRequestId = { left: 0, right: 0 };
 const tr = (key, variables) => window.CocI18n.t(key, variables);
 const locale = () => window.CocI18n.formatLocale;
+window.CocI18n.setPageTitle('compare');
 
 function normalizeTag(value) {
   const tag = String(value || '').trim().replace(/^#/, '').toUpperCase();
@@ -342,7 +343,12 @@ function renderHeadToHead() {
   legend.append(textNode('b', sideName('left')), textNode('b', sideName('right'))); root.appendChild(legend);
 }
 
+function updateComparisonTitle() {
+  window.CocI18n.setPageTitle('compare', ['left', 'right'].map((side, index) => profiles[side]?.player?.name || profiles[side]?.player?.tag || normalizeTag(document.getElementById(index ? 'player2' : 'player1').value) || ''));
+}
+
 function renderComparison() {
+  updateComparisonTitle();
   document.getElementById('comparisonContent').hidden = !profiles.left && !profiles.right;
   if (!profiles.left && !profiles.right) return;
   renderStickyCompareHeader(); renderComparisonOverview();
@@ -970,6 +976,7 @@ async function fetchProfile(tag) {
 }
 
 async function loadProfiles() {
+  updateComparisonTitle();
   const entries = [['left', 'player1', tr('compare.playerA')], ['right', 'player2', tr('compare.playerB')]];
   const tasks = entries.map(async ([side, inputId, label]) => {
     const raw = document.getElementById(inputId).value.trim();
@@ -981,6 +988,7 @@ async function loadProfiles() {
       const data = await fetchProfile(tag);
       window.RecentlyOpened?.player({ tag: data.player.tag, name: data.player.name, meta: data.player.townHallLevel ? `TH ${data.player.townHallLevel}` : '' });
       profiles[side] = data;
+      updateComparisonTitle();
       renderCard(side, data);
     } catch (error) { showStatus(side, error.message, true); }
   });

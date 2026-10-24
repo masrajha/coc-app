@@ -2,6 +2,16 @@
   const STORAGE_KEY = 'coc-language';
   const messages = {
     id: {
+      "title.home": "CoC Clan Command Center - Pantau Clan, War & Pemain",
+      "title.player": "Profil Pemain",
+      "title.clan": "Profil Clan",
+      "title.compare": "Perbandingan Pemain",
+      "title.compareClan": "Perbandingan Clan",
+      "title.player1": "Pemain 1",
+      "title.player2": "Pemain 2",
+      "title.clan1": "Clan 1",
+      "title.clan2": "Clan 2",
+
       "theme.label": "Tema",
       "theme.dark": "Gelap",
       "theme.light": "Terang",
@@ -1087,6 +1097,16 @@
       'player.loadingSessionComparison': 'Memuat perbandingan sesi…'
     },
     en: {
+      "title.home": "CoC Clan Command Center - Clan, War & Player Tracker",
+      "title.player": "Player Profile",
+      "title.clan": "Clan Profile",
+      "title.compare": "Player Comparison",
+      "title.compareClan": "Clan Comparison",
+      "title.player1": "Player 1",
+      "title.player2": "Player 2",
+      "title.clan1": "Clan 1",
+      "title.clan2": "Clan 2",
+
       "theme.label": "Theme",
       "theme.dark": "Dark",
       "theme.light": "Light",
@@ -2183,6 +2203,25 @@
     return template.replace(/\{(\w+)\}/g, (match, name) => variables[name] ?? match);
   }
 
+  let pageTitleContext = null;
+  function renderPageTitle() {
+    if (!pageTitleContext) return;
+    const {kind, names} = pageTitleContext;
+    if (kind === 'home') { document.title = t('title.home'); return; }
+    const comparison = kind === 'compare' || kind === 'compareClan';
+    const prefix = kind === 'compareClan' ? 'clan' : 'player';
+    const hasNames = names.some(Boolean);
+    const subject = comparison
+      ? [0, 1].map(index => names[index] || t(`title.${prefix}${index + 1}`)).join(' vs ')
+      : names[0] || '';
+    document.title = t('title.' + kind) + (hasNames ? ': ' + subject : '') + ' - CoC Clan Command Center';
+  }
+  function setPageTitle(kind, names = []) {
+    if (!['home', 'player', 'clan', 'compare', 'compareClan'].includes(kind)) return;
+    pageTitleContext = {kind, names: names.slice(0, 2).map(value => typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : '')};
+    renderPageTitle();
+  }
+
   function apiUrl(path) {
     const separator = path.includes('?') ? '&' : '?';
     return `${path}${separator}lang=${encodeURIComponent(locale)}`;
@@ -2199,6 +2238,7 @@
     root.querySelectorAll('[data-i18n-title]').forEach(element => { element.title = t(element.dataset.i18nTitle); });
     root.querySelectorAll('[data-i18n-alt]').forEach(element => { element.alt = t(element.dataset.i18nAlt); });
     root.querySelectorAll('[data-language-switch]').forEach(select => { select.value = locale; });
+    if (root === document) renderPageTitle();
   }
 
   function setLocale(next) {
@@ -2214,7 +2254,7 @@
   }
 
   window.CocI18n = {
-    t, apply, setLocale, apiUrl, apiFetch,
+    t, apply, setLocale, apiUrl, apiFetch, setPageTitle,
     hasTranslation: (key, language) => Object.hasOwn(messages[language] || {}, key),
     get locale() { return locale; },
     get formatLocale() { return locale === 'id' ? 'id-ID' : 'en-US'; },

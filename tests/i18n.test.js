@@ -86,4 +86,30 @@ for (const file of ['public/index.css', 'public/player.css', 'public/compare.css
 for (const key of [...translationKeys, ...computedKeys]) {
   assert.ok(english.context.window.CocI18n.hasTranslation(key, 'en'), `Missing English translation: ${key}`);
 }
-console.log(`i18n tests passed (${keys.length} page bindings, ${scriptKeys.length} script references).`);
+const titleCase = createContext('en');
+const titleApi = titleCase.context.window.CocI18n;
+const titleDocument = titleCase.context.document;
+titleApi.setPageTitle('compare', ["O'Connor", 'Amerta Buana']);
+assert.equal(titleDocument.title, "Player Comparison: O'Connor vs Amerta Buana - CoC Clan Command Center");
+// Reapplying static title translations must preserve the resolved player names.
+const titleBinding = {dataset:{i18n:'compare.pageTitle'},set textContent(value){titleDocument.title=value;}};
+titleDocument.querySelectorAll = selector => selector === '[data-i18n]' ? [titleBinding] : [];
+titleApi.apply();
+assert.equal(titleDocument.title, "Player Comparison: O'Connor vs Amerta Buana - CoC Clan Command Center");
+titleApi.setLocale('id');
+assert.equal(titleDocument.title, "Perbandingan Pemain: O'Connor vs Amerta Buana - CoC Clan Command Center");
+titleApi.setPageTitle('compare', ['Amerta Buana']);
+assert.equal(titleDocument.title, 'Perbandingan Pemain: Amerta Buana vs Pemain 2 - CoC Clan Command Center');
+titleApi.setPageTitle('clan', ['ISTIMEWA']);
+assert.equal(titleDocument.title, 'Profil Clan: ISTIMEWA - CoC Clan Command Center');
+titleApi.setPageTitle('compareClan', ['ISTIMEWA', 'Other Clan']);
+assert.equal(titleDocument.title, 'Perbandingan Clan: ISTIMEWA vs Other Clan - CoC Clan Command Center');
+titleApi.setPageTitle('player', ['#28P08PG0G']);
+assert.equal(titleDocument.title, 'Profil Pemain: #28P08PG0G - CoC Clan Command Center');
+titleApi.setPageTitle('player', ["  O'Connor\n Player  "]);
+assert.equal(titleDocument.title, "Profil Pemain: O'Connor Player - CoC Clan Command Center");
+titleApi.setPageTitle('compare');
+assert.equal(titleDocument.title, 'Perbandingan Pemain - CoC Clan Command Center');
+titleApi.setPageTitle('home');
+assert.equal(titleDocument.title, 'CoC Clan Command Center - Pantau Clan, War & Pemain');
+console.log(`i18n tests passed (${keys.length} page bindings, ${scriptKeys.length} script references, contextual titles).`);

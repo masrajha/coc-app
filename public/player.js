@@ -13,6 +13,7 @@ let currentPerformanceData = null;
 const tr = (key, variables) => window.CocI18n.t(key, variables);
 const localizedNumber = (value, options) => window.CocI18n.number(value, options);
 const localizedDate = value => window.CocI18n.dateTime(new Date(value));
+window.CocI18n.setPageTitle('player');
 const backLink = document.getElementById('backLink');
 if (clanTag) backLink.href = `/?clan=${encodeURIComponent(clanTag)}`;
 
@@ -409,7 +410,7 @@ function renderProfile(data) {
   const compareClan = clanTag || normalizeTag(player.clan?.tag);
   if (compareClan) compareParams.set('clan', compareClan);
   document.getElementById('compareLink').href = `/compare.html?${compareParams}`;
-  document.title = `${player.name} · ${tr('player.pageTitle')}`;
+  window.CocI18n.setPageTitle('player', [player.name || player.tag]);
   setText('playerName', player.name);
   setText('copyTag', player.tag);
   const clanName = document.getElementById('clanName');
@@ -456,6 +457,7 @@ async function loadProfile(rawTag) {
   const tag = normalizeTag(rawTag);
   const status = document.getElementById('status');
   if (!tag) { status.hidden = false; status.textContent = tr('player.invalidTag'); return; }
+  window.CocI18n.setPageTitle('player', ['#' + tag]);
   document.getElementById('playerTag').value = tag;
   document.getElementById('profile').hidden = true;
   status.hidden = false;

@@ -6,6 +6,7 @@
   let state = [{},{}], request = 0, loading = false;
   const params = new URLSearchParams(location.search);
   el('clanOne').value = params.get('clan1') || ''; el('clanTwo').value = params.get('clan2') || '';
+  i18n.setPageTitle('compareClan', [el('clanOne').value, el('clanTwo').value]);
   el('clanWarPeriod').value = params.get('days') === '90' ? '90' : '30';
   function syncUrl() {
     const query = new URLSearchParams({clan1:clean(el('clanOne').value),clan2:clean(el('clanTwo').value),days:el('clanWarPeriod').value});
@@ -27,7 +28,11 @@
       if(s[resource]?.stale) {const p=document.createElement('p');p.textContent=tr('raid.stale');node.append(p);}
     });
   }
+  function updateTitle() {
+    i18n.setPageTitle('compareClan', state.map((side, index) => side.profile?.name || side.profile?.tag || clean(el(index ? 'clanTwo' : 'clanOne').value)));
+  }
   function render() {
+    updateTitle();
     const profiles=state.map(s=>s.profile), summaries=profiles.map(p=>p?model.profile(p):null);
     table('clanProfileCompare',[
       [tr('cc.clan'),profiles.map(p=>p?`${p.name} · ${p.tag}`:'—')],
@@ -70,10 +75,11 @@
     event?.preventDefault();
     const tags=[clean(el('clanOne').value),clean(el('clanTwo').value)];
     if(tags.some(tag=>! /^[0289PYLQGRJCUV]{3,15}$/.test(tag))||tags[0]===tags[1]){el('clanCompareStatus').textContent=tr('cc.invalid');return;}
+    i18n.setPageTitle('compareClan', tags);
     const version=++request;state=[{},{}];loading=true;el('clanCompareContent').hidden=true;
     const status=el('clanCompareStatus');status.replaceChildren();const spin=document.createElement('span');spin.className='cc-spinner';spin.setAttribute('aria-hidden','true');status.append(spin,document.createTextNode(tr('cc.loading')));syncUrl();
     await Promise.allSettled(tags.flatMap((tag,index)=>[['profile',''],['war','/war-log?limit=50'],['raids','/raids?limit=10']].map(async([resource,suffix])=>{
-      try{const response=await i18n.apiFetch('/api/clan/'+tag+suffix),data=await response.json();if(!response.ok)throw new Error(data.error||tr('cc.failed'));if(version===request)state[index][resource]=data;}
+      try{const response=await i18n.apiFetch('/api/clan/'+tag+suffix),data=await response.json();if(!response.ok)throw new Error(data.error||tr('cc.failed'));if(version===request){state[index][resource]=data;if(resource==='profile')updateTitle();}}
       catch(error){if(version===request)state[index][resource+'Error']=error.message;}
     })));
     if(version!==request)return;
