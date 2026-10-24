@@ -13,12 +13,14 @@ const scriptKeys = scripts.flatMap(page => [...fs.readFileSync(page, 'utf8').mat
 const translationKeys = [...new Set([...keys, ...scriptKeys])];
 const computedKeys = ['theme.label', 'theme.dark', 'theme.light', 'theme.system', 'theme.dark-simple', 'theme.light-simple', ...['wars','cwl','trophies','friendly','games','builder','design','farming','donator','social','talkative','underdog','relaxed','competitive','capital','newbie'].map(key => 'labels.name.' + key), 'compare.quality.rendah', 'compare.quality.cukup', 'compare.quality.baik', 'clan.flag.Donasi nol', 'clan.flag.Trofi 7 hari tidak berubah', 'clan.flag.Donasi 7 hari tidak berubah'];
 
-function createContext(initialLocale) {
+function createContext(initialLocale, address = 'https://share.example.test/') {
   const storage = new Map(initialLocale ? [['coc-language', initialLocale]] : []);
   let reloads = 0;
   const requests = [];
   const context = {
     Intl,
+    URL,
+    URLSearchParams,
     fetch: (url, options) => { requests.push({ url, options }); return Promise.resolve({ ok: true }); },
     localStorage: {
       getItem: key => storage.get(key) || null,
@@ -31,7 +33,8 @@ function createContext(initialLocale) {
     },
     window: {
       dispatchEvent() {},
-      location: { reload: () => { reloads += 1; } }
+      location: { href: address, search: new URL(address).search, reload: () => { reloads += 1; } },
+      history: { replaceState: (_state, _title, next) => { context.window.location.href = String(next); context.window.location.search = new URL(next).search; } }
     },
     CustomEvent: class CustomEvent {}
   };
@@ -41,6 +44,10 @@ function createContext(initialLocale) {
 
 const first = createContext();
 assert.equal(first.context.window.CocI18n.locale, 'id');
+const receivedShare = createContext('id', 'https://share.example.test/player.html?tag=28P08PG0G&lang=en&view=army');
+assert.equal(receivedShare.context.window.CocI18n.locale, 'en', 'A shared language must override the saved preference.');
+receivedShare.context.window.CocI18n.setLocale('id');
+assert.equal(new URL(receivedShare.context.window.location.href).searchParams.get('lang'), 'id', 'Changing language must update explicit shared URL language before reloading.');
 assert.equal(first.context.document.documentElement.lang, 'id');
 assert.equal(first.context.window.CocI18n.number(1234.5), '1.234,5');
 assert.equal(first.context.window.CocI18n.dateTime(new Date('2026-10-18T00:00:00Z'), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }), '18 Oktober 2026');

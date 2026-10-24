@@ -166,9 +166,10 @@ final class App
         $app->get('/api/player/{tag}/raids', fn($req, $res, $args) => $self->playerRaids($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/league-group', fn($req, $res, $args) => $self->playerLeagueGroup($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
-        $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html'));
-        $app->get('/clan.html', fn($req, $res) => $self->staticFile($res, 'index.html'));
-        $app->get('/{path:.*}', fn($req, $res, $args) => $self->staticFile($res, $args['path'] ?? ''));
+        $app->get('/share/image/{hash}.png', fn($req, $res, $args) => $self->shareImage($req, $res, $args['hash']));
+        $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
+        $app->get('/clan.html', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
+        $app->get('/{path:.*}', fn($req, $res, $args) => $self->staticFile($res, $args['path'] ?? '', $req));
         return $app;
     }
 
@@ -387,7 +388,7 @@ final class App
         } catch (\Throwable) { $res->getBody()->write($this->locale === 'en' ? 'Could not create the CSV report.' : 'Gagal membuat laporan CSV.'); return $res->withStatus(500)->withHeader('Content-Type', 'text/plain; charset=utf-8')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language'); }
     }
 
-    private function staticFile(ResponseInterface $res, string $requested): ResponseInterface
+    private function staticFile(ResponseInterface $res, string $requested, ?ServerRequestInterface $req = null): ResponseInterface
     {
         $safe = str_replace('\\', '/', rawurldecode($requested));
         if ($safe === '' || str_contains($safe, '..') || str_starts_with($safe, '/')) return $res->withStatus(404);
@@ -407,11 +408,23 @@ final class App
             'webp' => 'image/webp',
             default => mime_content_type($path) ?: 'application/octet-stream'
         };
-        if ($extension === 'html') $content = $this->versionHtmlAssets($content, $root);
+        if ($extension === 'html') {
+            if ($req && in_array($req->getUri()->getPath(), ['/', '/index.html', '/clan.html', '/player.html', '/compare.html', '/compare-clan.html'], true)) {
+                try {
+                    $share = $this->shareService($req);
+                    $context = $share->context($req->getUri()->getPath(), $req->getQueryParams());
+                    $content = $share->html($content, $share->metadata($context));
+                    $content = preg_replace('/<html lang="[^"]*"/', '<html lang="' . $this->locale . '"', $content, 1);
+                } catch (\Throwable $error) {
+                    error_log('Share preview unavailable: ' . get_class($error));
+                }
+            }
+            $content = $this->versionHtmlAssets($content, $root);
+        }
         $res->getBody()->write($content);
         $response = $res->withHeader('Content-Type', $mime)->withHeader('X-Content-Type-Options', 'nosniff');
         if ($extension === 'html') {
-            return $response->withHeader('Cache-Control', 'no-cache, must-revalidate');
+            return $response->withHeader('Cache-Control', 'no-cache, must-revalidate')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language');
         }
         if (in_array($extension, ['css', 'js'], true)) {
             $etag = '"' . hash('sha256', $content) . '"';
@@ -420,6 +433,37 @@ final class App
                 ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT');
         }
         return $response;
+    }
+
+    private function shareService(ServerRequestInterface $req): SharePreview
+    {
+        $configured = (string)($this->env('APP_URL') ?: '');
+        $parts = $configured !== '' ? parse_url($configured) : false;
+        if ($parts && in_array($parts['scheme'] ?? '', ['https', 'http'], true) && !empty($parts['host']) && !isset($parts['user']) && !isset($parts['query']) && !isset($parts['fragment'])) {
+            $base = rtrim($configured, '/');
+        } else {
+            $uri = $req->getUri();
+            $scheme = $uri->getScheme() === 'https' ? 'https' : 'http';
+            $host = $uri->getHost() ?: 'localhost';
+            $base = $scheme . '://' . $host . ($uri->getPort() ? ':' . $uri->getPort() : '');
+        }
+        return new SharePreview($this->file('share'), fn(string $path, int $timeout) => $this->upstream($path, $timeout, 0, null, true), $base, $this->locale);
+    }
+
+    private function shareImage(ServerRequestInterface $req, ResponseInterface $res, string $hash): ResponseInterface
+    {
+        try {
+            $bytes = $this->shareService($req)->image($hash);
+            if ($bytes === null) return $res->withStatus(404);
+            $etag = '"' . hash('sha256', $bytes) . '"';
+            if ($req->getHeaderLine('If-None-Match') === $etag) return $res->withStatus(304)->withHeader('ETag', $etag)->withHeader('Cache-Control', 'public, max-age=31536000, immutable');
+            $res->getBody()->write($bytes);
+            return $res->withHeader('Content-Type', 'image/png')->withHeader('X-Content-Type-Options', 'nosniff')
+                ->withHeader('Cache-Control', 'public, max-age=31536000, immutable')->withHeader('ETag', $etag);
+        } catch (\Throwable $error) {
+            error_log('Share image unavailable: ' . get_class($error));
+            return $res->withStatus(503)->withHeader('Cache-Control', 'no-store');
+        }
     }
 
     private function versionHtmlAssets(string $html, string $publicRoot): string

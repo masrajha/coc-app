@@ -494,8 +494,8 @@ document.querySelectorAll('.tabs button').forEach(button => button.addEventListe
 }));
 ['progressSearch', 'progressFilter', 'progressSort'].forEach(id => document.getElementById(id)?.addEventListener(id === 'progressSearch' ? 'input' : 'change', () => currentProgress && renderProgressTools(currentProgress)));
 document.getElementById('copyPlayerResume').addEventListener('click', async () => { try { await navigator.clipboard.writeText(document.getElementById('playerResumeText').textContent); setText('copyPlayerResume', tr('player.copied')); } catch {} });
-document.getElementById('copyPlayerLink').addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); setText('copyPlayerLink', tr('player.copied')); } catch {} });
+document.getElementById('copyPlayerLink').addEventListener('click', async () => { try { await navigator.clipboard.writeText(window.CocShare.url()); setText('copyPlayerLink', tr('player.copied')); } catch {} });
 document.getElementById('exportPlayerCsv').addEventListener('click', () => { const p = currentProfileData?.player; if (!p) return; const csv = `\uFEFFfield,value\r\nname,"${String(p.name || '').replaceAll('"', '""')}"\r\ntag,"${p.tag || ''}"\r\ntownHall,${p.townHallLevel || ''}\r\ntrophies,${p.trophies || ''}\r\nwarStars,${p.warStars || ''}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); const link = document.createElement('a'); link.href = url; link.download = `player-${normalizeTag(p.tag)}.csv`; link.click(); URL.revokeObjectURL(url); });
-const tabFromHash = location.hash.replace('#', '');
-if (tabFromHash && document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`)) document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`).click();
+const tabFromHash = location.hash.replace('#', '') || params.get('view');
+if (['army', 'progress', 'performance', 'ranked-battles', 'capital-raids', 'achievements'].includes(tabFromHash)) document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`)?.click();
 if (params.has('tag')) loadProfile(params.get('tag'));

@@ -107,6 +107,21 @@ Unggah `public/theme-simple.css` beserta perubahan `public/theme.css`, `public/t
 
 Kelima opsi disimpan melalui key `coc-theme`: `dark`, `light`, `dark-simple`, `light-simple`, dan `system`. Atribut `data-theme` tetap memakai `dark`/`light` agar komponen dan kontrol native bekerja; `data-theme-variant` membedakan `simple`/`default`. Mode Sistem mengikuti Royal Gold atau Sandstone sesuai perangkat.
 
+## Pratinjau tautan WhatsApp / Open Graph
+
+Unggah `src/SharePreview.php`, `src/ShareCard.php`, `src/App.php`, `.htaccess`, `public/share.js`, `public/fonts/`, dan perubahan HTML/JavaScript terkait. Halaman HTML harus melewati front controller PHP agar metadata dinamis tersedia tanpa JavaScript.
+
+Empat penyesuaian yang diterapkan:
+
+1. **Metadata dari server:** judul, deskripsi, canonical, Open Graph, dan Twitter Card tersedia pada HTML awal untuk home, clan, player, perbandingan player, dan perbandingan clan.
+2. **Gambar dan cache:** kartu Royal Gold PNG 1200×630 disediakan melalui `/share/image/{hash}.png`. Snapshot metadata disimpan 15 menit di `data/share/`; kegagalan API menghasilkan kartu parsial dan dicoba ulang setelah satu menit. URL gambar lama mempertahankan isi yang sama. Folder cache harus dapat ditulis PHP; tidak perlu mengunggah cache lokal.
+3. **URL publik HTTPS:** tambahkan `APP_URL=https://domainanda.com` pada `.env` hosting, tanpa slash akhir atau path, terutama di balik proxy HTTPS. Halaman dan gambar harus dapat dibuka publik tanpa login. `localhost` tidak dapat diakses WhatsApp. Jika konfigurasi belum diisi, origin diambil dari request.
+4. **Konteks tautan:** tombol salin tautan/ringkasan membawa `lang=id|en` dan `view=...`; battle log player juga membawa `session=current|previous`. Penerima membuka bahasa dan tab yang sesuai. Fragment `#...` diubah menjadi query karena fragment tidak dikirim ke server.
+
+Untuk hasil gambar terbaik, aktifkan ekstensi PHP **GD dengan FreeType**. Font Noto Sans dan lisensi OFL disertakan di `public/fonts/`. Tanpa GD, PNG tetap dibuat memakai renderer bitmap bawaan; ikon dan dukungan karakter nama lebih terbatas. Tidak diperlukan Chrome atau layanan screenshot di hosting. Gambar berupa kartu ringkasan, bukan tangkapan layar seluruh halaman, dengan palet Royal Gold tetap.
+
+Pengujian: `composer test`, `node tests/share.test.js`, dan `node tests/i18n.test.js`. Pengujian GD di XAMPP: `php -d extension=gd tests/share.php`. Setelah deployment, buka sumber HTML misalnya `https://domainanda.com/player.html?tag=28P08PG0G&lang=id&view=ranked-battles&session=previous`, kemudian buka URL `og:image` yang tercantum. WhatsApp memiliki cache pratinjau sendiri sehingga perubahan mungkin tidak langsung terlihat. Pengujian lokal tidak memverifikasi tampilan di aplikasi WhatsApp.
+
 ### Judul tab browser sesuai konteks
 
 Unggah perubahan `public/i18n.js`, `public/index.html`, `public/player.js`, `public/compare.js`, `public/clan-compare.js`, dan `public/compare-clan.html`. Judul profil memakai nama pemain/clan, sedangkan perbandingan memakai kedua nama dengan pemisah `vs` dan suffix `- CoC Clan Command Center`. Saat data belum tersedia, tag atau judul umum digunakan. Teks judul mengikuti bahasa aktif dan tetap mempertahankan nama setelah terjemahan diterapkan ulang.

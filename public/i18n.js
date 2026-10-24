@@ -2195,6 +2195,8 @@
 
   let locale;
   try { locale = localStorage.getItem(STORAGE_KEY); } catch { /* Storage is optional. */ }
+  const requestedLanguage = typeof URLSearchParams === 'function' ? new URLSearchParams(window.location.search || '').get('lang') : null;
+  if (requestedLanguage === 'id' || requestedLanguage === 'en') locale = requestedLanguage;
   if (locale !== 'id' && locale !== 'en') locale = 'id';
   document.documentElement.lang = locale;
 
@@ -2246,6 +2248,10 @@
     let persisted = false;
     try { localStorage.setItem(STORAGE_KEY, next); persisted = true; } catch { /* Current page can still switch. */ }
     locale = next;
+    if (typeof URL === 'function' && window.location.href && window.history?.replaceState) {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('lang')) { url.searchParams.set('lang', next); window.history.replaceState(null, '', url); }
+    }
     document.documentElement.lang = locale;
     apply();
     window.dispatchEvent(new CustomEvent('coc-language-changed', { detail: { locale } }));

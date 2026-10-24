@@ -9,7 +9,7 @@
   i18n.setPageTitle('compareClan', [el('clanOne').value, el('clanTwo').value]);
   el('clanWarPeriod').value = params.get('days') === '90' ? '90' : '30';
   function syncUrl() {
-    const query = new URLSearchParams({clan1:clean(el('clanOne').value),clan2:clean(el('clanTwo').value),days:el('clanWarPeriod').value});
+    const query = new URLSearchParams({clan1:clean(el('clanOne').value),clan2:clean(el('clanTwo').value),days:el('clanWarPeriod').value,lang:i18n.locale});
     if(el('clanRaidWeekend').value) query.set('weekend',el('clanRaidWeekend').value);
     history.replaceState(null,'',location.pathname+'?'+query);
   }
@@ -92,6 +92,6 @@
   el('clanCompareForm').addEventListener('submit',load);
   el('clanSwap').onclick=()=>{[el('clanOne').value,el('clanTwo').value]=[el('clanTwo').value,el('clanOne').value];if(el('clanOne').value&&el('clanTwo').value)load();};
   el('clanWarPeriod').onchange=el('clanRaidWeekend').onchange=()=>{if(!loading){render();syncUrl();}};
-  el('clanShare').onclick=async()=>{try{syncUrl();await navigator.clipboard.writeText(location.href);el('clanCompareStatus').textContent=tr('cc.copied');}catch{el('clanCompareStatus').textContent=tr('cc.copyFallback');}};
+  el('clanShare').onclick=async()=>{try{syncUrl();await navigator.clipboard.writeText(window.CocShare.url());el('clanCompareStatus').textContent=tr('cc.copied');}catch{el('clanCompareStatus').textContent=tr('cc.copyFallback');}};
   if(el('clanOne').value&&el('clanTwo').value)load();
 })();

@@ -837,8 +837,7 @@ function renderResume() {
 
 async function copyComparisonLink() {
   const status = document.getElementById('shareStatus');
-  const url = new URL(location.href);
-  if (!url.hash) url.hash = '#progress';
+  const url = new URL(window.CocShare.url());
   try {
     await navigator.clipboard.writeText(url.toString());
     status.textContent = tr('compare.linkCopied');
@@ -1034,7 +1033,7 @@ function navigateToComparison() {
   location.href = `/compare.html${query.size ? `?${query}` : ''}${location.hash}`;
 }
 
-function activateCompareTab(hash = location.hash) {
+function activateCompareTab(hash = location.hash || params.get('view')) {
   const aliases = { war: 'war-cwl', league: 'ranked-league' };
   const requested = String(hash || '').replace(/^#/, '').toLowerCase();
   const key = aliases[requested] || requested;

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/theme.css">
   <link rel="stylesheet" href="/theme-simple.css">
   <script src="/i18n.js"></script>
+  <script src="/share.js"></script>
     <script src="/rankings.js" defer></script>
     <script src="/recent.js" defer></script>
     <script src="/donation.js" defer></script>
@@ -1829,7 +1830,7 @@
         document.getElementById('copyClanSummary').addEventListener('click', async () => {
             const summary = document.getElementById('clanReportSummary').textContent;
             try {
-                await navigator.clipboard.writeText(`${summary}\n${window.location.href}`);
+                await navigator.clipboard.writeText(`${summary}\n${window.CocShare.url()}`);
                 setText('clanActionStatus', tr('clan.summaryCopied'));
             } catch {
                 setText('clanActionStatus', tr('clan.clipboardDenied'));

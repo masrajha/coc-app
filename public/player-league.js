@@ -974,7 +974,8 @@
       element('rankedSessionComparison').hidden = true;
       return;
     }
-    select.value = sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
+    const requestedSession = new URLSearchParams(location.search).get('session');
+    select.value = sessions.some(session => session.id === requestedSession) ? requestedSession : sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
     battleSelect.value = select.value;
     loadSession(select.value);
     loadPlayerBattleLog(battleSelect.value);

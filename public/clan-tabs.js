@@ -6,7 +6,7 @@
   const panels = [...root.querySelectorAll('.clan-tab-panel')];
   let active = 'overview';
   function targetForHash() {
-    try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); }
+    try { return document.getElementById(decodeURIComponent(location.hash.slice(1) || new URLSearchParams(location.search).get('view') || '')); }
     catch { return null; }
   }
   function openDetails(target) {
