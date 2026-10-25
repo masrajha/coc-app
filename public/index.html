@@ -2181,7 +2181,9 @@
 
         document.querySelectorAll('[data-home-tab-link]').forEach(link => {
             link.addEventListener('click', event => {
+                if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
                 if (location.pathname !== '/' && location.pathname !== '/index.html') return;
+                if (document.getElementById('landingPanel').hidden) return;
                 const mode = link.dataset.homeTabLink;
                 if (!mode) return;
                 event.preventDefault();
