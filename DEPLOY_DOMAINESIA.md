@@ -107,6 +107,14 @@ Unggah `public/theme-simple.css` beserta perubahan `public/theme.css`, `public/t
 
 Kelima opsi disimpan melalui key `coc-theme`: `dark`, `light`, `dark-simple`, `light-simple`, dan `system`. Atribut `data-theme` tetap memakai `dark`/`light` agar komponen dan kontrol native bekerja; `data-theme-variant` membedakan `simple`/`default`. Mode Sistem mengikuti Royal Gold atau Sandstone sesuai perangkat.
 
+## Peta perang pada roster War & CWL
+
+Unggah `src/WarMap.php`, perubahan `src/App.php`, `public/war-map.js`, `public/war-map.css`, `public/index.html`, dan `public/i18n.js` bersamaan. Pada bagian Roster perang tersedia pilihan Tabel/Peta. Default tetap tabel; peta mendukung clan sendiri, lawan, serta kedua sisi berdampingan pada desktop. Mobile menampilkan satu sisi dengan detail base di bawah peta.
+
+Peta memakai ikon lokal `/th-{level}.webp`, latar dekoratif CSS, posisi zig-zag berdasarkan urutan war, pencarian pemain/posisi, filter TH, dan filter status pertahanan. Bintang dan persentase pada setiap base adalah hasil **serangan terbaik yang diterima**, bukan total bintang serangannya. Detail base memisahkan serangan diterima dan dilakukan, menampilkan sisa kuota, serta menyediakan tautan profil. Memilih satu serangan menyorot penyerang dan target; garis berarah muncul bila kedua base terlihat pada tampilan dua sisi. Detail log parsial ditandai dan kuota tidak diketahui ditampilkan sebagai tanda pisah.
+
+Data memakai endpoint perang yang sama dengan tabel dan mendukung ronde CWL terpilih. Tidak memerlukan endpoint tambahan, unduhan aset baru, atau API key baru. Ini adalah visualisasi ringkasan perang, bukan layout base atau replay serangan. Pilihan base direset saat pasangan clan/ronde berubah. Ikon yang gagal dimuat digantikan label TH. Jalankan `composer test` dan `node tests/i18n.test.js` untuk pengujian data serta terjemahan.
+
 ## Pratinjau tautan WhatsApp / Open Graph
 
 Unggah `src/SharePreview.php`, `src/ShareCard.php`, `src/App.php`, `.htaccess`, `public/share.js`, `public/fonts/`, dan perubahan HTML/JavaScript terkait. Halaman HTML harus melewati front controller PHP agar metadata dinamis tersedia tanpa JavaScript.

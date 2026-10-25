@@ -7,6 +7,7 @@
     <title>CoC Clan Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/war-map.css">
     <link rel="stylesheet" href="/raids.css">
     <link rel="stylesheet" href="/account-features.css">
     <link rel="stylesheet" href="/clan-tabs.css">
@@ -16,6 +17,7 @@
   <link rel="stylesheet" href="/theme-simple.css">
   <script src="/i18n.js"></script>
   <script src="/share.js"></script>
+  <script src="/war-map.js"></script>
     <script src="/rankings.js" defer></script>
     <script src="/recent.js" defer></script>
     <script src="/donation.js" defer></script>
@@ -380,7 +382,7 @@
                         </div>
                     </div>
 
-                    <div class="grid gap-4 p-4 xl:grid-cols-[1fr_360px]">
+                    <div class="war-layout grid gap-4 p-4 xl:grid-cols-[1fr_360px]">
                         <div class="min-w-0 space-y-4">
                             <section id="cwlStandingsSection" class="hidden clan-anchor-section">
                                 <span id="cwl-standings" class="anchor-target" aria-hidden="true"></span>
@@ -409,7 +411,9 @@
                             <details class="clan-detail-panel" open><summary data-i18n="clan.warRoster">Roster perang</summary><section id="war-roster" class="clan-anchor-section">
                                 <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
                                     <h3 class="text-sm font-bold uppercase tracking-wide text-slate-600" data-i18n="clan.warRoster">Roster perang</h3>
-                                    <div class="flex flex-wrap gap-1.5">
+                                    <div class="war-view-toggle" role="group" aria-label="Tampilan roster" data-i18n-aria-label="warMap.viewLabel"><button type="button" data-war-view="table" aria-pressed="true" data-i18n="warMap.table">Tabel</button><button type="button" data-war-view="map" aria-pressed="false" data-i18n="warMap.map">Peta</button></div>
+                                </div>
+                                    <div id="warRosterTableFilters" class="mb-2 flex flex-wrap gap-1.5">
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="all" data-i18n="clan.all">Semua</button>
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="pending" data-i18n="clan.pending">Belum</button>
                                         <button class="roster-filter rounded border border-slate-300 px-2 py-1 text-xs font-semibold" data-filter="done" data-i18n="clan.done">Sudah</button>
@@ -419,8 +423,7 @@
                                         <select id="rosterTownHall" class="roster-select" aria-label="Filter Town Hall"><option value="all" data-i18n="clan.allTh">Semua TH</option></select>
                                         <select id="rosterSort" class="roster-select" aria-label="Urutkan roster" data-i18n-aria-label="clan.sortRoster"><option value="position" data-i18n="clan.sortPosition">Urut posisi</option><option value="remaining" data-i18n="clan.remainingAttacks">Sisa serangan</option><option value="stars" data-i18n="clan.stars">Bintang</option><option value="destruction" data-i18n="clan.destruction">Destruksi</option><option value="th">Town Hall</option></select>
                                     </div>
-                                </div>
-                                <div class="max-h-[520px] overflow-auto rounded border border-slate-200">
+                                <div id="warRosterTableView" class="max-h-[520px] overflow-auto rounded border border-slate-200">
                                     <table class="w-full text-left text-xs">
                                         <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                             <tr>
@@ -436,6 +439,18 @@
                                         </thead>
                                         <tbody id="warRoster" class="divide-y divide-slate-200 bg-white"></tbody>
                                     </table>
+                                </div>
+                                <div id="warMapView" class="war-map-view" hidden>
+                                    <div class="war-map-toolbar">
+                                        <div class="war-map-sides" role="group" aria-label="Sisi peta" data-i18n-aria-label="warMap.sideLabel"><button type="button" data-war-side="home" aria-pressed="true" data-i18n="warMap.home">Clan sendiri</button><button type="button" data-war-side="enemy" aria-pressed="false" data-i18n="warMap.enemy">Lawan</button><button type="button" data-war-side="both" aria-pressed="false" data-i18n="warMap.both">Kedua sisi</button></div>
+                                        <div class="war-map-controls">
+                                            <label><span data-i18n="warMap.search">Cari pemain / posisi</span><input id="warMapSearch" type="search" autocomplete="off"></label>
+                                            <label><span data-i18n="warMap.filter">Status base</span><select id="warMapFilter"><option value="all" data-i18n="clan.all">Semua</option><option value="untouched" data-i18n="warMap.untouched">Belum diserang</option><option value="cleanup" data-i18n="clan.cleanupNeeded">Perlu cleanup</option><option value="triple" data-i18n="warMap.triple">3 bintang</option></select></label>
+                                            <label><span>Town Hall</span><select id="warMapTownHall"><option value="all" data-i18n="warMap.allTh">Semua TH</option></select></label>
+                                        </div>
+                                    </div>
+                                    <p class="war-map-note" data-i18n="warMap.note">Bintang dan destruksi adalah hasil serangan terbaik yang diterima setiap base. Posisi peta bersifat ilustratif.</p>
+                                    <div class="war-map-layout"><div id="warMapBoards" class="war-map-boards"></div><aside id="warMapDetails" class="war-map-details" aria-label="Detail base" data-i18n-aria-label="warMap.details"></aside></div>
                                 </div>
                             </section></details>
 
@@ -1482,6 +1497,7 @@
                 if (!response.ok) throw new Error(data.error || tr('clan.warLoadError'));
 
                 latestWarData = data;
+                window.ClanWarMap.render(data);
                 refreshClanReport();
                 setText('warUpdated', tr('clan.warUpdate', { date: new Date(data.lastUpdated).toLocaleString(window.CocI18n.formatLocale) }));
                 updateDataFreshness('war', data.lastUpdated);
