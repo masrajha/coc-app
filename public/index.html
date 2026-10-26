@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/theme.js"></script>
+  <script src="/site.js"></script>
     <title>CoC Clan Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/index.css">
@@ -15,6 +16,7 @@
     <link rel="stylesheet" href="/donation.css">
     <link rel="stylesheet" href="/theme.css">
   <link rel="stylesheet" href="/theme-simple.css">
+  <link rel="stylesheet" href="/site.css">
   <script src="/i18n.js"></script>
   <script src="/share.js"></script>
   <script src="/war-map.js"></script>
@@ -22,8 +24,8 @@
     <script src="/recent.js" defer></script>
     <script src="/donation.js" defer></script>
 </head>
-<body class="dashboard">
-    <header class="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
+<body class="dashboard command-ui">
+    <header class="command-header sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div class="max-w-7xl mx-auto px-4 py-3">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div class="flex items-center gap-3">
@@ -45,22 +47,26 @@
         </div>
     </header>
 
+  <section class="command-masthead clan-masthead" aria-labelledby="commandPageTitle"><div class="command-kicker">CLAN COMMAND CENTER</div><h2 id="commandPageTitle" data-i18n="design.clanTitle">Pusat komando clan</h2><p data-i18n="design.clanIntro">Pantau anggota, persiapan perang, CWL, dan Clan Capital dalam satu dashboard.</p><img class="command-masthead-art " src="/assets/images/optimized/golem.webp" width="190" height="205" alt="" aria-hidden="true" loading="lazy" decoding="async"></section>
+
+
     <main class="max-w-7xl mx-auto px-4 py-4">
-        <section id="landingPanel" class="landing-panel" aria-labelledby="landingTitle" data-section-tone="blue">
-            <div class="landing-layout">
-                <div class="landing-main">
-            <div class="landing-copy">
+        <section class="home-showcase" aria-labelledby="landingTitle"><picture class="home-hero-picture" aria-hidden="true"><source media="(max-width:700px)" srcset="/assets/images/optimized/hero-mobile.webp"><source media="(max-width:1100px)" srcset="/assets/images/optimized/hero-tablet.webp"><img src="/assets/images/optimized/hero-desktop.webp" width="1599" height="900" alt="" fetchpriority="high" decoding="async"></picture>            <div class="landing-copy">
                 <p class="landing-eyebrow">CLAN COMMAND CENTER</p>
                 <h2 id="landingTitle" data-i18n="home.heading">Pantau clan, war, dan progres pemain.</h2>
                 <p class="landing-description" data-i18n="home.description">Cari clan lewat tag atau nama untuk membuka war aktif, standings CWL, dan aktivitas anggota.</p>
-            </div>
+            </div></section>
+        <section id="landingPanel" class="landing-panel" aria-labelledby="landingTitle" data-section-tone="blue">
+            <div class="landing-layout">
+                <div class="landing-main">
+
 
             <section class="quick-search" aria-label="Pencarian clan dan pemain" data-i18n-aria-label="home.searchLabel">
                 <div class="quick-search-tabs" role="tablist" aria-label="Pilih tujuan" data-i18n-aria-label="home.searchTabs">
-                    <button type="button" class="quick-search-tab active" id="homeClanTab" role="tab" aria-selected="true" aria-controls="homeClanPanel" data-home-mode="clan" data-section-tone="blue">Clan</button>
-                    <button type="button" class="quick-search-tab" id="homePlayerTab" role="tab" aria-selected="false" aria-controls="homePlayerPanel" data-home-mode="player" data-section-tone="blue">Player</button>
-                    <button type="button" class="quick-search-tab" id="homeCompareTab" role="tab" aria-selected="false" aria-controls="homeComparePanel" data-home-mode="compare" data-section-tone="teal">Compare Player</button>
-                    <button type="button" class="quick-search-tab" id="homeCompareClanTab" role="tab" aria-selected="false" aria-controls="homeCompareClanPanel" data-home-mode="compare-clan" data-section-tone="purple">Compare Clan</button>
+                    <button type="button" class="quick-search-tab active" id="homeClanTab" role="tab" aria-selected="true" aria-controls="homeClanPanel" data-home-mode="clan" data-section-tone="blue"><img src="/assets/images/optimized/icon-shield.webp" width="22" height="24" alt="" aria-hidden="true" decoding="async">Clan</button>
+                    <button type="button" class="quick-search-tab" id="homePlayerTab" role="tab" aria-selected="false" aria-controls="homePlayerPanel" data-home-mode="player" data-section-tone="blue"><img src="/assets/images/optimized/icon-players.webp" width="22" height="24" alt="" aria-hidden="true" decoding="async">Player</button>
+                    <button type="button" class="quick-search-tab" id="homeCompareTab" role="tab" aria-selected="false" aria-controls="homeComparePanel" data-home-mode="compare" data-section-tone="teal"><img src="/assets/images/optimized/icon-swords.webp" width="22" height="24" alt="" aria-hidden="true" decoding="async">Compare Player</button>
+                    <button type="button" class="quick-search-tab" id="homeCompareClanTab" role="tab" aria-selected="false" aria-controls="homeCompareClanPanel" data-home-mode="compare-clan" data-section-tone="purple"><img src="/assets/images/optimized/icon-crown.webp" width="22" height="24" alt="" aria-hidden="true" decoding="async">Compare Clan</button>
                 </div>
                 <form id="homeClanPanel" class="quick-search-form" role="tabpanel" aria-labelledby="homeClanTab" novalidate>
                     <div class="clan-search-modes" role="group" aria-label="Cari clan berdasarkan" data-i18n-aria-label="home.clanSearchMode">
@@ -132,18 +138,18 @@
             <section class="landing-quick-access" aria-label="Akses cepat">
                 <div class="quick-access-heading"><span class="landing-eyebrow" data-i18n="home.quickAccess">QUICK ACCESS</span><span id="landingLastActivity" data-i18n="home.ready">Siap digunakan</span></div>
                 <div class="quick-access-grid">
-                    <a id="quickRecentClan" href="/clan.html" class="quick-access-card"><span class="quick-access-icon">CL</span><span><strong data-i18n="home.lastClan">Clan terakhir</strong><small id="quickRecentClanText" data-i18n="home.lastClanHint">Buka clan yang terakhir dilihat</small></span><b>→</b></a>
-                    <a id="quickRecentPlayer" href="/player.html" class="quick-access-card"><span class="quick-access-icon">PL</span><span><strong data-i18n="home.lastPlayer">Player terakhir</strong><small id="quickRecentPlayerText" data-i18n="home.lastPlayerHint">Buka profil yang terakhir dilihat</small></span><b>→</b></a>
-                    <a href="/#compare" data-home-tab-link="compare" class="quick-access-card"><span class="quick-access-icon">VS</span><span><strong data-i18n="home.comparePlayers">Bandingkan player</strong><small>Progres, Army, War/CWL</small></span><b>→</b></a>
+                    <a id="quickRecentClan" href="/clan.html" class="quick-access-card"><span class="quick-access-icon"><img src="/assets/images/optimized/town-hall.webp" width="48" height="52" alt="" loading="lazy" decoding="async"></span><span><strong data-i18n="home.lastClan">Clan terakhir</strong><small id="quickRecentClanText" data-i18n="home.lastClanHint">Buka clan yang terakhir dilihat</small></span><b>→</b></a>
+                    <a id="quickRecentPlayer" href="/player.html" class="quick-access-card"><span class="quick-access-icon"><img src="/assets/images/optimized/barbarian-king.webp" width="48" height="52" alt="" loading="lazy" decoding="async"></span><span><strong data-i18n="home.lastPlayer">Player terakhir</strong><small id="quickRecentPlayerText" data-i18n="home.lastPlayerHint">Buka profil yang terakhir dilihat</small></span><b>→</b></a>
+                    <a href="/#compare" data-home-tab-link="compare" class="quick-access-card"><span class="quick-access-icon"><img src="/assets/images/optimized/icon-swords.webp" width="48" height="52" alt="" loading="lazy" decoding="async"></span><span><strong data-i18n="home.comparePlayers">Bandingkan player</strong><small>Progres, Army, War/CWL</small></span><b>→</b></a>
                 </div>
             </section>
             <section class="landing-features" aria-label="Fitur utama">
-                <div class="landing-feature-card"><span>01</span><strong>War Command Center</strong><p data-i18n="home.featureWar">Roster, serangan tersisa, CWL standings, dan target cleanup.</p><a href="/#clan" data-home-tab-link="clan"><span data-i18n="home.openDashboard">Buka dashboard</span> →</a></div>
-                <div class="landing-feature-card"><span>02</span><strong>Player Progress</strong><p data-i18n="home.featurePlayer">Audit Army, rushed check, upgrade planner, dan battle log.</p><a href="/#player" data-home-tab-link="player"><span data-i18n="home.findPlayer">Cari player</span> →</a></div>
-                <div class="landing-feature-card"><span>03</span><strong>Ranked League</strong><p data-i18n="home.featureRanked">Riwayat serangan, pertahanan, bintang, dan destruksi.</p><a href="/player.html#ranked-battles"><span data-i18n="home.viewBattleLog">Lihat battle log</span> →</a></div>
+                <div class="landing-feature-card"><img class="feature-art" src="/assets/images/optimized/feature-war.webp" width="720" height="360" alt="" loading="lazy" decoding="async"><span>01</span><strong>War Command Center</strong><p data-i18n="home.featureWar">Roster, serangan tersisa, CWL standings, dan target cleanup.</p><a href="/#clan" data-home-tab-link="clan"><span data-i18n="home.openDashboard">Buka dashboard</span> →</a></div>
+                <div class="landing-feature-card"><img class="feature-art" src="/assets/images/optimized/feature-player.webp" width="720" height="360" alt="" loading="lazy" decoding="async"><span>02</span><strong>Player Progress</strong><p data-i18n="home.featurePlayer">Audit Army, rushed check, upgrade planner, dan battle log.</p><a href="/#player" data-home-tab-link="player"><span data-i18n="home.findPlayer">Cari player</span> →</a></div>
+                <div class="landing-feature-card"><img class="feature-art" src="/assets/images/optimized/feature-ranked.webp" width="720" height="360" alt="" loading="lazy" decoding="async"><span>03</span><strong>Ranked League</strong><p data-i18n="home.featureRanked">Riwayat serangan, pertahanan, bintang, dan destruksi.</p><a href="/player.html#ranked-battles"><span data-i18n="home.viewBattleLog">Lihat battle log</span> →</a></div>
             </section>
             <section class="landing-stats" aria-label="Statistik akses">
-                <div><span data-i18n="home.savedClans">Clan tersimpan</span><strong id="landingClanCount">0</strong></div><div><span data-i18n="home.savedPlayers">Player tersimpan</span><strong id="landingPlayerCount">0</strong></div><div><span data-i18n="home.popularClans">Clan populer</span><strong id="landingPopularCount">0</strong></div><div><span data-i18n="home.availableModes">Mode tersedia</span><strong>3</strong></div>
+                <div><img class="landing-stat-icon" src="/assets/images/optimized/icon-shield.webp" width="26" height="30" alt="" loading="lazy" decoding="async"><span data-i18n="home.savedClans">Clan tersimpan</span><strong id="landingClanCount">0</strong></div><div><img class="landing-stat-icon" src="/assets/images/optimized/icon-players.webp" width="26" height="30" alt="" loading="lazy" decoding="async"><span data-i18n="home.savedPlayers">Player tersimpan</span><strong id="landingPlayerCount">0</strong></div><div><img class="landing-stat-icon" src="/assets/images/optimized/icon-crown.webp" width="26" height="30" alt="" loading="lazy" decoding="async"><span data-i18n="home.popularClans">Clan populer</span><strong id="landingPopularCount">0</strong></div><div><img class="landing-stat-icon" src="/assets/images/optimized/icon-swords.webp" width="26" height="30" alt="" loading="lazy" decoding="async"><span data-i18n="home.availableModes">Mode tersedia</span><strong>3</strong></div>
             </section>
 
                 </div>

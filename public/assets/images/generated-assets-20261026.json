@@ -1,0 +1,54 @@
+{
+  "created": "2026-10-26",
+  "method": "AI-generated with image_gen using existing project illustrations as references",
+  "assets": [
+    {
+      "path": "hero/hero-mobile-portrait.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2406188,
+      "alpha": false,
+      "role": "Portrait mobile hero, upper half reserved for HTML text"
+    },
+    {
+      "path": "characters/barbarian-king-large.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2070537,
+      "alpha": true,
+      "role": "High-resolution Barbarian King cutout"
+    },
+    {
+      "path": "characters/archer-queen-large.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2191777,
+      "alpha": true,
+      "role": "High-resolution Archer Queen cutout"
+    },
+    {
+      "path": "characters/grand-warden-large.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 2510170,
+      "alpha": true,
+      "role": "High-resolution Grand Warden cutout"
+    },
+    {
+      "path": "characters/golem-large.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 2161386,
+      "alpha": true,
+      "role": "Stone Golem with cyan details for War Command card"
+    },
+    {
+      "path": "ornaments/stone-metal-frame.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1555575,
+      "alpha": true,
+      "role": "Decorative slate and metal frame with transparent center"
+    }
+  ]
+}

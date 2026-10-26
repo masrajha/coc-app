@@ -107,6 +107,20 @@ Unggah `public/theme-simple.css` beserta perubahan `public/theme.css`, `public/t
 
 Kelima opsi disimpan melalui key `coc-theme`: `dark`, `light`, `dark-simple`, `light-simple`, dan `system`. Atribut `data-theme` tetap memakai `dark`/`light` agar komponen dan kontrol native bekerja; `data-theme-variant` membedakan `simple`/`default`. Mode Sistem mengikuti Royal Gold atau Sandstone sesuai perangkat.
 
+## Redesign Command Center dan gambar terkompresi
+
+Unggah perubahan keempat HTML (`public/index.html`, `public/player.html`, `public/compare.html`, `public/compare-clan.html`), `public/site.js`, `public/site.css`, `public/i18n.js`, `src/App.php`, serta seluruh folder `public/assets/images/optimized/`. Halaman clan tetap memakai template index yang sama. Unggah HTML, stylesheet, script, dan gambar bersamaan agar tidak terjadi aset hilang.
+
+Halaman utama memakai hero responsif, panel pencarian, akses cepat bergambar, tiga kartu fitur, dan sidebar riwayat. Halaman clan/player/perbandingan memakai header bersama serta banner ringkas di atas konten data. Bahasa Indonesia/English, tema Dark/Light/Sistem, dan varian Simple tetap tersedia. Semua varian tema, termasuk Simple, memakai gambar dan tata letak yang sama; palet warnanya mengikuti tema aktif.
+
+Gambar halaman hanya memakai turunan WebP dari folder `optimized`, bukan PNG master. Paket berisi 19 file, total sekitar 803 KiB; bukan seluruh paket yang diunduh pada setiap halaman. Hero desktop sekitar 146 KiB, hero mobile 114 KiB, ilustrasi karakter 50–66 KiB, dan kartu fitur 12–21 KiB. Elemen gambar memiliki dimensi untuk menjaga layout; gambar di bawah area awal memakai lazy loading. Hero memakai `picture` sehingga browser memilih satu sumber sesuai viewport.
+
+Saat dilayani melalui PHP, gambar WebP teroptimasi memakai cache satu hari dan ETag; permintaan validasi gambar yang belum berubah mengembalikan HTTP 304 tanpa body. Jika gambar dilayani langsung oleh CDN atau konfigurasi document root lain, terapkan header cache yang setara pada server tersebut.
+
+Untuk membuat ulang turunan gambar di komputer pengembangan: instal Pillow lalu jalankan `python scripts/prepare-web-images.py`. Python tidak diperlukan pada hosting. File master di folder `hero`, `characters`, `feature-cards`, `icons`, dan `ornaments` tetap dapat disimpan sebagai sumber kerja; file master tersebut tidak diperlukan untuk layout baru di hosting. Daftar dimensi dan ukuran file ada di `public/assets/images/optimized/manifest.json`.
+
+Verifikasi: `composer test`, `node tests/i18n.test.js`, dan `node tests/theme.test.js`. Pengujian aset memeriksa ukuran file, format WebP, referensi halaman, dan cache HTTP.
+
 ## Peta perang pada roster War & CWL
 
 Unggah `src/WarMap.php`, perubahan `src/App.php`, `public/war-map.js`, `public/war-map.css`, `public/index.html`, dan `public/i18n.js` bersamaan. Pada bagian Roster perang tersedia pilihan Tabel/Peta. Default tetap tabel; peta mendukung clan sendiri, lawan, serta kedua sisi berdampingan pada desktop. Mobile menampilkan satu sisi dengan detail base di bawah peta.

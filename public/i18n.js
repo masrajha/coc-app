@@ -2,6 +2,15 @@
   const STORAGE_KEY = 'coc-language';
   const messages = {
     id: {
+      "design.tagline": "Pantau clan, war, dan progres pemain.",
+      "design.clanTitle": "Pusat komando clan",
+      "design.clanIntro": "Pantau anggota, persiapan perang, CWL, dan Clan Capital dalam satu dashboard.",
+      "design.playerTitle": "Kenali kekuatan pemain.",
+      "design.playerIntro": "Profil, progres pasukan, performa perang, dan Ranked League dalam satu tempat.",
+      "design.compareTitle": "Dua pemain. Satu perbandingan.",
+      "design.compareIntro": "Bandingkan progres, Army, Ranked League, dan aktivitas dengan konteks yang jelas.",
+      "design.compareClanTitle": "Temukan keunggulan setiap clan.",
+      "design.compareClanIntro": "Bandingkan komposisi anggota, aktivitas, war log, dan Raid Weekend.",
       "warMap.viewLabel": "Tampilan roster",
       "warMap.table": "Tabel",
       "warMap.map": "Peta",
@@ -1127,6 +1136,15 @@
       'player.loadingSessionComparison': 'Memuat perbandingan sesi…'
     },
     en: {
+      "design.tagline": "Track clans, wars, and player progress.",
+      "design.clanTitle": "Your clan command center",
+      "design.clanIntro": "Track members, war readiness, CWL, and Clan Capital in one dashboard.",
+      "design.playerTitle": "Know your player.",
+      "design.playerIntro": "Profile, army progress, war performance, and Ranked League in one place.",
+      "design.compareTitle": "Two players. One comparison.",
+      "design.compareIntro": "Compare progress, Army, Ranked League, and activity with clear context.",
+      "design.compareClanTitle": "Find each clan's strengths.",
+      "design.compareClanIntro": "Compare member composition, activity, war logs, and Raid Weekends.",
       "warMap.viewLabel": "Roster view",
       "warMap.table": "Table",
       "warMap.map": "Map",

@@ -1,0 +1,154 @@
+[
+  {
+    "file": "hero-desktop.webp",
+    "source": "hero/hero-dragon-battle.webp",
+    "width": 1599,
+    "height": 900,
+    "bytes": 149418,
+    "sourceBytes": 254062
+  },
+  {
+    "file": "hero-tablet.webp",
+    "source": "hero/hero-dragon-battle.webp",
+    "width": 959,
+    "height": 540,
+    "bytes": 79178,
+    "sourceBytes": 254062
+  },
+  {
+    "file": "hero-mobile.webp",
+    "source": "hero/hero-mobile-portrait.png",
+    "width": 720,
+    "height": 1080,
+    "bytes": 116564,
+    "sourceBytes": 2406188
+  },
+  {
+    "file": "fortress-backdrop.webp",
+    "source": "hero/hero-fortress-blue.webp",
+    "width": 959,
+    "height": 540,
+    "bytes": 87972,
+    "sourceBytes": 318596
+  },
+  {
+    "file": "barbarian-king.webp",
+    "source": "characters/barbarian-king-large.png",
+    "width": 420,
+    "height": 630,
+    "bytes": 51022,
+    "sourceBytes": 2070537
+  },
+  {
+    "file": "archer-queen.webp",
+    "source": "characters/archer-queen-large.png",
+    "width": 420,
+    "height": 630,
+    "bytes": 52252,
+    "sourceBytes": 2191777
+  },
+  {
+    "file": "grand-warden.webp",
+    "source": "characters/grand-warden-large.png",
+    "width": 420,
+    "height": 630,
+    "bytes": 55350,
+    "sourceBytes": 2510170
+  },
+  {
+    "file": "golem.webp",
+    "source": "characters/golem-large.png",
+    "width": 480,
+    "height": 480,
+    "bytes": 67618,
+    "sourceBytes": 2161386
+  },
+  {
+    "file": "town-hall.webp",
+    "source": "characters/fortified-town-hall.png",
+    "width": 436,
+    "height": 286,
+    "bytes": 43078,
+    "sourceBytes": 196824
+  },
+  {
+    "file": "feature-war.webp",
+    "source": "feature-cards/war-command.webp",
+    "width": 720,
+    "height": 360,
+    "bytes": 15182,
+    "sourceBytes": 28480
+  },
+  {
+    "file": "feature-player.webp",
+    "source": "feature-cards/player-progress.webp",
+    "width": 720,
+    "height": 360,
+    "bytes": 12458,
+    "sourceBytes": 23644
+  },
+  {
+    "file": "feature-ranked.webp",
+    "source": "feature-cards/ranked-league.webp",
+    "width": 720,
+    "height": 360,
+    "bytes": 21086,
+    "sourceBytes": 38596
+  },
+  {
+    "file": "panel-frame.webp",
+    "source": "ornaments/stone-metal-frame.png",
+    "width": 960,
+    "height": 640,
+    "bytes": 59926,
+    "sourceBytes": 1555575
+  },
+  {
+    "file": "icon-shield.webp",
+    "source": "icons/shield.png",
+    "width": 58,
+    "height": 64,
+    "bytes": 1896,
+    "sourceBytes": 14943
+  },
+  {
+    "file": "icon-players.webp",
+    "source": "icons/players.png",
+    "width": 60,
+    "height": 64,
+    "bytes": 1956,
+    "sourceBytes": 15038
+  },
+  {
+    "file": "icon-swords.webp",
+    "source": "icons/swords.png",
+    "width": 54,
+    "height": 64,
+    "bytes": 1728,
+    "sourceBytes": 13869
+  },
+  {
+    "file": "icon-crown.webp",
+    "source": "icons/crown.png",
+    "width": 58,
+    "height": 64,
+    "bytes": 1856,
+    "sourceBytes": 14234
+  },
+  {
+    "file": "icon-trophy.webp",
+    "source": "icons/trophy.png",
+    "width": 54,
+    "height": 64,
+    "bytes": 1834,
+    "sourceBytes": 13616
+  },
+  {
+    "file": "icon-statistics.webp",
+    "source": "icons/statistics.png",
+    "width": 63,
+    "height": 64,
+    "bytes": 2048,
+    "sourceBytes": 14675
+  }
+]

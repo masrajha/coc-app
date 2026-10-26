@@ -421,6 +421,12 @@ final class App
             }
             $content = $this->versionHtmlAssets($content, $root);
         }
+        if (str_starts_with($safe, 'assets/images/optimized/') && $extension === 'webp') {
+            $etag = '"' . hash('sha256', $content) . '"';
+            $res = $res->withHeader('Cache-Control', 'public, max-age=86400')->withHeader('ETag', $etag)
+                ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT');
+            if ($req?->getHeaderLine('If-None-Match') === $etag) return $res->withStatus(304);
+        }
         $res->getBody()->write($content);
         $response = $res->withHeader('Content-Type', $mime)->withHeader('X-Content-Type-Options', 'nosniff');
         if ($extension === 'html') {
