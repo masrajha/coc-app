@@ -45,7 +45,17 @@
     const cards=node('div',null,'capital-district-grid');
     for(const district of report.districts){
       const card=node('article',null,'capital-district-card');
-      card.append(node('h3',district.name || tr('feature.district',{id:district.id})),node('strong',tr('feature.districtLevel',{level:number(district.level)})));
+      const capitalPeak=Number(district.id)===70000000 || district.name==='Capital Peak';
+      const level=Number(district.level);
+      card.append(node('h3',district.name || tr('feature.district',{id:district.id})));
+      if(Number.isInteger(level) && level>=1 && level<=(capitalPeak?10:5)){
+        const image=node('img',null,'capital-district-image');
+        image.src=`/assets/capital/${capitalPeak?'capital':'district'}-hall-${level}.webp`;
+        image.alt='';image.width=96;image.height=96;image.loading='lazy';image.decoding='async';
+        image.addEventListener('error',()=>image.remove(),{once:true});
+        card.append(image);
+      }
+      card.append(node('strong',tr(capitalPeak?'feature.capitalHallLevel':'feature.districtLevel',{level:number(district.level)})));
       card.append(node('span',district.delta == null?tr('feature.noDistrictBaseline'):district.delta>0?tr('feature.levelGain',{count:number(district.delta)}):district.delta<0?tr('feature.levelChanged',{count:number(district.delta)}):tr('feature.levelUnchanged'),'feature-caption'));
       cards.append(card);
     }
