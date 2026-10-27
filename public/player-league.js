@@ -25,6 +25,7 @@
       .format(new Date(Number(session.seasonId) * 1000));
   }
   function sessionLabel(session) {
+    if (session?.id === 'global') return tr('player.legendLeaderboard');
     const label = session?.id === 'current' ? tr('player.sessionCurrent') : session?.id === 'previous' ? tr('player.sessionPrevious') : session?.label || tr('player.sessionGeneric');
     const date = sessionDate(session);
     return `${label}${date ? ` - ${date}` : ''}`;
@@ -74,6 +75,105 @@
   function setLeagueTitle(tier) {
     setText('leagueSidebarEyebrow', tier ? tr('player.leagueSidebarTitleTier', { tier }) : tr('player.leagueSidebarTitle'));
     setLeagueBadge('sidebarLeagueBadge', tier);
+  }
+
+  function renderTransition(id, transition, previous = false) {
+    const target = element(id);
+    target.hidden = false;
+    const status = transition?.status || 'unknown';
+    target.className = `league-transition is-${status}`;
+    if (!['promoted', 'demoted', 'unchanged'].includes(status)) {
+      target.textContent = tr('player.leagueHistoryUnknown'); return;
+    }
+    const symbol = {promoted:'↑',demoted:'↓',unchanged:'＝'}[status];
+    const label = tr(`player.leagueChange.${status}`);
+    const movement = status === 'unchanged' ? transition.currentTier : `${transition.previousTier} → ${transition.currentTier}`;
+    target.textContent = `${previous ? tr('player.leagueSessionOutcome') + ': ' : ''}${symbol} ${label} · ${movement}`;
+    target.title = tr('player.leagueChangeEvidence');
+  }
+
+  function groupMode(enabled) {
+    document.querySelector('.league-view-tabs').hidden = !enabled;
+    element('leagueStandingsView').hidden = !enabled || state.leagueView !== 'standings';
+    element('leagueStatisticsView').hidden = !enabled || state.leagueView !== 'statistics';
+    element('legendGlobalSummary').hidden = enabled;
+  }
+
+  function renderLegendGlobal(player) {
+    const root = element('legendGlobalSummary'); root.replaceChildren();
+    const stats = player.legendStatistics || {};
+    const fields = [
+      ['player.legendSeasonTrophies', stats.currentSeason?.trophies ?? player.trophies],
+      ['player.legendGlobalRank', stats.currentSeason?.rank],
+      ['player.legendBestTrophies', stats.bestSeason?.trophies],
+      ['player.legendBestRank', stats.bestSeason?.rank]
+    ];
+    for (const [key, value] of fields) {
+      const item = document.createElement('div');
+      const label = document.createElement('span'); label.textContent = tr(key);
+      const number = document.createElement('strong');
+      number.textContent = Number.isFinite(value) ? localizedNumber(value) : tr('player.noData');
+      if (key === 'player.legendGlobalRank') number.id = 'legendCurrentGlobalRank';
+      item.append(label, number); root.append(item);
+    }
+    const standing = document.createElement('p'); standing.id = 'legendGlobalStanding'; standing.className = 'legend-global-standing'; standing.setAttribute('role', 'status'); root.append(standing);
+    const rule = document.createElement('p'); rule.className = 'section-note'; rule.textContent = tr('player.legendCutoffRule'); root.append(rule);
+    if (stats.bestSeason?.id) {
+      const note = document.createElement('p'); note.textContent = tr('player.legendBestSeason', {season:stats.bestSeason.id}); root.append(note);
+    }
+    const link = document.createElement('a'); link.href = '/?lang=' + document.documentElement.lang + '#rankingsPanel';
+    link.textContent = tr('player.openGlobalLeaderboard'); root.append(link);
+    if (player.leagueTier?.name === 'Legend I') {
+      if (Number.isInteger(stats.currentSeason?.rank) && stats.currentSeason.rank > 0) {
+        paintGlobalRanking({rank:stats.currentSeason.rank});
+      } else loadGlobalRanking();
+    }
+  }
+
+  function paintGlobalRanking(data) {
+    const rank = data.rank;
+    const target = element('legendGlobalStanding');
+    const found = Number.isInteger(rank) && rank > 0;
+    element('legendCurrentGlobalRank').textContent = found ? `#${localizedNumber(rank)}` : tr('player.globalRankUnavailable');
+    target.className = 'legend-global-standing' + (found ? rank <= 10000 ? ' is-within-cutoff' : ' is-demotion-zone' : '');
+    target.textContent = found ? tr(rank <= 10000 ? 'player.globalWithinCutoff' : 'player.globalDemotionZone')
+      : tr(data.canContinue ? 'player.globalRankSearching' : 'player.globalRankCoverage', {count:localizedNumber(data.scanned || 0)});
+    if (data.lastUpdated) target.textContent += ' ' + tr('player.globalRankUpdated', {date:window.CocI18n.dateTime(new Date(data.lastUpdated))});
+  }
+
+  async function loadGlobalRanking() {
+    const request = state.globalRequest;
+    const tag = state.playerTag;
+    const target = element('legendGlobalStanding');
+    target.replaceChildren();
+    const spinner = document.createElement('span'); spinner.className = 'loading-spinner'; spinner.setAttribute('aria-hidden','true');
+    target.append(spinner, document.createTextNode(tr('player.globalRankLoading')));
+    try {
+      for (let page = 0; page < 20; page++) {
+        if (request !== state.globalRequest || tag !== state.playerTag) return;
+        const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(tag)}/global-ranking`);
+        const data = await response.json();
+        if (request !== state.globalRequest || tag !== state.playerTag) return;
+        if (!response.ok) throw new Error(data.error || tr('player.globalRankFailed'));
+        paintGlobalRanking(data);
+        if (!data.canContinue) return;
+        await new Promise(resolve => setTimeout(resolve, 750));
+      }
+      target.textContent = tr('player.globalRankIncomplete');
+    } catch (error) {
+      if (request !== state.globalRequest || tag !== state.playerTag) return;
+      element('legendCurrentGlobalRank').textContent = tr('player.globalRankUnavailable');
+      target.textContent = tr('player.globalRankFailed') + ' ' + error.message;
+    }
+  }
+
+  function unavailableBattleLog(message) {
+    setText('rankedBattleStatus', message); element('rankedBattleStatus').hidden = false;
+    element('rankedBattleSummary').replaceChildren();
+    for (const id of ['rankedAttackTotal','rankedDefenseTotal','rankedAttackTrophies','rankedDefenseTrophies']) setText(id, '');
+    document.querySelector('.ranked-log-toolbar').hidden = true;
+    document.querySelector('.ranked-battle-columns').hidden = true;
+    element('rankedSessionComparison').hidden = true;
   }
 
   const tooltip = document.createElement('div');
@@ -840,7 +940,7 @@
     const currentSession = sessions.find(session => session.id === 'current');
     const previousSession = sessions.find(session => session.id === 'previous');
     const request = ++state.comparisonRequest;
-    if (!currentSession || !previousSession) { root.hidden = true; chart.replaceChildren(); element('rankedComparisonInsights').replaceChildren(); return; }
+    if (sessions.some(session => session.id === 'global') || !currentSession || !previousSession) { root.hidden = true; chart.replaceChildren(); element('rankedComparisonInsights').replaceChildren(); return; }
     root.hidden = false;
     chart.textContent = tr('player.loadingSessionComparison');
     try {
@@ -857,6 +957,9 @@
 
   async function loadPlayerBattleLog(sessionId) {
     const request = ++state.logRequest;
+    if (sessionId === 'global') { unavailableBattleLog(tr('player.legendBattleUnavailable')); return; }
+    document.querySelector('.ranked-log-toolbar').hidden = false;
+    document.querySelector('.ranked-battle-columns').hidden = false;
     const status = element('rankedBattleStatus'); status.hidden = false; setLoading('rankedBattleStatus', tr('player.loadingBattleLog'));
     try {
       const data = await fetchPlayerBattleSession(sessionId);
@@ -875,6 +978,19 @@
     hideBattle(true);
     setLeagueTitle(null);
     const request = ++state.request;
+    if (sessionId === 'global') {
+      groupMode(false);
+      setLeagueTitle('Legend I');
+      const heading = element('leagueSidebarTitle'); heading.dataset.i18n = 'player.legendLeaderboard'; heading.textContent = tr('player.legendLeaderboard');
+      element('leaguePlayerRank').hidden = true;
+      setText('leagueStatus', tr('player.legendGlobal')); element('leagueStatus').hidden = false;
+      setText('leagueRankSummary', tr('player.legendLeaderboard'));
+      renderTransition('leagueSessionTransition', state.leagueTransition);
+      return;
+    }
+    groupMode(true);
+    const heading = element('leagueSidebarTitle'); heading.dataset.i18n = 'player.leagueGroup'; heading.textContent = tr('player.leagueGroup');
+    element('leagueSessionTransition').hidden = true;
     const status = element('leagueStatus');
     status.hidden = false;
     setLoading('leagueStatus', tr('player.loadingGroup'));
@@ -903,16 +1019,23 @@
       loadLeagueStatistics(sessionId);
       const label = tr(data.session.id === 'current' ? 'player.sessionCurrentLong' : 'player.sessionLast');
       setLeagueTitle(data.leagueTier);
+      const transition = state.leagueTransition;
+      const matching = data.session?.seasonId === (data.session.id === 'previous' ? transition?.previousSeasonId : transition?.seasonId);
+      renderTransition('leagueSessionTransition', matching ? transition : null, data.session.id === 'previous');
       const tier = data.leagueTier ? `${data.leagueTier} · ` : '';
       const rankText = data.playerRank ? tr('player.rankOf', { rank: data.playerRank, total: data.totalMembers }) : tr('player.rankUnavailable');
       setText('leagueRankSummary', `${tier}${label} · ${rankText}`);
       const card = element('leaguePlayerRank');
       card.hidden = false;
       card.replaceChildren();
+      const zone = state.leagueRule && Number.isInteger(data.playerRank) && data.playerRank > 0 && data.playerRank <= state.members.length
+        ? standingsZone(data.playerRank) || 'retention' : 'unknown';
+      card.dataset.rankZone = zone;
       const rank = document.createElement('strong');
       rank.textContent = data.playerRank ? `#${data.playerRank}` : '—';
       const description = document.createElement('span');
       description.textContent = `${label} · ${tr('player.groupMembersCount', { count: data.totalMembers })}`;
+      description.textContent += ` · ${tr(`player.rankZone.${zone}`)}`;
       card.append(rank, description);
       if (data.stale) {
         const updated = data.lastUpdated ? window.CocI18n.dateTime(new Date(data.lastUpdated)) : tr('player.earlier');
@@ -929,13 +1052,24 @@
 
   function initialize(player) {
     hideBattle(true);
+    state.globalRequest = (state.globalRequest || 0) + 1;
+    state.logRequest++;
     state.battleCache.clear();
     state.playerBattleCache.clear();
     state.comparisonRequest++;
     setLeagueTitle(null);
     setLeagueBadge('playerLeagueBadge', player.leagueTier?.name);
+    element('leagueSidebarTitle').dataset.i18n = 'player.leagueGroup';
+    setText('leagueSidebarTitle', tr('player.leagueGroup'));
     state.request++;
     state.playerTag = normalizeTag(player.tag);
+    state.leagueTransition = player.leagueTransition || null;
+    renderLegendGlobal(player);
+    element('legendGlobalSummary').hidden = true;
+    document.querySelector('.ranked-log-toolbar').hidden = false;
+    document.querySelector('.ranked-battle-columns').hidden = false;
+    element('rankedBattleSummary').replaceChildren();
+    element('leagueSessionTransition').hidden = true;
     state.members = [];
     state.leagueRule = null;
     state.leagueStats = null;
@@ -951,7 +1085,8 @@
     const battleSelect = element('rankedBattleSession');
     select.replaceChildren();
     battleSelect.replaceChildren();
-    const sessions = Array.isArray(player.leagueSessions) ? player.leagueSessions : [];
+    const sessions = Array.isArray(player.leagueSessions) ? [...player.leagueSessions] : [];
+    if (player.leagueTier?.name === 'Legend I') sessions.unshift({id:'global'});
     state.sessions = sessions;
     for (const session of sessions) {
       const option = document.createElement('option');
@@ -963,19 +1098,20 @@
     select.disabled = sessions.length === 0;
     battleSelect.disabled = sessions.length === 0;
     if (!sessions.length) {
+      groupMode(false); element('legendGlobalSummary').hidden = true;
       const message = tr(player.leagueTier?.name === 'Legend I' ? 'player.legendGlobal' : 'player.noGroup');
       const status = element('leagueStatus');
       status.hidden = false;
       status.textContent = message;
       setText('leagueRankSummary', message);
       element('leaguePlayerRank').hidden = true;
-      setText('rankedBattleStatus', message);
+      unavailableBattleLog(message);
       renderBattleLogList('rankedAttackLogs', [], tr('player.battleLogUnavailable')); renderBattleLogList('rankedDefenseLogs', [], tr('player.battleLogUnavailable'));
       element('rankedSessionComparison').hidden = true;
       return;
     }
     const requestedSession = new URLSearchParams(location.search).get('session');
-    select.value = sessions.some(session => session.id === requestedSession) ? requestedSession : sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
+    select.value = sessions.some(session => session.id === requestedSession) ? requestedSession : sessions.some(session => session.id === 'global') ? 'global' : sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
     battleSelect.value = select.value;
     loadSession(select.value);
     loadPlayerBattleLog(battleSelect.value);

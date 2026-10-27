@@ -33,6 +33,17 @@ try {
         }
     }
     $get('/api/rankings/not-supported', 400);
+    $seed('/locations/global/rankings/players?limit=1000', ['items' => [
+        ['tag' => '#2GPP802UU', 'rank' => 10000, 'trophies' => 5000],
+        ['tag' => '#Y8CPQU8QC', 'rank' => 10001, 'trophies' => 4999]
+    ], 'paging' => ['cursors' => []]]);
+    $global = $get('/api/player/2GPP802UU/global-ranking');
+    $assert($global['rank'] === 10000 && $global['standing'] === 'withinCutoff' && $global['provisional'], 'Global ranking must expose the provisional cutoff status.');
+    $global = $get('/api/player/Y8CPQU8QC/global-ranking');
+    $assert($global['rank'] === 10001 && $global['standing'] === 'demotionZone', 'Rank beyond 10,000 must be a provisional demotion zone.');
+    $global = $get('/api/player/28P08PG0G/global-ranking');
+    $assert($global['rank'] === null && $global['standing'] === 'unknown' && !$global['canContinue'], 'Missing tag must remain unknown even when the API has no more pages.');
+    $get('/api/player/INVALID/global-ranking', 400);
     $get('/api/rankings/capitals?location=bad%2Fpath', 400);
     $yesterday = gmdate('Y-m-d', strtotime('-1 day'));
     $capital = ['capitalHallLevel' => 10, 'districts' => [['id' => 1, 'name' => 'Capital Peak', 'districtHallLevel' => 10], ['id' => 2, 'name' => 'Barbarian Camp', 'districtHallLevel' => 5]]];

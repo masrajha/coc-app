@@ -147,3 +147,19 @@ Pengujian: `composer test`, `node tests/share.test.js`, dan `node tests/i18n.tes
 ### Judul tab browser sesuai konteks
 
 Unggah perubahan `public/i18n.js`, `public/index.html`, `public/player.js`, `public/compare.js`, `public/clan-compare.js`, dan `public/compare-clan.html`. Judul profil memakai nama pemain/clan, sedangkan perbandingan memakai kedua nama dengan pemisah `vs` dan suffix `- CoC Clan Command Center`. Saat data belum tersedia, tag atau judul umum digunakan. Teks judul mengikuti bahasa aktif dan tetap mempertahankan nama setelah terjemahan diterapkan ulang.
+
+### Level Ranked League per sesi
+
+Unggah perubahan `src/App.php`. Level liga kini diarsipkan berdasarkan pasangan group tag dan season ID di `data/ranked-sessions/` saat profil atau grup sesi aktif dibaca. Pastikan folder `data/` dapat ditulis PHP dan sertakan arsip ini saat memindahkan server. Sesi previous menggunakan arsip tersebut, atau snapshot anggota dalam rentang minggu sesi yang sama (termasuk snapshot dari klan lama). Snapshot bertanggal saja pada hari pergantian sesi tidak digunakan karena waktunya ambigu. Jika bukti level sesi tidak tersedia, tier/rule dikembalikan `null`; liga profil terbaru tidak digunakan untuk menebak riwayat. Rule yang sama berlaku untuk badge, zona promosi/demosi, kuota battle, serta bonus defense.
+
+### Legend I dan perubahan level liga pemain
+
+Unggah juga `src/RankedLeagueHistory.php`, `public/player.html`, `public/player-league.js`, `public/player-league.css`, dan `public/i18n.js`. Riwayat per pemain disimpan di `data/ranked-players/` (52 minggu pengamatan), termasuk Legend I yang tidak memiliki group tag. Folder ini harus dapat ditulis PHP dan disertakan saat memindahkan data server. Minggu liga berganti Senin 05:00 UTC; status Promosi/Demosi/Tetap hanya membandingkan minggu berurutan dengan bukti arsip/snapshot. Jika bukti tidak ada, UI menampilkan keterangan riwayat belum tersedia.
+
+Legend I menampilkan trofi dan statistik musim dari profil serta tautan ke leaderboard global. Peringkat hanya ditampilkan jika dikirim API; nilai yang tidak tersedia tidak dianggap nol. Battle log, kuota, bonus pertahanan, serta statistik grup disembunyikan dalam tampilan global. Grup previous tetap dapat dipilih jika API menyediakan tag grup yang valid. Tidak ada permintaan battle log ke grup `#0`, dan aplikasi tidak menambahkan sumber API pihak ketiga.
+
+### Peringkat global Legend I dan batas bertahan
+
+Unggah `src/GlobalRankings.php` bersama perubahan `src/App.php`, `public/player-league.js`, `public/player-league.css`, dan `public/i18n.js`. Endpoint `/api/player/{tag}/global-ranking` mencari tag pada leaderboard global dan menggunakan cache indeks bersama selama 5 menit di `data/cache/global-rankings-index.json`. Pengambilan mengikuti cursor bila tersedia, dua halaman per request, dengan batas 20.000 entri. Lock mencegah beberapa profil mengunduh halaman yang sama secara bersamaan.
+
+Pada pemeriksaan API tanggal 27 Oktober 2026 (WIB), permintaan `limit=1000` hanya mengembalikan peringkat 1-200 tanpa cursor lanjutan. Tag yang tidak ditemukan tetap berstatus unknown, bukan dianggap di luar 10.000 besar. UI menampilkan cakupan aktual hasil API. Posisi sampai 10.000 diberi label dalam batas bertahan sementara; posisi lebih rendah diberi label zona demosi sementara, hanya bila rank diketahui. Penentuan akhir minggu adalah Senin 05:00 UTC / 12:00 WIB. Hasil berjalan tidak mengubah riwayat promosi/demosi yang dikonfirmasi lewat level liga. Endpoint ini tidak mengklaim menyediakan arsip peringkat akhir minggu.

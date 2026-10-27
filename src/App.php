@@ -165,6 +165,7 @@ final class App
         $app->get('/api/player/{tag}/war-history', fn($req, $res, $args) => $self->playerWarHistory($res, $args['tag']));
         $app->get('/api/player/{tag}/raids', fn($req, $res, $args) => $self->playerRaids($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/league-group', fn($req, $res, $args) => $self->playerLeagueGroup($req, $res, $args['tag']));
+        $app->get('/api/player/{tag}/global-ranking', fn($req, $res, $args) => $self->playerGlobalRanking($res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
         $app->get('/share/image/{hash}.png', fn($req, $res, $args) => $self->shareImage($req, $res, $args['hash']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
@@ -563,6 +564,9 @@ final class App
     }
     private function profile(array $p, string $updated): array
     {
+        foreach ($this->leagueSessions($p) as $session) {
+            if ($session['id'] === 'current') $this->rankedSessionTier($p, $session, $updated);
+        }
         $progress=$this->progress($p);
         $army=['heroes'=>[],'heroEquipment'=>[],'pets'=>[],'troops'=>[],'superTroops'=>[],'builderBase'=>[],'spells'=>[]];
         foreach($p['heroes']??[] as $i)$army[($i['village']??'')==='builderBase'?'builderBase':'heroes'][]=$this->playerItem($i);
@@ -593,6 +597,8 @@ final class App
         $player['league']=isset($p['league'])?['name'=>$p['league']['name']??null,'iconUrls'=>$p['league']['iconUrls']??null]:null;
         $player['leagueTier']=isset($p['leagueTier'])?['id'=>$p['leagueTier']['id']??null,'name'=>$p['leagueTier']['name']??null]:null;
         $player['leagueSessions']=$this->leagueSessions($p);
+        $player['leagueTransition']=$this->playerLeagueTransition($p, $updated);
+        $player['legendStatistics']=is_array($p['legendStatistics']??null)?$p['legendStatistics']:null;
         $player['clan']=isset($p['clan'])?['tag'=>$p['clan']['tag']??null,'name'=>$p['clan']['name']??null,'badgeUrls'=>$p['clan']['badgeUrls']??null]:null;
         return ['player'=>$player,'army'=>$army,'progress'=>$progress,'achievements'=>is_array($p['achievements']??null)?$p['achievements']:null,'lastUpdated'=>$updated];
     }
@@ -864,6 +870,29 @@ final class App
         }
     }
 
+    private function playerGlobalRanking(ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag pemain tidak valid.');
+        $lock = null;
+        try {
+            $path = 'cache/global-rankings-index.json';
+            $directory = dirname($this->file($path));
+            if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) throw new LocalDataFailure('Unable to create ranking cache');
+            $lock = fopen($this->file('cache/global-rankings.lock'), 'c');
+            if ($lock === false) throw new LocalDataFailure('Unable to open ranking lock');
+            if (!flock($lock, LOCK_EX | LOCK_NB)) {
+                return $this->respond($res, ['playerTag' => '#' . $tag, 'rank' => null, 'standing' => 'unknown', 'scanned' => 0, 'canContinue' => true, 'provisional' => true]);
+            }
+            $index = $this->readJson($path, []);
+            if (($index['expires'] ?? 0) <= time()) $index = ['expires' => time() + 300];
+            $index = GlobalRankings::advance($index, '#' . $tag, fn(string $endpoint): array => $this->upstream($endpoint, 6000, 0, 300));
+            $this->writeJson($path, $index, true);
+            return $this->respond($res, GlobalRankings::result($index, '#' . $tag));
+        } catch (\Throwable $e) { return $this->failure($res, $e); }
+        finally { if (is_resource($lock)) { flock($lock, LOCK_UN); fclose($lock); } }
+    }
+
     private function rankings(ServerRequestInterface $req, ResponseInterface $res, string $type): ResponseInterface
     {
         if (!in_array($type, ['players', 'clans', 'players-builder-base', 'clans-builder-base', 'capitals'], true)) return $this->tagError($res, 'Jenis ranking tidak valid.');
@@ -903,6 +932,75 @@ final class App
             $sessions[] = ['id' => $key, 'label' => $label, 'groupTag' => $group, 'seasonId' => (int)$season];
         }
         return $sessions;
+    }
+
+    private function playerLeagueTransition(array $player, string $updated): array
+    {
+        $tag = $this->normalizeTag($player['tag'] ?? '');
+        if (!$tag) return ['status' => 'unknown'];
+        $path = 'ranked-players/' . $tag . '.json';
+        $history = $this->readJson($path, []);
+        $previousWeek = RankedLeagueHistory::weekStart(strtotime($updated)) - 7 * 86400;
+        $previousTier = null;
+        foreach ($this->leagueSessions($player) as $session) {
+            if ($session['id'] === 'previous' && $session['seasonId'] === $previousWeek) {
+                $previousTier = $this->rankedSessionTier($player, $session, $updated);
+            }
+        }
+        $snapshots = [];
+        if ($previousTier === null && !isset($history['weeks'][(string)$previousWeek])) {
+            foreach (glob($this->file('snapshots/*.json')) ?: [] as $snapshotPath) {
+                $clanTag = $this->normalizeTag(pathinfo($snapshotPath, PATHINFO_FILENAME));
+                if ($clanTag) $snapshots = array_merge($snapshots, $this->snapshots($clanTag));
+            }
+        }
+        $report = RankedLeagueHistory::report($player, $updated, $history, $snapshots, $previousTier);
+        if ($report['history'] !== $history) $this->writeJson($path, $report['history'], true);
+        return $report['transition'];
+    }
+
+    private function rankedSessionTier(array $player, array $session, string $observedAt): ?string
+    {
+        // A profile's leagueTier can already reflect promotion/demotion while only
+        // previousLeagueGroupTag remains. Bind observed tiers to group + season.
+        $path = 'ranked-sessions/' . hash('sha256', $session['groupTag'] . ':' . $session['seasonId']) . '.json';
+        $saved = $this->readJson($path, []);
+        $tier = $session['id'] === 'current' ? ($player['leagueTier']['name'] ?? null) : null;
+        $source = 'currentProfile';
+        if (!is_string($tier) || trim($tier) === '') {
+            if (is_string($saved['leagueTier'] ?? null) && $saved['leagueTier'] !== '') return $saved['leagueTier'];
+            $tier = null;
+            $source = 'clanSnapshot';
+            $latest = 0;
+            $start = (int)$session['seasonId'];
+            $end = $start + 7 * 86400;
+            foreach (glob($this->file('snapshots/*.json')) ?: [] as $snapshotPath) {
+                $clanTag = $this->normalizeTag(pathinfo($snapshotPath, PATHINFO_FILENAME));
+                if (!$clanTag) continue;
+                foreach ($this->snapshots($clanTag) as $snapshot) {
+                    $captured = isset($snapshot['capturedAt']) ? strtotime($snapshot['capturedAt']) : false;
+                    if ($captured === false) {
+                        // Date-only records cannot disambiguate rollover days.
+                        $date = $snapshot['date'] ?? '';
+                        if ($date <= gmdate('Y-m-d', $start) || $date >= gmdate('Y-m-d', $end)) continue;
+                        $captured = strtotime($date . 'T00:00:00Z');
+                    }
+                    if ($captured === false || $captured < $start || $captured >= $end || $captured <= $latest) continue;
+                    foreach ($snapshot['members'] ?? [] as $member) {
+                        $name = $member['leagueTier']['name'] ?? null;
+                        if (($member['tag'] ?? null) !== ($player['tag'] ?? null) || !is_string($name) || trim($name) === '') continue;
+                        $tier = $name;
+                        $latest = $captured;
+                        $observedAt = gmdate('c', $captured);
+                    }
+                }
+            }
+        }
+        if ($tier !== null && ($saved['leagueTier'] ?? null) !== $tier) {
+            $this->writeJson($path, ['groupTag' => $session['groupTag'], 'seasonId' => $session['seasonId'],
+                'leagueTier' => $tier, 'observedAt' => $observedAt, 'source' => $source], true);
+        }
+        return $tier;
     }
 
     private function rankedRule(?string $tier): ?array
@@ -986,8 +1084,10 @@ final class App
             $session = null;
             foreach ($sessions as $candidate) if ($candidate['id'] === $sessionId) { $session = $candidate; break; }
             if ($session === null) return $this->respond($res, ['error' => 'Pemain tidak memiliki grup pada sesi liga ini.'], 404);
-            $hasCurrentSession = (bool)array_filter($sessions, static fn(array $candidate): bool => $candidate['id'] === 'current');
-            $leagueTierName = ($sessionId === 'current' || !$hasCurrentSession) ? ($profile['data']['leagueTier']['name'] ?? null) : null;
+            foreach ($sessions as $candidate) {
+                if ($candidate['id'] === 'current') $this->rankedSessionTier($profile['data'], $candidate, $profile['lastUpdated']);
+            }
+            $leagueTierName = $this->rankedSessionTier($profile['data'], $session, $profile['lastUpdated']);
             $rankedRule = $this->rankedRule($leagueTierName);
             $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
             $previous = $sessionId === 'previous';

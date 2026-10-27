@@ -72,8 +72,13 @@
         <div><span data-i18n="player.donations">Donasi</span><strong id="donations">—</strong></div>
       </section>
 
-      <nav class="tabs" aria-label="Bagian profil" data-i18n-aria-label="player.profileSections">
-        <button type="button" data-tab="army" data-section-tone="blue" aria-selected="true">Army</button><button type="button" data-tab="progress" data-section-tone="blue" aria-selected="false" data-i18n="player.progress">Progres</button><button type="button" data-tab="performance" data-section-tone="amber" aria-selected="false" data-i18n="player.warPerformance">Performa War/CWL</button><button type="button" data-tab="ranked-battles" data-section-tone="amber" aria-selected="false">Ranked League</button><button type="button" data-tab="capital-raids" data-section-tone="purple" aria-selected="false" data-i18n="raid.title">Raid Weekend</button><button type="button" data-tab="achievements" data-section-tone="teal" aria-selected="false" data-i18n="feature.achievements">Pencapaian</button>
+      <nav class="tabs player-tabs" aria-label="Bagian profil" data-i18n-aria-label="player.profileSections">
+        <button type="button" data-tab="army" data-section-tone="blue" aria-selected="true"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 3 5 1 11 11-4 4L4 8 3 3Zm11 11 6 6m-6 0 6-6M21 3l-5 1-4 4M3 21l6-6m-5-1 6 6"/></svg><span>Army</span></button>
+        <button type="button" data-tab="progress" data-section-tone="blue" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v18h18M7 15l5-5 4 3 5-7m-5 0h5v5"/></svg><span data-i18n="player.progress">Progres</span></button>
+        <button type="button" data-tab="performance" data-section-tone="amber" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Zm4 4-1 4-6 6m-1-5 5 5m-5 1 1-1"/></svg><span data-i18n="player.warPerformance">Performa War/CWL</span></button>
+        <button type="button" data-tab="ranked-battles" data-section-tone="amber" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 3h10v6a5 5 0 0 1-10 0V3ZM7 5H3v3a4 4 0 0 0 4 4m10-7h4v3a4 4 0 0 1-4 4m-5 2v5m-4 2h8m-7 0v-2h6v2"/></svg><span>Ranked League</span></button>
+        <button type="button" data-tab="capital-raids" data-section-tone="purple" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 21V4h4v4h3V4h4v4h3V4h4v17H3Zm6 0v-5a3 3 0 0 1 6 0v5M6 12h1m10 0h1"/></svg><span data-i18n="raid.title">Raid Weekend</span></button>
+        <button type="button" data-tab="achievements" data-section-tone="teal" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="6"/><path d="m7 13-2 8 7-3 7 3-2-8m-5-7 .9 1.8 2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .3-2-1.4-1.4 2-.3L12 6Z"/></svg><span data-i18n="feature.achievements">Pencapaian</span></button>
       </nav>
 
       <section id="army" class="panel" data-section-tone="blue">
@@ -151,6 +156,8 @@
         </div>
         <label class="league-session-label" for="leagueSession" data-i18n="player.leagueSession">Sesi liga</label>
         <select id="leagueSession" aria-label="Pilih sesi liga" data-i18n-aria-label="player.chooseLeagueSession"></select>
+        <div id="leagueSessionTransition" class="league-transition" hidden></div>
+        <div id="legendGlobalSummary" class="legend-global-summary" hidden></div>
         <p id="leagueStatus" class="section-note" role="status" data-i18n="player.loadingLeagueSession">Memuat sesi liga...</p>
         <div id="leaguePlayerRank" class="league-player-rank" hidden></div>
         <div class="league-view-tabs" role="tablist" aria-label="Tampilan grup liga" data-i18n-aria-label="player.leagueView">

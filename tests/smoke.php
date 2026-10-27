@@ -19,7 +19,8 @@ file_put_contents($snapshotDir . '/2GPP802UU.json', json_encode(['clanTag' => '#
     ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50], 'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'trophies' => 6000, 'donations' => 2, 'donationsReceived' => 1, 'leagueTier' => ['name' => 'Legend II']]]],
 ]]));
 file_put_contents($snapshotDir . '/9RU089PG.json', json_encode(['clanTag' => '#9RU089PG', 'snapshots' => [
-    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T01:00:00Z', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'level' => 18, 'members' => 42]],
+    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T01:00:00Z', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'level' => 18, 'members' => 42],
+        'members' => [['tag' => '#28P08PG0G', 'leagueTier' => ['name' => 'Legend III']]]],
 ]]));
 file_put_contents($warDir . '/2GPP802UU.json', json_encode(['clanTag' => '#2GPP802UU', 'wars' => [[
     'id' => 'War:20261001:OTHER1', 'type' => 'War', 'state' => 'warEnded',
@@ -129,9 +130,16 @@ $seedApiCache('/leaguegroup/%238URPQL0/1791176400?playerTag=%232R92VJG0U', ['mem
     'attackLogs' => [], 'defenseLogs' => [['stars' => 3, 'destructionPercentage' => 90]]]);
 $seedApiCache('/players/%2328P08PG0G', [
     'tag' => '#28P08PG0G', 'name' => 'Amerta Buana', 'townHallLevel' => 18,
-    'leagueTier' => ['name' => 'Legend III'],
+    'leagueTier' => ['name' => 'Legend II'],
     'currentLeagueSeasonId' => 0,
     'previousLeagueGroupTag' => '#8UUGLPJ', 'previousLeagueSeasonId' => 1791176400
+]);
+$seedApiCache('/players/%23Y8CPQU8QC', [
+    'tag' => '#Y8CPQU8QC', 'name' => 'Baraa', 'townHallLevel' => 18, 'trophies' => 5281,
+    'leagueTier' => ['id' => 105000036, 'name' => 'Legend I'],
+    'currentLeagueGroupTag' => '#0', 'currentLeagueSeasonId' => 1791176400,
+    'previousLeagueGroupTag' => '#0', 'previousLeagueSeasonId' => 1790571600,
+    'legendStatistics' => ['currentSeason' => ['trophies' => 5281], 'bestSeason' => ['id' => '2025-12-01', 'rank' => 1128, 'trophies' => 5610]]
 ]);
 $bonusAttackLogs = array_fill(0, 22, ['stars' => 3, 'destructionPercentage' => 100, 'trophies' => 35]);
 $bonusAttackLogs[] = ['stars' => 2, 'destructionPercentage' => 90, 'trophies' => 33];
@@ -500,7 +508,16 @@ try {
         throw new RuntimeException('Sesi liga yang masih berjalan tidak boleh mendapat bonus pertahanan.');
     }
     $bonusBattle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/28P08PG0G/league-group?session=previous&detail=battle&memberTag=28P08PG0G'))->getBody(), true);
+    $legendProfile = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/Y8CPQU8QC/profile'))->getBody(), true);
+    if ($legendProfile['player']['leagueSessions'] !== []
+        || $legendProfile['player']['legendStatistics']['currentSeason']['trophies'] !== 5281
+        || $legendProfile['player']['legendStatistics']['bestSeason']['rank'] !== 1128
+        || $legendProfile['player']['leagueTransition']['status'] !== 'unknown'
+        || !is_file($dataDir . '/ranked-players/Y8CPQU8QC.json')) {
+        throw new RuntimeException('Legend I must expose available season statistics and archive history without creating a group.');
+    }
     if (($bonusBattle['session']['id'] ?? null) !== 'previous'
+        || ($bonusBattle['leagueTier'] ?? null) !== 'Legend III'
         || ($bonusBattle['leagueRule']['battles'] ?? null) !== 24
         || ($bonusBattle['attack']['points'] ?? null) !== 838
         || ($bonusBattle['defense']['battlePoints'] ?? null) !== 210

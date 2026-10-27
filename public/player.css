@@ -1746,3 +1746,10 @@ dialog::backdrop {
     }
 }
 .loading-state{display:flex;align-items:center;gap:9px}.loading-spinner{display:inline-block;width:16px;height:16px;flex:0 0 16px;border:2px solid var(--theme-border,#40546b);border-top-color:var(--theme-blue-border,#76a8ff);border-radius:50%;animation:loading-spin .8s linear infinite}@keyframes loading-spin{to{transform:rotate(360deg)}}.loading-skeleton{height:12px;border-radius:5px;background:linear-gradient(90deg,var(--theme-raised,#1b2938) 25%,var(--theme-hover,#2a3b4f) 50%,var(--theme-raised,#1b2938) 75%);background-size:200% 100%;animation:loading-shimmer 1.3s ease-in-out infinite}@keyframes loading-shimmer{to{background-position:-200% 0}}
+
+/* Inline decorative icons survive language changes because labels use their own spans. */
+.command-ui .player-tabs{flex-wrap:nowrap;overflow-x:auto}
+.command-ui .player-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0}
+.player-tab-icon{display:block;width:18px;height:18px;flex:0 0 18px;color:currentColor}
+.command-ui .player-tabs button[aria-selected=true] .player-tab-icon{color:var(--section-edge,var(--theme-link,#84b4ff))}
+@media(max-width:700px){.player-tab-icon{width:16px;height:16px;flex-basis:16px}}
