@@ -108,3 +108,9 @@ html[data-theme] .command-ui.dashboard .rankings-heading .rankings-eyebrow{color
 html[data-theme] .command-ui.dashboard .rankings-heading .rankings-description{color:#d7e0ed;line-height:1.5}
 html[data-theme] .command-ui.dashboard .rankings-heading .ranking-location-control{color:#d7e0ed}
 @media(max-width:700px){.command-ui.dashboard .rankings-heading{background-position:center;gap:16px}}
+
+/* Clan and player-comparison tabs use the same decorative SVG style as player tabs. */
+.command-ui :is(.clan-primary-tabs,.compare-tabs) a{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.nav-tab-icon{display:block;width:18px;height:18px;flex:0 0 18px;color:currentColor}
+.command-ui :is(.clan-primary-tabs,.compare-tabs) a[aria-selected=true] .nav-tab-icon{color:var(--section-edge,var(--theme-link,#84b4ff))}
+@media(max-width:700px){.nav-tab-icon{width:16px;height:16px;flex-basis:16px}}
