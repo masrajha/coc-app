@@ -215,3 +215,28 @@ Unggah perubahan `public/index.html`, `public/player.html`, `public/compare.html
 Header, judul kontekstual, metadata Open Graph, kartu berbagi dan ekspor perbandingan memakai ClanIntel. Versi konteks share dinaikkan sehingga metadata baru tidak memakai cache identitas sebelumnya. Preview yang sudah disimpan WhatsApp dapat tetap mengikuti cache WhatsApp.
 
 Footer empat halaman utama (home/clan, player, compare player, compare clan) memuat disclaimer lengkap dan tautan Fan Content Policy dalam Indonesia/English. Logo SVG buatan proyek berukuran kurang dari 1 KiB; favicon dan touch icon lokal. Ilustrasi tetap memakai turunan WebP yang sudah dikompres. Halaman utama berisi lima kartu fitur, empat akses cepat, dan statistik akses nyata. Pada mobile, riwayat berada sesudah pencarian dengan pilihan Klan/Pemain/Populer; desktop tetap menampilkan ketiga panel.
+
+### Sitemap, panduan dua bahasa, dan ringkasan profil server
+
+Unggah `.htaccess`, `src/App.php`, `src/Seo.php`, `src/SeoGuides.php`, keempat halaman HTML utama, `public/i18n.js`, `public/seo.css`, dan `public/seo.js`. Pastikan `APP_URL` adalah origin HTTPS publik yang benar (misalnya `https://clanintel.example`), bukan localhost. Tidak ada perubahan token API atau cron yang diwajibkan fitur ini.
+
+Dokumen publik baru:
+
+- `/robots.txt`: aturan crawl dan alamat sitemap index.
+- `/sitemap.xml`: index menuju `/sitemaps/pages.xml`, `/sitemaps/guides.xml`, dan pecahan klan/pemain.
+- `/guides?lang=id` dan `?lang=en`: indeks empat panduan.
+- `/guides/ranked-league`, `/guides/war-cwl`, `/guides/player-progress`, `/guides/clan-capital`: artikel server-rendered dalam dua bahasa dengan referensi resmi.
+- `/explore/clans` dan `/explore/players`: direktori profil tersimpan, 50 profil per halaman; parameter `page` untuk navigasi.
+- `/leaderboards?category=players&lang=id`: ranking tersimpan; kategori lain `clans`, `players-builder-base`, `clans-builder-base`, `capitals`. Tambahkan `location=ID_LOKASI_API` untuk negara yang sudah diketahui dan memiliki daftar tersimpan.
+
+URL profil lama tetap berlaku. Canonical profil memakai tag dan bahasa, tanpa parameter tab, sesi atau tracking. URL berbagi tetap dapat memuat tab/sesi untuk pratinjau yang sesuai. Pasangan hreflang `id`, `en`, dan `x-default` disediakan pada HTML dan sitemap. Form/pasangan compare, profil kosong atau belum dikenal, direktori kosong, serta ranking kosong/kedaluwarsa menggunakan noindex. Halaman panduan tidak dikenal dan pagination lewat batas memakai HTTP 404.
+
+Sitemap dan halaman direktori/ranking tidak memanggil API. Penemuan awal membaca cache API dan snapshot lama; pengambilan profil berikutnya mempertahankan pengamatan ringkas terbaru di `DATA_DIR/seo/clans/` atau `players/`, dan daftar ranking di `DATA_DIR/seo/rankings/`. Folder ini merupakan katalog data terkini, bukan snapshot harian Army. Backup bersama direktori data lainnya. Folder data tetap privat dan tidak perlu diunggah ke document root publik.
+
+Hanya profil dengan nama, level dan pengamatan dalam 90 hari terakhir yang masuk direktori/sitemap. Daftar ranking yang dipublikasikan memiliki pengamatan maksimal 24 jam; baris yang ditampilkan dibatasi 25. Tanggal pengamatan selalu terlihat. `lastmod` profil hanya disertakan jika waktu perubahan isi pada katalog diketahui; tanggal refetch identik tidak dijadikan perubahan. Sitemap klan/pemain dipecah setiap 5.000 profil (10.000 URL karena dua bahasa). Tidak ada `priority` atau `changefreq` buatan.
+
+HTML awal profil yang dikenal berisi ringkasan tersimpan, tautan terkait, level hero yang tersedia atau cakupan snapshot/distrik klan. Bagian interaktif tetap memperbarui data seperti sebelumnya. Jika pertama kali membuka profil dan API belum memberi data, halaman tidak langsung dipromosikan ke sitemap. Panduan dapat diakses tanpa JavaScript; tema dan tautan bahasa tetap tersedia.
+
+Sesudah deploy, buka `/robots.txt` dan `/sitemap.xml`, pastikan origin benar serta XML mengembalikan 200, lalu kirim `sitemap.xml` melalui Google Search Console pada properti domain yang sesuai. Gunakan URL Inspection untuk satu profil per bahasa dan satu artikel. Halaman hanya bisa masuk indeks jika hosting dapat diakses publik. Pengiriman sitemap tidak menjamin pengindeksan atau peringkat. Jika domain berubah, perbarui APP_URL dan buat pengalihan permanen dari domain lama secara terpisah.
+
+Validasi lokal: `composer test`, `node tests/i18n.test.js`, dan `node --check public/seo.js`. Pengujian SEO memeriksa XML, canonical/hreflang, isi HTML awal, negara ranking, escaping nama, aturan noindex, dan perubahan lastmod.

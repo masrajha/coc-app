@@ -168,6 +168,13 @@ final class App
         $app->get('/api/player/{tag}/global-ranking', fn($req, $res, $args) => $self->playerGlobalRanking($res, $args['tag']));
         $app->get('/api/player/{tag}/country-ranking', fn($req, $res, $args) => $self->playerCountryRanking($res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
+        $app->get('/robots.txt', fn($req, $res) => $self->seoFile($req, $res, 'robots'));
+        $app->get('/sitemap.xml', fn($req, $res) => $self->seoFile($req, $res, 'index'));
+        $app->get('/sitemaps/{name}.xml', fn($req, $res, $args) => $self->seoFile($req, $res, $args['name']));
+        $app->get('/guides', fn($req, $res) => $self->seoPage($req, $res));
+        $app->get('/guides/{slug}', fn($req, $res) => $self->seoPage($req, $res));
+        $app->get('/explore/{kind}', fn($req, $res) => $self->seoPage($req, $res));
+        $app->get('/leaderboards', fn($req, $res) => $self->seoPage($req, $res));
         $app->get('/share/image/{hash}.png', fn($req, $res, $args) => $self->shareImage($req, $res, $args['hash']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
         $app->get('/clan.html', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
@@ -203,13 +210,13 @@ final class App
     {
         $now = time();
         $ttl = $ttlSeconds ?? self::CACHE_TTL;
-        if (isset($this->cache[$path]) && $this->cache[$path]['expires'] > $now) return $this->cache[$path]['entry'];
+        if (isset($this->cache[$path]) && $this->cache[$path]['expires'] > $now) return $this->rememberSeo($path, $this->cache[$path]['entry']);
         $cacheFile = 'cache/' . hash('sha256', $path) . '.json';
         $diskCache = $this->readJson($cacheFile, []);
         $staleEntry = isset($diskCache['entry']['data']) ? $diskCache['entry'] : null;
         if (($diskCache['expires'] ?? 0) > $now && isset($diskCache['entry']['data'])) {
             $this->cache[$path] = ['entry' => $diskCache['entry'], 'expires' => $diskCache['expires']];
-            return $diskCache['entry'];
+            return $this->rememberSeo($path, $diskCache['entry']);
         }
         $token = (string)$this->env('COC_API_TOKEN');
         if ($token === '') throw new \RuntimeException('Token API belum diatur.');
@@ -227,7 +234,7 @@ final class App
                     $entry = ['data' => $data, 'lastUpdated' => gmdate('c')];
                     $this->cache[$path] = ['entry' => $entry, 'expires' => $now + $ttl];
                     $this->writeJson($cacheFile, ['entry' => $entry, 'expires' => $now + $ttl]);
-                    return $entry;
+                    return $this->rememberSeo($path, $entry);
                 }
                 $last = new UpstreamFailure($status, null, $body);
                 if (!in_array($status, [502, 503, 504], true) || $attempt === $retries) throw $last;
@@ -240,7 +247,7 @@ final class App
         } catch (UpstreamFailure $e) {
             if ($staleOnFailure && $staleEntry !== null && ($e->status === 0 || in_array($e->status, [502, 503, 504], true))) {
                 $staleEntry['stale'] = true;
-                return $staleEntry;
+                return $this->rememberSeo($path, $staleEntry);
             }
             throw $e;
         }
@@ -421,6 +428,10 @@ final class App
                     error_log('Share preview unavailable: ' . get_class($error));
                 }
             }
+            if ($req && in_array($req->getUri()->getPath(), ['/', '/index.html', '/clan.html', '/player.html', '/compare.html', '/compare-clan.html'], true)) {
+                try { $content = (new Seo($this->dataDir, $this->publicOrigin($req), $this->locale))->decorate($content, $req->getUri()->getPath(), $req->getQueryParams()); }
+                catch (\Throwable $error) { error_log('SEO summary unavailable: ' . get_class($error)); }
+            }
             $content = $this->versionHtmlAssets($content, $root);
         }
         if (str_starts_with($safe, 'assets/images/optimized/') && $extension === 'webp') {
@@ -443,7 +454,7 @@ final class App
         return $response;
     }
 
-    private function shareService(ServerRequestInterface $req): SharePreview
+    private function publicOrigin(ServerRequestInterface $req): string
     {
         $configured = (string)($this->env('APP_URL') ?: '');
         $parts = $configured !== '' ? parse_url($configured) : false;
@@ -455,7 +466,43 @@ final class App
             $host = $uri->getHost() ?: 'localhost';
             $base = $scheme . '://' . $host . ($uri->getPort() ? ':' . $uri->getPort() : '');
         }
-        return new SharePreview($this->file('share'), fn(string $path, int $timeout) => $this->upstream($path, $timeout, 0, null, true), $base, $this->locale);
+        return $base;
+    }
+
+    private function shareService(ServerRequestInterface $req): SharePreview
+    {
+        return new SharePreview($this->file('share'), fn(string $path, int $timeout) => $this->upstream($path, $timeout, 0, null, true), $this->publicOrigin($req), $this->locale);
+    }
+
+    private function rememberSeo(string $path, array $entry): array
+    {
+        try { (new Seo($this->dataDir, '', $this->locale))->remember($path, $entry); }
+        catch (\Throwable $error) { error_log('SEO observation unavailable: ' . get_class($error)); }
+        return $entry;
+    }
+
+    private function seoFile(ServerRequestInterface $req, ResponseInterface $res, string $name): ResponseInterface
+    {
+        $seo = new Seo($this->dataDir, $this->publicOrigin($req), $this->locale);
+        if ($name === 'robots') $content = $seo->robots();
+        elseif ($name === 'index') $content = $seo->sitemap();
+        elseif (in_array($name, ['pages','guides'], true)) $content = $seo->sitemap($name);
+        elseif (preg_match('/^(clans|players)-([1-9][0-9]{0,5})$/', $name, $match)) $content = $seo->sitemap($match[1], (int)$match[2]);
+        else $content = null;
+        if ($content === null) return $res->withStatus(404);
+        $res->getBody()->write($content);
+        return $res->withHeader('Content-Type', $name === 'robots' ? 'text/plain; charset=utf-8' : 'application/xml; charset=utf-8')
+            ->withHeader('Cache-Control', 'public, max-age=300')->withHeader('X-Content-Type-Options', 'nosniff');
+    }
+
+    private function seoPage(ServerRequestInterface $req, ResponseInterface $res): ResponseInterface
+    {
+        $seo = new Seo($this->dataDir, $this->publicOrigin($req), $this->locale);
+        [$status, $html] = $seo->page($req->getUri()->getPath(), $req->getQueryParams());
+        $res->getBody()->write($this->versionHtmlAssets($html, realpath(__DIR__ . '/../public')));
+        return $res->withStatus($status)->withHeader('Content-Type', 'text/html; charset=utf-8')->withHeader('Content-Language', $this->locale)
+            ->withHeader('Cache-Control', 'no-cache, must-revalidate')->withHeader('Vary', 'Accept-Language')
+            ->withHeader('X-Robots-Tag', $status === 404 || str_contains($html, 'content="noindex,follow"') ? 'noindex, follow' : 'all');
     }
 
     private function shareImage(ServerRequestInterface $req, ResponseInterface $res, string $hash): ResponseInterface
