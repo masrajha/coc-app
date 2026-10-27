@@ -1653,6 +1653,7 @@ dialog::backdrop {
 }
 
 .progress-toolbar,
+.ranked-mode-toolbar,
 .ranked-log-toolbar {
     display: flex;
     flex-wrap: wrap;
@@ -1662,6 +1663,7 @@ dialog::backdrop {
 
 .progress-toolbar input,
 .progress-toolbar select,
+.ranked-mode-toolbar select,
 .ranked-log-toolbar select {
     padding: 7px 9px;
     border: 1px solid var(--theme-border,#3a5068);

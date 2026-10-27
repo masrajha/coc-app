@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Demo Battle Log Game Style</title>
+  <link rel="stylesheet" href="/battle-log-style/coc_pixel_match.css">
+  <link rel="stylesheet" href="/battle-log-style/demo.css">
+  <script src="/battle-log-style/demo.js" defer></script>
+</head>
+<body>
+  <header class="demo-toolbar">
+    <div class="demo-intro"><h1>Pratinjau Battle Log</h1><p>Data contoh untuk membandingkan gaya dengan game.</p></div>
+    <div class="demo-controls">
+      <label>Contoh<select id="demoScenario"><option value="24">24 kotak per sisi</option><option value="30">30 kotak per sisi</option><option value="56">56 kotak per sisi</option></select></label>
+      <label>Gaya<select id="demoStyle"><option value="refined">Penyesuaian game</option><option value="original">CSS asli</option></select></label>
+      <label>Ukuran<select id="demoZoom"><option value="fit">Pas layar</option><option value="1">100% · 1440 px</option><option value="1.25">125%</option></select></label>
+      <label>Nama pemain<input id="demoName" value="Kyuraa" maxlength="36" autocomplete="off"></label>
+      <button id="demoReopen" type="button" hidden>Buka pratinjau</button>
+    </div>
+  </header>
+  <p class="demo-help">Kartu dapat dipilih untuk melihat detail contoh. Tampilan Pas layar mempertahankan susunan 6 + 6 kolom; pilih 100% untuk memeriksa detail pada mobile.</p>
+  <div id="demoViewport" class="demo-viewport">
+    <div id="demoStage" class="demo-stage">
+      <main id="reference" class="coc-reference demo-game demo-refined" aria-label="Pratinjau bergaya game">
+        <nav class="coc-ref-tabs" aria-label="Tab demo game">
+          <button class="coc-ref-tab" type="button" aria-pressed="false">Leaderboard</button>
+          <button class="coc-ref-tab" type="button" aria-pressed="true">Battle Log</button>
+          <button class="coc-ref-tab" type="button" aria-pressed="false">League History</button>
+          <button class="coc-ref-tab" type="button" aria-pressed="false">Town Halls</button>
+          <button id="demoClose" class="coc-ref-close" type="button" aria-label="Tutup pratinjau">X</button>
+        </nav>
+        <section class="coc-ref-window" aria-label="Battle log contoh">
+          <header class="coc-ref-head">
+            <div class="coc-ref-topline">
+              <div class="coc-ref-banner" aria-hidden="true"></div>
+              <div id="demoPlayer" class="coc-ref-player">#11 Kyuraa</div>
+              <div class="coc-ref-total">Total: <strong id="demoTotal">1110</strong><img class="demo-trophy demo-total-trophy" src="/assets/trophy.png" alt="trofi" width="44" height="52"></div>
+              <div class="coc-ref-views" role="group" aria-label="Tampilan battle log">
+                <button id="demoList" class="coc-ref-view" type="button" aria-pressed="false" aria-label="Tampilan daftar"><svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M3 12h18M3 19h18" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></button>
+                <button id="demoGrid" class="coc-ref-view" type="button" aria-pressed="true" aria-label="Tampilan kotak"><span class="coc-ref-tiles-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+              </div>
+            </div>
+            <div class="coc-ref-stats">
+              <div class="coc-ref-stat"><span>Attacks</span><span class="coc-ref-num"><span id="demoAttackTotal">+844</span> <img class="demo-trophy" src="/assets/trophy.png" alt="trofi" width="32" height="38"></span></div>
+              <div class="coc-ref-stat"><span>Defenses</span><span class="coc-ref-num"><span id="demoDefenseTotal">+266</span> <img class="demo-trophy" src="/assets/trophy.png" alt="trofi" width="32" height="38"></span></div>
+            </div>
+          </header>
+          <div class="demo-battle-columns">
+            <section aria-label="Attacks"><div id="demoAttackGrid" class="coc-ref-grid"></div></section>
+            <section aria-label="Defenses"><div id="demoDefenseGrid" class="coc-ref-grid"></div></section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <footer class="demo-notes">
+    <p><strong id="demoCounts" role="status"></strong> · Kanvas dasar 1440 px. Tinggi mengikuti jumlah kartu.</p>
+    <p>CSS asli tetap dimuat dari <a href="./coc_pixel_match.css">coc_pixel_match.css</a>. Pilihan Penyesuaian game memakai font lokal Lilita One, warna kartu lebih terang, dan angka berbingkai. Font ini bukan font resmi game.</p>
+    <p>Demo ini belum mengambil data API atau menambahkan fitur berbagi gambar. <a href="./coc_bold_preview.html">Buka preview awal</a> · <a href="./fonts/OFL.txt">Lisensi font</a></p>
+  </footer>
+  <dialog id="demoDetails" class="demo-details" aria-labelledby="demoDetailsTitle">
+    <form method="dialog"><header><h2 id="demoDetailsTitle">Detail contoh</h2><button aria-label="Tutup detail">×</button></header><dl id="demoDetailsValues"></dl><p>Data ilustrasi untuk memeriksa tampilan kartu.</p></form>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,76 @@
+/* Clash of Clans battle log — 1440 × 748 reference geometry.
+   Scoped so it does not overwrite an existing dashboard. */
+*{box-sizing:border-box}html,body{margin:0}body{background:#584944}
+.coc-reference{--ink:#261715;--stone:#d3cec9;position:relative;width:100%;min-height:748px;background:#584944;color:#fff;font-family:system-ui,Arial,sans-serif;overflow:hidden}
+.coc-reference button{cursor:pointer;font:inherit}.coc-reference button:focus-visible{outline:3px solid #62bafa;outline-offset:2px}
+.coc-ref-tabs{height:91px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 62px;gap:7px;padding:19px 10px 0 103px;align-items:stretch;background:linear-gradient(#62514b,#564641)}
+.coc-ref-tab{height:74px;border:1px solid #6b5b55;border-radius:17px 17px 0 0;background:linear-gradient(#a59c93,#948a82 53%,#80736e);box-shadow:inset 0 2px #b5aca3;color:#fff;font-size:27px!important;font-weight:1000!important;letter-spacing:-.6px;-webkit-text-stroke:1.45px #1d1717;text-shadow:2px 3px 0 #1b1414,-1px -1px 0 #1b1414,1px -1px 0 #1b1414;white-space:nowrap;padding:0 3px 19px}
+.coc-ref-tab[aria-selected=true]{background:linear-gradient(#c0b9b1,#c2bbb3 72%,#c2bbb3);border-color:#b7afa7;box-shadow:inset 0 3px #d1ccc7}
+.coc-ref-close{width:54px;height:56px;align-self:start;margin-left:7px;border:3px solid #1b1010;border-radius:12px;background:linear-gradient(#ff8b92 2%,#fa4b57 28%,#d51b32 67%,#a20b21);box-shadow:inset 0 3px #ffd0d1,inset 0 -4px #7e0f19,0 4px #312423;font-size:40px!important;font-weight:1000!important;line-height:1;color:#fff;-webkit-text-stroke:2px #170f11;text-shadow:2px 3px #1a080e}
+.coc-ref-window{position:relative;height:650px;margin:-1px 1px 9px;border:11px solid #d0cbc6;border-radius:17px;background:#d2cdc8;box-shadow:inset 0 2px #f9f6f2,0 2px 1px #372821;overflow:hidden}
+.coc-ref-head{height:159px;margin:0;border-radius:8px 8px 11px 11px;border:3px solid #451c23;box-shadow:inset 0 2px 1px #ae6872,0 3px 0 #896e69;background-color:#692b35;background-image:linear-gradient(45deg,transparent 46%,#3c14233c 47%,#3c14233c 49%,transparent 50%),linear-gradient(-45deg,transparent 46%,#40182470 47%,#40182470 49%,transparent 50%),linear-gradient(180deg,#572234 0%,#782b35 65%,#63242e);background-size:64px 64px,64px 64px,100% 100%;position:relative}
+.coc-ref-topline{height:94px;display:flex;align-items:flex-start;position:relative}
+.coc-ref-banner{position:relative;flex:0 0 53px;height:87px;margin:0 15px 0 7px;background:linear-gradient(90deg,#867b6f,#cfc8b7 30%,#dfd7c8 71%,#8b766a);border-left:2px solid #34211e;border-right:3px solid #3e2b26;box-shadow:2px 2px 0 #392724, inset 4px 0 #f7f0df;clip-path:polygon(0 0,100% 0,100% 100%,50% 91%,0 100%)}
+.coc-ref-banner:after{content:'━';position:absolute;top:15px;left:13px;font-size:26px;color:#1c1717;text-shadow:1px 1px #fff}
+.coc-ref-player{font-size:34px;font-weight:1000;white-space:nowrap;line-height:68px;letter-spacing:-1px;color:#f4ece7;-webkit-text-stroke:1.4px #231716;text-shadow:2px 4px #170d0c,-1px -1px #170d0c}
+.coc-ref-total{position:absolute;left:38%;top:12px;font-size:40px;white-space:nowrap;font-weight:1000;line-height:1.4;letter-spacing:-1px;color:#fff0e6;-webkit-text-stroke:1.5px #1b1110;text-shadow:2px 4px 0 #180f0e}
+.coc-ref-total strong{color:#f8ead6}.coc-ref-trophy{display:inline-block;font-size:43px;vertical-align:-6px;filter:drop-shadow(1px 2px #120d0c)}
+.coc-ref-views{position:absolute;right:6px;top:13px;display:flex;align-items:center;gap:3px;height:69px;padding:4px;background:linear-gradient(#140e10,#38292b);border:1px solid #a97475;border-radius:13px;box-shadow:inset 0 1px #d8a1a0,0 4px #341d1d}
+.coc-ref-view{width:55px;height:59px;display:grid;place-items:center;background:none;border:0;border-radius:8px;color:#dadbd8;font-size:42px!important;line-height:1;text-shadow:2px 3px #050505,-1px -1px #050505}
+.coc-ref-view[aria-pressed=true]{background:linear-gradient(#e7e3dc,#a89c92);color:#fff;border:2px solid #282223;box-shadow:inset 0 2px #fff}
+.coc-ref-tiles-icon{display:grid;grid-template-columns:repeat(2,20px);gap:3px}.coc-ref-tiles-icon i{height:19px;background:#eeeae2;border:3px solid #191516;border-radius:3px;box-shadow:1px 2px #262021}
+.coc-ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:23px;padding:0 0 0 4px}
+.coc-ref-stat{height:57px;border-radius:10px;background:linear-gradient(90deg,#4a161d9c,#50192070);display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:27px;font-weight:1000;-webkit-text-stroke:1px #271312;text-shadow:2px 3px #1f0b0d;white-space:nowrap}
+.coc-ref-stat .coc-ref-num{font-size:26px}.coc-ref-stat .coc-ref-num span{font-size:30px}
+.coc-ref-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px 9px;padding:9px 11px 0;align-content:start}
+.coc-ref-card{min-width:0;height:84px;padding:3px 1px 2px;border:2px solid #aaa29e;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;background:linear-gradient(#bcb7b6,#b1a9a7 65%,#aaa29f);box-shadow:inset 0 2px 1px #e4dfdc,0 3px 2px #77716d;color:#fff;transition:filter .15s,transform .15s}
+.coc-ref-card:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.coc-ref-card.gold{border-color:#cf9a30;background:linear-gradient(#f7e7b3,#ecd29a 40%,#d2af65);box-shadow:inset 0 2px #fff6dd,0 3px 1px #aa762e,0 0 0 1px #e5b342}
+.coc-ref-card.red{border-color:#d68f83;background:linear-gradient(#deb3ae,#cfa59f);box-shadow:inset 0 2px #ffe0d9,0 3px 1px #a57771}
+.coc-ref-card.blue{border-color:#a8b2c0;background:linear-gradient(#b9c2d0,#acb4c1);box-shadow:inset 0 2px #d9e0e9,0 3px 1px #8993a5}
+.coc-ref-score{white-space:nowrap;font-size:24px;line-height:29px;font-weight:1000;letter-spacing:-1px;-webkit-text-stroke:1px #2c2221;text-shadow:2px 3px #292322,-1px -1px #292322}
+.coc-ref-score .tiny-trophy{font-size:24px;vertical-align:1px;margin-left:3px;filter:drop-shadow(1px 1px #2a2316)}
+.coc-ref-stars{display:flex;justify-content:center;gap:0;width:100%;height:33px}
+.coc-ref-star{width:32px;height:32px;flex:0 1 32px;filter:drop-shadow(1px 2px #403b38)}.coc-ref-star svg{display:block;width:100%;height:100%}
+.coc-ref-card.no-stars .coc-ref-score{margin-top:0}
+.coc-ref-list .coc-ref-grid{grid-template-columns:repeat(4,1fr)}
+.coc-ref-closed{display:none;position:absolute;inset:0;background:#584944;align-items:center;justify-content:center;font-size:25px;font-weight:bold}
+@media(max-width:1050px){.coc-reference{overflow-x:auto}.coc-ref-tabs,.coc-ref-window{min-width:1100px}.coc-ref-total{left:37%}}
+@media(prefers-reduced-motion:reduce){.coc-ref-card{transition:none}}
+
+/* V2 — typography strengthened to match the thick CoC game lettering. */
+.coc-reference {
+  font-family: "Inter Display Black", "Inter Display", "DejaVu Sans", sans-serif;
+  font-weight: 900;
+  font-synthesis: weight;
+}
+.coc-ref-tab,
+.coc-ref-player,
+.coc-ref-total,
+.coc-ref-stat,
+.coc-ref-score {
+  font-family: "Inter Display Black", "Inter Display", "DejaVu Sans", sans-serif;
+  font-weight: 1000 !important;
+  font-synthesis: weight;
+  paint-order: stroke fill;
+}
+.coc-ref-tab {
+  -webkit-text-stroke: 2.6px #211816;
+  text-shadow: 1px 2px 0 #140e0c, 2px 4px 0 #140e0c;
+}
+.coc-ref-player {
+  -webkit-text-stroke: 2.5px #21110f;
+  text-shadow: 2px 3px 0 #160c0b, 3px 4px 0 #160c0b;
+}
+.coc-ref-total {
+  -webkit-text-stroke: 2.8px #20110e;
+  text-shadow: 2px 3px 0 #180e0d, 3px 5px 0 #180e0d;
+}
+.coc-ref-stat {
+  -webkit-text-stroke: 2px #281413;
+  text-shadow: 2px 3px 0 #170c0c;
+}
+.coc-ref-score {
+  -webkit-text-stroke: 1.9px #28201d;
+  text-shadow: 1px 2px 0 #241b19, 2px 3px 0 #241b19;
+}

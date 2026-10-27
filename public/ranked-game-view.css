@@ -1,0 +1,17 @@
+/* This sheet lives inside an isolated frame, never on the dashboard document. */
+body{background:#171c27}
+.demo-viewport{padding:8px 12px 12px}
+.game-message{margin:0;padding:32px 20px;text-align:center;color:#e4e9f2;font:14px/1.6 system-ui,sans-serif}
+.game-message:empty{display:none}
+.game-message.is-loading:before{content:'';display:inline-block;width:16px;height:16px;margin-right:8px;vertical-align:middle;border:2px solid #4a596e;border-top-color:#f4bd42;border-radius:50%;animation:game-loading .8s linear infinite}
+@keyframes game-loading{to{transform:rotate(360deg)}}
+.game-list-empty-note{display:none}.coc-ref-list .game-list-empty-note{display:block;color:#51463b;font:22px/1.5 system-ui,sans-serif}
+.demo-game .coc-ref-card.game-empty{background:#c6c0b8;border-color:#ddd7ce;box-shadow:inset 0 2px #e7e1d8,0 2px 1px #9a938b;cursor:default;opacity:.7}
+.demo-game .game-empty :is(.coc-ref-score,.coc-ref-stars){visibility:hidden}
+.demo-game .game-empty .demo-row-name{color:#655c54;-webkit-text-stroke:0;text-shadow:none;font-family:system-ui,sans-serif;font-size:19px}
+.demo-game .coc-ref-card:disabled:hover{filter:none;transform:none}
+.demo-game .coc-ref-score{font-size:27px}
+.demo-game .game-unknown{font-family:system-ui,sans-serif;font-size:25px}
+.demo-game.coc-ref-list .coc-ref-card.game-empty{display:none}
+.demo-game.coc-ref-list .game-missing-name{opacity:.8}
+@media(max-width:700px){.demo-viewport{padding-inline:8px}}

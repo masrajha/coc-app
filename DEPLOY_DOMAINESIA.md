@@ -193,3 +193,15 @@ Pencarian negara memakai indeks cache bersama per negara selama 5 menit di `data
 ### Lokasi leaderboard dan lokasi klan
 
 Unggah perubahan `public/rankings.js`, `public/index.html`, dan `public/i18n.js`. Pilihan negara memakai endpoint leaderboard negara pemain. Kolom lokasi pemain yang diambil melalui clan summary kini diberi label Lokasi klan, dengan penjelasan bahwa lokasi klan bisa berbeda dari lokasi leaderboard pemain. Judul dan caption menampilkan negara leaderboard yang dipilih. Pemain tidak disaring ulang berdasarkan lokasi klannya karena itu akan mengubah daftar peringkat resmi yang diterima dari API.
+
+### Mode Game pada Battle Log player
+
+Unggah perubahan `public/player.html`, `public/player-league.js`, `public/player-league.css`, dan `public/i18n.js`, serta file baru `public/ranked-game.js`, `public/ranked-game-model.js`, `public/ranked-game-view.js`, `public/ranked-game-view.css`, dan seluruh `public/battle-log-style/` (termasuk `player-view.html`, CSS sumber/demo, font lokal Lilita One, dan lisensinya).
+
+Toolbar Ranked League menyediakan Tampilan Standar/Game. Game membuka dialog layar penuh dengan frame terisolasi agar CSS game tidak mengubah dashboard. Frame dan font baru dimuat ketika Game pertama kali dibuka. Data berasal dari respons battle sesi yang sudah dimuat, bukan data contoh atau fetch API tambahan. Seluruh log sesi ditampilkan; filter mode Standar tidak diterapkan ke Game. Pengguna dapat mengganti sesi, urutan Terlama/Terbaru, ukuran Pas layar/100%/125%, dan kotak/daftar. Daftar menampilkan nama lawan, persen destruksi, bintang, serta trofi. Empat tab game dipertahankan sebagai tampilan visual; kontennya tetap Battle Log.
+
+Total memakai nilai resmi API bila tersedia. Poin tidak tersedia tetap berupa tanda kosong, data parsial diberi keterangan, dan bonus defense hanya ditampilkan dari data sesi previous. Kotak kosong mengikuti kuota rule bila diketahui dan tidak dianggap battle nol. Mode Game dinonaktifkan ketika log belum tersedia, termasuk tampilan global Legend I; grup previous Legend I yang valid tetap didukung. Pergantian pemain/sesi membersihkan data lama. Tombol Gambar / Bagikan membuka pratinjau PNG dari tampilan kotak/daftar aktif dengan lebar 1440 px, terlepas dari zoom layar. Unduh PNG tersedia dari pratinjau; Bagikan gambar memakai native file sharing jika browser mendukungnya (HTTPS/localhost), dengan petunjuk unduh sebagai alternatif. Pembatalan share tidak dianggap error. Blob pratinjau dibersihkan saat ditutup. Rendering berjalan lokal tanpa mengirim data atau gambar ke layanan lain.
+
+Unggah juga `public/vendor/html-to-image/` (library html-to-image 1.11.13 beserta lisensi MIT). Library hanya dimuat di frame mode Game dan tidak bergantung CDN saat aplikasi dipakai.
+
+Pengujian: `node tests/ranked-game.test.js`, `node tests/i18n.test.js`, dan `composer test`.

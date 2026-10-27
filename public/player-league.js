@@ -210,6 +210,7 @@
   }
 
   function unavailableBattleLog(message) {
+    window.RankedGame.unavailable(message);
     setText('rankedBattleStatus', message); element('rankedBattleStatus').hidden = false;
     element('rankedBattleSummary').replaceChildren();
     for (const id of ['rankedAttackTotal','rankedDefenseTotal','rankedAttackTrophies','rankedDefenseTrophies']) setText(id, '');
@@ -999,6 +1000,7 @@
 
   async function loadPlayerBattleLog(sessionId) {
     const request = ++state.logRequest;
+    window.RankedGame.loading();
     if (sessionId === 'global') { unavailableBattleLog(tr('player.legendBattleUnavailable')); return; }
     document.querySelector('.ranked-log-toolbar').hidden = false;
     document.querySelector('.ranked-battle-columns').hidden = false;
@@ -1007,9 +1009,11 @@
       const data = await fetchPlayerBattleSession(sessionId);
       if (request !== state.logRequest) return;
       renderPlayerBattleLog(data);
+      window.RankedGame.render(data);
       status.textContent = data.stale ? tr('player.battleLogStale', { date: window.CocI18n.dateTime(new Date(data.lastUpdated)) }) : tr('player.battleLogSummary', { session: sessionLabel(data.session), attacks: localizedNumber(data.attack?.sampleSize || 0), defenses: localizedNumber(data.defense?.sampleSize || 0) });
     } catch (error) {
       if (request !== state.logRequest) return;
+      window.RankedGame.unavailable(error.message);
       element('rankedBattleSummary').replaceChildren();
       renderBattleLogList('rankedAttackLogs', [], tr('player.battleLogUnavailable')); renderBattleLogList('rankedDefenseLogs', [], tr('player.battleLogUnavailable'));
       status.textContent = error.message;
@@ -1094,6 +1098,7 @@
 
   function initialize(player) {
     hideBattle(true);
+    window.RankedGame.reset(player);
     state.globalRequest = (state.globalRequest || 0) + 1;
     state.logRequest++;
     state.battleCache.clear();

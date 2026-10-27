@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="/site.css">
   <script src="/i18n.js"></script>
   <script src="/share.js"></script>
+  <script src="/ranked-game-model.js" defer></script>
+  <script src="/ranked-game.js" defer></script>
   <script src="/player-league.js" defer></script>
   <script src="/recent.js" defer></script>
   <script src="/raids.js" defer></script>
@@ -125,6 +127,7 @@
             <aside id="rankedComparisonInsights" class="ranked-comparison-insights" aria-label="Ringkasan performa dua sesi" data-i18n-aria-label="player.twoSessionSummary"></aside>
           </div>
         </section>
+        <div class="ranked-mode-toolbar"><label class="ranked-mode-control"><span data-i18n="game.display">Tampilan</span><select id="rankedLogMode" disabled aria-label="Tampilan battle log" data-i18n-aria-label="game.display"><option value="standard" data-i18n="game.standard">Standar</option><option value="game" data-i18n="game.mode">Game</option></select></label></div>
         <div class="ranked-battle-columns">
           <section><div class="ranked-battle-heading"><h3 data-i18n="player.attacks">Attacks</h3><span><b id="rankedAttackTotal"></b><b id="rankedAttackTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedAttackLogs" class="ranked-battle-list"></div></section>
           <section><div class="ranked-battle-heading"><h3 data-i18n="player.defenses">Defenses</h3><span><b id="rankedDefenseTotal"></b><b id="rankedDefenseTrophies" class="ranked-trophy-total"></b></span></div><div id="rankedDefenseLogs" class="ranked-battle-list"></div></section>
@@ -213,6 +216,26 @@
       </aside>
     </div>
   </main>
+
+  <dialog id="rankedImageDialog" class="ranked-image-dialog" aria-labelledby="rankedImageTitle">
+    <h2 id="rankedImageTitle" data-i18n="game.preview">Pratinjau gambar Battle Log</h2>
+    <div class="ranked-image-actions"><button id="rankedImageDownload" type="button" data-i18n="game.download">Unduh PNG</button><button id="rankedImageShare" type="button" data-i18n="game.share">Bagikan gambar</button><button id="rankedImageClose" type="button" data-i18n="player.close">Tutup</button></div>
+    <p id="rankedImageStatus" role="status"></p><img id="rankedImagePreview" alt="" data-i18n-alt="game.preview">
+  </dialog>
+  <dialog id="rankedGameDialog" class="ranked-game-dialog" aria-labelledby="rankedGameTitle" aria-describedby="rankedGameStatus">
+    <header class="ranked-game-toolbar">
+      <div class="ranked-game-heading"><h2 id="rankedGameTitle" data-i18n="game.title">Battle Log - Mode Game</h2><p id="rankedGameContext"></p></div>
+      <div class="ranked-game-controls">
+        <label><span data-i18n="player.leagueSession">Sesi liga</span><select id="rankedGameSession"></select></label>
+        <label><span data-i18n="compare.battleOrder">Urutan</span><select id="rankedGameOrder"><option value="oldest" data-i18n="player.oldest">Terlama</option><option value="latest" data-i18n="player.latest">Terbaru</option></select></label>
+        <label><span data-i18n="game.zoom">Ukuran</span><select id="rankedGameZoom"><option value="fit" data-i18n="game.fit">Pas layar</option><option value="1">100%</option><option value="1.25">125%</option></select></label>
+      </div>
+      <button id="rankedGameExport" type="button" disabled data-i18n="game.export">Gambar / Bagikan</button>
+      <button id="closeRankedGame" type="button" data-i18n="game.back">Kembali ke Standar</button>
+    </header>
+    <p id="rankedGameStatus" class="ranked-game-status" role="status" aria-live="polite"></p>
+    <iframe id="rankedGameFrame" class="ranked-game-frame" title="Battle log bergaya game" data-i18n-title="game.frameTitle"></iframe>
+  </dialog>
 
   <dialog id="itemDialog" aria-labelledby="itemTitle">
     <div class="dialog-head"><h2 id="itemTitle"></h2><button id="closeDialog" type="button" aria-label="Tutup" data-i18n-aria-label="player.close">×</button></div>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Battle Log - Game</title>
+<link rel="stylesheet" href="/battle-log-style/coc_pixel_match.css"><link rel="stylesheet" href="/battle-log-style/demo.css"><link rel="stylesheet" href="/ranked-game-view.css">
+<script src="/vendor/html-to-image/html-to-image.js" defer></script><script src="/ranked-game-model.js" defer></script><script src="/ranked-game-view.js" defer></script></head><body>
+<p id="gameMessage" class="game-message" role="status"></p>
+  <div id="demoViewport" class="demo-viewport" hidden>
+    <div id="demoStage" class="demo-stage">
+      <main id="reference" class="coc-reference demo-game demo-refined" aria-label="Pratinjau bergaya game">
+        <nav class="coc-ref-tabs" aria-label="Tab demo game">
+          <button class="coc-ref-tab" type="button" aria-pressed="false">Leaderboard</button>
+          <button class="coc-ref-tab" type="button" aria-pressed="true">Battle Log</button>
+          <button class="coc-ref-tab" type="button" aria-pressed="false">League History</button>
+          <button class="coc-ref-tab" type="button" aria-pressed="false">Town Halls</button>
+          <button id="demoClose" class="coc-ref-close" type="button" aria-label="Tutup pratinjau">X</button>
+        </nav>
+        <section class="coc-ref-window" aria-label="Battle log contoh">
+          <header class="coc-ref-head">
+            <div class="coc-ref-topline">
+              <div class="coc-ref-banner" aria-hidden="true"></div>
+              <div id="demoPlayer" class="coc-ref-player">?</div>
+              <div class="coc-ref-total">Total: <strong id="demoTotal">?</strong><img class="demo-trophy demo-total-trophy" src="/assets/trophy.png" alt="trofi" width="44" height="52"></div>
+              <div class="coc-ref-views" role="group" aria-label="Tampilan battle log">
+                <button id="demoList" class="coc-ref-view" type="button" aria-pressed="false" aria-label="Tampilan daftar"><svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M3 12h18M3 19h18" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></button>
+                <button id="demoGrid" class="coc-ref-view" type="button" aria-pressed="true" aria-label="Tampilan kotak"><span class="coc-ref-tiles-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+              </div>
+            </div>
+            <div class="coc-ref-stats">
+              <div class="coc-ref-stat"><span>Attacks</span><span class="coc-ref-num"><span id="demoAttackTotal">?</span> <img class="demo-trophy" src="/assets/trophy.png" alt="trofi" width="32" height="38"></span></div>
+              <div class="coc-ref-stat"><span>Defenses</span><span class="coc-ref-num"><span id="demoDefenseTotal">?</span> <img class="demo-trophy" src="/assets/trophy.png" alt="trofi" width="32" height="38"></span></div>
+            </div>
+          </header>
+          <div class="demo-battle-columns">
+            <section aria-label="Attacks"><div id="demoAttackGrid" class="coc-ref-grid"></div></section>
+            <section aria-label="Defenses"><div id="demoDefenseGrid" class="coc-ref-grid"></div></section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <dialog id="demoDetails" class="demo-details" aria-labelledby="demoDetailsTitle">
+    <form method="dialog"><header><h2 id="demoDetailsTitle">Detail contoh</h2><button aria-label="Tutup detail">×</button></header><dl id="demoDetailsValues"></dl></form>
+  </dialog>
+</body></html>
