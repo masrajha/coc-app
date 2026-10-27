@@ -61,6 +61,7 @@
   }
   window.RankedGameExport=async()=>{
     if(!payload?.data||payload.loading||el('demoViewport').hidden)throw new Error('No battle data');
+    if(!window.htmlToImage?.toBlob){const error=new Error('Image export library unavailable');error.code='IMAGE_LIBRARY_MISSING';throw error;}
     await document.fonts.ready;
     await Promise.all([...root.querySelectorAll('img')].map(image=>image.decode()));
     const blob=await window.htmlToImage.toBlob(root,{

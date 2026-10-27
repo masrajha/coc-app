@@ -202,6 +202,8 @@ Toolbar Ranked League menyediakan Tampilan Standar/Game. Game membuka dialog lay
 
 Total memakai nilai resmi API bila tersedia. Poin tidak tersedia tetap berupa tanda kosong, data parsial diberi keterangan, dan bonus defense hanya ditampilkan dari data sesi previous. Kotak kosong mengikuti kuota rule bila diketahui dan tidak dianggap battle nol. Mode Game dinonaktifkan ketika log belum tersedia, termasuk tampilan global Legend I; grup previous Legend I yang valid tetap didukung. Pergantian pemain/sesi membersihkan data lama. Tombol Gambar / Bagikan membuka pratinjau PNG dari tampilan kotak/daftar aktif dengan lebar 1440 px, terlepas dari zoom layar. Unduh PNG tersedia dari pratinjau; Bagikan gambar memakai native file sharing jika browser mendukungnya (HTTPS/localhost), dengan petunjuk unduh sebagai alternatif. Pembatalan share tidak dianggap error. Blob pratinjau dibersihkan saat ditutup. Rendering berjalan lokal tanpa mengirim data atau gambar ke layanan lain.
 
-Unggah juga `public/vendor/html-to-image/` (library html-to-image 1.11.13 beserta lisensi MIT). Library hanya dimuat di frame mode Game dan tidak bergantung CDN saat aplikasi dipakai.
+Unggah juga `public/assets/libs/html-to-image/` (library html-to-image 1.11.13 beserta lisensi MIT). Library hanya dimuat di frame mode Game dan tidak bergantung CDN saat aplikasi dipakai.
 
 Pengujian: `node tests/ranked-game.test.js`, `node tests/i18n.test.js`, dan `composer test`.
+
+Jika ekspor Game menghasilkan 404 untuk library: gunakan lokasi `public/assets/libs/html-to-image/`, bukan `public/vendor/`. Pola Git `vendor/` mengabaikan semua direktori vendor dan aturan Apache memblokir URL `/vendor/`. Unggah library beserta LICENSE dan `public/battle-log-style/player-view.html` yang terbaru. Pastikan URL `/assets/libs/html-to-image/html-to-image.js` merespons 200, lalu muat ulang halaman player. Jangan membuka akses folder vendor PHP.

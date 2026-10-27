@@ -42,7 +42,7 @@
       imageUrl=URL.createObjectURL(imageFile);el('rankedImagePreview').src=imageUrl;
       el('rankedImageStatus').textContent=navigator.canShare?.({files:[imageFile]})?'':tr('game.shareFallback');
       imageDialog.showModal();
-    }catch(error){el('rankedGameStatus').textContent=tr('game.exportError');}
+    }catch(error){el('rankedGameStatus').textContent=tr(error.code==='IMAGE_LIBRARY_MISSING'?'game.libraryMissing':'game.exportError');}
     finally{exporting=false;frame.style.pointerEvents='';dialog.removeAttribute('aria-busy');sessions();
       for(const id of ['rankedGameOrder','rankedGameZoom'])el(id).disabled=false;
       el('rankedGameExport').disabled=!data||loading;

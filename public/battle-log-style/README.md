@@ -32,4 +32,4 @@ It receives real session data from its same-origin parent using postMessage;
 `/ranked-game-view.js` renders it without demo fixtures or API requests.
 The standalone `demo.html` remains available for visual reference.
 
-Mode Game terintegrasi menyediakan Gambar / Bagikan, pratinjau PNG 1440 px, unduh, dan native file sharing bila didukung. Ekspor mengikuti mode kotak/daftar serta urutan aktif. Library html-to-image 1.11.13 disimpan lokal di `public/vendor/html-to-image/` dengan lisensi MIT.
+Mode Game terintegrasi menyediakan Gambar / Bagikan, pratinjau PNG 1440 px, unduh, dan native file sharing bila didukung. Ekspor mengikuti mode kotak/daftar serta urutan aktif. Library html-to-image 1.11.13 disimpan lokal di `public/assets/libs/html-to-image/` dengan lisensi MIT.
