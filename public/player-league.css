@@ -136,3 +136,5 @@ html[data-theme] .command-ui .league-player-rank[data-rank-zone]{background:var(
 html[data-theme] .command-ui .league-player-rank[data-rank-zone=promotion]{background:var(--theme-green-soft,#183d34);border-color:var(--theme-green-border,#36866d);color:var(--theme-text,#e8edf5)}
 html[data-theme] .command-ui .league-player-rank[data-rank-zone=demotion]{background:var(--theme-red-soft,#482d36);border-color:var(--theme-red-border,#945765);color:var(--theme-text,#e8edf5)}
 html[data-theme] .command-ui .league-player-rank[data-rank-zone] strong{color:var(--theme-text,#e8edf5)}
+
+#legendCountryRanking[hidden]{display:none}#legendCountryStatus .loading-spinner{margin-right:6px}

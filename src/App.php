@@ -166,6 +166,7 @@ final class App
         $app->get('/api/player/{tag}/raids', fn($req, $res, $args) => $self->playerRaids($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/league-group', fn($req, $res, $args) => $self->playerLeagueGroup($req, $res, $args['tag']));
         $app->get('/api/player/{tag}/global-ranking', fn($req, $res, $args) => $self->playerGlobalRanking($res, $args['tag']));
+        $app->get('/api/player/{tag}/country-ranking', fn($req, $res, $args) => $self->playerCountryRanking($res, $args['tag']));
         $app->get('/api/player/{tag}/performance', fn($req, $res, $args) => $self->playerPerformance($req, $res, $args['tag']));
         $app->get('/share/image/{hash}.png', fn($req, $res, $args) => $self->shareImage($req, $res, $args['hash']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
@@ -889,6 +890,39 @@ final class App
             $index = GlobalRankings::advance($index, '#' . $tag, fn(string $endpoint): array => $this->upstream($endpoint, 6000, 0, 300));
             $this->writeJson($path, $index, true);
             return $this->respond($res, GlobalRankings::result($index, '#' . $tag));
+        } catch (\Throwable $e) { return $this->failure($res, $e); }
+        finally { if (is_resource($lock)) { flock($lock, LOCK_UN); fclose($lock); } }
+    }
+
+    private function playerCountryRanking(ResponseInterface $res, string $raw): ResponseInterface
+    {
+        $tag = $this->normalizeTag($raw);
+        if (!$tag) return $this->tagError($res, 'Tag pemain tidak valid.');
+        $lock = null;
+        try {
+            $profile = $this->upstream('/players/' . rawurlencode('#' . $tag), 6000, 0);
+            $clanTag = $this->normalizeTag($profile['data']['clan']['tag'] ?? '');
+            $base = ['playerTag' => '#' . $tag, 'rank' => null, 'canContinue' => false, 'scanned' => 0, 'country' => null, 'source' => 'clanLocation'];
+            if (!$clanTag) return $this->respond($res, $base + ['reason' => 'noClan']);
+            $clan = $this->upstream('/clans/' . rawurlencode('#' . $clanTag), 6000, 0);
+            $location = $clan['data']['location'] ?? [];
+            $locationId = filter_var($location['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            if (($location['isCountry'] ?? false) !== true || $locationId === false) return $this->respond($res, $base + ['reason' => 'noCountry']);
+            $country = ['id' => $locationId, 'name' => $location['name'] ?? '', 'countryCode' => $location['countryCode'] ?? null];
+            $base['country'] = $country; $base['clanTag'] = '#' . $clanTag;
+            $path = 'cache/country-rankings-' . $locationId . '.json';
+            $directory = dirname($this->file($path));
+            if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) throw new LocalDataFailure('Unable to create ranking cache');
+            $lock = fopen($this->file('cache/country-rankings-' . $locationId . '.lock'), 'c');
+            if ($lock === false) throw new LocalDataFailure('Unable to open ranking lock');
+            if (!flock($lock, LOCK_EX | LOCK_NB)) return $this->respond($res, array_replace($base, ['canContinue' => true]));
+            $index = $this->readJson($path, []);
+            if (($index['expires'] ?? 0) <= time()) $index = ['expires' => time() + 300];
+            $index = GlobalRankings::advance($index, '#' . $tag, fn(string $endpoint): array => $this->upstream($endpoint, 6000, 0, 300), (string)$locationId);
+            $this->writeJson($path, $index, true);
+            $match = $index['players']['#' . $tag] ?? null;
+            return $this->respond($res, array_replace($base, ['rank' => $match['rank'] ?? null, 'scanned' => $index['scanned'],
+                'canContinue' => $match === null && !$index['done'], 'lastUpdated' => $match['lastUpdated'] ?? $index['lastUpdated'] ?? null]));
         } catch (\Throwable $e) { return $this->failure($res, $e); }
         finally { if (is_resource($lock)) { flock($lock, LOCK_UN); fclose($lock); } }
     }

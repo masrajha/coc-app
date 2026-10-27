@@ -44,6 +44,22 @@ try {
     $global = $get('/api/player/28P08PG0G/global-ranking');
     $assert($global['rank'] === null && $global['standing'] === 'unknown' && !$global['canContinue'], 'Missing tag must remain unknown even when the API has no more pages.');
     $get('/api/player/INVALID/global-ranking', 400);
+    $seed('/clans/%239RU089PG', ['tag' => '#9RU089PG', 'location' => ['id' => 32000114, 'name' => 'Indonesia', 'isCountry' => true, 'countryCode' => 'ID']]);
+    foreach (['Y8CPQU8QC', 'QCGLCYVYU'] as $countryTag) $seed('/players/%23' . $countryTag,
+        ['tag' => '#' . $countryTag, 'leagueTier' => ['name' => 'Legend I'], 'clan' => ['tag' => '#9RU089PG']]);
+    $seed('/locations/32000114/rankings/players?limit=1000', ['items' => [['tag' => '#Y8CPQU8QC', 'rank' => 81]], 'paging' => ['cursors' => []]]);
+    $country = $get('/api/player/Y8CPQU8QC/country-ranking');
+    $assert($country['rank'] === 81 && $country['country']['id'] === 32000114 && $country['country']['name'] === 'Indonesia'
+        && $country['source'] === 'clanLocation' && !array_key_exists('standing', $country), 'Country rank must use the clan country and must not classify global demotion.');
+    $country = $get('/api/player/QCGLCYVYU/country-ranking');
+    $assert($country['rank'] === null && $country['scanned'] === 1 && !$country['canContinue'], 'A tag absent from country results must remain unknown.');
+    $assert($get('/api/player/Y8CPQU8QC/global-ranking')['rank'] === 10001, 'Country lookup must not replace or contaminate the global ranking cache.');
+    $seed('/players/%23QRCUY0YY2', ['tag' => '#QRCUY0YY2']);
+    $assert($get('/api/player/QRCUY0YY2/country-ranking')['reason'] === 'noClan', 'Players without clans must not trigger a country leaderboard request.');
+    $seed('/players/%232R92VJG0U', ['tag' => '#2R92VJG0U', 'clan' => ['tag' => '#PJ20G29L']]);
+    $seed('/clans/%23PJ20G29L', ['tag' => '#PJ20G29L', 'location' => ['id' => 32000006, 'name' => 'International', 'isCountry' => false]]);
+    $assert($get('/api/player/2R92VJG0U/country-ranking')['reason'] === 'noCountry', 'International regions must not be treated as a country.');
+    $get('/api/player/INVALID/country-ranking', 400);
     $get('/api/rankings/capitals?location=bad%2Fpath', 400);
     $yesterday = gmdate('Y-m-d', strtotime('-1 day'));
     $capital = ['capitalHallLevel' => 10, 'districts' => [['id' => 1, 'name' => 'Capital Peak', 'districtHallLevel' => 10], ['id' => 2, 'name' => 'Barbarian Camp', 'districtHallLevel' => 5]]];

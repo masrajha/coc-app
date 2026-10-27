@@ -116,6 +116,12 @@
       if (key === 'player.legendGlobalRank') number.id = 'legendCurrentGlobalRank';
       item.append(label, number); root.append(item);
     }
+    const countryCard = document.createElement('div'); countryCard.id='legendCountryRanking'; countryCard.hidden=true;
+    const countryLabel=document.createElement('span');countryLabel.id='legendCountryLabel';
+    const countryRank=document.createElement('strong');countryRank.id='legendCountryRank';countryCard.append(countryLabel,countryRank);
+    root.insertBefore(countryCard,root.children[2]);
+    const countryStatus=document.createElement('p');countryStatus.id='legendCountryStatus';countryStatus.className='section-note';countryStatus.setAttribute('role','status');
+    root.insertBefore(countryStatus,countryCard.nextSibling);
     const standing = document.createElement('p'); standing.id = 'legendGlobalStanding'; standing.className = 'legend-global-standing'; standing.setAttribute('role', 'status'); root.append(standing);
     const rule = document.createElement('p'); rule.className = 'section-note'; rule.textContent = tr('player.legendCutoffRule'); root.append(rule);
     if (stats.bestSeason?.id) {
@@ -127,6 +133,42 @@
       if (Number.isInteger(stats.currentSeason?.rank) && stats.currentSeason.rank > 0) {
         paintGlobalRanking({rank:stats.currentSeason.rank});
       } else loadGlobalRanking();
+      loadCountryRanking(player);
+    }
+  }
+
+  async function loadCountryRanking(player) {
+    const request=state.globalRequest, tag=state.playerTag;
+    const card=element('legendCountryRanking'), status=element('legendCountryStatus');
+    if(!player.clan?.tag){status.textContent=tr('player.countryRankNoClan');return;}
+    const spinner=document.createElement('span');spinner.className='loading-spinner';spinner.setAttribute('aria-hidden','true');
+    status.append(spinner,document.createTextNode(tr('player.countryRankLoading')));
+    try {
+      for(let page=0;page<20;page++){
+        if(request!==state.globalRequest || tag!==state.playerTag)return;
+        const response=await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(tag)}/country-ranking`);
+        const data=await response.json();
+        if(request!==state.globalRequest || tag!==state.playerTag)return;
+        if(!response.ok)throw new Error(data.error || tr('player.countryRankFailed'));
+        const country=data.country?.name || '';
+        if(Number.isInteger(data.rank) && data.rank>0){
+          card.hidden=false;
+          element('legendCountryLabel').textContent=tr('player.countryRankLabel',{country});
+          element('legendCountryRank').textContent=`#${localizedNumber(data.rank)}`;
+          status.textContent=tr('player.countryRankContext',{country});
+          if(data.lastUpdated)status.textContent+=' '+tr('player.globalRankUpdated',{date:window.CocI18n.dateTime(new Date(data.lastUpdated))});
+          return;
+        }
+        if(data.reason==='noClan'){status.textContent=tr('player.countryRankNoClan');return;}
+        if(data.reason==='noCountry'){status.textContent=tr('player.countryRankNoCountry');return;}
+        status.textContent=tr(data.canContinue?'player.countryRankSearching':'player.countryRankNotFound',{country,count:localizedNumber(data.scanned || 0)});
+        if(!data.canContinue)return;
+        await new Promise(resolve=>setTimeout(resolve,750));
+      }
+      status.textContent=tr('player.countryRankIncomplete');
+    } catch(error){
+      if(request!==state.globalRequest || tag!==state.playerTag)return;
+      card.hidden=true;status.textContent=tr('player.countryRankFailed')+' '+error.message;
     }
   }
 

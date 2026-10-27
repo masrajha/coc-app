@@ -183,3 +183,13 @@ Panel memakai dialog native dengan lebar maksimal 580 px di desktop dan memenuhi
 ### Tombol salin tautan berlabel
 
 Unggah `public/share.js`, `public/player.js`, `public/player.html`, `public/player.css`, `public/compare.js`, `public/compare.html`, `public/compare.css`, dan `public/i18n.js`. Tombol pada toolbar tab compare kini memakai ikon tautan dan label Salin tautan; pada mobile berada di baris bawah tab, rata kanan. Tombol player berada pada toolbar tab bagian atas, terpisah dari area tab yang dapat digeser. Pada mobile tombol berada di baris bawah tab, rata kanan. Toolbar tetap terlihat saat menggulir; tindakan salin ringkasan dan ekspor tetap berada di Player summary. Tooltip dan URL mengikuti tab aktif. Konfirmasi berhasil/gagal tampil pada tombol dan diumumkan lewat status aksesibel; Clipboard API memiliki fallback untuk browser yang menolak akses clipboard.
+
+### Peringkat negara untuk profil Legend I
+
+Unggah perubahan `src/App.php`, `src/GlobalRankings.php`, `public/player-league.js`, `public/player-league.css`, dan `public/i18n.js`. Endpoint `/api/player/{tag}/country-ranking` membaca klan dari profil pemain, lalu memakai lokasi klan hanya jika `isCountry=true`. Tag pemain dicari pada `/locations/{countryId}/rankings/players`. Hasil ditemukan ditampilkan sebagai Peringkat {negara}; jika tidak ditemukan, UI menjelaskan cakupan hasil tanpa menganggapnya sebagai peringkat global atau bukti negara akun.
+
+Pencarian negara memakai indeks cache bersama per negara selama 5 menit di `data/cache/country-rankings-{id}.json` dan lock per negara, terpisah dari indeks global. Pagination diikuti bila disediakan. Pemain tanpa klan atau klan berlokasi International/tanpa lokasi negara mendapat keterangan dan tidak memicu pencarian leaderboard negara. Peringkat negara tidak digunakan untuk menilai demosi Legend I dan tidak menggantikan peringkat global.
+
+### Lokasi leaderboard dan lokasi klan
+
+Unggah perubahan `public/rankings.js`, `public/index.html`, dan `public/i18n.js`. Pilihan negara memakai endpoint leaderboard negara pemain. Kolom lokasi pemain yang diambil melalui clan summary kini diberi label Lokasi klan, dengan penjelasan bahwa lokasi klan bisa berbeda dari lokasi leaderboard pemain. Judul dan caption menampilkan negara leaderboard yang dipilih. Pemain tidak disaring ulang berdasarkan lokasi klannya karena itu akan mengubah daftar peringkat resmi yang diterima dari API.

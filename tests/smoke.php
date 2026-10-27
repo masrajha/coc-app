@@ -412,7 +412,7 @@ try {
         throw new RuntimeException('Navigasi kembali ke home tidak tersedia di header.');
     }
     $rankingScript = (string)$app->handle($factory->createServerRequest('GET', '/rankings.js'))->getBody();
-    foreach (['home.location', 'home.attacks', 'home.defenses', 'home.notAvailable', '/summary', 'data.location?.name', 'item.attackWins', 'item.defenseWins', 'item.leagueTier?.name'] as $marker) {
+    foreach (['home.clanLocationColumn', 'home.attacks', 'home.defenses', 'home.notAvailable', '/summary', 'data.location?.name', 'item.attackWins', 'item.defenseWins', 'item.leagueTier?.name'] as $marker) {
         if (!str_contains($rankingScript, $marker)) throw new RuntimeException('Leaderboard pemain tidak menampilkan kolom ranking yang diharapkan.');
     }
     $i18nScript = (string)$app->handle($factory->createServerRequest('GET', '/i18n.js'))->getBody();

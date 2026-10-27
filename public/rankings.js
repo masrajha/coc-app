@@ -46,6 +46,15 @@
     locationSelect.value = [...locationSelect.options].some(option => option.value === selected) ? selected : 'global';
   }
 
+  function updateLocationContext() {
+    const selected = locationSelect.selectedOptions[0]?.textContent || 'Global';
+    const title = document.getElementById('rankingsTitle');
+    title.removeAttribute('data-i18n');
+    title.textContent = locationSelect.value === 'global' ? tr('home.rankingsTitle') : tr('home.countryRankingsTitle', {country:selected});
+    caption.textContent = `${tr(categoryCaption())} · ${selected}`;
+    document.getElementById('rankingLocationNote').hidden = !isPlayer();
+  }
+
   async function loadLocations() {
     try {
       const response = await window.CocI18n.apiFetch('/api/rankings/locations');
@@ -65,7 +74,7 @@
     status.textContent = tr('home.loadingLeaderboard');
     tableWrap.hidden = true;
     updated.textContent = '';
-    caption.textContent = tr(categoryCaption());
+    updateLocationContext();
   }
 
   function appendCell(row, content, className = '') {
@@ -101,6 +110,7 @@
     const clan = item.clan;
     appendCell(row, clan?.name || '—', 'secondary-cell');
     const countryCell = appendCell(row, tr(clan?.tag ? 'home.loadingShort' : 'home.notAvailable'), 'secondary-cell player-location-cell');
+    countryCell.title = tr('home.clanLocationTooltip');
     if (clan?.tag) countryCell.dataset.clanTag = cleanTag(clan.tag);
     appendCell(row, (rankingType === 'players-builder-base' ? item.builderBaseLeague?.name : item.leagueTier?.name || item.league?.name) || '—', 'secondary-cell league-cell');
     appendCell(row, displayNumber(rankingType === 'players-builder-base' ? item.builderBaseTrophies : item.trophies), 'score-cell');
@@ -148,8 +158,8 @@
     tableHead.replaceChildren();
     tableRows.replaceChildren();
     const headings = isPlayer()
-      ? ['home.rank', 'home.player', 'home.clan', 'home.location', 'home.league', 'home.trophies', ...(rankingType === 'players' ? ['home.attacks', 'home.defenses'] : [])]
-      : ['home.rank', 'home.clan', 'clan.levelWord', 'home.membersHeading', 'home.location', rankingType === 'capitals' ? 'feature.capitalPoints' : rankingType === 'clans-builder-base' ? 'feature.builderPoints' : 'home.clanPoints'];
+      ? ['home.rank', 'home.player', 'home.clan', 'home.clanLocationColumn', 'home.league', 'home.trophies', ...(rankingType === 'players' ? ['home.attacks', 'home.defenses'] : [])]
+      : ['home.rank', 'home.clan', 'clan.levelWord', 'home.membersHeading', 'home.clanLocationColumn', rankingType === 'capitals' ? 'feature.capitalPoints' : rankingType === 'clans-builder-base' ? 'feature.builderPoints' : 'home.clanPoints'];
     const headRow = document.createElement('tr');
     for (const key of headings) headRow.appendChild(text('th', tr(key)));
     tableHead.appendChild(headRow);
@@ -170,6 +180,7 @@
     updated.textContent = data.lastUpdated
       ? tr('home.rankingUpdated', { date: window.CocI18n.dateTime(new Date(data.lastUpdated)) })
       : tr('home.rankingUpdatedUnknown');
+    updateLocationContext();
     hydrateClanLocations(requestNumber);
   }
 
@@ -256,6 +267,7 @@
   }));
   locationSelect.addEventListener('change', loadRankings);
   document.getElementById('refreshRankings').addEventListener('click', loadRankings);
+  window.addEventListener('coc-language-changed',updateLocationContext);
 
   loadLocations();
   loadRankings();

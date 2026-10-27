@@ -7,13 +7,13 @@ final class GlobalRankings
 {
     public const MAX_PLAYERS = 20000;
 
-    public static function advance(array $index, string $tag, callable $fetch): array
+    public static function advance(array $index, string $tag, callable $fetch, string $location = 'global'): array
     {
         $index += ['players' => [], 'scanned' => 0, 'after' => null, 'done' => false, 'seenCursors' => []];
         // Incremental requests keep the player profile responsive. The shared
         // index is reused when another player needs a rank from the same pages.
         for ($page = 0; $page < 2 && !$index['done'] && !isset($index['players'][$tag]); $page++) {
-            $path = '/locations/global/rankings/players?limit=1000';
+            $path = '/locations/' . rawurlencode($location) . '/rankings/players?limit=1000';
             if ($index['after'] !== null) $path .= '&after=' . rawurlencode($index['after']);
             $entry = $fetch($path);
             $items = $entry['data']['items'] ?? [];
