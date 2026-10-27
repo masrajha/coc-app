@@ -38,7 +38,7 @@ try {
     $response = $get('/player.html?tag=28P08PG0G&lang=en&view=ranked-battles');
     $html = (string)$response->getBody(); $meta = $metadata($html);
     $assert($response->getStatusCode() === 200 && $response->getHeaderLine('Content-Language') === 'en', 'Shared HTML must be localized.');
-    $assert($meta['og:title'] === 'Player Profile: ' . $name . ' - CoC Clan Command Center', 'Names and dollar signs must survive metadata escaping.');
+    $assert($meta['og:title'] === 'Player Profile: ' . $name . ' - ClanIntel', 'Names and dollar signs must survive metadata escaping.');
     $assert($meta['og:title'] === $meta['title'] && $meta['og:locale'] === 'en_US', 'Initial title must match Open Graph metadata.');
     $assert(!str_contains($html, 'private-test-token') && !str_contains($html, '<Player>'), 'HTML must not expose tokens or unescaped names.');
     $assert(str_contains($meta['og:url'], 'view=ranked-battles') && str_contains($meta['og:url'], 'lang=en'), 'Canonical URL must preserve language and view.');
@@ -57,7 +57,7 @@ try {
     $comparison = $metadata((string)$get('/compare.html?player1=28P08PG0G&player2=PJ20G29L&lang=en&view=army')->getBody());
     $assert(str_contains($comparison['og:title'], $name . ' vs Other Player'), 'Player comparison must use both names.');
     $clan = $metadata((string)$get('/clan.html?tag=2GPP802UU&lang=id&view=members')->getBody());
-    $assert($clan['og:title'] === 'Profil Clan: ISTIMEWA - CoC Clan Command Center' && $clan['og:locale'] === 'id_ID', 'Clan metadata must be available before JavaScript.');
+    $assert($clan['og:title'] === 'Profil Clan: ISTIMEWA - ClanIntel' && $clan['og:locale'] === 'id_ID', 'Clan metadata must be available before JavaScript.');
     $clanComparison = $metadata((string)$get('/compare-clan.html?clan1=2GPP802UU&clan2=9RU089PG&lang=en')->getBody());
     $assert(str_contains($clanComparison['og:title'], 'ISTIMEWA vs Other Clan'), 'Clan comparison must use both names.');
     $home = $metadata((string)$get('/?lang=id')->getBody());

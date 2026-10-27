@@ -190,6 +190,9 @@ $checks = [
     '/recent.js' => [200, 'text/javascript'],
     '/compare-battles.js' => [200, 'text/javascript'],
     '/assets/libs/html-to-image/html-to-image.js' => [200, 'text/javascript'],
+    '/favicon.svg' => [200, 'image/svg+xml'],
+    '/assets/brand/clanintel-mark.svg' => [200, 'image/svg+xml'],
+    '/assets/brand/apple-touch-icon.png' => [200, 'image/png'],
     '/ranked-game.js' => [200, 'text/javascript'],
     '/ranked-game-model.js' => [200, 'text/javascript'],
     '/ranked-game-view.js' => [200, 'text/javascript'],
@@ -307,13 +310,19 @@ try {
             if (!str_contains($page, $marker)) throw new RuntimeException('Kontrol donasi belum tersedia di seluruh halaman.');
         }
     }
+    $clanComparePage = (string)$app->handle($factory->createServerRequest('GET', '/compare-clan.html'))->getBody();
+    foreach ([$home, $playerPage, $comparePage, $clanComparePage] as $page) {
+        foreach (['ClanIntel', '/favicon.svg', '/assets/brand/clanintel-mark.svg', 'data-i18n="brand.disclaimer"', 'https://www.supercell.com/fan-content-policy'] as $brandMarker) {
+            if (!str_contains($page, $brandMarker)) throw new RuntimeException('ClanIntel branding or disclaimer missing: ' . $brandMarker);
+        }
+    }
     foreach (['/i18n.js', 'data-language-switch', 'data-i18n="player.accountSummary"'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Pemilih bahasa halaman player belum lengkap: ' . $marker);
     }
     foreach (['/i18n.js', 'data-language-switch', 'data-i18n="compare.heading"'] as $marker) {
         if (!str_contains($comparePage, $marker)) throw new RuntimeException('Pemilih bahasa halaman compare belum lengkap: ' . $marker);
     }
-    foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Pantau clan, war, dan progres pemain.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
+    foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Kenali klanmu. Pantau perang.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
     }
     foreach (['clanSectionNav', 'clan-overview', 'warCommandStrip', 'warProjection', 'rosterTownHall', 'rosterSort', 'matchup-map', 'warMemberDialog', 'renderWarCommand', 'rosterTheoreticalLimit', 'ourReachableMaximum', 'openWarMemberDialog', 'window.ClanTabs.activateFromHash'] as $marker) {
@@ -414,7 +423,7 @@ try {
     foreach (["location.href = `/clan.html?tag=", "location.href = `/player.html?tag=", "location.href = `/compare.html?"] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Form pencarian home tidak mengarah ke halaman tujuan yang tersedia.');
     }
-    if (!str_contains($home, 'href="/" class="home-brand"') || !str_contains($home, 'aria-label="Kembali ke home"')) {
+    if (!str_contains($home, 'href="/" class="home-brand"') || !str_contains($home, 'aria-label="ClanIntel"')) {
         throw new RuntimeException('Navigasi kembali ke home tidak tersedia di header.');
     }
     $rankingScript = (string)$app->handle($factory->createServerRequest('GET', '/rankings.js'))->getBody();

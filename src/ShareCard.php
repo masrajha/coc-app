@@ -115,14 +115,14 @@ final class ShareCard
         $this->rectangle($x + 7, $y, 62, 62, '#957531');
         $this->rectangle($x + 13, $y + 6, 50, 50, '#27364c');
         $this->rectangle($x + 20, $y + 62, 36, 7, '#957531');
-        $this->text((string)($entity['badgeText'] ?? 'COC'), $x + 17, $y + 23, 18, '#ffd166', 46);
+        $this->text((string)($entity['badgeText'] ?? 'CI'), $x + 17, $y + 23, 18, '#ffd166', 46);
     }
 
     public function render(array $card, ?callable $asset = null): string
     {
         $this->rectangle(0, 0, 1200, 630, '#101725');
         $this->rectangle(0, 0, 1200, 8, '#e3af35');
-        $this->text('COC CLAN COMMAND CENTER', 46, 32, 25, '#ffd166', 1100);
+        $this->text('CLANINTEL', 46, 32, 25, '#ffd166', 1100);
         $this->text((string)$card['heading'], 46, 82, 40, '#fff5dd', 1100);
         $this->text((string)$card['context'], 46, 137, 23, '#d6c5a6', 1100);
         $entities = array_slice($card['entities'] ?? [], 0, 2); $count = max(1, count($entities));

@@ -207,3 +207,11 @@ Unggah juga `public/assets/libs/html-to-image/` (library html-to-image 1.11.13 b
 Pengujian: `node tests/ranked-game.test.js`, `node tests/i18n.test.js`, dan `composer test`.
 
 Jika ekspor Game menghasilkan 404 untuk library: gunakan lokasi `public/assets/libs/html-to-image/`, bukan `public/vendor/`. Pola Git `vendor/` mengabaikan semua direktori vendor dan aturan Apache memblokir URL `/vendor/`. Unggah library beserta LICENSE dan `public/battle-log-style/player-view.html` yang terbaru. Pastikan URL `/assets/libs/html-to-image/html-to-image.js` merespons 200, lalu muat ulang halaman player. Jangan membuka akses folder vendor PHP.
+
+### Rebranding ClanIntel
+
+Unggah perubahan `public/index.html`, `public/player.html`, `public/compare.html`, `public/compare-clan.html`, `public/site.css`, `public/site.js`, `public/i18n.js`, `src/SharePreview.php`, dan `src/ShareCard.php`. Sertakan folder baru `public/assets/brand/`, `public/favicon.svg`, dan `public/favicon.ico`; semuanya harus ikut Git dan paket deploy.
+
+Header, judul kontekstual, metadata Open Graph, kartu berbagi dan ekspor perbandingan memakai ClanIntel. Versi konteks share dinaikkan sehingga metadata baru tidak memakai cache identitas sebelumnya. Preview yang sudah disimpan WhatsApp dapat tetap mengikuti cache WhatsApp.
+
+Footer empat halaman utama (home/clan, player, compare player, compare clan) memuat disclaimer lengkap dan tautan Fan Content Policy dalam Indonesia/English. Logo SVG buatan proyek berukuran kurang dari 1 KiB; favicon dan touch icon lokal. Ilustrasi tetap memakai turunan WebP yang sudah dikompres. Halaman utama berisi lima kartu fitur, empat akses cepat, dan statistik akses nyata. Pada mobile, riwayat berada sesudah pencarian dengan pilihan Klan/Pemain/Populer; desktop tetap menampilkan ketiga panel.

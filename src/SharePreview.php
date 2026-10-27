@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 final class SharePreview
 {
     public const TTL = 900;
-    private const VERSION = 1;
+    private const VERSION = 2;
     private float $deadline;
     private bool $partial = false;
     private bool $saved = false;
@@ -108,7 +108,7 @@ final class SharePreview
     {
         $raw = $tag ? $this->data('/clans/' . rawurlencode('#' . $tag)) : null;
         $entity = ['name' => $raw['name'] ?? ($tag ? '#' . $tag : 'Clan ' . ($index + 1)), 'tag' => $tag ? '#' . $tag : '—',
-            'badgeText' => isset($raw['clanLevel']) ? (string)$raw['clanLevel'] : 'COC', 'badgeUrl' => $raw['badgeUrls']['medium'] ?? $raw['badgeUrls']['small'] ?? null,
+            'badgeText' => isset($raw['clanLevel']) ? (string)$raw['clanLevel'] : 'CI', 'badgeUrl' => $raw['badgeUrls']['medium'] ?? $raw['badgeUrls']['small'] ?? null,
             'subtitle' => ($raw['warLeague']['name'] ?? 'Clan War League') . (isset($raw['clanLevel']) ? ' · Level ' . $raw['clanLevel'] : ''),
             'metrics' => [[$this->word('Anggota', 'Members'), isset($raw['members']) ? $this->number($raw['members']) . '/50' : '—'],
                 [$this->word('Poin clan', 'Clan points'), $this->number($raw['clanPoints'] ?? null)], [$this->word('Perang menang', 'Wars won'), $this->number($raw['warWins'] ?? null)]]];
@@ -149,25 +149,25 @@ final class SharePreview
         if ($cached && ($cached['expires'] ?? 0) > time()) return $cached['metadata'] + ['origin' => $this->baseUrl];
         $kind = $context['kind'];
         $heading = match ($kind) {'player' => $this->word('Profil Pemain', 'Player Profile'), 'clan' => $this->word('Profil Clan', 'Clan Profile'),
-            'compare' => $this->word('Perbandingan Pemain', 'Player Comparison'), 'compareClan' => $this->word('Perbandingan Clan', 'Clan Comparison'), default => 'Clan Command Center'};
+            'compare' => $this->word('Perbandingan Pemain', 'Player Comparison'), 'compareClan' => $this->word('Perbandingan Clan', 'Clan Comparison'), default => 'ClanIntel'};
         $entities = [];
         foreach ($context['tags'] as $index => $tag) $entities[] = in_array($kind, ['player', 'compare'], true) ? $this->player($tag, $context, $index) : $this->clan($tag, $context, $index);
         $view = $context['view'];
         $viewName = match ($view) {'ranked-battles', 'ranked-league' => 'Ranked League', 'capital', 'capital-raids' => 'Clan Capital',
             'war-cwl', 'performance' => 'War & CWL', 'members' => $this->word('Anggota', 'Members'), 'history' => $this->word('Riwayat & Laporan', 'History & Reports'),
             'progress' => $this->word('Progres', 'Progress'), 'achievements' => $this->word('Pencapaian', 'Achievements'), 'army' => 'Army', default => $this->word('Ringkasan', 'Overview')};
-        if (!$entities) $entities[] = ['name' => 'Clan Command Center', 'tag' => 'Clash of Clans', 'badgeText' => 'COC', 'subtitle' => $this->word('Pantau clan, war, dan progres pemain', 'Track clans, wars, and player progress'),
+        if (!$entities) $entities[] = ['name' => 'ClanIntel', 'tag' => 'Clash of Clans', 'badgeText' => 'CI', 'subtitle' => $this->word('Pantau clan, war, dan progres pemain', 'Track clans, wars, and player progress'),
             'metrics' => [['Clan', 'War & CWL'], ['Player', 'Ranked League'], ['Compare', 'Clan / Player']]];
         $names = array_column($entities, 'name');
         $title = $kind === 'home' ? $heading : $heading . ': ' . implode(' vs ', $names);
         $description = $kind === 'home' ? $this->word('Statistik clan, perang, Ranked League, dan perbandingan pemain Clash of Clans.', 'Clash of Clans clan statistics, wars, Ranked League, and player comparisons.')
-            : $viewName . ' · ' . implode(' vs ', $names) . ' · CoC Clan Command Center';
+            : $viewName . ' · ' . implode(' vs ', $names) . ' · ClanIntel';
         $card = ['heading' => $heading, 'context' => $viewName . ' · Clash of Clans', 'entities' => $entities,
             'notice' => $this->partial ? $this->word('Sebagian data belum tersedia', 'Some data is currently unavailable') : ($this->saved ? $this->word('Menggunakan data tersimpan', 'Using saved data') : ''),
-            'footer' => $this->word('Snapshot dibuat ', 'Snapshot generated ') . gmdate('d M Y H:i') . ' UTC · ' . (parse_url($this->baseUrl, PHP_URL_HOST) ?: 'CoC Clan Command Center')];
+            'footer' => $this->word('Snapshot dibuat ', 'Snapshot generated ') . gmdate('d M Y H:i') . ' UTC · ' . (parse_url($this->baseUrl, PHP_URL_HOST) ?: 'ClanIntel')];
         $hash = hash('sha256', json_encode($card, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE));
         $this->write($this->directory . '/images/' . $hash . '.json', json_encode($card, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
-        $metadata = ['title' => $title . ' - CoC Clan Command Center', 'description' => $description, 'imageId' => $hash, 'context' => $context];
+        $metadata = ['title' => $kind === 'home' ? $this->word('ClanIntel - Pantau Clan, War & Pemain', 'ClanIntel - Clan, War & Player Tracker') : $title . ' - ClanIntel', 'description' => $description, 'imageId' => $hash, 'context' => $context];
         $this->write($file, json_encode(['expires' => time() + ($this->partial ? 60 : self::TTL), 'metadata' => $metadata], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
         return $metadata + ['origin' => $this->baseUrl];
     }
@@ -188,7 +188,7 @@ final class SharePreview
         $urls = $this->urls($metadata);
         $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $html = preg_replace_callback('/<title\b[^>]*>.*?<\/title>/is', fn() => '<title>' . $escape($metadata['title']) . '</title>', $html, 1);
-        $tags = ['og:type'=>'website', 'og:site_name'=>'CoC Clan Command Center', 'og:title'=>$metadata['title'], 'og:description'=>$metadata['description'],
+        $tags = ['og:type'=>'website', 'og:site_name'=>'ClanIntel', 'og:title'=>$metadata['title'], 'og:description'=>$metadata['description'],
             'og:url'=>$urls['url'], 'og:locale'=>$this->locale === 'en' ? 'en_US' : 'id_ID', 'og:image'=>$urls['image'], 'og:image:type'=>'image/png',
             'og:image:width'=>'1200', 'og:image:height'=>'630', 'og:image:alt'=>$metadata['title']];
         $head = '<link rel="canonical" href="' . $escape($urls['url']) . '">' . "\n";
