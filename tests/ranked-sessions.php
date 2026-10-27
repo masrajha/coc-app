@@ -40,6 +40,16 @@ try {
     $check($resolve->invoke($app, $player, $session, '2026-10-26T10:00:00Z') === 'Legend III', 'Archived season tiers must survive snapshot removal.');
     $unknown = $session; $unknown['groupTag'] = '#8U89LYJ';
     $check($resolve->invoke($app, $player, $unknown, '2026-10-26T10:00:00Z') === null, 'Missing history must not fall back to the current profile tier.');
+    $infer = $type->getMethod('rankedTierFromGroup');
+    $check($infer->invoke($app, ['attackLogs' => array_fill(0, 30, ['stars' => 3])]) === 'Legend II', 'Thirty group attacks uniquely identify Legend II.');
+    $check($infer->invoke($app, ['attackLogs' => array_fill(0, 25, ['stars' => 3])]) === 'Legend II', 'More than 24 group attacks requires Legend II.');
+    $check($infer->invoke($app, ['attackLogs' => array_fill(0, 24, ['stars' => 3])]) === null, 'Twenty-four attacks may be incomplete Legend II data and must remain ambiguous.');
+    $check($infer->invoke($app, ['attackLogs' => array_fill(0, 31, ['stars' => 3])]) === null, 'Counts outside the known group rules must not be assigned a tier.');
+    $check($infer->invoke($app, ['members' => [['attackWinCount' => 27, 'attackLoseCount' => 3]]]) === 'Legend II', 'Group member counters can establish a minimum quota when logs are absent.');
+    $evidenceSession = $session; $evidenceSession['groupTag'] = '#8CLVVJ0';
+    $promotedPlayer = $player; $promotedPlayer['leagueTier']['name'] = 'Legend I';
+    $check($resolve->invoke($app, $promotedPlayer, $evidenceSession, '2026-10-26T10:00:00Z', ['attackLogs' => array_fill(0, 30, ['stars' => 3])]) === 'Legend II', 'Promoted Legend I profiles must recover their old group tier from unique battle evidence.');
+    $check($resolve->invoke($app, $promotedPlayer, $evidenceSession, '2026-10-27T10:00:00Z') === 'Legend II', 'Recovered group tiers must persist without requiring the logs again.');
     $saveSnapshots([['date' => '2026-10-26', 'members' => [['tag' => '#28P08PG0G', 'leagueTier' => ['name' => 'Legend II']]]]]);
     $check($resolve->invoke($app, $player, $unknown, '2026-10-26T10:00:00Z') === null, 'Date-only rollover snapshots must be excluded.');
 

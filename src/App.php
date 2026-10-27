@@ -959,7 +959,27 @@ final class App
         return $report['transition'];
     }
 
-    private function rankedSessionTier(array $player, array $session, string $observedAt): ?string
+    private function rankedTierFromGroup(array $group): ?string
+    {
+        // Battle counts are lower bounds, not proof that the quota was reached.
+        // Resolve only when exactly one group tier can accommodate the evidence.
+        $observed = 0;
+        foreach (['attackLogs', 'defenseLogs'] as $key) {
+            $observed = max($observed, count(array_filter(is_array($group[$key] ?? null) ? $group[$key] : [], 'is_array')));
+        }
+        foreach ($group['members'] ?? [] as $member) {
+            foreach (['attack', 'defense'] as $side) {
+                $wins = filter_var($member[$side . 'WinCount'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
+                $losses = filter_var($member[$side . 'LoseCount'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
+                if ($wins !== false && $losses !== false) $observed = max($observed, $wins + $losses);
+            }
+        }
+        if ($observed < 1) return null;
+        $candidates = array_keys(array_filter(self::RANKED_RULES, static fn(array $rule): bool => $rule['battles'] >= $observed));
+        return count($candidates) === 1 ? $candidates[0] : null;
+    }
+
+    private function rankedSessionTier(array $player, array $session, string $observedAt, ?array $group = null): ?string
     {
         // A profile's leagueTier can already reflect promotion/demotion while only
         // previousLeagueGroupTag remains. Bind observed tiers to group + season.
@@ -995,6 +1015,10 @@ final class App
                     }
                 }
             }
+        }
+        if ($tier === null && $group !== null) {
+            $tier = $this->rankedTierFromGroup($group);
+            $source = 'groupBattleCounts';
         }
         if ($tier !== null && ($saved['leagueTier'] ?? null) !== $tier) {
             $this->writeJson($path, ['groupTag' => $session['groupTag'], 'seasonId' => $session['seasonId'],
@@ -1092,6 +1116,10 @@ final class App
             $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
             $previous = $sessionId === 'previous';
             $group = $this->upstream($path, 18000, 0, $previous ? 30 * 86400 : null, $previous);
+            if ($leagueTierName === null) {
+                $leagueTierName = $this->rankedSessionTier($profile['data'], $session, $group['lastUpdated'], $group['data']);
+                $rankedRule = $this->rankedRule($leagueTierName);
+            }
             if (($req->getQueryParams()['detail'] ?? null) === 'statistics') {
                 $statistics = $this->rankedLeagueStatistics($session, $group['data']['members'] ?? [], $previous);
                 return $this->respond($res, ['playerTag' => '#' . $tag, 'session' => $session] + $statistics);
@@ -1107,6 +1135,10 @@ final class App
                 if ($memberTag !== $tag) {
                     $detailPath = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $memberTag);
                     $group = $this->upstream($detailPath, 18000, 0, $previous ? 30 * 86400 : null, $previous);
+                }
+                if ($leagueTierName === null) {
+                    $leagueTierName = $this->rankedSessionTier($profile['data'], $session, $group['lastUpdated'], $group['data']);
+                    $rankedRule = $this->rankedRule($leagueTierName);
                 }
                 $averages = [];
                 foreach (['attack' => 'attackLogs', 'defense' => 'defenseLogs'] as $side => $key) {

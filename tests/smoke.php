@@ -141,6 +141,13 @@ $seedApiCache('/players/%23Y8CPQU8QC', [
     'previousLeagueGroupTag' => '#0', 'previousLeagueSeasonId' => 1790571600,
     'legendStatistics' => ['currentSeason' => ['trophies' => 5281], 'bestSeason' => ['id' => '2025-12-01', 'rank' => 1128, 'trophies' => 5610]]
 ]);
+foreach (['QCGLCYVYU' => ['#8CLVVJ0', 1790571600], 'QRCUY0YY2' => ['#8U0YUP2', 1791176400]] as $legendTag => [$oldGroup, $oldSeason]) {
+    $seedApiCache('/players/%23' . $legendTag, ['tag' => '#' . $legendTag, 'name' => $legendTag, 'leagueTier' => ['name' => 'Legend I'],
+        'currentLeagueGroupTag' => '#0', 'previousLeagueGroupTag' => $oldGroup, 'previousLeagueSeasonId' => $oldSeason]);
+    $seedApiCache('/leaguegroup/' . rawurlencode($oldGroup) . '/' . $oldSeason . '?playerTag=%23' . $legendTag,
+        ['members' => [['playerTag' => '#' . $legendTag, 'playerName' => $legendTag, 'leagueTrophies' => 1200]],
+            'attackLogs' => array_fill(0, 30, ['stars' => 3, 'destructionPercentage' => 100, 'trophies' => 40]), 'defenseLogs' => []]);
+}
 $bonusAttackLogs = array_fill(0, 22, ['stars' => 3, 'destructionPercentage' => 100, 'trophies' => 35]);
 $bonusAttackLogs[] = ['stars' => 2, 'destructionPercentage' => 90, 'trophies' => 33];
 $bonusAttackLogs[] = ['stars' => 2, 'destructionPercentage' => 83, 'trophies' => 35];
@@ -181,6 +188,7 @@ $checks = [
     '/donation.css' => [200, 'text/css'],
     '/donation.js' => [200, 'text/javascript'],
     '/recent.js' => [200, 'text/javascript'],
+    '/compare-battles.js' => [200, 'text/javascript'],
     '/cwl-master-1.png' => [200, 'image/png'],
     '/cwl-legend.png' => [200, 'image/png'],
     '/league-legend.png' => [200, 'image/png'],
@@ -508,6 +516,12 @@ try {
         throw new RuntimeException('Sesi liga yang masih berjalan tidak boleh mendapat bonus pertahanan.');
     }
     $bonusBattle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/28P08PG0G/league-group?session=previous&detail=battle&memberTag=28P08PG0G'))->getBody(), true);
+    foreach (['QCGLCYVYU', 'QRCUY0YY2'] as $legendTag) {
+        $oldBattle = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/' . $legendTag . '/league-group?session=previous&detail=battle&memberTag=' . $legendTag))->getBody(), true);
+        if (($oldBattle['leagueTier'] ?? null) !== 'Legend II' || ($oldBattle['leagueRule']['battles'] ?? null) !== 30) {
+            throw new RuntimeException('Old Legend II groups must remain identifiable after promotion to Legend I when snapshots are missing.');
+        }
+    }
     $legendProfile = json_decode((string)$app->handle($factory->createServerRequest('GET', '/api/player/Y8CPQU8QC/profile'))->getBody(), true);
     if ($legendProfile['player']['leagueSessions'] !== []
         || $legendProfile['player']['legendStatistics']['currentSeason']['trophies'] !== 5281

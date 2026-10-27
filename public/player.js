@@ -491,10 +491,18 @@ document.querySelectorAll('.tabs button').forEach(button => button.addEventListe
   for (const section of ['army', 'progress', 'performance', 'ranked-battles', 'capital-raids', 'achievements']) document.getElementById(section).hidden = section !== button.dataset.tab;
   if (button.dataset.tab === 'capital-raids') window.PlayerRaids.activate();
   history.replaceState(null, '', `#${button.dataset.tab}`);
+  updatePlayerCopyContext();
 }));
+function updatePlayerCopyContext() {
+  const button=document.getElementById('copyPlayerLink');
+  window.CocShare.resetCopy(button,document.getElementById('playerLinkStatus'));
+  const tab=document.querySelector('.player-tabs [aria-selected=true]')?.textContent.trim() || 'Army';
+  button.title=tr('share.copyProfileTabContext',{tab});button.setAttribute('aria-label',button.title);
+}
+updatePlayerCopyContext();
 ['progressSearch', 'progressFilter', 'progressSort'].forEach(id => document.getElementById(id)?.addEventListener(id === 'progressSearch' ? 'input' : 'change', () => currentProgress && renderProgressTools(currentProgress)));
 document.getElementById('copyPlayerResume').addEventListener('click', async () => { try { await navigator.clipboard.writeText(document.getElementById('playerResumeText').textContent); setText('copyPlayerResume', tr('player.copied')); } catch {} });
-document.getElementById('copyPlayerLink').addEventListener('click', async () => { try { await navigator.clipboard.writeText(window.CocShare.url()); setText('copyPlayerLink', tr('player.copied')); } catch {} });
+document.getElementById('copyPlayerLink').addEventListener('click', event => window.CocShare.copyLink(event.currentTarget,document.getElementById('playerLinkStatus')));
 document.getElementById('exportPlayerCsv').addEventListener('click', () => { const p = currentProfileData?.player; if (!p) return; const csv = `\uFEFFfield,value\r\nname,"${String(p.name || '').replaceAll('"', '""')}"\r\ntag,"${p.tag || ''}"\r\ntownHall,${p.townHallLevel || ''}\r\ntrophies,${p.trophies || ''}\r\nwarStars,${p.warStars || ''}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); const link = document.createElement('a'); link.href = url; link.download = `player-${normalizeTag(p.tag)}.csv`; link.click(); URL.revokeObjectURL(url); });
 const tabFromHash = location.hash.replace('#', '') || params.get('view');
 if (['army', 'progress', 'performance', 'ranked-battles', 'capital-raids', 'achievements'].includes(tabFromHash)) document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`)?.click();

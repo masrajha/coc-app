@@ -265,7 +265,39 @@
         ? sides.attack.points + sides.defense.totalPoints : null) };
   }
 
-  const api = { sections, categories, comparableProgress, armyRows, categoryRows, levelDifferences, sameLeagueSeason, leagueSummary,
+  function legendContext(left, right) {
+    const isLegend = profile => profile?.player?.leagueTier?.name === 'Legend I';
+    const both = isLegend(left) && isLegend(right);
+    const a = left?.player?.legendStatistics?.currentSeason?.id;
+    const b = right?.player?.legendStatistics?.currentSeason?.id;
+    const wa = left?.player?.leagueTransition?.seasonId;
+    const wb = right?.player?.leagueTransition?.seasonId;
+    const timestamps = [Date.parse(left?.lastUpdated), Date.parse(right?.lastUpdated)];
+    const freshTogether = timestamps.every(Number.isFinite) && Math.abs(timestamps[0] - timestamps[1]) <= 600000;
+    const samePeriod = both && freshTogether && (a || b ? Boolean(a && b && a === b) : Boolean(wa && wb && wa === wb));
+    return { visible: isLegend(left) || isLegend(right), both, samePeriod };
+  }
+
+  function battleLogRows(data, side = 'attack', filter = 'all', sort = 'oldest') {
+    const raw = Array.isArray(data?.[side]?.logs) ? data[side].logs.filter(log => log && typeof log === 'object') : [];
+    const bonus = side === 'defense' && data?.session?.id === 'previous' && Array.isArray(data?.defense?.bonusLogs)
+      ? data.defense.bonusLogs.filter(log => log && typeof log === 'object').map(log => ({...log,kind:'defenseBonus'})) : [];
+    const numeric = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value)) ? Number(value) : null;
+    const time = log => parseWarDate(log.timestamp)?.getTime() ?? null;
+    const chronological = [...raw].sort((a,b) => time(a) !== null && time(b) !== null ? time(a)-time(b) : 0)
+      .map((log,index) => ({...log,battleNumber:index+1}));
+    const logs = chronological.filter(log => filter === 'all' || (filter === 'triple' && numeric(log.stars) === 3)
+      || (filter === 'low' && numeric(log.stars) !== null && numeric(log.stars) >= 0 && numeric(log.stars) <= 1));
+    logs.sort((a,b) => sort === 'latest' ? (time(a) !== null && time(b) !== null ? time(b)-time(a) : 0)
+      : sort === 'stars' ? (numeric(b.stars) ?? -1)-(numeric(a.stars) ?? -1) : sort === 'destruction' ? (numeric(b.destructionPercentage) ?? -1)-(numeric(a.destructionPercentage) ?? -1) : 0);
+    const all = [...raw,...bonus], points = all.map(log => numeric(log.trophies)).filter(value => value !== null);
+    const count = numeric(data?.player?.[side+'Count']);
+    return {logs:filter === 'all' ? [...logs,...bonus] : logs, count:Array.isArray(data?.[side]?.logs)?raw.length:null,
+      bonusCount:bonus.length, points:points.length ? points.reduce((a,b)=>a+b,0) : count === 0 && !all.length ? 0 : null,
+      partial:points.length!==all.length || count===null || count!==raw.length};
+  }
+
+  const api = { sections, categories, comparableProgress, armyRows, categoryRows, levelDifferences, sameLeagueSeason, leagueSummary, legendContext, battleLogRows,
     itemLevelMark, itemProgress, numberMarks, itemComparison, progressCategorySummary,
     parseWarDate, filterWars, combineWars, warStatus, warSummary, sharedSnapshots, filterSnapshots, donationChanges, resume };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

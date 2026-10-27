@@ -4,13 +4,17 @@ const clanTag = normalizeTag(params.get('clan'));
 const profiles = { left: null, right: null };
 const performances = { left: null, right: null };
 const leaguePerformance = { left: null, right: null };
+const leagueLoadState = {left:'idle',right:'idle'};
 let performanceErrors = [];
 let sharedTrend = [];
 let displayedWars = [];
 let rosterTag = null;
 const leagueRequestId = { left: 0, right: 0 };
+const legendRanks = {left: null, right: null};
+let legendRequestId = 0;
 const tr = (key, variables) => window.CocI18n.t(key, variables);
 const locale = () => window.CocI18n.formatLocale;
+window.CompareBattleLog.configure({data:side=>leaguePerformance[side],name:side=>sideName(side),loading:side=>leagueLoadState[side]==='loading'});
 window.CocI18n.setPageTitle('compare');
 
 function normalizeTag(value) {
@@ -528,11 +532,17 @@ function renderLeagueSide(side, data, error = null) {
   if (!summary.attack.pointDataComplete || !summary.defense.pointDataComplete) quality.appendChild(textNode('small', tr('compare.rankedPartial')));
   if (summary.stale) quality.appendChild(textNode('small', tr('compare.rankedCached')));
   root.append(badge, meta, rank, state, quality);
+  const battleButton=textNode('button',tr('compare.openBattleLog'),'open-compare-battle');
+  battleButton.type='button';battleButton.dataset.openBattle=side;
+  battleButton.setAttribute('aria-haspopup','dialog');battleButton.setAttribute('aria-controls','compareBattleDrawer');
+  battleButton.setAttribute('aria-label',tr('compare.openPlayerBattleLog',{player:sideName(side)}));
+  battleButton.addEventListener('click',()=>window.CompareBattleLog.open(side,battleButton));root.append(battleButton);
 }
 
 function renderLeagueMetrics() {
   const root = document.getElementById('leagueMetricsTable');
   root.replaceChildren();
+  root.hidden = !['left', 'right'].some(side => profiles[side]?.player?.leagueSessions?.length);
   const summaries = Object.fromEntries(['left', 'right'].map(side => [side, model.leagueSummary(leaguePerformance[side])]));
   const points = (value, complete) => ({ value, comparable: complete, detail: complete ? '' : tr('compare.rankedPartialPoints') });
   const average = (value, count) => ({ value, detail: tr('compare.rankedPointSample', { count: formatNumber(count) }) });
@@ -626,15 +636,17 @@ function refreshLeagueComparison() {
   }
   renderLeagueComparisonNote();
   renderLeagueMetrics();
+  window.CompareBattleLog.refresh();
 }
 
 async function loadLeagueSide(side, sessionId, requestId) {
   const profile = profiles[side];
   leaguePerformance[side] = null;
+  leagueLoadState[side] = profile && sessionId ? 'loading' : 'empty';
   refreshLeagueComparison();
   if (!profile || !sessionId) {
     leaguePerformance[side] = null;
-    renderLeagueSide(side, null, tr('compare.noLeagueSession'));
+    renderLeagueSide(side, null, tr(profile?.player?.leagueTier?.name === 'Legend I' ? 'compare.legendNoPrevious' : 'compare.noLeagueSession'));
     refreshLeagueComparison();
     return;
   }
@@ -646,15 +658,127 @@ async function loadLeagueSide(side, sessionId, requestId) {
     if (!response.ok) throw new Error(data.error || tr('compare.leagueSessionUnavailable'));
     if (requestId !== leagueRequestId[side]) return;
     leaguePerformance[side] = data;
+    leagueLoadState[side] = 'ready';
   } catch (error) {
     if (requestId !== leagueRequestId[side]) return;
     leaguePerformance[side] = null;
+    leagueLoadState[side] = 'error';
     renderLeagueSide(side, null, error.message);
   }
   refreshLeagueComparison();
 }
 
+function legendValue(side, field) {
+  const profile = profiles[side];
+  if (profile?.player?.leagueTier?.name !== 'Legend I') return null;
+  return field === 'rank' ? legendRanks[side]?.rank ?? null
+    : profile.player.legendStatistics?.currentSeason?.trophies ?? profile.player.trophies ?? null;
+}
+
+function legendTransition(side) {
+  const change = profiles[side]?.player?.leagueTransition;
+  if (!['promoted', 'demoted', 'unchanged'].includes(change?.status)) return tr('player.leagueHistoryUnknown');
+  const movement = change.status === 'unchanged' ? change.currentTier : `${change.previousTier} → ${change.currentTier}`;
+  return `${tr(`player.leagueChange.${change.status}`)} · ${movement}`;
+}
+
+function legendTable(root, rows, comparable = false) {
+  root.replaceChildren();
+  const table = textNode('table', '', 'league-metrics-table');
+  const head = document.createElement('thead'), titles = document.createElement('tr');
+  for (const title of [tr('compare.rankedMetric'), sideName('left'), sideName('right')]) {
+    const th = textNode('th', title); th.scope = 'col'; titles.append(th);
+  }
+  head.append(titles); table.append(head);
+  const body = document.createElement('tbody');
+  for (const row of rows) {
+    const line = document.createElement('tr');
+    const label = textNode('th', tr(row.key)); label.scope = 'row'; line.append(label);
+    const items = {left: row.get('left'), right: row.get('right')};
+    const valid = comparable && row.mark && ['left', 'right'].every(side => Number.isFinite(items[side].value));
+    const marks = valid ? model.numberMarks(items.left.value * (row.lower ? -1 : 1), items.right.value * (row.lower ? -1 : 1)) : null;
+    for (const side of ['left', 'right']) {
+      const item = items[side], cell = document.createElement('td');
+      const value = textNode('strong', item.text ?? formatNumber(item.value), 'league-table-value');
+      if (marks) value.append(comparisonMark(marks[side], 'league-mark'));
+      cell.append(value);
+      if (item.detail) cell.append(textNode('small', item.detail));
+      line.append(cell);
+    }
+    body.append(line);
+  }
+  table.append(body); root.append(table);
+}
+
+function renderLegendComparison() {
+  const root = document.getElementById('legendComparison');
+  const context = model.legendContext(profiles.left, profiles.right);
+  root.hidden = !context.visible;
+  if (!context.visible) return;
+  const week = profiles.left?.player?.leagueTransition?.seasonId;
+  const period = week ? window.CocI18n.dateTime(new Date(week * 1000), {day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}) : profiles.left?.player?.legendStatistics?.currentSeason?.id || tr('compare.sessionUnknown');
+  document.getElementById('legendComparisonContext').textContent = tr(!context.both ? 'compare.legendMixedSystems' : context.samePeriod ? 'compare.legendSamePeriod' : 'compare.legendUnconfirmedPeriod', {date:period});
+  const ranksComparable = context.samePeriod && ['left', 'right'].every(side => {
+    const timestamp = Date.parse(legendRanks[side]?.lastUpdated);
+    const start = profiles[side]?.player?.leagueTransition?.seasonId * 1000;
+    return Number.isFinite(timestamp) && timestamp >= start && timestamp < start + 7 * 86400000;
+  }) && Math.abs(Date.parse(legendRanks.left?.lastUpdated) - Date.parse(legendRanks.right?.lastUpdated)) <= 600000;
+  legendTable(document.getElementById('legendComparisonTable'), [
+    {key:'compare.legendCurrentTier', get:side => ({text:profiles[side]?.player?.leagueTier?.name || tr('compare.tierUnavailable')})},
+    {key:'player.legendSeasonTrophies', mark:true, get:side => ({value:legendValue(side,'trophies'), detail:profiles[side]?.player?.leagueTier?.name !== 'Legend I' ? tr('compare.legendGroupBelow') : profiles[side]?.lastUpdated ? tr('player.globalRankUpdated',{date:window.CocI18n.dateTime(new Date(profiles[side].lastUpdated))}) : ''})},
+    {key:'player.legendGlobalRank', mark:ranksComparable, lower:true, get:side => {
+      const data=legendRanks[side], rank=legendValue(side,'rank');
+      const detail = data?.error || (data?.loading ? tr('player.globalRankLoading') : data?.rank == null && data ? tr('player.globalRankCoverage',{count:formatNumber(data.scanned || 0)}) : data?.lastUpdated ? tr('player.globalRankUpdated',{date:window.CocI18n.dateTime(new Date(data.lastUpdated))}) : '');
+      return {value:rank,text:rank ? `#${formatNumber(rank)}` : tr('player.globalRankUnavailable'),detail:profiles[side]?.player?.leagueTier?.name === 'Legend I' ? detail : tr('compare.legendGroupBelow')};
+    }},
+    {key:'compare.legendCutoff', get:side => {
+      const rank=legendValue(side,'rank');
+      return {text:rank ? tr(rank<=10000?'player.globalWithinCutoff':'player.globalDemotionZone') : tr('player.globalRankUnavailable')};
+    }},
+    {key:'compare.legendMovement', get:side=>({text:legendTransition(side)})}
+  ], context.samePeriod);
+  legendTable(document.getElementById('legendComparisonRecords'), [
+    {key:'player.legendBestTrophies',get:side=>({value:profiles[side]?.player?.legendStatistics?.bestSeason?.trophies ?? null})},
+    {key:'player.legendBestRank',get:side=>({value:profiles[side]?.player?.legendStatistics?.bestSeason?.rank ?? null})},
+    {key:'compare.legendRecordPeriod',get:side=>({text:profiles[side]?.player?.legendStatistics?.bestSeason?.id || tr('player.noData')})}
+  ]);
+}
+
+async function loadLegendRank(side, request) {
+  const profile = profiles[side], tag = normalizeTag(profile.player.tag);
+  const rank = profile.player.legendStatistics?.currentSeason?.rank;
+  if (Number.isInteger(rank) && rank > 0) {
+    legendRanks[side] = {rank,lastUpdated:profile.lastUpdated}; renderLegendComparison(); return;
+  }
+  legendRanks[side] = {loading:true}; renderLegendComparison();
+  try {
+    for (let page=0;page<20;page++) {
+      if(request!==legendRequestId || profiles[side]!==profile)return;
+      const response = await window.CocI18n.apiFetch(`/api/player/${encodeURIComponent(tag)}/global-ranking`);
+      const data = await response.json();
+      if(request!==legendRequestId || profiles[side]!==profile)return;
+      if(!response.ok)throw new Error(data.error || tr('player.globalRankFailed'));
+      legendRanks[side] = {...data,loading:Boolean(data.canContinue)}; renderLegendComparison();
+      if(!data.canContinue)return;
+      await new Promise(resolve=>setTimeout(resolve,750));
+    }
+    legendRanks[side] = {error:tr('player.globalRankIncomplete')};
+  } catch(error) {
+    if(request!==legendRequestId || profiles[side]!==profile)return;
+    legendRanks[side] = {error:tr('player.globalRankFailed')+' '+error.message};
+  }
+  renderLegendComparison();
+}
+
+function initializeLegendComparison() {
+  const request = ++legendRequestId;
+  legendRanks.left=null;legendRanks.right=null;
+  renderLegendComparison();
+  for(const side of ['left','right']) if(profiles[side]?.player?.leagueTier?.name==='Legend I')loadLegendRank(side,request);
+}
+
 function initializeLeagueComparison() {
+  initializeLegendComparison();
   const root = document.getElementById('leagueComparisonGrid');
   root.replaceChildren();
   leaguePerformance.left = null;
@@ -676,13 +800,17 @@ function initializeLeagueComparison() {
         const sessionName = tr(session.id === 'current' ? 'player.sessionCurrent' : 'player.sessionPrevious');
         select.add(new Option(`${sessionName}${date ? ` · ${date}` : ''}`, session.id));
       }
-      select.value = sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
+      select.value = profile?.player?.leagueTier?.name === 'Legend I' && sessions.some(session => session.id === 'previous')
+        ? 'previous' : sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
     }
     select.disabled = !sessions.length;
     head.appendChild(select);
     const result = textNode('div', '', 'league-result');
     result.id = `leagueResult${side}`;
     card.append(head, result);
+    if (profile?.player?.leagueTier?.name === 'Legend I' && sessions.some(session => session.id === 'previous')) {
+      card.append(textNode('p', tr('compare.legendPreviousKept'), 'league-quality-note'));
+    }
     root.appendChild(card);
     select.addEventListener('change', () => loadLeagueSide(side, select.value, ++leagueRequestId[side]));
     loadLeagueSide(side, select.value, requestId);
@@ -837,17 +965,7 @@ function renderResume() {
 
 async function copyComparisonLink(event) {
   const status = document.getElementById(event?.currentTarget?.id === 'copyActiveTabLink' ? 'tabShareStatus' : 'shareStatus');
-  const url = new URL(window.CocShare.url());
-  try {
-    await navigator.clipboard.writeText(url.toString());
-    status.textContent = tr('compare.linkCopied');
-  } catch {
-    const input = document.createElement('textarea'); input.value = url.toString(); input.style.position = 'fixed'; input.style.opacity = '0';
-    document.body.appendChild(input); input.select();
-    status.textContent = tr(document.execCommand('copy') ? 'compare.linkCopied' : 'compare.copyFailed');
-    input.remove();
-  }
-  setTimeout(() => { status.textContent = ''; }, 2500);
+  await window.CocShare.copyLink(event.currentTarget,status);
 }
 
 async function fetchPerformance(tag, context) {
@@ -1046,6 +1164,10 @@ function activateCompareTab(hash = location.hash || params.get('view')) {
     else tab.removeAttribute('aria-current');
   }
   for (const section of sections) document.getElementById(section).hidden = section !== active;
+  const copyButton=document.getElementById('copyActiveTabLink');
+  window.CocShare.resetCopy(copyButton,document.getElementById('tabShareStatus'));
+  const label=document.querySelector(`.compare-tabs [data-tab="${active}"]`).textContent.trim();
+  copyButton.title=tr('share.copyTabContext',{tab:label});copyButton.setAttribute('aria-label',copyButton.title);
 }
 
 document.getElementById('compareForm').addEventListener('submit', event => { event.preventDefault(); navigateToComparison(); });

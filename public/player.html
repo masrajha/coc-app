@@ -72,6 +72,7 @@
         <div><span data-i18n="player.donations">Donasi</span><strong id="donations">—</strong></div>
       </section>
 
+      <div class="player-tab-toolbar">
       <nav class="tabs player-tabs" aria-label="Bagian profil" data-i18n-aria-label="player.profileSections">
         <button type="button" data-tab="army" data-section-tone="blue" aria-selected="true"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m3 3 5 1 11 11-4 4L4 8 3 3Zm11 11 6 6m-6 0 6-6M21 3l-5 1-4 4M3 21l6-6m-5-1 6 6"/></svg><span>Army</span></button>
         <button type="button" data-tab="progress" data-section-tone="blue" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v18h18M7 15l5-5 4 3 5-7m-5 0h5v5"/></svg><span data-i18n="player.progress">Progres</span></button>
@@ -80,6 +81,8 @@
         <button type="button" data-tab="capital-raids" data-section-tone="purple" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 21V4h4v4h3V4h4v4h3V4h4v17H3Zm6 0v-5a3 3 0 0 1 6 0v5M6 12h1m10 0h1"/></svg><span data-i18n="raid.title">Raid Weekend</span></button>
         <button type="button" data-tab="achievements" data-section-tone="teal" aria-selected="false"><svg class="player-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="6"/><path d="m7 13-2 8 7-3 7 3-2-8m-5-7 .9 1.8 2 .3-1.4 1.4.3 2-1.8-1-1.8 1 .3-2-1.4-1.4 2-.3L12 6Z"/></svg><span data-i18n="feature.achievements">Pencapaian</span></button>
       </nav>
+        <div class="player-tab-share"><button id="copyPlayerLink" class="copy-link-button" type="button" aria-describedby="playerLinkStatus"><svg class="copy-link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m10 13 4-4m-6 6-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 3 1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0"/></svg><svg class="copy-link-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg><span class="copy-link-label" data-i18n="player.copyLink">Salin tautan</span></button><span id="playerLinkStatus" class="copy-link-status" role="status" aria-live="polite"></span></div>
+      </div>
 
       <section id="army" class="panel" data-section-tone="blue">
         <div class="section-head"><div><div class="eyebrow" data-i18n="player.accountComposition">KOMPOSISI AKUN</div><h2>Army</h2></div><span id="armyCount"></span></div>
@@ -146,7 +149,7 @@
       <section id="player-resume" class="panel player-resume-panel" data-section-tone="slate">
         <div class="section-head"><div><div class="eyebrow">PROFILE REPORT</div><h2 data-i18n="player.resume">Resume pemain</h2></div><span id="dataSourceNote"></span></div>
         <p id="playerResumeText" class="section-note" data-i18n="player.resumePending">Resume akan tersedia setelah profil dimuat.</p>
-        <div class="resume-actions"><button id="copyPlayerResume" type="button" data-i18n="player.copyResume">Salin resume</button><button id="copyPlayerLink" type="button" data-i18n="player.copyLink">Salin tautan</button><button id="exportPlayerCsv" type="button">Export CSV</button></div>
+        <div class="resume-actions"><button id="copyPlayerResume" type="button" data-i18n="player.copyResume">Salin resume</button><button id="exportPlayerCsv" type="button" data-i18n="compare.exportCsv">Ekspor CSV</button></div>
       </section>
       </div>
       <aside class="league-sidebar panel" data-section-tone="amber" aria-labelledby="leagueSidebarTitle">

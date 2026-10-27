@@ -15,6 +15,7 @@
   <script src="/i18n.js"></script>
   <script src="/share.js"></script>
   <script src="/compare-model.js" defer></script>
+  <script src="/compare-battles.js" defer></script>
   <script src="/recent.js" defer></script>
   <script src="/compare.js" defer></script>
   <script src="/donation.js" defer></script>
@@ -75,7 +76,7 @@
         <a href="#ranked-league" data-tab="ranked-league" data-section-tone="amber" aria-selected="false">Ranked League</a>
         <a href="#activity" data-tab="activity" data-section-tone="teal" aria-selected="false" data-i18n="compare.activity">Aktivitas</a>
       </nav>
-      <div class="share-actions compare-tab-share"><button id="copyActiveTabLink" type="button" aria-label="Salin tautan tab" title="Salin tautan tab" data-i18n-aria-label="compare.copyActiveTabLink" data-i18n-title="compare.copyActiveTabLink" aria-describedby="tabShareStatus"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><span id="tabShareStatus" role="status" aria-live="polite"></span></div>
+      <div class="share-actions compare-tab-share"><button id="copyActiveTabLink" class="copy-link-button" type="button" aria-label="Salin tautan tab" title="Salin tautan tab" aria-describedby="tabShareStatus"><svg class="copy-link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m10 13 4-4m-6 6-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 3 1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0"/></svg><svg class="copy-link-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg><span class="copy-link-label" data-i18n="player.copyLink">Salin tautan</span></button><span id="tabShareStatus" class="copy-link-status" role="status" aria-live="polite"></span></div>
       </div>
       <section id="progress" class="panel compare-panel" data-section-tone="blue">
         <div class="section-head"><div><div class="eyebrow" data-i18n="compare.progressEyebrow">PROGRES PASUKAN DAN HERO</div><h2 data-i18n="compare.scoresAndCategories">Skor & kategori</h2></div></div>
@@ -105,6 +106,13 @@
         <div id="warCharts" class="war-summary-grid"></div>
       </section>
       <section id="ranked-league" class="panel compare-panel" hidden data-section-tone="amber">
+        <section id="legendComparison" class="legend-comparison" hidden aria-labelledby="legendComparisonTitle">
+          <h2 id="legendComparisonTitle" data-i18n="compare.legendCurrent">Legend I · Kondisi saat ini</h2>
+          <p id="legendComparisonContext" class="league-comparison-note"></p>
+          <div id="legendComparisonTable" class="league-metrics-table-wrap" aria-live="polite"></div>
+          <details class="legend-records"><summary data-i18n="compare.legendRecords">Rekor pribadi</summary><div id="legendComparisonRecords" class="league-metrics-table-wrap"></div></details>
+          <p class="section-note" data-i18n="player.legendCutoffRule"></p>
+        </section>
         <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2 data-i18n="compare.leaguePerformance">Performa liga</h2></div></div>
         <p class="section-note" data-i18n="compare.leagueScope">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
         <div id="leagueComparisonNote" class="league-comparison-note"></div>
@@ -126,6 +134,22 @@
       </section>
     </div>
   </main>
+  <dialog id="compareBattleDrawer" class="compare-battle-drawer" aria-labelledby="compareBattleTitle" aria-describedby="compareBattleContext">
+    <header class="compare-battle-header"><div><h2 id="compareBattleTitle" data-i18n="compare.battleLog">Battle log</h2><p id="compareBattleContext"></p></div><button id="closeCompareBattle" type="button" aria-label="Tutup battle log" data-i18n-aria-label="compare.closeBattleLog" autofocus>×</button></header>
+    <div class="compare-battle-body">
+      <label class="compare-battle-player"><span data-i18n="player.player">Pemain</span><select id="compareBattlePlayer"></select></label>
+      <div class="compare-battle-tabs" role="tablist" aria-label="Jenis battle" data-i18n-aria-label="compare.battleType">
+        <button id="compareAttackTab" type="button" role="tab" data-battle-side="attack" aria-controls="compareBattlePanel" aria-selected="true" data-i18n="player.attacks">Attacks</button>
+        <button id="compareDefenseTab" type="button" role="tab" data-battle-side="defense" aria-controls="compareBattlePanel" aria-selected="false" tabindex="-1" data-i18n="player.defenses">Defenses</button>
+      </div>
+      <section id="compareBattlePanel" role="tabpanel" aria-labelledby="compareAttackTab">
+        <p id="compareBattlePoints" class="compare-battle-points"></p>
+        <div class="compare-battle-toolbar"><label><span data-i18n="compare.battleFilter">Hasil</span><select id="compareBattleFilter"><option value="all" data-i18n="player.allResults">Semua hasil</option><option value="triple" data-i18n="player.threeStars">3 bintang</option><option value="low" data-i18n="player.zeroOneStars">0–1 bintang</option></select></label><label><span data-i18n="compare.battleOrder">Urutan</span><select id="compareBattleSort"><option value="oldest" data-i18n="player.oldest">Terlama</option><option value="latest" data-i18n="player.latest">Terbaru</option><option value="stars" data-i18n="player.stars">Bintang</option><option value="destruction" data-i18n="player.destruction">Destruksi</option></select></label></div>
+        <p id="compareBattleNotice" class="section-note" role="status" aria-live="polite"></p>
+        <div id="compareBattleLogs" class="ranked-battle-list"></div>
+      </section>
+    </div>
+  </dialog>
   <footer class="footer"><span data-i18n="compare.footerSource">Data profil berasal dari API Clash of Clans. Ikon item dari</span> <a href="https://clashofclans.fandom.com/wiki/Clash_of_Clans_Wiki" target="_blank" rel="noopener noreferrer">Clash of Clans Wiki</a>.<br><span data-i18n="player.footerDeveloper">Dikembangkan oleh Amerta Buana #28P08PG0G</span> · <a data-donation-trigger href="https://saweria.co/masrajha" data-i18n="player.footerSupport">Dukung pengembangan</a></footer>
 </body>
 </html>
