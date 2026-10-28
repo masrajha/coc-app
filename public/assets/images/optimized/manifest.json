@@ -150,5 +150,13 @@
     "height": 64,
     "bytes": 2048,
     "sourceBytes": 14675
+  },
+  {
+    "file": "hot-badge.webp",
+    "source": "icons/hot-badge.png",
+    "width": 120,
+    "height": 74,
+    "bytes": 3976,
+    "sourceBytes": 936717
   }
 ]

@@ -1775,3 +1775,9 @@ dialog::backdrop {
 .command-ui .player-tab-toolbar>.player-tabs{position:static;flex:1;min-width:0;margin:0;padding:10px 0 0;border:0;border-radius:0;background:transparent}
 .player-tab-share{display:flex;align-items:center;justify-content:flex-end;flex:0 0 auto;padding:6px 0}
 @media(max-width:700px){.command-ui .player-tab-toolbar{top:0;flex-wrap:wrap;gap:0}.command-ui .player-tab-toolbar>.player-tabs{flex-basis:100%}.player-tab-share{width:100%;padding:8px 0}}
+
+/* Keep the small image badge above the label, inside the scrollable tab's top gutter. */
+.command-ui .player-tab-toolbar>.player-tabs{padding-top:22px}
+.command-ui .player-tabs button[data-tab="ranked-battles"]{position:relative;padding-right:5px}
+.command-ui .player-tabs .player-tab-hot{position:absolute;top:-15px;right:-18px;display:block;width:30px;height:19px;padding:0;border:0;background:none;pointer-events:none}
+@media(max-width:700px){.command-ui .player-tabs .player-tab-hot{width:28px;height:18px;top:-14px;right:-16px}}

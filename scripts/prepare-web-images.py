@@ -10,6 +10,7 @@ import json
 ROOT = Path(__file__).resolve().parents[1] / 'public/assets/images'
 OUT = ROOT / 'optimized'
 JOBS = [
+    ('icons/hot-badge.png', 'hot-badge.webp', (120, 74), 85),
     ('hero/hero-dragon-battle.webp', 'hero-desktop.webp', (1600, 900), 78),
     ('hero/hero-dragon-battle.webp', 'hero-tablet.webp', (960, 540), 78),
     ('hero/hero-mobile-portrait.png', 'hero-mobile.webp', (720, 1080), 78),

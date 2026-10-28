@@ -149,3 +149,23 @@ html[data-theme] .command-ui .home-showcase .hero-accent{color:#f4c45b}
 
 .command-ui .home-brand h1.clanintel-wordmark,.command-ui .command-brand-copy .clanintel-wordmark{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-size:26px;letter-spacing:-.04em}
 @media(max-width:700px){.command-ui .home-brand h1.clanintel-wordmark,.command-ui .command-brand-copy .clanintel-wordmark{font-size:24px}}
+
+/* Shared HOT image: one cached asset, static lettering and an animated flame. */
+.command-ui .hot-badge{display:block;width:30px;height:19px;padding:0;border:0;background:none;pointer-events:none}
+.command-ui .hot-badge img{display:block;position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:contain}
+.command-ui .quick-search-tab .home-tab-label{position:relative;display:inline-block;white-space:nowrap}
+.command-ui .quick-search-tab .home-tab-hot{position:absolute;top:-15px;right:-18px}
+@media(max-width:700px){.command-ui .hot-badge{width:28px;height:18px}.command-ui .quick-search-tab .home-tab-hot{top:-14px;right:-16px}}
+.hot-badge-body{clip-path:inset(0 43% 0 0)}
+.hot-badge-flame{clip-path:inset(0 0 0 55%);transform-origin:78% 92%;animation:hot-flame-flicker 1.35s ease-in-out infinite}
+@keyframes hot-flame-flicker{0%,100%{transform:scale(1) rotate(-.8deg);filter:brightness(1)}25%{transform:scale(1.015,1.055) rotate(.7deg);filter:brightness(1.12)}50%{transform:scale(.99,1.02) rotate(-.5deg);filter:brightness(1.04)}75%{transform:scale(1.02,1.07) rotate(.5deg);filter:brightness(1.15)}}
+@media(prefers-reduced-motion:reduce){.hot-badge-flame{animation:none;transform:none;filter:none}}
+
+.command-ui .clan-primary-tabs .clan-tab-hot-label{position:relative;display:inline-block;white-space:nowrap}
+.command-ui .clan-primary-tabs .clan-tab-hot{position:absolute;top:-15px;right:-18px}
+@media(max-width:700px){.command-ui .clan-primary-tabs .clan-tab-hot{top:-14px;right:-16px}}
+
+.command-ui .compare-tab-toolbar .compare-tabs{padding-top:22px}
+.command-ui .compare-tabs .compare-tab-hot-label{position:relative;display:inline-block;white-space:nowrap}
+.command-ui .compare-tabs .compare-tab-hot{position:absolute;top:-15px;right:-18px}
+@media(max-width:700px){.command-ui .compare-tabs .compare-tab-hot{top:-14px;right:-16px}}
