@@ -86,7 +86,41 @@ try {
     $assert($get('/api/player/9RU089PG/war-preference')['warPreference'] === null, 'Missing preference must remain unknown.');
     $assert($get('/api/player/9RU089PG/profile')['achievements'] === null, 'Missing achievements must remain unavailable.');
     $get('/api/player/INVALID/war-preference?lang=en', 400);
-    echo "Account feature tests passed: ranking categories/locations, capital snapshots, achievements, and war preferences.\n";
+    $superPairs = [
+        'Super Barbarian'=>'Barbarian','Super Archer'=>'Archer','Super Giant'=>'Giant','Sneaky Goblin'=>'Goblin',
+        'Super Wall Breaker'=>'Wall Breaker','Super Wizard'=>'Wizard','Inferno Dragon'=>'Baby Dragon','Super Minion'=>'Minion',
+        'Super Valkyrie'=>'Valkyrie','Super Witch'=>'Witch','Ice Hound'=>'Lava Hound','Rocket Balloon'=>'Balloon',
+        'Super Bowler'=>'Bowler','Super Dragon'=>'Dragon','Super Miner'=>'Miner','Super Hog Rider'=>'Hog Rider','Super Yeti'=>'Yeti',
+    ];
+    $troops=[]; $expected=[];
+    foreach ($superPairs as $super=>$base) {
+        $level=count($expected)+2; $expected[$super]=[$base,$level,$level+2];
+        // Super troops precede their base entries; matching must not depend on API order.
+        $troops[]=['name'=>$super,'level'=>1,'maxLevel'=>1,'village'=>'home'];
+        $troops[]=['name'=>$base,'level'=>$level,'maxLevel'=>$level+2,'village'=>'home'];
+    }
+    $troops[]=['name'=>'Barbarian','level'=>99,'maxLevel'=>99,'village'=>'builderBase'];
+    $seed('/players/%23Q2YYJ9G00',['tag'=>'#Q2YYJ9G00','name'=>'Super troop test','townHallLevel'=>18,'troops'=>$troops]);
+    $superProfile=$get('/api/player/Q2YYJ9G00/profile');
+    $supers=array_column($superProfile['army']['superTroops'],null,'name');
+    $assert(count($supers)===17 && count($superProfile['army']['troops'])===17,'Super troop normalization must preserve categories and item counts.');
+    foreach ($expected as $super=>[$base,$level,$max]) {
+        $item=$supers[$super];
+        $assert($item['level']===$level && $item['maxLevel']===$max && $item['baseTroop']===$base,'Super troop badges must use the matching Home Village base level: '.$super);
+        $assert($item['apiLevel']===1 && $item['apiMaxLevel']===1,'Raw API unlock markers must remain available.');
+        $assert($item['progressMaxLevel']===$max,'Comparison progress limits must follow the base troop too.');
+    }
+    $assert($superProfile['army']['builderBase'][0]['level']===99,'Builder Base levels must not be altered or used as the Home Village source.');
+    $assert($superProfile['progress']['score']['categories']['troops']['knownItems']===17,'Super troop normalization must not double count progress items.');
+    $seed('/players/%2392GQCPJL9',['tag'=>'#92GQCPJL9','name'=>'Partial super troop test','townHallLevel'=>18,'troops'=>[
+        ['name'=>'Super Archer','level'=>1,'maxLevel'=>1,'village'=>'home'],
+        ['name'=>'Super Barbarian','level'=>1,'maxLevel'=>1,'village'=>'home'],
+        ['name'=>'Barbarian','level'=>8,'village'=>'home'],
+    ]]);
+    $partial=array_column($get('/api/player/92GQCPJL9/profile')['army']['superTroops'],null,'name');
+    $assert($partial['Super Archer']['level']===1 && !isset($partial['Super Archer']['levelSource']),'Missing base troops must not cause an invented level.');
+    $assert($partial['Super Barbarian']['level']===8 && $partial['Super Barbarian']['maxLevel']===null,'An unknown base cap must not retain the misleading Super Troop cap of one.');
+    echo "Account feature tests passed: ranking categories/locations, capital snapshots, achievements, war preferences and 17 Super Troop base-level mappings.\n";
 } finally {
     if ($previousToken === null) unset($_ENV['COC_API_TOKEN']); else $_ENV['COC_API_TOKEN'] = $previousToken;
     if ($previousDirectory === null) unset($_ENV['DATA_DIR']); else $_ENV['DATA_DIR'] = $previousDirectory;

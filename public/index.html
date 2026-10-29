@@ -13,6 +13,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/index.css">
     <link rel="stylesheet" href="/war-map.css">
+    <link rel="stylesheet" href="/war-summary.css">
     <link rel="stylesheet" href="/raids.css">
     <link rel="stylesheet" href="/account-features.css">
     <link rel="stylesheet" href="/clan-tabs.css">
@@ -25,6 +26,7 @@
   <script src="/i18n.js"></script>
   <script src="/share.js"></script>
   <script src="/war-map.js"></script>
+  <script src="/war-summary.js"></script>
     <script src="/rankings.js" defer></script>
     <script src="/recent.js" defer></script>
     <script src="/donation.js" defer></script>
@@ -351,50 +353,34 @@
                 </div>
             </section></div>
 
-            <div id="war-cwl" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-war-cwl" hidden><section id="clan-war" class="rounded border border-slate-200 bg-white clan-anchor-section" aria-labelledby="warTitle" data-section-tone="amber">
-                <div class="border-b border-slate-200 px-4 py-3">
-                    <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-                        <div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <h2 id="warTitle" class="text-lg font-bold leading-6" data-i18n="clan.warActive">Perang aktif</h2>
-                                <span id="warPhase" class="rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700"></span>
-                            </div>
-                            <p id="warTimer" class="mt-1 text-sm font-semibold text-slate-700"></p>
-                        </div>
-                        <nav id="warRounds" class="hidden flex flex-wrap gap-1.5" aria-label="Navigasi putaran CWL" data-i18n-aria-label="clan.roundNavigation"></nav>
-                    </div>
+            <div id="war-cwl" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-war-cwl" hidden>
+              <p class="war-section-kicker">CLANINTEL / WAR &amp; CWL</p>
+              <section id="clan-war" class="war-command-panel rounded border border-slate-200 bg-white clan-anchor-section" aria-labelledby="warTitle" data-section-tone="amber">
+                <div class="war-summary-header">
+                    <div class="war-summary-heading"><p class="war-summary-eyebrow" data-i18n="clan.layout.eyebrow">ANALISIS PERANG &amp; CWL</p><h2 id="warTitle" data-i18n="clan.warActive">Perang aktif</h2><p id="warTimer"></p></div>
+                    <div class="war-summary-controls"><span id="warPhase" class="war-phase-badge"></span><nav id="warRounds" class="hidden" aria-label="Navigasi putaran CWL" data-i18n-aria-label="clan.roundNavigation"></nav></div>
                 </div>
-
-                <p id="warStatus" class="loading-state px-4 py-4 text-sm" role="status"><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="clan.loadingWar">Memuat data perang…</span></p>
-
+                <p id="warStatus" class="loading-state px-4 py-4 text-sm" role="status"><span class="loading-spinner" aria-hidden="true"></span><span data-i18n="clan.loadingWar">Memuat data perang...</span></p>
                 <div id="warContent" class="hidden">
-                    <div id="warCommandStrip" class="war-command-strip">
-                        <div><span id="warCommandTone" class="war-command-indicator"></span><div><strong id="warCommandText" data-i18n="clan.assessingWar">Menilai kondisi perang…</strong><small id="warCommandDetail"></small></div></div>
-                        <button id="showPendingRoster" type="button" data-i18n="clan.showPending">Tampilkan yang belum menyerang</button>
+                  <div class="war-summary">
+                    <div class="war-scoreboard">
+                        <section class="war-clan-card war-home-card" aria-labelledby="warClanName"><p class="war-card-label" data-i18n="clan.layout.yourClan">Klan Anda</p><h3 id="warClanName"></h3><div id="warClanScore" class="war-clan-score"></div></section>
+                        <div class="war-versus"><span class="war-vs" aria-hidden="true">VS</span><div id="warScoreLead" class="war-score-lead" data-tone="neutral"><strong id="warScoreDelta"></strong><span id="warScoreDeltaLabel" data-i18n="clan.layout.currentMargin">Selisih saat ini</span></div></div>
+                        <section class="war-clan-card war-enemy-card" aria-labelledby="warOpponentName"><p class="war-card-label" data-i18n="clan.layout.opponentClan">Klan lawan</p><h3><a id="warOpponentName" class="war-opponent-link"></a></h3><div id="warOpponentScore" class="war-clan-score"></div></section>
                     </div>
-                    <div id="warProjection" class="war-projection"></div>
-                    <div class="grid border-b border-slate-200 md:grid-cols-4">
-                        <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
-                            <p class="text-xs font-semibold uppercase text-slate-500">Clan</p>
-                            <h3 id="warClanName" class="mt-1 truncate text-base font-bold"></h3>
-                            <p id="warClanScore" class="text-sm font-semibold text-blue-700"></p>
-                        </div>
-                        <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
-                            <p class="text-xs font-semibold uppercase text-slate-500" data-i18n="clan.opponent">Lawan</p>
-                            <h3 class="mt-1 truncate text-base font-bold"><a id="warOpponentName" class="war-opponent-link"></a></h3>
-                            <p id="warOpponentScore" class="text-sm font-semibold text-rose-700"></p>
-                        </div>
-                        <div class="border-b border-slate-200 px-4 py-3 md:border-b-0 md:border-r">
-                            <p class="text-xs font-semibold uppercase text-slate-500" data-i18n="home.attacks">Serangan</p>
-                            <p id="warRemaining" class="mt-1 text-base font-bold"></p>
-                            <p id="warAttackUsage" class="text-xs text-slate-500"></p>
-                        </div>
-                        <div class="px-4 py-3">
-                            <p id="warPendingLabel" class="text-xs font-semibold uppercase text-slate-500" data-i18n="clan.followUp">Perlu follow up</p>
-                            <p id="warPendingCount" class="mt-1 text-base font-bold"></p>
-                            <p id="warPendingNames" class="truncate text-xs text-slate-500"></p>
-                        </div>
+                    <section class="war-usage" aria-labelledby="warUsageTitle">
+                        <div class="war-usage-heading"><h3 id="warUsageTitle" data-i18n="clan.layout.attackUsage">Pemakaian serangan klan</h3><p id="warAttackUsage"></p></div>
+                        <progress id="warUsageProgress" class="war-usage-progress" max="100" value="0" aria-labelledby="warUsageTitle" hidden></progress>
+                        <div class="war-usage-caption"><span id="warUsagePercent"></span><span id="warUsagePending"></span></div>
+                    </section>
+                    <div id="warCommandStrip" class="war-command-strip"><div><span id="warCommandTone" class="war-command-indicator" aria-hidden="true"></span><div><strong id="warCommandText" data-i18n="clan.assessingWar">Menilai kondisi perang...</strong><small id="warCommandDetail"></small></div></div></div>
+                    <div id="warProjection" class="war-projection war-summary-metrics">
+                        <div><span data-i18n="clan.remainingAttacks">Sisa serangan</span><strong id="warRemaining"></strong><small id="warRemainingDetail"></small></div>
+                        <div id="warResultCard"><span data-i18n="clan.layout.resultStatus">Status hasil</span><strong id="warResultSummary"></strong><small id="warResultDetail"></small></div>
+                        <div><span id="warPendingLabel" data-i18n="clan.playersWithAttacksLeft">Pemain dengan sisa serangan</span><strong id="warPendingCount"></strong><small data-i18n="clan.layout.pendingHint">Lihat daftar sisa serangan</small></div>
                     </div>
+                  </div>
+                  <div class="war-pending-footer"><div><h3 id="warPendingFooterLabel" data-i18n="clan.playersWithAttacksLeft">Pemain dengan sisa serangan</h3><p id="warPendingNames"></p></div><button id="showPendingRoster" type="button" aria-controls="war-roster"><span id="warPendingAction" data-i18n="clan.layout.viewRemaining">Lihat sisa serangan</span><span aria-hidden="true">&rarr;</span></button></div>
 
                     <div class="war-layout grid gap-4 p-4 xl:grid-cols-[1fr_360px]">
                         <div class="min-w-0 space-y-4">
@@ -593,6 +579,7 @@
     <script>
         let activeTag = null;
         let warRefreshTimer = null;
+        let warEndTimer = null;
         let selectedRound = null;
         let warRequestId = 0;
         let rosterFilter = 'all';
@@ -718,10 +705,7 @@
         }
 
         function parseCoCTime(value) {
-            if (!value) return null;
-            const match = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})\.\d{3}Z$/.exec(value);
-            if (!match) return null;
-            return new Date(Date.UTC(+match[1], +match[2] - 1, +match[3], +match[4], +match[5], +match[6]));
+            return window.ClanWarSummary.parseTime(value);
         }
 
         function updateDataFreshness(key, value) {
@@ -828,7 +812,7 @@
             document.getElementById('warCommandTone').className = `war-command-indicator ${tone}`;
             setText('warCommandText', headline);
             setText('warCommandDetail', tr('clan.warCommandDetail', { ours: clanStars, theirs: opponentStars, used: data.clan?.attacks || 0, quota: totalQuota ?? '—', opponent: opponentRemaining ?? '—' }));
-            document.getElementById('showPendingRoster').hidden = ourPerfect || data.state === 'warEnded';
+
             setText('warPendingLabel', tr(ourPerfect || data.state === 'warEnded' ? 'clan.playersWithAttacksLeft' : 'clan.followUp'));
 
             const needed = Math.max(0, opponentStars + 1 - clanStars);
@@ -850,11 +834,8 @@
             else if (clanStars >= ourTheoreticalLimit) status = tr('clan.warMaxStars');
             else if (remaining === null) status = tr('clan.warQuotaUnknown');
             else status = needed ? tr('clan.starsNeeded', { stars: needed, average: formatLocalizedNumber(needed / Math.max(1, remaining), { maximumFractionDigits: 2 }) }) : tr('clan.leadNotSafe');
-            const projection = document.getElementById('warProjection');
-            projection.replaceChildren();
-            for (const [label, value] of [[tr('clan.ourTheoreticalLimit'), `${ourTheoreticalLimit}★`], [tr('clan.opponentTheoreticalLimit'), `${opponentTheoreticalLimit}★`], [tr('clan.requirement'), status]]) {
-                const item = document.createElement('div'); item.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); projection.appendChild(item);
-            }
+            window.ClanWarSummary.render(data, { pending, remaining, totalQuota, ourTheoreticalLimit, opponentTheoreticalLimit,
+                clanStars, opponentStars, ourPerfect, opponentPerfect, result, destructionKnown, status });
         }
 
         function showWarStatus(message, preserveContent = false, loading = false) {
@@ -1500,17 +1481,50 @@
             }
         }
 
+        function renderWarTiming(data) {
+            const phases = { preparation: tr('clan.phase.preparation'), inWar: tr('clan.phase.inWar'), warEnded: tr('clan.phase.warEnded') };
+            const warTypeLabel = data.type === 'CWL' ? 'CWL' : tr('compare.classicWar');
+            const ended = data.state === 'warEnded';
+            setText('warTitle', selectedRound === null ? tr(ended ? 'clan.warFinishedTitle' : 'clan.warActive') : tr('clan.warRound', { round: selectedRound }));
+            setText('warPhase', `${warTypeLabel}${data.round ? ` - R${data.round}` : ''} - ${phases[data.state] || data.state || tr('clan.phase.unknown')}`);
+            const deadline = parseCoCTime(data.state === 'preparation' ? data.startTime : data.endTime);
+            setText('warTimer', deadline ? tr('clan.warTimer', { action: tr(data.state === 'preparation' ? 'clan.starts' : ended ? 'clan.ended' : 'clan.ends'), date: deadline.toLocaleString(window.CocI18n.formatLocale), remaining: !ended && deadline > new Date() ? tr('clan.timeRemaining', { duration: formatDuration(deadline - new Date()) }) : tr('clan.timePassed') }) : tr('clan.warTimeUnavailable'));
+            setText('overviewWarState', `${warTypeLabel}${data.round ? ` R${data.round}` : ''}`);
+            setText('overviewWarScore', `${data.clan.stars}\u2013${data.opponent.stars}\u2605 \u00b7 ${phases[data.state] || data.state}`);
+            return deadline;
+        }
+
+        function watchWarEnd(data, tag) {
+            clearTimeout(warEndTimer);
+            const end = parseCoCTime(data.endTime);
+            if (data.state !== 'inWar' || !end) return;
+            const watchedRound = selectedRound;
+            warEndTimer = setTimeout(() => {
+                if (activeTag !== tag || latestWarData !== data || selectedRound !== watchedRound) return;
+                const ended = window.ClanWarSummary.normalize(data);
+                if (ended === data) return;
+                latestWarData = ended;
+                const deadline = renderWarTiming(ended);
+                renderWarCommand(ended, deadline);
+                renderRoster(ended); renderTargets(ended); renderPerformance(ended);
+                window.ClanWarMap.render(ended); refreshClanReport();
+                loadWar(tag);
+            }, Math.max(0, Math.min(2147483647, end.getTime() - Date.now() + 100)));
+        }
+
         async function loadWar(tag) {
             const requestId = ++warRequestId;
             const round = selectedRound;
             try {
                 const url = `/api/clan/${encodeURIComponent(tag)}/war${round === null ? '' : `?round=${round}`}`;
                 const response = await window.CocI18n.apiFetch(url);
-                const data = await response.json();
+                const data = window.ClanWarSummary.normalize(await response.json());
                 if (tag !== activeTag || requestId !== warRequestId) return;
                 if (!response.ok) throw new Error(data.error || tr('clan.warLoadError'));
 
                 latestWarData = data;
+                watchWarEnd(data, tag);
+                document.getElementById('warPhase').dataset.state = data.state || 'unknown';
                 window.ClanWarMap.render(data);
                 refreshClanReport();
                 setText('warUpdated', tr('clan.warUpdate', { date: new Date(data.lastUpdated).toLocaleString(window.CocI18n.formatLocale) }));
@@ -1520,6 +1534,7 @@
 
                 if (data.state === 'notInWar') {
                     setText('warPhase', tr('clan.noWar'));
+                    setText('warTimer', '');
                     setText('overviewWarState', tr('clan.noWar'));
                     setText('overviewWarScore', tr('clan.noActiveWar'));
                     showWarStatus(tr('clan.noWarDetail'));
@@ -1527,19 +1542,15 @@
                 }
                 if (data.state === 'cwlWaiting') {
                     setText('warPhase', 'CWL');
+                    setText('warTimer', '');
                     setText('overviewWarState', tr('clan.cwlWaiting'));
                     setText('overviewWarScore', tr('clan.roundUnknown'));
                     showWarStatus(tr('clan.cwlWaitingDetail'));
                     return;
                 }
 
-                const phases = { preparation: tr('clan.phase.preparation'), inWar: tr('clan.phase.inWar'), warEnded: tr('clan.phase.warEnded') };
-                const warTypeLabel = data.type === 'CWL' ? 'CWL' : tr('compare.classicWar');
-                setText('warPhase', `${warTypeLabel}${data.round ? ` - R${data.round}` : ''} - ${phases[data.state] || data.state || tr('clan.phase.unknown')}`);
-                const deadline = parseCoCTime(data.state === 'preparation' ? data.startTime : data.endTime);
-                setText('warTimer', deadline ? tr('clan.warTimer', { action: tr(data.state === 'preparation' ? 'clan.starts' : 'clan.ends'), date: deadline.toLocaleString(window.CocI18n.formatLocale), remaining: deadline > new Date() ? tr('clan.timeRemaining', { duration: formatDuration(deadline - new Date()) }) : tr('clan.timePassed') }) : tr('clan.warTimeUnavailable'));
+                const deadline = renderWarTiming(data);
                 setText('warClanName', data.clan.name);
-                setText('warClanScore', tr('clan.warScore', { stars: data.clan.stars, destruction: formatPercent(data.clan.destructionPercentage), attacks: data.clan.attacks }));
                 setText('warOpponentName', data.opponent.name);
                 const opponentLink = document.getElementById('warOpponentName');
                 const opponentTag = String(data.opponent.tag || '').replace(/^#/, '').toUpperCase();
@@ -1550,9 +1561,6 @@
                     opponentLink.removeAttribute('href');
                     opponentLink.removeAttribute('title');
                 }
-                setText('warOpponentScore', tr('clan.warScore', { stars: data.opponent.stars, destruction: formatPercent(data.opponent.destructionPercentage), attacks: data.opponent.attacks }));
-                setText('overviewWarState', `${warTypeLabel}${data.round ? ` R${data.round}` : ''}`);
-                setText('overviewWarScore', `${data.clan.stars}–${data.opponent.stars}★ · ${phases[data.state] || data.state}`);
 
                 const totalQuota = data.attacksPerMember === null ? null : data.teamSize * data.attacksPerMember;
                 setText('warRemaining', data.attacksRemaining === null ? tr('clan.attacksRecorded', { count: data.attacksUsed }) : tr('clan.attacksRemainingValue', { remaining: data.attacksRemaining, total: totalQuota }));
@@ -1733,6 +1741,7 @@
             performancePage = 1;
             warRequestId++;
             clearInterval(warRefreshTimer);
+            clearTimeout(warEndTimer);
             document.getElementById('searchButton').disabled = true;
 
             resultDiv.classList.add('hidden');

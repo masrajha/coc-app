@@ -240,3 +240,31 @@ HTML awal profil yang dikenal berisi ringkasan tersimpan, tautan terkait, level 
 Sesudah deploy, buka `/robots.txt` dan `/sitemap.xml`, pastikan origin benar serta XML mengembalikan 200, lalu kirim `sitemap.xml` melalui Google Search Console pada properti domain yang sesuai. Gunakan URL Inspection untuk satu profil per bahasa dan satu artikel. Halaman hanya bisa masuk indeks jika hosting dapat diakses publik. Pengiriman sitemap tidak menjamin pengindeksan atau peringkat. Jika domain berubah, perbarui APP_URL dan buat pengalihan permanen dari domain lama secara terpisah.
 
 Validasi lokal: `composer test`, `node tests/i18n.test.js`, dan `node --check public/seo.js`. Pengujian SEO memeriksa XML, canonical/hreflang, isi HTML awal, negara ranking, escaping nama, aturan noindex, dan perubahan lastmod.
+
+### Layout ringkasan War & CWL
+
+Unggah `public/index.html`, `public/i18n.js`, serta file baru `public/war-summary.css` dan `public/war-summary.js`. Ringkasan memakai dua kartu skor klan dengan batas bintang, selisih skor/destruksi, pemakaian serangan, banner status, tiga metrik dan akses roster pending. Layout beradaptasi pada desktop/tablet/mobile dan mengambil warna dari variabel tema.
+
+Perhitungan target dan hasil tetap berada di `renderWarCommand`; modul baru hanya menyajikan hasilnya. Tombol sisa serangan tetap tersedia ketika skor sudah maksimal jika masih ada anggota dengan kuota tersisa. Pada perang selesai, keterangannya menjadi serangan terlewat. Kuota yang tidak diketahui tidak ditampilkan sebagai progres 0% atau kuota pasti. Putaran CWL, standings, roster, peta, target cleanup dan analisis di bawah ringkasan tetap tersedia.
+
+Pemeriksaan: `node tests/i18n.test.js`, `node --check public/war-summary.js`, dan `composer test`.
+
+Perbaikan tema ringkasan perang: `war-summary.css` kini menyediakan palet lokal `--war-*` dengan fallback lengkap. Dark Simple hanya mendefinisikan skema warna, sehingga komponen tidak boleh bergantung pada variabel `--theme-*` tanpa fallback. Pastikan stylesheet terbaru ikut deploy agar kartu, border, progress dan tombol tidak menjadi transparan pada mode tersebut.
+
+Status akhir perang: unggah `public/index.html`, `public/war-summary.js`, dan `public/i18n.js` terbaru. Tampilan mempertimbangkan endTime (format CoC/ISO), sehingga cache inWar tidak mempertahankan badge sedang berlangsung setelah deadline. Timer lokal memperbarui tampilan saat halaman tetap terbuka, lalu meminta pembaruan data. War klasik dan putaran CWL memakai keterangan selesai/Ended serta pesan hasil akhir. Jika data API masih berstatus inWar setelah waktu berakhir, hasil nonmaksimal ditandai menunggu pembaruan; hasil imbang maksimal kedua klan dapat dipastikan tanpa mengasumsikan kemenangan dari skor cache. Uji regresi tambahan: `node tests/war-status.test.js`.
+
+### Layout hero dan ringkasan profil pemain
+
+Unggah `public/player.html`, `public/player.js`, `public/player-league.js`, `public/i18n.js`, file baru `public/player-profile.css`, `public/player-overview.js`, dan seluruh `public/assets/profile/`. Semua ikon statistik merupakan SVG kecil; latar fortress, karakter dan ikon TH/BH memakai aset lokal yang sudah ada. Header profil, ringkasan empat kartu dan enam statistik memakai lebar penuh; sidebar liga mendampingi tab analisis di bawahnya. Palet lokal memiliki fallback agar Dark Simple tetap menampilkan warna/border.
+
+Progress bar cakupan tidak ditampilkan jika total maksimum item tidak diketahui. Jumlah `expectedItems` pada kategori skor/API hanya mewakili input analisis dan tidak dianggap jumlah semua item yang dapat dibuka. Jika nanti backend menyediakan katalog yang benar-benar lengkap, bar cakupan hanya aktif melalui `progress.coverage.totalKnown = true` dan `progress.coverage.expectedItems` berupa integer positif yang tidak lebih kecil dari jumlah item terhitung. Saat ini kontrak tersebut belum dikirim backend, sehingga kartu menunjukkan jumlah item tanpa bar cakupan. Bar skor progres tetap mengikuti persentase Army yang tersedia, termasuk keterangan skor parsial. Status rushed tidak mengklaim penilaian bangunan/tembok.
+
+Pemeriksaan: `node tests/player-overview.test.js`, `node tests/i18n.test.js`, dan `composer test`. Verifikasi browser mencakup empat tema, dua bahasa, desktop/tablet/mobile, cakupan tanpa/dengan maksimum eksplisit, trofi nol, profil tanpa klan, serta nama panjang.
+
+### Gambar hero pada header profil pemain
+
+- Upload `public/player.html`, `public/player-overview.js`, `public/player-profile.css`, serta enam file `.webp` di `public/assets/images/hero/characters/`.
+- Header memilih hero Home Village dengan rasio `level / maxLevel` tertinggi. Batas level memakai data kategori progres jika tersedia, lalu data hero API sebagai cadangan. Jika rasio tertinggi sama, salah satunya dipilih acak dan dipertahankan selama data yang sama ditampilkan.
+- Jika tidak ada hero dengan batas level valid, gambar disembunyikan. Gambar mempunyai kolom tersendiri sehingga tidak menutupi informasi pemain maupun waktu pembaruan.
+- Aset WebP berukuran sekitar 51–78 KiB per gambar; browser hanya memuat gambar yang terpilih. PNG sumber tetap disimpan dan tidak dipakai pada header.
+- Validasi pemilihan: `node tests/player-overview.test.js`.

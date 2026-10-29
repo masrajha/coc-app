@@ -20,7 +20,14 @@ final class App
     private const ICON_TTL = 86400;
     private const SECTIONS = ['heroes', 'heroEquipment', 'pets', 'troops', 'superTroops', 'builderBase', 'spells'];
     private const PETS = ['L.A.S.S.I', 'Electro Owl', 'Mighty Yak', 'Unicorn', 'Frosty', 'Diggy', 'Poison Lizard', 'Phoenix', 'Spirit Fox', 'Angry Jelly', 'Sneezy'];
-    private const SUPER_TROOPS = ['Super Barbarian', 'Super Archer', 'Super Giant', 'Sneaky Goblin', 'Super Wall Breaker', 'Super Wizard', 'Inferno Dragon', 'Super Minion', 'Super Valkyrie', 'Super Witch', 'Ice Hound', 'Rocket Balloon', 'Super Bowler', 'Super Dragon', 'Super Miner', 'Super Hog Rider', 'Super Yeti'];
+    private const SUPER_TROOPS = [
+        'Super Barbarian' => 'Barbarian', 'Super Archer' => 'Archer', 'Super Giant' => 'Giant',
+        'Sneaky Goblin' => 'Goblin', 'Super Wall Breaker' => 'Wall Breaker', 'Super Wizard' => 'Wizard',
+        'Inferno Dragon' => 'Baby Dragon', 'Super Minion' => 'Minion', 'Super Valkyrie' => 'Valkyrie',
+        'Super Witch' => 'Witch', 'Ice Hound' => 'Lava Hound', 'Rocket Balloon' => 'Balloon',
+        'Super Bowler' => 'Bowler', 'Super Dragon' => 'Dragon', 'Super Miner' => 'Miner',
+        'Super Hog Rider' => 'Hog Rider', 'Super Yeti' => 'Yeti',
+    ];
     private const WEIGHTS = ['heroes' => 0.4, 'troops' => 0.35, 'spells' => 0.15, 'pets' => 0.1];
     private const RANKED_RULES = [
         'Skeleton League 1' => ['battles' => 6, 'promoted' => 50, 'demoted' => null],
@@ -597,7 +604,7 @@ final class App
         $th=(int)($player['townHallLevel'] ?? $player['townhallLevel'] ?? 0); $table=self::MAX_LEVELS[$th] ?? [];
         if (!$table) { $levels=array_keys(self::MAX_LEVELS); $fallback=max(array_filter($levels,static fn($n)=>$n<=$th) ?: [$levels[0]]); $table=self::MAX_LEVELS[$fallback]; } else $fallback=$th;
         $api=$th===18; $pets=$player['heroPets'] ?? $player['pets'] ?? array_values(array_filter($player['troops'] ?? [],static fn($i)=>in_array($i['name'] ?? '',self::PETS,true)));
-        $troops=array_values(array_filter($player['troops'] ?? [],static fn($i)=>!in_array($i['name'] ?? '',self::SUPER_TROOPS,true)&&!in_array($i['name'] ?? '',self::PETS,true)));
+        $troops=array_values(array_filter($player['troops'] ?? [],static fn($i)=>!isset(self::SUPER_TROOPS[$i['name'] ?? ''])&&!in_array($i['name'] ?? '',self::PETS,true)));
         $categories=['heroes'=>$this->scoreItems($player['heroes']??[],$table['heroes']??[],$api),'troops'=>$this->scoreItems($troops,$table['troops']??[],$api),'spells'=>$this->scoreItems($player['spells']??[],$table['spells']??[],$api),'pets'=>$this->scoreItems($pets,$table['pets']??[],$api)];
         $available=array_filter($categories,static fn($c)=>$c['percent']!==null); $weightTotal=0; foreach($available as $key=>$_)$weightTotal+=self::WEIGHTS[$key];
         $overall=null; if($weightTotal){$overall=0;foreach($available as $key=>$cat)$overall+=$cat['percent']*self::WEIGHTS[$key]/$weightTotal;$overall=round($overall,2);}
@@ -621,7 +628,7 @@ final class App
         foreach($p['heroEquipment']??[] as $i)$army['heroEquipment'][]=$this->playerItem($i);
         foreach($p['heroPets']??$p['pets']??[] as $i)$army['pets'][]=$this->playerItem($i);
         $seen=array_column($army['pets'],'name');
-        foreach($p['troops']??[] as $i){$item=$this->playerItem($i);if(($i['village']??'')==='builderBase')$army['builderBase'][]=$item;elseif(in_array($i['name']??'',self::PETS,true)){if(!in_array($item['name'],$seen,true))$army['pets'][]=$item;$seen[]=$item['name'];}elseif(in_array($i['name']??'',self::SUPER_TROOPS,true))$army['superTroops'][]=$item;else $army['troops'][]=$item;}
+        foreach($p['troops']??[] as $i){$item=$this->playerItem($i);if(($i['village']??'')==='builderBase')$army['builderBase'][]=$item;elseif(in_array($i['name']??'',self::PETS,true)){if(!in_array($item['name'],$seen,true))$army['pets'][]=$item;$seen[]=$item['name'];}elseif(isset(self::SUPER_TROOPS[$i['name']??'']))$army['superTroops'][]=$item;else $army['troops'][]=$item;}
         foreach($p['spells']??[] as $i)$army[($i['village']??'')==='builderBase'?'builderBase':'spells'][]=$this->playerItem($i);
         $progressSections=['heroes'=>'heroes','pets'=>'pets','troops'=>'troops','spells'=>'spells'];
         foreach($progressSections as $section=>$category){
@@ -638,6 +645,22 @@ final class App
         foreach($army['builderBase'] as &$item)if(isset($builderLimits[$item['name']])){
             $item['progressMaxLevel']=$builderLimits[$item['name']];
             $item['progressMaxSource']='BH '.($p['builderHallLevel']??'—');
+        }
+        unset($item);
+        // The API's Super Troop level can be an unlock marker (1). Display the
+        // matching Home Village troop's level and cap, preserving the raw values.
+        $baseTroops = array_column($army['troops'], null, 'name');
+        foreach ($army['superTroops'] as &$item) {
+            $baseName = self::SUPER_TROOPS[$item['name']] ?? null;
+            $base = $baseTroops[$baseName] ?? null;
+            if (!is_numeric($base['level'] ?? null) || (int)$base['level'] <= 0) continue;
+            $item['baseTroop'] = $baseName;
+            $item['levelSource'] = 'baseTroop';
+            $item['apiLevel'] = $item['level'];
+            $item['apiMaxLevel'] = $item['maxLevel'];
+            $item['level'] = $base['level'];
+            $item['maxLevel'] = $base['maxLevel'];
+            foreach (['progressMaxLevel', 'progressMaxSource'] as $field) if (isset($base[$field])) $item[$field] = $base[$field];
         }
         unset($item);
         foreach($army as $section=>&$items)foreach($items as &$item)$item['iconUrls']=$this->iconCandidates($item['name'],$section);unset($items,$item);

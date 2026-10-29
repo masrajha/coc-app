@@ -1,0 +1,82 @@
+/* War & CWL summary: independent of Tailwind and shared by all theme palettes. */
+.dashboard .war-section-kicker{margin:6px 2px 14px;color:var(--theme-muted,#9cb1c9);font-size:10px;font-weight:800;letter-spacing:.18em}
+/* Dark Simple intentionally omits shared palette variables. Resolve every surface
+   locally so an undefined theme token cannot invalidate a whole CSS declaration. */
+.dashboard #clan-war.war-command-panel{
+  --war-panel:var(--theme-panel,#1b283b);
+  --war-inset:var(--theme-inset,#101d2e);
+  --war-text:var(--theme-text,#f1f0eb);
+  --war-secondary:var(--theme-secondary,#adc1da);
+  --war-muted:var(--theme-muted,#9eb3cb);
+  --war-warning:var(--theme-warning,#f5bf43);
+  --war-success:var(--theme-success,#75dfbe);
+  --war-danger:var(--theme-danger,#ffa7aa);
+  --war-border:var(--theme-border,#344d67);
+  --war-green-soft:var(--theme-green-soft,#143b35);
+  --war-red-soft:var(--theme-red-soft,#452b36);
+  --war-gold-soft:var(--theme-gold-soft,#3e321b);
+  --war-purple-soft:var(--theme-purple-soft,#251f32);
+  --war-blue-soft:var(--theme-blue-soft,#1c334c);
+  --war-link:var(--theme-link,#9bc6f4);
+  --war-raised:var(--theme-raised,#233b4e);
+  --war-page:var(--theme-page,#0d1727);
+  --war-gold-border:var(--theme-gold-border,#bc922f);
+  --war-shadow:var(--theme-shadow,#00000033);
+}
+
+.dashboard #clan-war.war-command-panel{padding:0;overflow:hidden;border:1px solid var(--war-border);border-radius:18px;background:var(--war-panel);color:var(--war-text);box-shadow:0 12px 32px var(--war-shadow)}
+.war-summary-header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 26px 22px;border-bottom:1px solid var(--war-border)}
+.war-summary-heading{min-width:0}.war-summary-eyebrow{margin:0 0 6px;color:var(--war-warning);font-size:10px;font-weight:800;letter-spacing:.15em}
+.dashboard .war-summary-header h2{margin:0;font-size:25px;font-weight:800;line-height:1.25;letter-spacing:-.025em;color:var(--war-text)}
+.war-summary-heading #warTimer{margin:8px 0 0;color:var(--war-secondary);font-size:12px;font-weight:500;line-height:1.6}
+.war-summary-controls{display:flex;flex-direction:column;align-items:flex-end;gap:12px;max-width:48%}
+.dashboard .war-phase-badge{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:9px 13px;border:1px solid var(--war-border);border-radius:999px;background:var(--war-inset);color:var(--war-secondary);font-size:11px;font-weight:700;line-height:1.4}
+.war-phase-badge:before{content:"";flex:0 0 8px;width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px color-mix(in srgb,currentColor 15%,transparent)}
+.dashboard .war-phase-badge[data-state=inWar]{background:var(--war-green-soft);color:var(--war-success)}
+.dashboard .war-phase-badge[data-state=preparation]{background:var(--war-blue-soft);color:var(--war-link)}
+.war-summary-controls #warRounds:not(.hidden){display:flex;justify-content:flex-end;flex-wrap:wrap;gap:6px}
+.war-summary{padding:22px 25px 24px}
+.war-scoreboard{display:grid;grid-template-columns:minmax(0,1fr) minmax(135px,.36fr) minmax(0,1fr);align-items:stretch;gap:16px}
+.war-clan-card{min-width:0;padding:12px 15px;border:1px solid var(--war-border);border-radius:14px;background:var(--war-inset)}
+.war-clan-card.war-enemy-card{background:var(--war-purple-soft)}
+.war-card-label{margin:0 0 4px;color:var(--war-muted);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.dashboard .war-clan-card h3{margin:0;font-size:18px;line-height:1.3;font-weight:800;color:var(--war-text);overflow-wrap:anywhere}
+.dashboard .war-clan-card .war-opponent-link{color:inherit;text-decoration:none}.war-clan-card .war-opponent-link[href]:hover{text-decoration:underline;text-underline-offset:4px}
+.war-score-total{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px;margin:7px 0 4px}
+.dashboard .war-score-number{font-size:30px;line-height:1;font-weight:850;color:var(--war-text)}
+.dashboard .war-enemy-card .war-score-number{color:var(--war-danger)}
+.war-score-cap{color:var(--war-warning);font-size:12px;font-weight:800}
+.war-score-detail{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;line-height:1.5;color:var(--war-secondary)}
+.war-score-detail strong{color:var(--war-text);font-weight:700}
+.war-versus{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0}
+.war-vs{color:var(--war-muted);font-size:14px;letter-spacing:.2em;font-weight:850}
+.war-score-lead{display:grid;align-content:center;gap:4px;width:100%;min-height:47px;padding:8px;text-align:center;border:1px solid var(--war-border);border-radius:10px;background:var(--war-inset);color:var(--war-secondary)}
+.war-score-lead[data-tone=safe]{background:var(--war-green-soft);color:var(--war-success)}
+.war-score-lead[data-tone=danger]{background:var(--war-red-soft);color:var(--war-danger)}
+.war-score-lead strong{font-size:13px;font-weight:800;line-height:1.2}.war-score-lead>span{font-size:10px;line-height:1.4}
+.war-usage{margin:22px 0 18px}.war-usage-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px 20px;margin-bottom:9px}
+.war-usage-heading h3{margin:0;font-size:13px;font-weight:750}.war-usage-heading p{margin:0;text-align:right;font-size:12px;color:var(--war-secondary)}
+.war-usage-progress{appearance:none;-webkit-appearance:none;display:block;width:100%;height:11px;border:1px solid var(--war-border);border-radius:999px;overflow:hidden;background:var(--war-inset);color:var(--war-success)}
+.war-usage-progress[hidden]{display:none}.war-usage-progress::-webkit-progress-bar{background:var(--war-inset);border-radius:999px}.war-usage-progress::-webkit-progress-value{background:var(--war-success);border-radius:999px}.war-usage-progress::-moz-progress-bar{background:var(--war-success);border-radius:999px}
+.war-usage-caption{display:flex;justify-content:space-between;gap:8px 20px;margin-top:6px;color:var(--war-secondary);font-size:11px;line-height:1.5}.war-usage-caption>span:last-child{text-align:right}
+.dashboard .war-summary .war-command-strip{display:block;margin:0 0 14px;padding:13px 15px;border:1px solid var(--war-border);border-radius:11px;background:var(--war-inset)}
+.dashboard .war-summary .war-command-strip[data-tone=safe]{background:var(--war-green-soft)}
+.dashboard .war-summary .war-command-strip[data-tone=danger]{background:var(--war-red-soft)}
+.dashboard .war-summary .war-command-strip[data-tone=warning]{background:var(--war-gold-soft)}
+.dashboard .war-summary .war-command-strip[data-tone=info]{background:var(--war-blue-soft)}
+.war-summary .war-command-strip>div{gap:11px}.war-summary .war-command-strip strong{font-size:13px;line-height:1.5;color:var(--war-text)}
+.war-summary .war-command-strip small{font-size:12px;line-height:1.6;color:var(--war-secondary)}
+.war-summary .war-command-indicator{display:grid;place-items:center;width:26px;height:26px;flex:0 0 26px;background:var(--war-raised);color:var(--war-secondary);box-shadow:none;font-size:16px;font-weight:800}
+.war-summary .war-command-indicator:after{content:"i"}.war-summary .war-command-indicator.safe{color:var(--war-success)}.war-summary .war-command-indicator.safe:after{content:"\2713"}.war-summary .war-command-indicator.warning,.war-summary .war-command-indicator.danger{color:var(--war-danger)}.war-summary .war-command-indicator.warning:after,.war-summary .war-command-indicator.danger:after{content:"!"}
+.dashboard .war-summary .war-summary-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:0;background:none}
+.dashboard .war-summary-metrics>div{display:grid;align-content:start;gap:5px;min-width:0;padding:14px;border:1px solid var(--war-border);border-radius:10px;background:var(--war-inset)}
+.war-summary-metrics>div>span{color:var(--war-muted);font-size:10px;line-height:1.5;font-weight:800;text-transform:uppercase}
+.war-summary-metrics strong{color:var(--war-text);font-size:17px;line-height:1.4;font-weight:750}.war-summary-metrics #warRemaining{color:var(--war-warning)}
+.war-summary-metrics small{font-size:11px;color:var(--war-secondary);line-height:1.6}
+.war-summary-metrics [data-tone=safe] strong{color:var(--war-success)}.war-summary-metrics [data-tone=danger] strong{color:var(--war-danger)}
+.war-pending-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 25px;border-top:1px solid var(--war-border);border-bottom:1px solid var(--war-border);background:var(--war-inset)}
+.war-pending-footer>div{min-width:0}.war-pending-footer h3{font-size:12px;font-weight:750;margin:0 0 4px}.war-pending-footer p{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0;color:var(--war-secondary);font-size:12px}
+.dashboard .war-pending-footer button{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:0 0 auto;min-height:43px;padding:11px 17px;border:1px solid var(--war-gold-border);border-radius:10px;background:var(--war-warning);color:var(--war-page);font-family:inherit;font-size:12px;font-weight:800;line-height:1.4;cursor:pointer}
+.war-pending-footer button:hover{filter:brightness(1.08)}.war-pending-footer button:focus-visible{outline:2px solid var(--war-link);outline-offset:3px}.dashboard .war-pending-footer button[hidden]{display:none}
+@media(max-width:850px){.war-scoreboard{grid-template-columns:minmax(0,1fr) 120px minmax(0,1fr);gap:10px}.war-clan-card{padding:11px 13px}.dashboard .war-clan-card h3{font-size:17px}.war-score-detail{font-size:11px;gap:4px 10px}}
+@media(max-width:600px){.war-summary-header{padding:19px 16px;align-items:flex-start;flex-direction:column;gap:13px}.war-summary-controls{max-width:100%;align-items:flex-start}.war-summary-controls #warRounds:not(.hidden){justify-content:flex-start}.war-summary{padding:16px}.war-scoreboard{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.war-versus{grid-column:1/-1;grid-row:2;flex-direction:row;gap:10px}.war-versus .war-score-lead{width:auto;min-width:150px;min-height:0;display:flex;align-items:center;gap:10px}.war-vs{font-size:12px}.war-clan-card{padding:10px 12px}.dashboard .war-clan-card h3{font-size:16px}.dashboard .war-score-number{font-size:27px}.war-score-cap{font-size:11px}.war-score-detail{display:grid;gap:3px}.war-usage-heading,.war-usage-caption{align-items:flex-start;flex-direction:column;gap:5px}.war-usage-heading p,.war-usage-caption>span:last-child{text-align:left}.dashboard .war-summary .war-summary-metrics{grid-template-columns:1fr}.dashboard .war-summary-metrics>div:last-child{grid-column:auto}.war-pending-footer{padding:16px;align-items:flex-start;flex-direction:column;gap:12px}.dashboard .war-pending-footer button{width:100%}.war-pending-footer>div{max-width:100%}.war-section-kicker{font-size:9px}}

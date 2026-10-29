@@ -306,13 +306,7 @@ function renderProgressTools(progress) {
 }
 
 function renderPlayerOverview(player, progress, updated) {
-  const root = document.getElementById('playerOverviewCards'); root.replaceChildren();
-  const cards = [[tr('player.status'), rushedLabel(progress)], [tr('player.progressScore'), progress.score.overall === null ? '—' : `${localizedNumber(progress.score.overall)}%`], [tr('player.coverage'), tr('player.items', { count: localizedNumber(Object.values(progress.score.categories || {}).reduce((n, v) => n + Number(v.knownItems || 0), 0)) })], [tr('player.trophies'), localizedNumber(Number(player.trophies || 0))]];
-  cards.forEach(([label, value]) => { const card = document.createElement('div'); card.append(Object.assign(document.createElement('span'), { textContent: label }), Object.assign(document.createElement('strong'), { textContent: value })); root.appendChild(card); });
-  setText('overviewUpdated', updated ? tr('player.updatedShort', { date: localizedDate(updated) }) : '');
-  const actions = document.getElementById('playerOverviewActions'); actions.replaceChildren();
-  const compare = document.createElement('a'); compare.href = document.getElementById('compareLink').href; compare.textContent = tr('player.comparePlayers'); actions.appendChild(compare);
-  if (player.clan?.tag) { const clan = document.createElement('a'); clan.href = `/?clan=${encodeURIComponent(normalizeTag(player.clan.tag))}`; clan.textContent = tr('player.openClan'); actions.appendChild(clan); }
+  window.PlayerOverview.render(player, progress, updated);
 }
 
 function renderPerformance(data) {
@@ -411,7 +405,7 @@ function renderProfile(data) {
   if (compareClan) compareParams.set('clan', compareClan);
   document.getElementById('compareLink').href = `/compare.html?${compareParams}`;
   window.CocI18n.setPageTitle('player', [player.name || player.tag]);
-  setText('playerName', player.name);
+  window.PlayerOverview.renderName(player.name);
   setText('copyTag', player.tag);
   const clanName = document.getElementById('clanName');
   clanName.replaceChildren();
@@ -433,10 +427,11 @@ function renderProfile(data) {
   setText('trophies', player.trophies == null ? '—' : localizedNumber(player.trophies));
   setText('warStars', player.warStars == null ? '—' : localizedNumber(player.warStars));
   setText('donations', player.donations == null ? '—' : localizedNumber(player.donations));
-  setText('updated', tr('player.updated', { date: localizedDate(data.lastUpdated) }));
   const badge = document.getElementById('clanBadge');
-  const badgeUrl = player.clan?.badgeUrls?.small || player.clan?.badgeUrls?.medium;
+  const badgeUrl = player.clan?.badgeUrls?.large || player.clan?.badgeUrls?.medium || player.clan?.badgeUrls?.small;
+  document.getElementById('profileClanFallback').hidden = Boolean(badgeUrl);
   badge.hidden = !badgeUrl;
+  badge.onerror = () => {badge.hidden = true;document.getElementById('profileClanFallback').hidden = false;};
   if (badgeUrl) badge.src = badgeUrl;
   renderArmy(data.army);
   renderProgress(data.progress);

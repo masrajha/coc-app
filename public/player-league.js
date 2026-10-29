@@ -1031,6 +1031,7 @@
       element('leaguePlayerRank').hidden = true;
       setText('leagueStatus', tr('player.legendGlobal')); element('leagueStatus').hidden = false;
       setText('leagueRankSummary', tr('player.legendLeaderboard'));
+      setLeagueBadge('profileLeagueEmblem', 'Legend I');
       renderTransition('leagueSessionTransition', state.leagueTransition);
       return;
     }
@@ -1071,6 +1072,7 @@
       const tier = data.leagueTier ? `${data.leagueTier} · ` : '';
       const rankText = data.playerRank ? tr('player.rankOf', { rank: data.playerRank, total: data.totalMembers }) : tr('player.rankUnavailable');
       setText('leagueRankSummary', `${tier}${label} · ${rankText}`);
+      setLeagueBadge('profileLeagueEmblem', data.leagueTier);
       const card = element('leaguePlayerRank');
       card.hidden = false;
       card.replaceChildren();
@@ -1106,6 +1108,7 @@
     state.comparisonRequest++;
     setLeagueTitle(null);
     setLeagueBadge('playerLeagueBadge', player.leagueTier?.name);
+    setLeagueBadge('profileLeagueEmblem', player.leagueTier?.name);
     element('leagueSidebarTitle').dataset.i18n = 'player.leagueGroup';
     setText('leagueSidebarTitle', tr('player.leagueGroup'));
     state.request++;

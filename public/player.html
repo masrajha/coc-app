@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/theme-simple.css">
   <link rel="stylesheet" href="/site.css">
   <link rel="stylesheet" href="/seo.css">
+  <link rel="stylesheet" href="/player-profile.css">
   <script src="/i18n.js"></script>
   <script src="/share.js"></script>
   <script src="/ranked-game-model.js" defer></script>
@@ -27,10 +28,11 @@
   <script src="/recent.js" defer></script>
   <script src="/raids.js" defer></script>
   <script src="/account-features.js" defer></script>
+  <script src="/player-overview.js" defer></script>
   <script src="/player.js" defer></script>
   <script src="/donation.js" defer></script>
 </head>
-<body class="command-ui">
+<body class="command-ui player-profile-page">
   <header class="site-header command-header">
     <div class="header-inner"><a class="command-brand" href="/" aria-label="ClanIntel"><img class="clanintel-mark" src="/assets/brand/clanintel-mark.svg" width="44" height="44" alt=""><span class="command-brand-copy"><strong class="clanintel-wordmark">Clan<span>Intel</span></strong><small data-i18n="design.tagline">Analisis klan &amp; pelacakan perang.</small></span></a><nav class="command-header-nav">
       <a id="backLink" class="back-link" href="/" data-i18n="player.back">← Kembali ke klan</a>
@@ -51,32 +53,33 @@
     <div id="status" class="status" role="status" aria-live="polite" aria-atomic="true"><span data-i18n="player.enterTag">Masukkan player tag untuk membuka profil.</span></div>
     <div id="profile" class="profile-layout" hidden>
       <div class="profile-main">
-      <section class="profile-head">
+      <section class="profile-head profile-hero">
+        <div class="profile-hero-art" aria-hidden="true" hidden><img id="profileHeroCharacter" class="profile-hero-character" width="560" height="700" alt="" decoding="async"></div>
         <div class="identity">
-          <img id="clanBadge" class="clan-badge" alt="" hidden>
-          <div>
+          <div class="profile-badge-slot"><img id="clanBadge" class="clan-badge" alt="" hidden><img id="profileClanFallback" src="/assets/brand/clanintel-mark.svg" width="96" height="96" alt=""></div>
+          <div class="profile-identity-copy">
             <div class="eyebrow">PLAYER PROFILE</div>
             <div class="player-name-row"><h1 id="playerName"></h1><div id="playerLeagueBadge" class="player-league-badge" hidden></div></div>
             <div class="identity-meta"><button id="copyTag" type="button" title="Salin player tag" data-i18n-title="player.copyTag"></button><span id="clanName"></span><span id="role"></span><span id="playerWarPreference" class="war-preference"></span></div>
-            <div id="leagueRankSummary" class="league-rank-summary" data-i18n="player.leagueUnavailable">Peringkat grup liga belum tersedia.</div>
+            <div class="profile-league-line"><div id="profileLeagueEmblem" class="profile-league-emblem" hidden></div><div id="leagueRankSummary" class="league-rank-summary" data-i18n="player.leagueUnavailable">Peringkat grup liga belum tersedia.</div></div>
           </div>
         </div>
-        <div id="updated" class="updated"></div>
+        <div class="profile-updated"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14v16H5zM8 3v4m8-4v4M5 10h14m-10 4h1m4 0h1m-6 3h1"/></svg><div><time id="updated" class="updated"></time></div></div>
       </section>
 
       <section id="player-overview" class="panel player-overview-panel" data-section-tone="blue">
-        <div class="section-head"><div><div class="eyebrow">PLAYER SNAPSHOT</div><h2 data-i18n="player.accountSummary">Ringkasan akun</h2></div><span id="overviewUpdated"></span></div>
+        <div class="section-head"><div><div class="eyebrow">PLAYER SNAPSHOT</div><h2 data-i18n="player.accountSummary">Ringkasan akun</h2></div><div class="profile-overview-updated"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg><time id="overviewUpdated"></time></div></div>
         <div id="playerOverviewCards" class="player-overview-cards"></div>
         <div id="playerOverviewActions" class="player-overview-actions"></div>
       </section>
 
-      <section class="stats" data-section-tone="blue" aria-label="Ringkasan pemain" data-i18n-aria-label="player.profileSummary">
-        <div><span>Town Hall</span><strong id="townHall">—</strong></div>
-        <div><span>Builder Hall</span><strong id="builderHall">—</strong></div>
-        <div><span>XP</span><strong id="exp">—</strong></div>
-        <div><span data-i18n="player.trophies">Trofi</span><strong id="trophies">—</strong></div>
-        <div><span>War Stars</span><strong id="warStars">—</strong></div>
-        <div><span data-i18n="player.donations">Donasi</span><strong id="donations">—</strong></div>
+      <section class="stats profile-stats" data-section-tone="blue" aria-label="Ringkasan pemain" data-i18n-aria-label="player.profileSummary">
+        <div class="profile-stat profile-stat-hall"><span>Town Hall</span><strong id="townHall">—</strong></div>
+        <div class="profile-stat profile-stat-hall"><span>Builder Hall</span><strong id="builderHall">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/xp.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="profile.xpLevel">XP Level</span><strong id="exp">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/trophy.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="player.trophies">Trofi</span><strong id="trophies">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/war-star.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="profile.warStars">Bintang perang</span><strong id="warStars">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/donation.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="player.donations">Donasi</span><strong id="donations">—</strong></div>
       </section>
 
       <div class="player-tab-toolbar">
