@@ -572,7 +572,7 @@ function renderLeagueMetrics() {
   const body = document.createElement('tbody');
   for (const metric of definitions) {
     const row = document.createElement('tr');
-    const name = textNode('th', tr(metric.key)); name.scope = 'row'; row.appendChild(name);
+    const name = textNode('th', tr(metric.key)); name.dataset.metric = metric.key; name.scope = 'row'; row.appendChild(name);
     const values = Object.fromEntries(['left', 'right'].map(side => [side, leaguePerformance[side] ? metric.get(leaguePerformance[side], summaries[side]) : { value: null }]));
     for (const side of ['left', 'right']) {
       const item = values[side], other = values[side === 'left' ? 'right' : 'left'];
@@ -587,7 +587,8 @@ function renderLeagueMetrics() {
     }
     body.appendChild(row);
   }
-  table.appendChild(body); root.appendChild(table);
+  table.appendChild(body);
+  window.RankedMetricsLayout.render(root,table,{profiles,data:leaguePerformance,names:{left:sideName('left'),right:sideName('right')}});
   renderLeagueResume(summaries);
 }
 

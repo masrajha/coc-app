@@ -1,0 +1,40 @@
+/* Scoped to the Ranked League metrics table, leaving Legend I records unchanged. */
+#leagueMetricsTable{border:0;overflow:visible;border-radius:0}
+.ranked-metrics-heading{display:flex;align-items:center;gap:14px;margin:26px 0 16px}
+.ranked-metrics-heading h3{font-size:clamp(18px,2vw,23px);line-height:1.35;margin:0;color:var(--theme-text,#eef2f8)}
+.ranked-metrics-heading p{margin:6px 0 0;font-size:12px;line-height:1.6;color:var(--theme-secondary,#b6c8dd)}
+.ranked-metrics-heading>.ranked-metric-icon{width:48px;height:48px;flex-basis:48px;background:transparent;border:0}.ranked-metrics-heading>.ranked-metric-icon svg{width:38px;height:38px}
+.ranked-metrics-scroll{overflow-x:auto;border:1px solid var(--theme-border,#3b5069);border-radius:14px;scrollbar-color:var(--theme-track,#516780) var(--theme-inset,#0c192b)}
+.ranked-metrics-scroll:focus-visible{outline:2px solid var(--theme-link,#93c5fd);outline-offset:3px}
+#leagueMetricsTable .ranked-metrics-design{min-width:690px;width:100%;font-size:13px}
+#leagueMetricsTable .ranked-table-caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+#leagueMetricsTable .ranked-metrics-design :is(th,td){padding:9px 16px;vertical-align:middle;border-top:1px solid var(--theme-border,#35465d);border-right:1px solid var(--theme-border,#35465d)}
+#leagueMetricsTable .ranked-metrics-design :is(th,td):last-child{border-right:0}
+#leagueMetricsTable .ranked-metrics-design th:first-child{width:35%}
+#leagueMetricsTable .ranked-metrics-design thead th{padding:0;border-top:0;background:var(--theme-inset,#0c192b)}
+#leagueMetricsTable .ranked-metrics-design tbody th{background:var(--theme-panel,#1b2639);font-weight:400}
+#leagueMetricsTable .ranked-metrics-design tbody td:nth-child(2){background:color-mix(in srgb,var(--theme-gold-soft,#392d1a) 32%,var(--theme-panel,#1b2639))}
+#leagueMetricsTable .ranked-metrics-design tbody td:nth-child(3){background:color-mix(in srgb,var(--theme-blue-soft,#172d45) 24%,var(--theme-panel,#1b2639))}
+#leagueMetricsTable .ranked-metrics-design tbody tr:hover td{box-shadow:inset 0 0 0 999px #80808008}
+.ranked-metric-heading,.ranked-metric-label{display:flex;align-items:center;gap:14px;min-width:0}
+.ranked-metric-heading{padding:18px 20px;min-height:106px}.ranked-metric-heading strong{display:block;font-size:17px;color:var(--theme-text,#eef2f8)}
+.ranked-metric-heading small,.ranked-metric-copy small{display:block;font-size:11px;line-height:1.5;color:var(--theme-secondary,#b6c8dd);margin-top:4px}
+.ranked-metric-copy{min-width:0}.ranked-metric-copy strong{display:block;font-size:12px;line-height:1.4;color:var(--theme-text,#eef2f8);font-weight:700}
+.ranked-metric-icon{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border:1px solid var(--theme-border,#35465d);border-radius:9px;background:var(--theme-raised,#243248);color:var(--ranked-icon-blue,#8bbcff)}
+.ranked-metric-icon:is(.is-trophy,.is-burst){color:var(--theme-warning,#f2bd45)}.ranked-metric-icon.is-gem{color:var(--theme-purple,#bd88ed)}
+.ranked-player-heading{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;gap:14px;padding:17px 22px;min-height:106px;border:1px solid var(--theme-gold-border,#967733);border-radius:12px;background:var(--theme-panel,#1b2639)}
+.ranked-player-heading:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--theme-panel,#1b2639),color-mix(in srgb,var(--theme-panel,#1b2639) 80%,transparent)),url('/assets/images/backgrounds/sunset-battlefield.webp') right center/cover no-repeat}
+.ranked-player-heading.is-right{border-color:var(--theme-blue-border,#447bb4)}.ranked-player-heading.is-right:before{background-image:linear-gradient(90deg,var(--theme-panel,#1b2639),color-mix(in srgb,var(--theme-panel,#1b2639) 80%,transparent)),url('/assets/images/backgrounds/night-battlefield.webp')}
+.ranked-player-avatar{display:block;width:58px;height:58px;flex:0 0 58px;border:2px solid var(--theme-gold-border,#b99232);border-radius:50%;object-fit:cover;object-position:center 24%;background:var(--theme-inset,#0c192b)}
+.is-right .ranked-player-avatar{border-color:var(--theme-blue-border,#447bb4)}
+.ranked-player-copy{min-width:0}.ranked-player-copy>strong{display:block;font-size:17px;line-height:1.3;color:var(--theme-text,#eef2f8);overflow-wrap:anywhere}
+.ranked-player-position{display:block;font-size:13px;margin-top:6px;color:var(--theme-text,#eef2f8)}.ranked-player-copy>small{display:block;margin-top:3px;font-size:11px;color:var(--theme-secondary,#b6c8dd)}
+#leagueMetricsTable .league-table-value{font-size:18px;font-weight:800;line-height:1.35;gap:10px;color:var(--theme-text,#eef2f8)}
+#leagueMetricsTable .league-table-value>img{width:22px;height:25px;flex-basis:22px}
+#leagueMetricsTable .league-metrics-table td>small{font-size:11px;line-height:1.5;color:var(--theme-secondary,#b6c8dd);margin-top:5px}
+#leagueMetricsTable .league-mark{min-width:22px;height:22px;font-size:12px;border-radius:6px}
+.ranked-metrics-scroll-hint{display:none;font-size:11px;color:var(--theme-muted,#9db4ce);margin:0 0 9px}
+@media(max-width:740px){.ranked-metrics-scroll-hint{display:block}.ranked-metrics-heading{align-items:flex-start;gap:8px}.ranked-metrics-heading>.ranked-metric-icon{width:34px;height:38px;flex-basis:34px}.ranked-metrics-heading>.ranked-metric-icon svg{width:29px;height:29px}#leagueMetricsTable .ranked-metrics-design :is(th,td){padding:9px 12px}.ranked-metric-heading{padding:14px 12px}.ranked-player-heading{padding:14px 12px;gap:10px}.ranked-player-avatar{width:46px;height:46px;flex-basis:46px}.ranked-player-copy>strong{font-size:15px}#leagueMetricsTable .league-table-value{font-size:16px;gap:7px}.ranked-metric-icon{width:30px;height:34px;flex-basis:30px}.ranked-metric-label{gap:9px}}
+
+html[data-theme=light] .ranked-metric-icon{--ranked-icon-blue:#326fa8}
+@media(max-width:740px){#leagueMetricsTable .ranked-metrics-design th:first-child{width:30%}}
