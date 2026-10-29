@@ -10,6 +10,19 @@
 .seo-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}.seo-card-grid article{min-width:0;border:1px solid var(--theme-border);border-radius:12px;padding:20px;background:var(--theme-panel);overflow-wrap:anywhere}.seo-card-grid h2{font-size:18px}
 .seo-context{clear:both;margin:28px 0 0;padding:20px;border:1px solid var(--theme-border);border-radius:12px;background:var(--theme-panel);font-size:13px;line-height:1.7;overflow-wrap:anywhere}.seo-context h2{font-size:19px;margin:8px 0}.seo-context h2 small{font-size:12px;color:var(--theme-muted)}.seo-context h3{font-size:14px;margin:18px 0 8px}.seo-context p{color:var(--theme-secondary);margin:10px 0}
 .seo-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.seo-metrics div{min-width:0;padding:12px;background:var(--theme-inset);border:1px solid var(--theme-border);border-radius:8px}.seo-metrics dt{color:var(--theme-muted);font-size:11px}.seo-metrics dd{margin:6px 0 0;font-size:18px;font-weight:700;color:var(--theme-text)}
+/* Simple Dark intentionally uses component fallbacks instead of palette tokens. */
+#savedProfile{min-width:0;background:var(--theme-panel,#181f28);border-color:var(--theme-border,#304053);color:var(--theme-text,#e8edf5)}
+#savedProfile .command-kicker{color:var(--theme-warning,#ffcf8b)}
+#savedProfile :is(h2,h3){color:var(--theme-text,#e8edf5);font-weight:700;line-height:1.4}
+#savedProfile h2 small{display:inline-block;color:var(--theme-muted,#9aacbf);font-weight:400}
+#savedProfile p,#savedProfile .seo-inline-list{color:var(--theme-secondary,#b5c6db)}
+#savedProfile .seo-metrics>div{background:var(--theme-inset,#121923);border-color:var(--theme-border,#304053)}
+#savedProfile .seo-metrics dt{color:var(--theme-muted,#9aacbf)}
+#savedProfile .seo-metrics dd{color:var(--theme-text,#e8edf5);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#savedProfile a{color:var(--theme-link,#8eb9ff)}
+#savedProfile a:hover{color:var(--theme-text,#e8edf5);text-decoration:underline}
+#savedProfile a:focus-visible{outline:2px solid var(--theme-link,#8eb9ff);outline-offset:3px;border-radius:2px}
+#savedProfile .seo-links{margin-top:16px;padding-top:12px;border-top:1px solid var(--theme-border,#304053)}
 .seo-inline-list{display:flex;flex-wrap:wrap;gap:8px 24px;padding:0;list-style:none}.seo-ranking{padding:0;list-style:none;margin:24px 0;border:1px solid var(--theme-border);border-radius:12px;overflow:hidden}.seo-ranking li{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;border-bottom:1px solid var(--theme-border);background:var(--theme-panel)}.seo-ranking li:last-child{border:0}
 .seo-theme{display:flex;align-items:center;gap:8px;font-size:12px}.seo-theme select{padding:8px;border:1px solid var(--theme-border);border-radius:8px;background:var(--theme-panel);color:var(--theme-text)}
 @media(max-width:700px){.seo-main{padding:24px 16px}.seo-card-grid{grid-template-columns:1fr}.seo-article section{padding:16px}.seo-context{padding:16px}.seo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.seo-page .command-header-nav{justify-content:flex-start;gap:8px 14px}.seo-page .header-inner{gap:14px}.seo-context .seo-links a{padding:5px 0}}
