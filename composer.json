@@ -16,6 +16,6 @@
     }
   },
   "scripts": {
-    "test": ["php tests/smoke.php", "php tests/ranked-sessions.php", "php tests/raids.php", "php tests/account-features.php", "php tests/share.php", "php tests/war-map.php", "php tests/web-assets.php", "php tests/seo.php"]
+    "test": ["php tests/smoke.php", "php tests/ranked-sessions.php", "php tests/raids.php", "php tests/account-features.php", "php tests/share.php", "php tests/war-map.php", "php tests/web-assets.php", "php tests/seo.php", "php tests/seo-memory.php"]
   }
 }

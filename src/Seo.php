@@ -7,6 +7,8 @@ final class Seo
 {
     private const CHUNK = 5000; // Two language URLs per profile: at most 10,000 entries per file.
     private const AGE = 90 * 86400;
+    private const PROFILE_FIELDS = ['tag','name','clanLevel','members','clanPoints','warWins','warLeague','location','type','requiredTownhallLevel','clanCapital',
+        'townHallLevel','builderHallLevel','expLevel','trophies','warStars','donations','donationsReceived','leagueTier','clan','heroes'];
     private ?array $catalog = null;
     private ?array $savedLocations = null;
     private ?array $savedRankingPages = null;
@@ -63,9 +65,7 @@ final class Seo
         $raw = $entry['data'] ?? []; $tag = self::tag($raw['tag'] ?? null);
         if ($tag !== strtoupper($match[2]) || !is_string($raw['name'] ?? null) || trim($raw['name']) === '') return;
         if (!is_numeric($raw[$match[1] === 'clans' ? 'clanLevel' : 'townHallLevel'] ?? null)) return;
-        $fields = ['tag','name','clanLevel','members','clanPoints','warWins','warLeague','location','type','requiredTownhallLevel','clanCapital',
-            'townHallLevel','builderHallLevel','expLevel','trophies','warStars','donations','donationsReceived','leagueTier','clan','heroes'];
-        $saved = ['data' => array_intersect_key($raw, array_flip($fields)), 'lastUpdated' => $entry['lastUpdated'] ?? gmdate('c')];
+        $saved = ['data' => array_intersect_key($raw, array_flip(self::PROFILE_FIELDS)), 'lastUpdated' => $entry['lastUpdated'] ?? gmdate('c')];
         $folder = $this->directory . '/seo/' . $match[1];
         if (!is_dir($folder) && !@mkdir($folder, 0775, true) && !is_dir($folder)) return;
         $file = $folder . '/' . $tag . '.json';
@@ -80,6 +80,7 @@ final class Seo
     private function valid(array $entry, string $kind): bool
     {
         $data = $entry['data'] ?? [];
+        if (!is_array($data)) return false;
         $time = strtotime((string)($entry['lastUpdated'] ?? ''));
         return self::tag($data['tag'] ?? null) !== null && is_string($data['name'] ?? null) && trim($data['name']) !== ''
             && is_numeric($data[$kind === 'clans' ? 'clanLevel' : 'townHallLevel'] ?? null)
@@ -90,11 +91,18 @@ final class Seo
     {
         if ($this->catalog !== null) return $this->catalog;
         $result = ['clans' => [], 'players' => []];
-        $add = function (array $entry) use (&$result): void {
+        $add = function (mixed $entry) use (&$result): void {
+            if (!is_array($entry)) return;
             $kind = isset($entry['data']['clanLevel']) ? 'clans' : 'players';
             if (!$this->valid($entry, $kind)) return;
             $tag = self::tag($entry['data']['tag']);
-            if (!isset($result[$kind][$tag]) || strtotime($entry['lastUpdated']) >= strtotime($result[$kind][$tag]['lastUpdated'])) $result[$kind][$tag] = $entry;
+            if (!isset($result[$kind][$tag]) || strtotime($entry['lastUpdated']) >= strtotime($result[$kind][$tag]['lastUpdated'])) {
+                // Discovery must not retain entire API profiles (troops, equipment,
+                // achievements or clan rosters) for every cached account at once.
+                $compact = array_intersect_key($entry, array_flip(['data','lastUpdated','changedAt']));
+                $compact['data'] = array_intersect_key($entry['data'], array_flip(self::PROFILE_FIELDS));
+                $result[$kind][$tag] = $compact;
+            }
         };
         // Seed discovery from existing cache files, including installations predating this feature.
         foreach (glob($this->directory . '/cache/*.json') ?: [] as $path) $add($this->read($path)['entry'] ?? []);
