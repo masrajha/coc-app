@@ -27,15 +27,23 @@
     for(const [key,value] of Object.entries({viewBox:'0 0 24 24',width:24,height:24,fill:'none',stroke:'currentColor','stroke-width':1.8,'stroke-linecap':'round','stroke-linejoin':'round'}))svg.setAttribute(key,value);
     const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',paths[kind]||paths.chart);svg.append(path);box.append(svg);return box;
   }
+  const portraitAssets=[
+    ...['archer-queen','barbarian-king','dragon-duke','grand-warden','minion-prince','royal-champion']
+      .map(asset=>'/assets/images/hero/characters/'+asset+'.webp'),
+    '/assets/images/optimized/golem.webp'
+  ];
+  const portraits=new Map();
   function portrait(profile){
-    const assets={'Archer Queen':'archer-queen','Barbarian King':'barbarian-king','Dragon Duke':'dragon-duke','Grand Warden':'grand-warden','Minion Prince':'minion-prince','Royal Champion':'royal-champion'};
-    const scored=profile?.progress?.score?.categories?.heroes?.items||[];
-    const candidates=Object.entries(assets).flatMap(([name,asset])=>{
-      const item=scored.find(h=>h.name===name)||profile?.player?.heroes?.find(h=>h.name===name&&h.village!=='builderBase');
-      const level=Number(item?.level),maximum=Number(item?.maxLevel);
-      return Number.isFinite(level)&&level>0&&Number.isFinite(maximum)&&maximum>0?[{asset,ratio:Math.min(1,level/maximum)}]:[];
-    }).sort((a,b)=>b.ratio-a.ratio);
-    return candidates.length?'/assets/images/hero/characters/'+candidates[0].asset+'.webp':'/assets/brand/clanintel-mark.svg';
+    const tag=profile?.player?.tag;
+    if(!tag)return '/assets/brand/clanintel-mark.svg';
+    const key=String(tag).replace(/^#/,'').toUpperCase();
+    if(!portraits.has(key)){
+      // Keep each player's random portrait stable during session/filter/language updates.
+      const candidates=portraitAssets.filter(asset=>!Array.from(portraits.values()).includes(asset));
+      const pool=candidates.length?candidates:portraitAssets;
+      portraits.set(key,pool[Math.floor(Math.random()*pool.length)]);
+    }
+    return portraits.get(key);
   }
   function playerHeading(side,profile,data,name){
     const box=node('div',null,'ranked-player-heading is-'+side);

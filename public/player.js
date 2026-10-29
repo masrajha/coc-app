@@ -305,12 +305,13 @@ function renderProgressTools(progress) {
   Object.entries(progress.score.categories || {}).forEach(([key, value]) => { const row = document.createElement('div'); row.className = 'progress-radar-row'; row.innerHTML = `<span>${key}</span><i style="width:${Math.min(100, Number(value.percent || 0))}%"></i><b>${value.percent ?? '—'}%</b>`; radar.appendChild(row); });
 }
 
-function renderPlayerOverview(player, progress, updated) {
-  window.PlayerOverview.render(player, progress, updated);
+function renderPlayerOverview(player, progress, updated, extra) {
+  window.PlayerOverview.render(player, progress, updated, extra);
 }
 
 function renderPerformance(data) {
   currentPerformanceData = data;
+  window.PlayerOverview.update('performance',{status:'ready',data},currentProfileData?.player?.tag);
   const noteKey = data.note?.startsWith('Riwayat digabungkan') ? 'player.performanceNoteMerged'
     : data.note?.startsWith('Arsip perang dimulai') ? 'player.performanceNoteArchive' : null;
   setText('performanceNote', noteKey ? tr(noteKey) : data.note);
@@ -373,7 +374,7 @@ function renderPlayerResume(player, progress) {
 
 async function loadPerformance(player) {
   const tag = normalizeTag(clanTag || player.clan?.tag);
-  if (!tag) { setText('performanceNote', tr('player.archiveNoClan')); return; }
+  if (!tag) { setText('performanceNote', tr('player.archiveNoClan')); window.PlayerOverview.update('performance',{status:'empty'},player.tag); return; }
   try {
     const endpoint = `/api/player/${encodeURIComponent(normalizeTag(player.tag))}/performance?clan=${encodeURIComponent(tag)}`;
     let response = await window.CocI18n.apiFetch(endpoint);
@@ -388,9 +389,10 @@ async function loadPerformance(player) {
         if (response.ok) data = await response.json();
       }
     }
+    if (normalizeTag(currentProfileData?.player?.tag)!==normalizeTag(player.tag)) return;
     renderPerformance(data);
     if (currentProfileData) renderPlayerResume(currentProfileData.player, currentProfileData.progress);
-  } catch (error) { setText('performanceNote', error.message); }
+  } catch (error) { setText('performanceNote', error.message); window.PlayerOverview.update('performance',{status:'error'},player.tag); }
 }
 
 function renderProfile(data) {
@@ -436,10 +438,11 @@ function renderProfile(data) {
   renderArmy(data.army);
   renderProgress(data.progress);
   currentArmy = data.army;
-  renderPlayerOverview(player, data.progress, data.lastUpdated);
+  renderPlayerOverview(player, data.progress, data.lastUpdated, {army:data.army,achievements:data.achievements});
   renderPlayerResume(player, data.progress);
   PlayerLeague.initialize(player);
   window.PlayerRaids.initialize(player, clanTag);
+  window.PlayerRaids.activate();
   loadPerformance(player);
   document.getElementById('profile').hidden = false;
   document.getElementById('status').hidden = true;

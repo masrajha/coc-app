@@ -52,6 +52,110 @@
     return {known, total, counts, score:suppliedScore === null ? null : Math.max(0, Math.min(100, suppliedScore)),
       status:!progress?.complete ? 'unknown' : progress.rushed?.rushed ? 'warning' : 'safe'};
   }
+  function timestamp(value) {
+    if (value == null || value === '') return null;
+    if (typeof value === 'number') return Number.isFinite(value) ? (value < 1e12 ? value * 1000 : value) : null;
+    const text = String(value).replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(\.\d+)?Z$/, '$1-$2-$3T$4:$5:$6$7Z');
+    const result = Date.parse(text); return Number.isFinite(result) ? result : null;
+  }
+  function summaryModel(progress, extra = {}) {
+    const categories = progress?.score?.categories || {};
+    const capped = ['heroes','troops','spells','pets'].flatMap(key => categories[key]?.items || []).filter(item => numeric(item?.level) !== null && numeric(item?.level) >= 0 && numeric(item?.maxLevel) > 0);
+    const weakest = Object.entries(categories).filter(([,item]) => numeric(item?.percent) !== null).sort((a,b) => Number(a[1].percent)-Number(b[1].percent))[0];
+    const achievements = Array.isArray(extra.achievements) ? extra.achievements : null;
+    const next = (achievements || []).filter(item => numeric(item?.stars) !== null && Number(item.stars) < 3 && numeric(item.value) !== null && numeric(item.target) > 0)
+      .map(item => ({name:item.name,percent:Math.max(0,Math.min(100,Number(item.value)/Number(item.target)*100))})).sort((a,b) => b.percent-a.percent)[0] || null;
+    const raidRows = (extra.raids?.items || []).filter(item => timestamp(item?.startTime) !== null);
+    const latest = raidRows.length ? Math.max(...raidRows.map(item => timestamp(item.startTime))) : null;
+    const weekend = raidRows.filter(item => timestamp(item.startTime) === latest);
+    const sum = key => weekend.length && weekend.every(item => numeric(item[key]) !== null) ? weekend.reduce((total,item) => total + Number(item[key]),0) : null;
+    return {capped:capped.length,maxed:capped.filter(item => Number(item.level) >= Number(item.maxLevel)).length,
+      weakest:weakest && Number(weakest[1].percent)<100 ? {category:weakest[0],percent:Number(weakest[1].percent)} : null,
+      achievements:achievements ? {total:achievements.length,complete:achievements.filter(item => Number(item?.stars) === 3).length,next} : null,
+      raid:latest === null ? null : {start:latest,loot:sum('loot'),attacks:sum('attacks'),ongoing:weekend.some(item => item.state === 'ongoing'),partial:Boolean(extra.raids?.stale)||weekend.some(item => numeric(item.loot) === null || numeric(item.attacks) === null)}};
+  }
+  let snapshot = null;
+  const tag = value => String(value || '').replace(/^#/,'').toUpperCase();
+  const date = value => timestamp(value) === null ? '' : window.CocI18n.dateTime(new Date(timestamp(value)),{day:'numeric',month:'short',year:'numeric'});
+  function sessionContext(data) {
+    const label = tr(data?.session?.id === 'previous' ? 'player.sessionPrevious' : 'player.sessionCurrent');
+    return [label,Number(data?.session?.seasonId)>0 ? date(Number(data.session.seasonId)) : '',data?.leagueTier].filter(Boolean).join(' \u00b7 ');
+  }
+  function cards() {
+    const {player,progress,extra,feeds} = snapshot, values = model(progress);
+    const details = summaryModel(progress,{...extra,raids:feeds.raids?.data});
+    const empty = tr('snapshot.noData'), loading = tr('snapshot.loading');
+    const categoryKeys = {heroes:'snapshot.heroes',troops:'snapshot.troops',spells:'snapshot.spells',pets:'snapshot.pets'};
+    const list = [
+      {metric:'army',image:'coverage',label:'Army',tab:'army',value:details.capped ? tr('snapshot.maxed',{count:number(details.maxed)}) : '\u2014',
+        note:tr('profile.coverageBreakdown',Object.fromEntries(Object.entries(values.counts).map(([key,count]) => [key,number(count)]))),
+        context:(details.capped ? tr('snapshot.capScope',{count:number(details.capped)}) : tr('snapshot.noCaps'))+(Array.isArray(extra.army?.heroEquipment)?' · '+tr('snapshot.equipmentCount',{count:number(extra.army.heroEquipment.length)}):'')},
+      {metric:'score',image:'progress',label:tr('player.progress'),tab:'progress',value:values.score === null ? '\u2014' : number(values.score)+'%',status:values.status,
+        note:tr(values.status === 'unknown' ? 'player.rushed.unknown' : values.status === 'warning' ? 'player.rushed.yes' : 'player.rushed.no'),
+        context:tr(progress?.complete?'profile.scoreScope':'profile.scoreScopePartial')+(details.weakest && categoryKeys[details.weakest.category] ? ' · '+tr('snapshot.weakest',{category:tr(categoryKeys[details.weakest.category]),percent:number(details.weakest.percent)}) : ''),progress:values.score},
+      {metric:'ranked',image:'trophy-purple',label:'Ranked League',tab:'ranked-battles',value:'\u2014',note:empty,context:''},
+      {metric:'performance',image:'status',label:tr('player.warPerformance'),tab:'performance',value:'\u2014',note:feeds.performance?.status === 'loading' ? loading : empty,context:tr('snapshot.archive')},
+      {metric:'raids',image:'donation',label:'Raid Weekend',tab:'capital-raids',value:'\u2014',note:feeds.raids?.status === 'loading' ? loading : feeds.raids?.status === 'unloaded' ? tr('snapshot.openToLoad') : empty,context:''},
+      {metric:'achievements',image:'war-star',label:tr('feature.achievements'),tab:'achievements',value:details.achievements?.total ? tr('snapshot.completed',{complete:number(details.achievements.complete),total:number(details.achievements.total)}) : '\u2014',
+        note:details.achievements?.next ? tr('snapshot.nextAchievement',{name:details.achievements.next.name,percent:number(details.achievements.next.percent)}) : details.achievements?.total ? tr(details.achievements.complete===details.achievements.total?'snapshot.allAchievements':'snapshot.noAchievementTarget') : empty,context:tr('snapshot.achievementScope')}
+    ];
+    const ranked=list[2], feed=feeds.ranked;
+    if(feed?.status === 'global') {
+      const stats=player.legendStatistics?.currentSeason, rank=numeric(feeds.globalRank?.rank ?? stats?.rank);
+      ranked.value=rank>0 ? '#'+number(rank) : tr('snapshot.rankUnknown');
+      ranked.note=tr('snapshot.globalTrophies',{count:number(numeric(stats?.trophies ?? player.trophies))});
+      ranked.context=tr('snapshot.legendGlobal');
+    } else if(feed?.data) {
+      const data=feed.data, prepared=window.RankedGameModel?.prepare(data);
+      ranked.value=numeric(data.playerRank)>0 ? '#'+number(Number(data.playerRank))+(numeric(data.totalMembers)>0 ? ' / '+number(Number(data.totalMembers)) : '') : tr('snapshot.rankUnknown');
+      ranked.note=tr('snapshot.rankedPoints',{total:number(numeric(data.player?.trophies) ?? prepared?.total ?? null),attack:number(prepared?.attack.points ?? null),defense:number(prepared?.defense.points ?? null)});
+      ranked.context=sessionContext(data)+(data.stale?' \u00b7 '+tr('snapshot.partial'):'');
+    } else ranked.note=feed?.status === 'loading' ? loading : empty;
+    const war=feeds.performance?.data;
+    if(war?.summary) {
+      const summary=war.summary, item=list[3];
+      item.value=numeric(summary.starsPerAttack)!==null && Number(summary.attacks)>0 ? tr('snapshot.starsPerAttack',{count:number(Number(summary.starsPerAttack))}) : '\u2014';
+      item.note=tr('snapshot.warSample',{destruction:numeric(summary.destructionAverage)===null?'\u2014':number(Number(summary.destructionAverage))+'%',attacks:number(numeric(summary.attacks)),wars:number(numeric(summary.wars))});
+      const times=(war.wars||[]).map(item=>timestamp(item.endTime||item.startTime)).filter(time=>time!==null);
+      item.context=times.length ? tr('snapshot.archiveRange',{from:date(Math.min(...times)),to:date(Math.max(...times))}) : tr('snapshot.archive');
+    }
+    if(details.raid) {
+      const raid=details.raid,item=list[4];item.value=raid.loot===null?'\u2014':number(raid.loot);
+      item.note=tr('snapshot.raidSample',{attacks:number(raid.attacks)});
+      item.context=tr('snapshot.weekend',{date:date(raid.start)})+' \u00b7 '+tr(raid.ongoing?'raid.ongoing':'raid.ended')+(raid.partial?' \u00b7 '+tr('snapshot.partial'):'');
+    }
+    return list;
+  }
+  function paintCards() {
+    if(!snapshot)return;
+    const root=el('playerOverviewCards');
+    for(const item of cards()) {
+      let card=root.querySelector(`[data-metric="${item.metric}"]`);
+      if(!card) {
+        card=node('article',undefined,'overview-card');card.dataset.metric=item.metric;
+        const picture=node('span',undefined,'overview-card-icon');picture.setAttribute('aria-hidden','true');picture.append(icon(item.image));
+        const copy=node('div',undefined,'overview-card-copy');
+        copy.append(node('p',item.label,'overview-card-label'),node('strong','','overview-card-value'),node('div',undefined,'overview-card-body'));
+        const link=node('a',tr('snapshot.details'),'overview-card-link');link.href='#'+item.tab;link.dataset.snapshotTab=item.tab;link.setAttribute('aria-label',tr('snapshot.detailsFor',{section:item.label}));
+        link.addEventListener('click',event=>{
+          if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0)return;
+          const tab=document.querySelector(`.player-tabs button[data-tab="${item.tab}"]`);if(!tab)return;
+          event.preventDefault();tab.click();tab.focus({preventScroll:true});document.querySelector('.player-tab-toolbar').scrollIntoView({block:'start'});
+        });
+        copy.append(link);card.append(picture,copy);root.append(card);
+      }
+      if(item.status)card.dataset.status=item.status;
+      card.querySelector('.overview-card-value').textContent=item.value;
+      const body=card.querySelector('.overview-card-body');body.replaceChildren();
+      if(item.metric==='score'&&item.progress!==null)body.append(progressBar('score',item.progress,100,tr('profile.scoreBarLabel',{percent:number(item.progress)})));
+      body.append(node('p',item.note,'overview-card-note'));
+      if(item.context)body.append(node('p',item.context,'overview-card-context'));
+    }
+  }
+  function update(kind,payload,playerTag) {
+    if(!snapshot || tag(playerTag)!==tag(snapshot.player.tag))return;
+    snapshot.feeds[kind]=payload;paintCards();
+  }
   function icon(name, className = '') {
     const image = node('img'); image.src = '/assets/profile/' + name + '.svg'; image.alt = ''; image.width = 56; image.height = 56; image.className = className; return image;
   }
@@ -83,26 +187,10 @@
     if (!match) {target.textContent = text;return;}
     target.append(document.createTextNode(match[1]),node('span',match[2],'profile-name-accent'));
   }
-  function render(player, progress, updated) {
+  function render(player, progress, updated, extra = {}) {
     renderHero(player, progress);
-    const values = model(progress);
-    const cards = [
-      {metric:'status',image:'status',label:tr('player.status'),value:tr(values.status === 'unknown' ? 'player.rushed.unknown' : values.status === 'warning' ? 'player.rushed.yes' : 'player.rushed.no'),
-        note:tr(values.status === 'unknown' ? 'profile.statusUnknown' : values.status === 'warning' ? 'profile.statusReview' : 'profile.statusScope')},
-      {metric:'score',image:'progress',label:tr('player.progressScore'),value:values.score === null ? '—' : number(values.score)+'%',note:tr(progress.complete ? 'profile.scoreScope' : 'profile.scoreScopePartial')},
-      {metric:'coverage',image:'coverage',label:tr('player.coverage'),value:tr('player.items',{count:number(values.known)}),note:tr('profile.coverageBreakdown',Object.fromEntries(Object.entries(values.counts).map(([key,count]) => [key,number(count)])))},
-      {metric:'trophies',image:'trophy-purple',label:tr('player.trophies'),value:number(numeric(player.trophies)),note:tr('profile.currentTrophies')}
-    ];
-    const root = el('playerOverviewCards'); root.replaceChildren();
-    for (const item of cards) {
-      const card = node('article',undefined,'overview-card'); card.dataset.metric = item.metric; if (item.metric === 'status') card.dataset.status = values.status;
-      const picture = node('span',undefined,'overview-card-icon'); picture.setAttribute('aria-hidden','true'); picture.append(icon(item.image));
-      const copy = node('div',undefined,'overview-card-copy');
-      copy.append(node('p',item.label,'overview-card-label'),node('strong',item.value,'overview-card-value'));
-      if (item.metric === 'score' && values.score !== null) copy.append(progressBar('score',values.score,100,tr('profile.scoreBarLabel',{percent:number(values.score)})));
-      if (item.metric === 'coverage' && values.total !== null) copy.append(progressBar('coverage',values.known,values.total,tr('profile.coverageKnown',{known:number(values.known),total:number(values.total)})));
-      copy.append(node('p',item.note,'overview-card-note')); card.append(picture,copy); root.append(card);
-    }
+    snapshot={player,progress,extra,feeds:{ranked:{status:'loading'},performance:{status:'loading'},raids:{status:'unloaded'}}};
+    el('playerOverviewCards').replaceChildren();paintCards();
     const actions = el('playerOverviewActions'); actions.replaceChildren();
     const compare = node('a',undefined,'profile-action profile-action-primary'); compare.href = el('compareLink').href; compare.append(actionIcon('compare'),node('span',tr('player.comparePlayers'))); actions.append(compare);
     if (player.clan?.tag) {
@@ -111,5 +199,5 @@
     }
     renderTimestamp('overviewUpdated',updated,true);
   }
-  window.PlayerOverview = {model,render,renderName,chooseHero};
+  window.PlayerOverview = {model,summaryModel,render,renderName,chooseHero,update};
 })();

@@ -184,6 +184,7 @@
     pagination(el('raidPlayerPager'), items.length, player.page, size, page => { player.page = page; renderPlayerRows(); });
   }
   function renderPlayer() {
+    window.PlayerOverview?.update('raids',{status:'ready',data:player.data},player.tag);
     const data = player.data, root = el('raidPlayerMetrics'); root.replaceChildren();
     for (const [label, value] of [['raid.recordedWeekends', data.summary.weekends], ['raid.recordedAttacks', data.summary.attacks], ['raid.recordedLoot', data.summary.loot], ['raid.average', data.summary.lootPerAttack]]) metric(root, label, value);
     const filter = el('raidPlayerClan'), previous = filter.value; filter.replaceChildren(new Option(tr('raid.allClans'), ''));
@@ -198,6 +199,7 @@
   async function loadPlayer(after = null) {
     if (!player.tag || player.loading) return;
     const request = ++player.request; player.loading = true;
+    window.PlayerOverview?.update('raids',{status:'loading'},player.tag);
     status('raidPlayerStatus', tr('raid.loading'), true); playerControls();
     try {
       const params = new URLSearchParams({ limit: '10' });
@@ -206,7 +208,7 @@
       const data = await response.json(); if (request !== player.request) return;
       if (!response.ok) throw Error(data.error || tr('raid.failed'));
       player.data = data; player.loaded = true; player.clan = data.contextClanTag; renderPlayer();
-    } catch (error) { if (request === player.request) status('raidPlayerStatus', error.message || tr('raid.failed'), false, true); }
+    } catch (error) { if (request === player.request) { window.PlayerOverview?.update('raids',{status:'error'},player.tag); status('raidPlayerStatus', error.message || tr('raid.failed'), false, true); } }
     finally { if (request === player.request) { player.loading = false; playerControls(); } }
   }
   window.ClanRaids = {

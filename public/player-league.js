@@ -174,6 +174,7 @@
   }
 
   function paintGlobalRanking(data) {
+    window.PlayerOverview?.update('globalRank',data,state.playerTag);
     const rank = data.rank;
     const target = element('legendGlobalStanding');
     const found = Number.isInteger(rank) && rank > 0;
@@ -877,6 +878,7 @@
   }
 
   function renderPlayerBattleLog(data) {
+    window.PlayerOverview?.update('ranked',{status:'ready',data},state.playerTag);
     const summary = element('rankedBattleSummary'); summary.replaceChildren();
     const metrics = [
       [tr('player.rankMetric'), data.playerRank ? `#${data.playerRank}/${data.totalMembers}` : '—'],
@@ -1076,7 +1078,8 @@
   async function loadPlayerBattleLog(sessionId) {
     const request = ++state.logRequest;
     window.RankedGame.loading();
-    if (sessionId === 'global') { unavailableBattleLog(tr('player.legendBattleUnavailable')); return; }
+    if (sessionId === 'global') { window.PlayerOverview?.update('ranked',{status:'global'},state.playerTag); unavailableBattleLog(tr('player.legendBattleUnavailable')); return; }
+    window.PlayerOverview?.update('ranked',{status:'loading'},state.playerTag);
     document.querySelector('.ranked-log-toolbar').hidden = false;
     document.querySelector('.ranked-battle-columns').hidden = false;
     const status = element('rankedBattleStatus'); status.hidden = false; setLoading('rankedBattleStatus', tr('player.loadingBattleLog'));
@@ -1088,6 +1091,7 @@
       status.textContent = data.stale ? tr('player.battleLogStale', { date: window.CocI18n.dateTime(new Date(data.lastUpdated)) }) : tr('player.battleLogSummary', { session: sessionLabel(data.session), attacks: localizedNumber(data.attack?.sampleSize || 0), defenses: localizedNumber(data.defense?.sampleSize || 0) });
     } catch (error) {
       if (request !== state.logRequest) return;
+      window.PlayerOverview?.update('ranked',{status:'error'},state.playerTag);
       window.RankedGame.unavailable(error.message);
       element('rankedBattleSummary').replaceChildren();
       renderBattleLogList('rankedAttackLogs', [], tr('player.battleLogUnavailable')); renderBattleLogList('rankedDefenseLogs', [], tr('player.battleLogUnavailable'));
@@ -1227,6 +1231,7 @@
     select.disabled = sessions.length === 0;
     battleSelect.disabled = sessions.length === 0;
     if (!sessions.length) {
+      window.PlayerOverview?.update('ranked',{status:player.leagueTier?.name==='Legend I'?'global':'empty'},state.playerTag);
       groupMode(false); element('legendGlobalSummary').hidden = true;
       const message = tr(player.leagueTier?.name === 'Legend I' ? 'player.legendGlobal' : 'player.noGroup');
       const status = element('leagueStatus');

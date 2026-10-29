@@ -119,28 +119,15 @@ function renderStickyCompareHeader() {
 }
 
 function renderComparisonOverview() {
-  const root = document.getElementById('overviewScore');
-  const conclusion = document.getElementById('overviewConclusion');
-  root.replaceChildren();
-  if (!profiles.left || !profiles.right) {
-    conclusion.textContent = tr('compare.completeForOverview');
-    return;
-  }
-  const score = model.progressCategorySummary(profiles.left, profiles.right);
-  for (const [label, value, side] of [
-    [sideName('left'), score.left, 'left'], [tr('compare.equal'), score.equal, 'equal'], [sideName('right'), score.right, 'right']
-  ]) {
-    const tile = textNode('div', '', `overview-score-item ${side}`);
-    tile.append(textNode('strong', value), textNode('span', label)); root.appendChild(tile);
-  }
-  const quality = profiles.left.progress?.complete && profiles.right.progress?.complete
-    ? '' : tr('compare.partialQuality');
-  if (!score.compared) conclusion.textContent = tr('compare.noComparableCategories');
-  else if (score.left === score.right) conclusion.textContent = tr('compare.categoryTie', { count: score.compared, quality });
-  else {
-    const winner = score.left > score.right ? sideName('left') : sideName('right');
-    conclusion.textContent = tr('compare.categoryWinner', { winner, won: Math.max(score.left, score.right), total: score.compared, quality });
-  }
+  window.CompareOverview.render({
+    profiles,performances,league:leaguePerformance,
+    names:{left:sideName('left'),right:sideName('right')},
+    warPeriod:document.getElementById('warPeriod').value,
+    warPeriodLabel:document.getElementById('warPeriod').selectedOptions[0]?.textContent || '',
+    activityPeriod:document.getElementById('activityPeriod').value,
+    activityMetric:document.getElementById('activityMetric').value,
+    activate:activateCompareTab
+  });
 }
 
 function renderScore() {
@@ -640,6 +627,7 @@ function refreshLeagueComparison() {
   renderLeagueMetrics();
   window.CompareBattleLog.refresh();
   window.CompareGame.refresh();
+  renderComparisonOverview();
 }
 
 async function loadLeagueSide(side, sessionId, requestId) {
@@ -1197,9 +1185,9 @@ document.getElementById('armyCategory').addEventListener('change', renderArmy);
 document.getElementById('armyMode').addEventListener('change', renderArmy);
 document.getElementById('armySort').addEventListener('change', renderArmy);
 document.getElementById('armyDifferencesOnly').addEventListener('change', renderArmy);
-document.getElementById('warPeriod').addEventListener('change', () => { renderWar(); renderHeadToHead(); renderActivity(); renderResume(); });
-document.getElementById('activityPeriod').addEventListener('change', () => { renderActivity(); renderResume(); });
-document.getElementById('activityMetric').addEventListener('change', renderActivity);
+document.getElementById('warPeriod').addEventListener('change', () => { renderWar(); renderHeadToHead(); renderActivity(); renderResume(); renderComparisonOverview(); });
+document.getElementById('activityPeriod').addEventListener('change', () => { renderActivity(); renderResume(); renderComparisonOverview(); });
+document.getElementById('activityMetric').addEventListener('change', () => { renderActivity(); renderComparisonOverview(); });
 document.getElementById('exportCsv').addEventListener('click', exportCsv);
 document.getElementById('exportPng').addEventListener('click', exportPng);
 document.getElementById('copyCompareLink').addEventListener('click', copyComparisonLink);

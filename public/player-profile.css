@@ -210,3 +210,23 @@ html[data-theme=light] .player-profile-page .profile-hero-art{opacity:1}
 /* The player masthead uses the scenery without a foreground character. */
 .player-profile-page>.command-masthead{padding-right:28px}
 @media(max-width:700px){.player-profile-page>.command-masthead{padding-right:18px}}
+
+/* One compact snapshot card per player tab. */
+.player-profile-page #player-overview .player-overview-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.player-profile-page #player-overview .overview-card{min-height:182px;padding:14px;gap:11px}
+.player-profile-page #player-overview .overview-card-copy{display:flex;flex-direction:column;min-width:0}
+.player-profile-page #player-overview .overview-card-value{font-size:22px;line-height:1.3}
+.player-profile-page #player-overview .overview-card[data-metric=ranked] .overview-card-value{font-size:20px}
+.player-profile-page #player-overview .overview-card-note{font-size:11px;line-height:1.6;margin:9px 0 0}
+.overview-card-context{font-size:10px;line-height:1.6;margin:7px 0 0;color:var(--profile-muted);overflow-wrap:anywhere}
+.overview-card-link{align-self:flex-start;display:inline-flex;align-items:center;margin-top:auto;padding:9px 0 0;min-height:36px;font-size:12px;line-height:1.5;font-weight:650;color:var(--theme-link,#93bfff);text-decoration:none;text-underline-offset:3px}
+.overview-card-link:hover{text-decoration:underline}.overview-card-link:focus-visible{outline:2px solid var(--profile-gold);outline-offset:3px;border-radius:3px}
+.player-profile-page #player-overview .overview-card[data-metric=score]{--metric-color:var(--profile-gold);--metric-border:var(--profile-gold-border);--metric-bg:color-mix(in srgb,var(--profile-gold-bg) 42%,var(--profile-inset))}
+.player-profile-page #player-overview .overview-card[data-metric=army],.player-profile-page #player-overview .overview-card[data-metric=raids]{--metric-color:var(--profile-blue);--metric-border:var(--profile-blue-border);--metric-bg:color-mix(in srgb,var(--profile-blue-bg) 42%,var(--profile-inset))}
+.player-profile-page #player-overview .overview-card[data-metric=ranked]{--metric-color:var(--profile-purple);--metric-border:var(--profile-purple-border);--metric-bg:color-mix(in srgb,var(--profile-purple-bg) 42%,var(--profile-inset))}
+.player-profile-page #player-overview .overview-card[data-metric=performance]{--metric-color:var(--profile-success);--metric-border:var(--profile-green-border);--metric-bg:color-mix(in srgb,var(--profile-green-bg) 40%,var(--profile-inset))}
+.player-profile-page #player-overview .overview-card[data-metric=achievements]{--metric-color:var(--profile-gold);--metric-border:var(--profile-gold-border);--metric-bg:color-mix(in srgb,var(--profile-gold-bg) 30%,var(--profile-inset))}
+@container profile-content (max-width:850px){.player-profile-page #player-overview .player-overview-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.player-profile-page #player-overview .player-overview-cards{grid-template-columns:1fr}.player-profile-page #player-overview .overview-card{min-height:0}.player-profile-page #player-overview .overview-card-value{font-size:23px}}
+.player-profile-page .player-tab-toolbar{scroll-margin-top:96px}
+@media(min-width:481px) and (max-width:1100px){.player-profile-page #player-overview .player-overview-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}

@@ -53,3 +53,37 @@ test('random selection stays within tied best heroes and excludes invalid limits
   assert.equal(window.PlayerOverview.chooseHero({heroes:[{name:'Grand Warden',level:70}]}),null);
   assert.equal(window.PlayerOverview.chooseHero(),null);
 });
+
+test('snapshot maxed counts use known Home Village caps, not raw army or equipment caps', () => {
+  const result=window.PlayerOverview.summaryModel({score:{categories:{
+    heroes:{percent:80,items:[{level:80,maxLevel:80},{level:70,maxLevel:100},{level:null,maxLevel:25}]},
+    troops:{percent:95,items:[{level:10,maxLevel:10}]},spells:{percent:null},builderBase:{items:[{level:35,maxLevel:35}]}
+  }}},{army:{heroEquipment:[{level:27,maxLevel:27}]}});
+  assert.equal(result.capped,3);assert.equal(result.maxed,2);
+  assert.equal(result.weakest.category,'heroes');
+  assert.equal(window.PlayerOverview.summaryModel().capped,0);
+});
+
+test('snapshot achievements distinguish unavailable data and choose the closest unfinished goal', () => {
+  assert.equal(window.PlayerOverview.summaryModel().achievements,null);
+  const result=window.PlayerOverview.summaryModel(null,{achievements:[
+    {name:'Done',stars:3,value:100,target:100},
+    {name:'Next',stars:2,value:90,target:100},
+    {name:'Later',stars:1,value:0,target:100},
+    {name:'Unknown',stars:0,value:null,target:100}
+  ]}).achievements;
+  assert.equal(result.total,4);assert.equal(result.complete,1);assert.equal(result.next.name,'Next');assert.equal(result.next.percent,90);
+});
+
+test('snapshot raid totals aggregate only the latest observed weekend and preserve missing values', () => {
+  const items=[
+    {startTime:'20261016T070000.000Z',loot:9000,attacks:6,state:'ended'},
+    {startTime:'20261023T070000.000Z',loot:1000,attacks:2,state:'ended'},
+    {startTime:'20261023T070000.000Z',loot:500,attacks:1,state:'ended'}
+  ];
+  let result=window.PlayerOverview.summaryModel(null,{raids:{items}}).raid;
+  assert.equal(result.loot,1500);assert.equal(result.attacks,3);assert.equal(result.partial,false);
+  result=window.PlayerOverview.summaryModel(null,{raids:{items:[...items,{startTime:'20261023T070000.000Z',loot:null,attacks:0}]}}).raid;
+  assert.equal(result.loot,null);assert.equal(result.partial,true);
+  assert.equal(window.PlayerOverview.summaryModel(null,{raids:{items:[]}}).raid,null);
+});

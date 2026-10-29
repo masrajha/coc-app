@@ -8,7 +8,7 @@ assert.ok(inlineDashboard, 'Dashboard script is missing');
 new vm.Script(inlineDashboard[1], { filename: 'public/index.html' });
 const pages = ['public/index.html', 'public/player.html', 'public/compare.html', 'public/compare-clan.html'];
 const keys = pages.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/data-i18n(?:-placeholder|-aria-label|-title|-alt)?="([^"]+)"/g)].map(match => match[1]));
-const scripts = ['public/index.html', 'public/player-overview.js', 'public/war-summary.js', 'public/rankings.js', 'public/player.js', 'public/player-league.js', 'public/compare.js', 'public/compare-game.js', 'public/compare-ranked-layout.js', 'public/compare-game-view.js', 'public/donation.js', 'public/raids.js', 'public/clan-compare.js', 'public/clan-labels.js', 'public/account-features.js', 'public/clan-tabs.js'];
+const scripts = ['public/index.html', 'public/player-overview.js', 'public/war-summary.js', 'public/rankings.js', 'public/player.js', 'public/player-league.js', 'public/compare.js', 'public/compare-overview.js', 'public/compare-game.js', 'public/compare-ranked-layout.js', 'public/compare-game-view.js', 'public/donation.js', 'public/raids.js', 'public/clan-compare.js', 'public/clan-labels.js', 'public/account-features.js', 'public/clan-tabs.js'];
 const scriptKeys = scripts.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/\btr\(['"]([^'"]+)['"]/g)].map(match => match[1]));
 const warMapKeys = [...source.matchAll(/"(warMap\.[^"]+)"\s*:/g)].map(match => match[1]);
 const seoKeys = [...fs.readFileSync('src/Seo.php', 'utf8').matchAll(/["'](seo\.[a-zA-Z]+)["']/g)].map(match => match[1]);

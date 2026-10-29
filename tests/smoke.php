@@ -195,6 +195,9 @@ $checks = [
     '/donation.js' => [200, 'text/javascript'],
     '/recent.js' => [200, 'text/javascript'],
     '/compare-battles.js' => [200, 'text/javascript'],
+    '/compare-overview-model.js' => [200, 'text/javascript'],
+    '/compare-overview.js' => [200, 'text/javascript'],
+    '/compare-overview.css' => [200, 'text/css'],
     '/compare-ranked-layout.js' => [200, 'text/javascript'],
     '/compare-ranked-layout.css' => [200, 'text/css'],
     '/compare-game.js' => [200, 'text/javascript'],
@@ -328,7 +331,7 @@ try {
             if (!str_contains($page, $brandMarker)) throw new RuntimeException('ClanIntel branding or disclaimer missing: ' . $brandMarker);
         }
     }
-    foreach (['/i18n.js', 'data-language-switch', 'data-i18n="player.accountSummary"'] as $marker) {
+    foreach (['/i18n.js', 'data-language-switch', 'data-i18n="snapshot.title"'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Pemilih bahasa halaman player belum lengkap: ' . $marker);
     }
     foreach (['/i18n.js', 'data-language-switch', 'data-i18n="compare.heading"'] as $marker) {
