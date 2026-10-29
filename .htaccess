@@ -11,7 +11,7 @@ RewriteRule ^(src|vendor|data|test|tests|scripts)(/|$) - [F,L,NC]
 RewriteRule ^(?:index|clan|player|compare|compare-clan)\.html$ index.php [L,QSA]
 
 # SEO documents are generated from current saved data, not stale root copies.
-RewriteRule ^(?:robots\.txt|sitemap\.xml|sitemaps/[^/]+\.xml|guides(?:/[^/]+)?|explore/(?:clans|players)|leaderboards)$ index.php [L,QSA]
+RewriteRule ^(?:robots\.txt|sitemap\.xml|sitemaps/[^/]+\.xml|(?:guides|features)(?:/[^/]+)?|explore/(?:clans|players)|leaderboards)$ index.php [L,QSA]
 
 # Don't rewrite the front controller, real files, or directories. This is
 # important on LiteSpeed/cPanel, where rewriting an existing index.php back to

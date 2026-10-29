@@ -178,6 +178,8 @@ final class App
         $app->get('/robots.txt', fn($req, $res) => $self->seoFile($req, $res, 'robots'));
         $app->get('/sitemap.xml', fn($req, $res) => $self->seoFile($req, $res, 'index'));
         $app->get('/sitemaps/{name}.xml', fn($req, $res, $args) => $self->seoFile($req, $res, $args['name']));
+        $app->get('/features', fn($req, $res) => $self->seoPage($req, $res));
+        $app->get('/features/{slug}', fn($req, $res) => $self->seoPage($req, $res));
         $app->get('/guides', fn($req, $res) => $self->seoPage($req, $res));
         $app->get('/guides/{slug}', fn($req, $res) => $self->seoPage($req, $res));
         $app->get('/explore/{kind}', fn($req, $res) => $self->seoPage($req, $res));
