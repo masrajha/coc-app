@@ -252,12 +252,10 @@
             <div id="overview" class="clan-tab-panel" role="tabpanel" aria-labelledby="clanTab-overview"><section id="clan-overview" class="clan-overview" aria-labelledby="clanOverviewTitle" data-section-tone="blue">
                 <div class="clan-overview-heading"><div><p class="clan-overview-eyebrow">CLAN OVERVIEW</p><h2 id="clanOverviewTitle" data-i18n="clan.overview">Ringkasan operasional</h2></div><span id="clanDataFreshness" class="data-freshness" data-i18n="clan.waiting">Menunggu data…</span></div>
                 <div class="clan-overview-grid">
-                    <div data-section-tone="blue"><span data-i18n="clan.averageTh">Rata-rata TH</span><strong id="overviewAverageTh">—</strong><small id="overviewThRange" data-i18n="clan.notAvailable">Belum tersedia</small></div>
-                    <div data-section-tone="amber"><span data-i18n="clan.currentWar">War saat ini</span><strong id="overviewWarState" data-i18n="home.loadingShort">Memuat…</strong><small id="overviewWarScore" data-i18n="clan.waitingWar">Menunggu data war</small></div>
-                    <div data-section-tone="amber"><span data-i18n="clan.cwlPosition">Posisi CWL</span><strong id="overviewCwlPosition">—</strong><small id="overviewCwlMeta" data-i18n="clan.notAvailable">Belum tersedia</small></div>
-                    <div data-section-tone="slate"><span data-i18n="clan.review">Perlu review</span><strong id="overviewReviewCount">—</strong><small id="overviewActiveCount" data-i18n="clan.waitingSnapshot">Menunggu snapshot</small></div>
-                    <div data-section-tone="teal"><span data-i18n="clan.donations">Total donasi</span><strong id="overviewDonations">—</strong><small data-i18n="clan.currentSeason">Musim berjalan</small></div>
-                    <div data-section-tone="teal"><span data-i18n="clan.memberComposition">Komposisi anggota</span><strong id="overviewMembers">—</strong><small id="overviewRoles" data-i18n="clan.notAvailable">Belum tersedia</small></div>
+                    <div class="clan-summary-card" data-section-tone="blue"><div class="clan-summary-icon" aria-hidden="true"><img src="/assets/images/optimized/icon-players.webp" width="48" height="48" alt="" decoding="async"></div><div class="clan-summary-copy"><div class="clan-summary-heading"><span data-i18n="clan.tabs.members"></span><strong id="overviewMembers">—</strong></div><div class="clan-summary-detail"><small><span data-i18n="clan.averageTh"></span>: <b id="overviewAverageTh">—</b></small><small id="overviewThRange" data-i18n="clan.notAvailable"></small></div><div class="clan-summary-detail"><small><span data-i18n="clan.review"></span>: <b id="overviewReviewCount">—</b></small><small id="overviewActiveCount" data-i18n="clan.waitingSnapshot"></small></div><div class="clan-summary-detail"><small><span data-i18n="clan.donations"></span>: <b id="overviewDonations">—</b></small><small id="overviewRoles" data-i18n="clan.notAvailable"></small></div><a class="clan-summary-link" href="#members"><span data-i18n="clan.tabs.openMembers"></span> <span aria-hidden="true">→</span></a></div></div>
+                    <div class="clan-summary-card" data-section-tone="amber"><div class="clan-summary-icon" aria-hidden="true"><img src="/assets/profile/war-star.svg" width="48" height="48" alt="" decoding="async"></div><div class="clan-summary-copy"><div class="clan-summary-heading"><span data-i18n="clan.tabs.war"></span><strong id="overviewWarState" data-i18n="home.loadingShort"></strong></div><div class="clan-summary-detail"><small id="overviewWarScore" data-i18n="clan.waitingWar"></small></div><div class="clan-summary-detail"><small><span data-i18n="clan.cwlPosition"></span>: <b id="overviewCwlPosition">—</b></small><small id="overviewCwlMeta" data-i18n="clan.notAvailable"></small></div><div class="clan-summary-detail"><small><span data-i18n="clan.winStreak"></span>: <b id="overviewWinStreak">—</b></small></div><a class="clan-summary-link" href="#war-cwl"><span data-i18n="clan.tabs.openWar"></span> <span aria-hidden="true">→</span></a></div></div>
+                    <div class="clan-summary-card" data-section-tone="purple"><div class="clan-summary-icon" aria-hidden="true"><img src="/assets/profile/coverage.svg" width="48" height="48" alt="" decoding="async"></div><div class="clan-summary-copy"><div class="clan-summary-heading"><span data-i18n="clan.tabs.capital"></span><strong id="overviewCapitalLevel">—</strong></div><div class="clan-summary-detail"><small id="overviewCapitalDistricts" data-i18n="clan.notAvailable"></small></div><div class="clan-summary-detail"><small><span data-i18n="clan.capitalTrophies"></span>: <b id="overviewCapitalPoints">—</b></small><small id="overviewCapitalNote" data-i18n="clan.notAvailable"></small></div><a class="clan-summary-link" href="#capital"><span data-i18n="clan.tabs.openCapital"></span> <span aria-hidden="true">→</span></a></div></div>
+                    <div class="clan-summary-card" data-section-tone="teal"><div class="clan-summary-icon" aria-hidden="true"><img src="/assets/profile/progress.svg" width="48" height="48" alt="" decoding="async"></div><div class="clan-summary-copy"><div class="clan-summary-heading"><span data-i18n="clan.tabs.history"></span><strong id="overviewSnapshotCount" data-i18n="home.loadingShort"></strong></div><div class="clan-summary-detail"><small id="overviewSnapshotDate" data-i18n="clan.waitingSnapshot"></small><small data-i18n="clan.overview.historyHint"></small></div><div class="clan-summary-detail"><small><span data-i18n="clan.overview.unbeaten"></span>: <b id="overviewUnbeaten">—</b></small><small id="overviewUnbeatenNote" data-i18n="home.loadingShort"></small></div><a class="clan-summary-link" href="#history"><span data-i18n="clan.overview.openHistory"></span> <span aria-hidden="true">→</span></a></div></div>
                 </div>
                 <details class="clan-profile-details" open><summary data-i18n="clan.tabs.details">Detail clan</summary><div class="clan-profile-grid" aria-label="Informasi profil klan" data-i18n-aria-label="clan.profileInformation">
                     <section class="clan-profile-card" aria-labelledby="clanIdentityTitle">
@@ -730,6 +728,18 @@
             setText('overviewMembers', `${data.members || members.length}/50`);
             const leadership = members.filter(member => ['leader', 'coLeader', 'admin'].includes(member.role)).length;
             setText('overviewRoles', tr('clan.leadershipCount', { count: leadership }));
+            setText('overviewWinStreak', Number.isInteger(data.warWinStreak) && data.warWinStreak >= 0 ? formatLocalizedNumber(data.warWinStreak) : '—');
+            if (data.isWarLogPublic === false) {
+                setText('overviewUnbeaten', '—');
+                setText('overviewUnbeatenNote', tr('clan.warLogPrivate'));
+            }
+            const hall = data.clanCapital?.capitalHallLevel;
+            setText('overviewCapitalLevel', Number.isInteger(hall) && hall > 0 ? tr('feature.capitalHallLevel', { level: formatLocalizedNumber(hall) }) : tr('clan.notAvailable'));
+            const districts = data.clanCapital?.districts;
+            setText('overviewCapitalDistricts', Array.isArray(districts) && districts.length ? tr('clan.overview.districtCount', { count: formatLocalizedNumber(districts.length) }) : tr('feature.noDistricts'));
+            setText('overviewCapitalPoints', Number.isFinite(data.clanCapitalPoints) ? formatLocalizedNumber(data.clanCapitalPoints) : '—');
+            const baseline = data.capitalProgress?.baselineDate;
+            setText('overviewCapitalNote', baseline ? tr('feature.capitalBaseline', { date: window.CocI18n.dateTime(new Date(baseline + 'T00:00:00Z'), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) }) : tr('feature.noCapitalBaseline'));
             updateDataFreshness('clan', new Date().toISOString());
             refreshClanReport();
         }
@@ -1443,6 +1453,8 @@
         }
 
         function renderHealth(report) {
+            setText('overviewSnapshotCount', Number.isInteger(report.snapshots) ? tr('home.snapshots', { count: formatLocalizedNumber(report.snapshots) }) : tr('clan.notAvailable'));
+            setText('overviewSnapshotDate', report.latestSnapshot ? tr('clan.latestSnapshot', { date: window.CocI18n.dateTime(new Date(report.latestSnapshot + 'T00:00:00Z'), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) }) : tr('clan.noSnapshot'));
             setText('healthMeta', tr('clan.accessedAt', { date: new Date(report.generatedAt).toLocaleString(window.CocI18n.formatLocale) }));
             setText('healthSnapshotCount', tr('home.snapshots', { count: report.snapshots }));
             setText('healthLatest', report.latestSnapshot ? tr('clan.latestSnapshot', { date: report.latestSnapshot }) : tr('clan.noSnapshot'));
@@ -1476,6 +1488,10 @@
                 setText('healthLatest', '');
                 setText('healthReviewCount', '-');
                 setText('healthBaseline', '-');
+                setText('overviewReviewCount', '—');
+                setText('overviewActiveCount', tr('clan.activityLoadFailed'));
+                setText('overviewSnapshotCount', tr('clan.notAvailable'));
+                setText('overviewSnapshotDate', tr('clan.activityLoadFailed'));
                 document.getElementById('healthTable').replaceChildren();
                 document.getElementById('healthCsvLink').classList.add('hidden');
             }
@@ -1515,12 +1531,20 @@
         async function loadWar(tag) {
             const requestId = ++warRequestId;
             const round = selectedRound;
+            if (tag === activeTag && !latestWarData) {
+                setText('overviewWarState', tr('home.loadingShort'));
+                setText('overviewWarScore', tr('clan.waitingWar'));
+            }
             try {
                 const url = `/api/clan/${encodeURIComponent(tag)}/war${round === null ? '' : `?round=${round}`}`;
                 const response = await window.CocI18n.apiFetch(url);
                 const data = window.ClanWarSummary.normalize(await response.json());
                 if (tag !== activeTag || requestId !== warRequestId) return;
-                if (!response.ok) throw new Error(data.error || tr('clan.warLoadError'));
+                if (!response.ok) {
+                    const error = new Error(data.error || tr('clan.warLoadError'));
+                    error.privateWar = response.status === 403 && latestClanData?.isWarLogPublic === false;
+                    throw error;
+                }
 
                 latestWarData = data;
                 watchWarEnd(data, tag);
@@ -1547,6 +1571,9 @@
                     setText('overviewWarScore', tr('clan.roundUnknown'));
                     showWarStatus(tr('clan.cwlWaitingDetail'));
                     return;
+                }
+                if (!data.clan || !data.opponent || !['preparation', 'inWar', 'warEnded'].includes(data.state)) {
+                    throw new Error(tr('clan.warDataUnavailable'));
                 }
 
                 const deadline = renderWarTiming(data);
@@ -1587,7 +1614,18 @@
                 document.getElementById('warStatus').classList.add('hidden');
                 document.getElementById('warContent').classList.remove('hidden');
             } catch (error) {
-                if (tag === activeTag && requestId === warRequestId) showWarStatus(error.message);
+                if (tag !== activeTag || requestId !== warRequestId) return;
+                latestWarData = null;
+                setText('overviewWarState', tr(error.privateWar ? 'clan.warPrivate' : 'clan.notAvailable'));
+                setText('overviewWarScore', error.privateWar ? tr('clan.warPrivateDetail') : (error.message || tr('clan.warLoadError')));
+                setText('warPhase', tr(error.privateWar ? 'clan.warPrivate' : 'clan.notAvailable'));
+                document.getElementById('warPhase').dataset.state = 'unknown';
+                setText('warTimer', '');
+                showWarStatus(error.privateWar ? tr('clan.warPrivateDetail') : error.message);
+                if (!clanCwlLoaded) {
+                    setText('overviewCwlPosition', '—');
+                    setText('overviewCwlMeta', tr('clan.tabs.openWar'));
+                }
             }
         }
 
@@ -1615,6 +1653,27 @@
                 status.appendChild(spinner);
             }
             status.appendChild(document.createTextNode(error || tr(key)));
+        }
+
+        function clanUnbeatenStreak(items) {
+            if (!items.length) return null;
+            const dated = items.map(war => ({ war, date: parseCoCTime(war.endTime) }));
+            if (dated.some(item => !item.date)) return null;
+            dated.sort((a, b) => b.date.getTime() - a.date.getTime());
+            let wins = 0, draws = 0;
+            for (const { war } of dated) {
+                if (war.result === 'lose') return { count: wins + draws, wins, draws, exact: true };
+                if (war.result === 'win') wins++;
+                else if (war.result === 'tie') draws++;
+                else break;
+            }
+            return wins + draws ? { count: wins + draws, wins, draws, exact: false } : null;
+        }
+
+        function renderClanUnbeaten() {
+            const streak = clanUnbeatenStreak(clanWarLogItems);
+            setText('overviewUnbeaten', streak ? (streak.exact ? '' : '≥ ') + formatLocalizedNumber(streak.count) : '—');
+            setText('overviewUnbeatenNote', streak ? tr(streak.exact ? 'clan.overview.unbeatenExact' : 'clan.overview.unbeatenPartial', { wins: formatLocalizedNumber(streak.wins), draws: formatLocalizedNumber(streak.draws) }) : tr('clan.overview.unbeatenUnknown'));
         }
 
         function renderClanWarLog() {
@@ -1677,9 +1736,16 @@
                     if (!seen.has(key)) { clanWarLogItems.push(war); seen.add(key); }
                 }
                 clanWarLogNext = data.paging?.cursors?.after || null;
+                renderClanUnbeaten();
                 setClanWarLogStatus(clanWarLogItems.length ? '' : 'clan.warLogEmpty');
             } catch (error) {
-                if (tag === activeTag && requestId === clanWarLogRequestId) setClanWarLogStatus('', error.message || tr('clan.warLogLoadFailed'));
+                if (tag === activeTag && requestId === clanWarLogRequestId) {
+                    setClanWarLogStatus('', error.message || tr('clan.warLogLoadFailed'));
+                    if (!clanWarLogItems.length) {
+                        setText('overviewUnbeaten', '—');
+                        setText('overviewUnbeatenNote', latestClanData?.isWarLogPublic === false ? tr('clan.warLogPrivate') : tr('clan.warLogLoadFailed'));
+                    }
+                }
             } finally {
                 if (tag === activeTag && requestId === clanWarLogRequestId) { clanWarLogLoading = false; renderClanWarLog(); }
             }
@@ -1720,10 +1786,16 @@
             clanWarLogItems = [];
             clanWarLogNext = null;
             clanWarLogExpanded = false;
+            setText('overviewUnbeaten', '—');
+            setText('overviewUnbeatenNote', tr('home.loadingShort'));
             setClanWarLogStatus('clan.warLogLoading');
             renderClanWarLog();
             latestWarData = null;
             latestClanData = null;
+            setText('overviewSnapshotCount', tr('home.loadingShort'));
+            setText('overviewSnapshotDate', tr('clan.waitingSnapshot'));
+            setText('overviewReviewCount', '—');
+            setText('overviewActiveCount', tr('clan.waitingSnapshot'));
             for (const key of Object.keys(freshness)) freshness[key] = null;
             document.getElementById('rosterTownHall').value = 'all';
             document.getElementById('rosterSort').value = 'position';
@@ -1827,7 +1899,7 @@
 
         function ensureClanTabData(tab) {
             if (!activeTag || !latestClanData) return;
-            if (tab === 'history' && !clanHistoryLoaded) {
+            if (['overview', 'history', 'war-cwl'].includes(tab) && !clanHistoryLoaded) {
                 clanHistoryLoaded = true;
                 if (latestClanData.isWarLogPublic === false) setClanWarLogStatus('clan.warLogPrivate');
                 else loadClanWarLog(activeTag);

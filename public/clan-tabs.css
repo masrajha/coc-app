@@ -8,3 +8,42 @@
 .dashboard .clan-tab-panel{min-width:0;scroll-margin-top:100px}
 .clan-description{margin-top:6px;font-size:12px;color:var(--theme-link,#adc1d8)}.clan-description summary{width:fit-content;cursor:pointer;color:var(--theme-link,#9fc7f7)}.clan-description p{max-width:72ch;line-height:1.6;white-space:pre-line;overflow-wrap:anywhere}
 .clan-profile-details{border-top:1px solid var(--theme-border,#304459)}.clan-profile-details>summary,.clan-detail-panel>summary{padding:13px 16px;color:var(--theme-link,#c9ddf6);font-size:12px;font-weight:750;cursor:pointer}.clan-profile-details[open]>summary,.clan-detail-panel[open]>summary{border-bottom:1px solid var(--theme-border,#304459)}.clan-detail-panel{min-width:0;overflow:hidden;border:1px solid var(--theme-border,#33485d);border-radius:8px;background:var(--theme-panel,#14202c)}.clan-detail-panel>section{padding:13px!important;border:0!important;border-radius:0!important}.clan-detail-panel>summary:hover,.clan-profile-details>summary:hover{background:var(--theme-raised,#1e3043)}.clan-overview-shortcuts{display:flex;flex-wrap:wrap;gap:9px;padding:14px 16px;border-top:1px solid var(--theme-border,#304459)}.clan-overview-shortcuts a{padding:8px 11px;border:1px solid var(--theme-border,#405d7b);border-radius:6px;background:var(--theme-raised,#1b3047);color:var(--theme-link,#b6d8ff);font-size:12px;font-weight:650;text-decoration:none}.clan-overview-shortcuts a:hover{background:var(--theme-hover,#294867)}.clan-member-pager{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;margin-top:14px;color:var(--theme-link,#adc1d8);font-size:12px}.clan-member-pager[hidden]{display:none}.clan-member-pager button{min-height:38px;padding:8px 12px;border:1px solid var(--theme-border,#405b76);border-radius:6px;background:var(--theme-raised,#1c3045);color:var(--theme-text,#d9e9fa);font:inherit;cursor:pointer}.clan-member-pager button:disabled{opacity:.45;cursor:default}@media(max-width:640px){.dashboard .clan-primary-tabs a{padding:10px 12px;font-size:11px}.dashboard .clan-tab-panel{scroll-margin-top:145px}.clan-overview-shortcuts a{flex:1;text-align:center}.clan-member-pager{justify-content:space-between;gap:6px}.clan-description p{font-size:12px}}
+/* Snapshot-style operational cards, using the same icon and accent treatment as Player. */
+#clan-overview .clan-overview-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:18px}
+#clan-overview .clan-summary-card{--summary-color:var(--theme-link,#8eb9ff);--summary-border:var(--theme-blue-border,#426f9c);--summary-bg:var(--theme-blue-soft,#1b3048);display:flex;align-items:flex-start;gap:12px;min-width:0;padding:16px;border:1px solid var(--summary-border);border-radius:12px;background:color-mix(in srgb,var(--summary-bg) 40%,var(--theme-inset,#121923))}
+#clan-overview .clan-summary-card[data-section-tone=amber]{--summary-color:var(--theme-warning,#ffcf8b);--summary-border:var(--theme-gold-border,#92733b);--summary-bg:var(--theme-gold-soft,#3a2e1b)}
+#clan-overview .clan-summary-card[data-section-tone=slate]{--summary-color:var(--theme-secondary,#b5c6db);--summary-border:var(--theme-border,#40536b);--summary-bg:var(--theme-raised,#202c3a)}
+#clan-overview .clan-summary-card[data-section-tone=teal]{--summary-color:var(--theme-success,#75d8ba);--summary-border:var(--theme-green-border,#3d7d6a);--summary-bg:var(--theme-green-soft,#183a35)}
+#clan-overview .clan-summary-card[data-section-tone=purple]{--summary-color:var(--theme-purple,#c08ce0);--summary-border:var(--theme-purple-border,#775b96);--summary-bg:var(--theme-purple-soft,#30243f)}
+#clan-overview .clan-summary-card{position:relative;align-items:stretch}
+#clan-overview .clan-summary-icon{position:absolute;left:16px;top:16px;display:grid;place-items:center;width:42px;height:48px;padding:3px;border:1px solid color-mix(in srgb,var(--summary-color) 35%,transparent);border-radius:11px;background:color-mix(in srgb,var(--summary-color) 10%,transparent)}
+#clan-overview .clan-summary-icon img{display:block;width:36px;height:40px;object-fit:contain;filter:drop-shadow(0 2px 2px #0003)}
+#clan-overview .clan-summary-copy{display:flex;flex:1;flex-direction:column;gap:7px;min-width:0}
+#clan-overview .clan-summary-copy>*{flex-shrink:0}
+#clan-overview .clan-summary-heading{display:flex;flex-direction:column;gap:5px;min-height:63px;padding-left:54px}
+#clan-overview .clan-summary-heading>span{color:var(--theme-muted,#9aacbf);font-size:10px;font-weight:650;line-height:1.5;letter-spacing:.04em;text-transform:uppercase}
+#clan-overview .clan-summary-heading>strong{color:var(--theme-text,#eef5ff);font-size:23px;line-height:1.3;font-weight:750;font-variant-numeric:tabular-nums;white-space:normal;overflow:visible;overflow-wrap:anywhere}
+#clan-overview #overviewWarState{font-size:20px}
+#clan-overview .clan-summary-detail{display:flex;flex-direction:column;gap:4px;min-width:0;padding:10px;border:1px solid var(--theme-border,#304053);border-radius:8px;background:var(--theme-panel,#181f28)}
+#clan-overview .clan-summary-detail>small{color:var(--theme-secondary,#b5c6db);font-size:11px;line-height:1.6;white-space:normal;overflow:visible;overflow-wrap:anywhere}
+#clan-overview .clan-summary-detail>small :is(span,b){font-size:inherit;color:inherit;text-transform:none;white-space:normal}
+#clan-overview .clan-summary-link{align-self:flex-start;display:inline-flex;align-items:center;gap:5px;min-height:36px;margin-top:auto;padding-top:8px;font-size:12px;font-weight:650;color:var(--theme-link,#93bfff);text-decoration:none;text-underline-offset:3px}
+#clan-overview .clan-summary-link:hover{text-decoration:underline}
+#clan-overview .clan-summary-link>span{font:inherit;color:inherit;text-transform:none;white-space:normal}
+#clan-overview .clan-summary-link:focus-visible{outline:2px solid var(--summary-color);outline-offset:3px;border-radius:3px}
+@media(max-width:1100px){#clan-overview .clan-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+  #clan-overview .clan-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:10px;gap:8px;align-items:stretch}
+  #clan-overview .clan-summary-card{padding:10px;gap:0;aspect-ratio:auto;min-height:190px}
+  #clan-overview .clan-summary-icon{left:10px;top:10px;width:28px;height:32px;padding:2px;border-radius:7px}
+  #clan-overview .clan-summary-icon img{width:24px;height:27px}
+  #clan-overview .clan-summary-copy{gap:4px}
+  #clan-overview .clan-summary-heading{min-height:44px;gap:3px;padding-left:35px}
+  #clan-overview .clan-summary-heading>span{font-size:9px;line-height:1.4;letter-spacing:0}
+  #clan-overview .clan-summary-heading>strong,#clan-overview #overviewWarState{font-size:16px;line-height:1.25}
+  #clan-overview .clan-summary-detail{gap:3px;padding:4px 0;border:0;border-bottom:1px solid var(--theme-border,#304053);border-radius:0;background:transparent}
+  #clan-overview .clan-summary-detail>small{font-size:10px;line-height:1.4}
+  #clan-overview :is(#overviewThRange,#overviewActiveCount,#overviewRoles,#overviewCapitalNote,[data-i18n="clan.overview.historyHint"]){display:none}
+  #clan-overview :is(#overviewCwlMeta,#overviewUnbeatenNote){display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+  #clan-overview .clan-summary-link{align-self:stretch;justify-content:space-between;min-height:36px;padding-top:5px;font-size:10px;line-height:1.4}
+}
