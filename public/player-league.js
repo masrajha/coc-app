@@ -1,5 +1,6 @@
 (function () {
   const PAGE_SIZE = 25;
+  const comparison = { selected:new Map(), session:null, playerName:'' };
   const state = { playerTag: null, members: [], sessions: [], page: 0, request: 0, logRequest: 0, comparisonRequest: 0, statisticsRequest: 0, logFilter: 'all', logSort: 'oldest', battleCache: new Map(), playerBattleCache: new Map(), hoverTimer: null, hoverKey: null, pinned: false, trigger: null, leagueRule: null, leagueStats: null, statisticsSession: null, statisticsLoadingSession: null, statisticsMetric: 'trophies', playerRank: null, leagueView: 'standings' };
   const statisticsMetrics = {
     trophies: { labelKey: 'player.trophies', source: 'standings' },
@@ -337,6 +338,54 @@
     }, 180);
   }
 
+  function compareHref(tags) {
+    const query = new URLSearchParams({player1:tags[0],player2:tags[1],lang:window.CocI18n.locale});
+    if (clanTag) query.set('clan',clanTag);
+    if (comparison.session?.id) query.set('session',comparison.session.id);
+    if (Number(comparison.session?.seasonId) > 0) query.set('leagueSeason',String(comparison.session.seasonId));
+    return `/compare.html?${query}#ranked-league`;
+  }
+
+  function renderCompareBar() {
+    const root = element('leagueCompareBar');
+    root.hidden = !state.members.length || !comparison.session || state.leagueView !== 'standings';
+    root.replaceChildren();
+    const heading = document.createElement('strong'); heading.textContent = tr('player.groupCompareTitle');
+    const status = document.createElement('p'); status.className = 'league-compare-status';
+    status.setAttribute('role','status'); status.setAttribute('aria-live','polite');
+    status.textContent = tr(comparison.selected.size === 2 ? 'player.groupCompareReady' : comparison.selected.size === 1 ? 'player.groupCompareOne' : 'player.groupCompareEmpty');
+    const names = document.createElement('div'); names.className = 'league-compare-names';
+    for (const [tag,name] of comparison.selected) {
+      const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'league-compare-chip';
+      remove.textContent = name + ' \u00d7'; remove.setAttribute('aria-label',tr('player.groupCompareRemove',{name}));
+      remove.addEventListener('click',() => {
+        comparison.selected.delete(tag); updateCompareSelection();
+        element('leagueCompareBar').querySelector('button,a')?.focus();
+      }); names.append(remove);
+    }
+    const actions = document.createElement('div'); actions.className = 'league-compare-actions';
+    if (comparison.selected.size === 2) {
+      const link = document.createElement('a'); link.className = 'league-compare-submit';
+      link.href = compareHref([...comparison.selected.keys()]); link.textContent = tr('player.groupCompareGo'); actions.append(link);
+    }
+    if (comparison.selected.size) {
+      const reset = document.createElement('button'); reset.type = 'button'; reset.textContent = tr('player.groupCompareReset');
+      reset.addEventListener('click',() => {
+        comparison.selected.clear(); updateCompareSelection(); element('leagueMembers').querySelector('input')?.focus();
+      }); actions.append(reset);
+    }
+    root.append(heading,status,names,actions);
+  }
+
+  function updateCompareSelection() {
+    for (const checkbox of element('leagueMembers').querySelectorAll('.league-compare-check')) {
+      checkbox.checked = comparison.selected.has(checkbox.value);
+      checkbox.disabled = !checkbox.checked && comparison.selected.size >= 2;
+      checkbox.closest('li').classList.toggle('is-compare-selected',checkbox.checked);
+    }
+    renderCompareBar();
+  }
+
   function renderPage() {
     const list = element('leagueMembers');
     list.replaceChildren();
@@ -345,6 +394,20 @@
     for (const member of state.members.slice(start, start + PAGE_SIZE)) {
       const row = document.createElement('li');
       row.className = 'league-member';
+      const memberTag = normalizeTag(member.tag);
+      if (memberTag) {
+        row.classList.add('has-compare');
+        const check = document.createElement('input'); check.type = 'checkbox'; check.className = 'league-compare-check'; check.value = memberTag;
+        check.setAttribute('aria-label',tr('player.groupCompareSelect',{name:member.name || member.tag}));
+        check.addEventListener('click',event => event.stopPropagation());
+        check.addEventListener('change',() => {
+          hideBattle(true);
+          if (!check.checked) comparison.selected.delete(memberTag);
+          else if (comparison.selected.size < 2) comparison.selected.set(memberTag,member.name || member.tag);
+          updateCompareSelection();
+        });
+        row.append(check);
+      }
       const isCurrent = normalizeTag(member.tag) === state.playerTag;
       if (isCurrent) row.classList.add('is-current');
       const rank = document.createElement('span');
@@ -388,6 +451,13 @@
         if (state.pinned && state.hoverKey === key) hideBattle(true);
         else showBattle(member, row, true, info);
       });
+      if (memberTag && !isCurrent && state.playerTag) {
+        const quick = document.createElement('a'); quick.className = 'league-compare-quick';
+        quick.textContent = tr('player.groupCompareProfile');
+        quick.title = tr('player.groupComparePair',{name:member.name || member.tag,player:comparison.playerName});
+        quick.setAttribute('aria-label',quick.title); quick.href = compareHref([state.playerTag,memberTag]);
+        activity.append(quick);
+      }
       activity.appendChild(info);
       const zone = standingsZone(member.rank);
       if (zone) row.classList.add(`is-${zone}-zone`);
@@ -397,10 +467,14 @@
         if (window.matchMedia('(hover: hover)').matches) showBattle(member, row);
       });
       row.addEventListener('mouseleave', hideBattle);
-      row.addEventListener('focusin', () => showBattle(member, row));
+      row.addEventListener('focusin', event => {
+        if (event.target.closest('.league-compare-check,.league-compare-quick')) { hideBattle(true); return; }
+        showBattle(member, row);
+      });
       row.addEventListener('focusout', hideBattle);
       list.appendChild(row);
     }
+    updateCompareSelection();
     setText('leagueMemberCount', tr('player.playersCount', { count: localizedNumber(state.members.length) }));
     setText('leaguePageInfo', totalPages ? `${state.page + 1} / ${totalPages}` : '—');
     element('leaguePrev').disabled = state.page <= 0;
@@ -751,6 +825,7 @@
 
   function setLeagueView(view) {
     state.leagueView = view === 'statistics' ? 'statistics' : 'standings';
+    renderCompareBar();
     const statistics = state.leagueView === 'statistics';
     element('leagueStandingsView').hidden = statistics;
     element('leagueStatisticsView').hidden = !statistics;
@@ -1021,6 +1096,7 @@
   }
 
   async function loadSession(sessionId) {
+    comparison.selected.clear(); comparison.session = null; renderCompareBar();
     hideBattle(true);
     setLeagueTitle(null);
     const request = ++state.request;
@@ -1057,6 +1133,7 @@
       const data = await response.json().catch(() => ({ error: tr('player.groupInvalidResponse') }));
       if (request !== state.request) return;
       if (!response.ok) throw new Error(data.error || tr('player.groupFailed'));
+      comparison.session = data.session || null;
       state.members = Array.isArray(data.members) ? data.members : [];
       state.leagueRule = data.leagueRule || null;
       state.playerRank = data.playerRank || null;
@@ -1113,6 +1190,8 @@
     setText('leagueSidebarTitle', tr('player.leagueGroup'));
     state.request++;
     state.playerTag = normalizeTag(player.tag);
+    comparison.playerName = player.name || player.tag;
+    comparison.selected.clear(); comparison.session = null;
     state.leagueTransition = player.leagueTransition || null;
     renderLegendGlobal(player);
     element('legendGlobalSummary').hidden = true;

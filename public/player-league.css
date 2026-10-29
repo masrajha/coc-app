@@ -159,3 +159,25 @@ body.ranked-game-open{overflow:hidden}
 .ranked-image-dialog::backdrop{background:#000b}.ranked-image-dialog h2{margin:0 0 12px;font-size:18px}
 .ranked-image-actions{display:flex;flex-wrap:wrap;gap:8px;position:sticky;top:0;padding:8px 0;background:var(--theme-panel,#172231)}
 .ranked-image-dialog img{display:block;width:100%;height:auto}.ranked-image-dialog p{font-size:12px;color:var(--theme-secondary,#b7c7da)}
+
+/* Comparison controls stay outside the scrolling standings list. */
+.league-member.has-compare{grid-template-columns:18px 28px minmax(0,1fr) auto;gap:5px 6px}
+.league-member.has-compare .league-member-activity{grid-column:3/-1;flex-wrap:wrap;gap:6px 10px}
+.league-compare-check{width:16px;height:16px;margin:0;accent-color:var(--theme-warning,#e3b23b);cursor:pointer;align-self:start;margin-top:2px}
+.league-compare-check:disabled{opacity:.35;cursor:default}
+.league-member.is-compare-selected{border-color:var(--theme-warning,#e3b23b);background:var(--theme-gold-soft,#30291a);box-shadow:inset 3px 0 var(--theme-warning,#e3b23b)}
+.league-compare-quick{color:var(--theme-link,#9ac4ff);text-decoration:underline;text-underline-offset:2px;font-size:10px;line-height:1.6}
+.league-compare-bar{flex:0 0 auto;padding-top:12px;margin-top:12px;border-top:1px solid var(--theme-border,#35465d);background:var(--theme-panel,#1b2639)}
+.league-compare-bar[hidden]{display:none}
+.league-compare-bar>strong{display:block;font-size:12px;color:var(--theme-text,#eef2f8)}
+.league-compare-status{margin:6px 0;color:var(--theme-secondary,#b6c8dd);font-size:11px;line-height:1.5}
+.league-compare-names{display:flex;flex-wrap:wrap;gap:6px}
+.league-compare-chip{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid var(--theme-border,#35465d);border-radius:6px;padding:5px 8px;background:var(--theme-inset,#0c192b);color:var(--theme-text,#eef2f8);font-size:11px;cursor:pointer}
+.league-compare-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.league-compare-actions:has(>*){margin-top:8px}
+.league-compare-actions>a,.league-compare-actions>button{padding:7px 10px;border:1px solid var(--theme-border,#35465d);border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer}
+.league-compare-actions>a{background:var(--theme-action-bg,#e3b23b);color:var(--theme-action-text,#18202b);flex:1;text-align:center}
+.league-compare-actions>button{background:var(--theme-inset,#0c192b);color:var(--theme-secondary,#b6c8dd)}
+.league-compare-bar :is(a,button):focus-visible,.league-compare-check:focus-visible,.league-compare-quick:focus-visible{outline:2px solid var(--theme-warning,#e3b23b);outline-offset:3px}
+
+@media(max-width:1100px){.league-members{overflow-y:auto;scrollbar-color:var(--theme-track,#516780) var(--theme-inset,#17212e)}}

@@ -22,6 +22,7 @@
   <script src="/compare-model.js" defer></script>
   <script src="/compare-battles.js" defer></script>
   <script src="/recent.js" defer></script>
+  <script src="/compare-game.js" defer></script>
   <script src="/compare.js" defer></script>
   <script src="/donation.js" defer></script>
 </head>
@@ -118,7 +119,7 @@
           <details class="legend-records"><summary data-i18n="compare.legendRecords">Rekor pribadi</summary><div id="legendComparisonRecords" class="league-metrics-table-wrap"></div></details>
           <p class="section-note" data-i18n="player.legendCutoffRule"></p>
         </section>
-        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2 data-i18n="compare.leaguePerformance">Performa liga</h2></div></div>
+        <div class="section-head"><div><div class="eyebrow">RANKED LEAGUE</div><h2 data-i18n="compare.leaguePerformance">Performa liga</h2></div><button id="openCompareGame" class="open-compare-battle" type="button" disabled aria-haspopup="dialog" aria-controls="compareGameDialog" data-i18n="compare.gameOpen">Gambar perbandingan</button></div>
         <p class="section-note" data-i18n="compare.leagueScope">Setiap pemain ditampilkan berdasarkan sesi grupnya sendiri. Peringkat grup berbeda tidak selalu dapat dibandingkan langsung. Metrik hanya tersedia jika API menyediakan data sesi dan riwayat battle.</p>
         <div id="leagueComparisonNote" class="league-comparison-note"></div>
         <div id="leagueComparisonGrid" class="league-comparison-grid"></div>
@@ -139,6 +140,16 @@
       </section>
     </div>
   </main>
+  <dialog id="compareGameDialog" class="compare-game-dialog" aria-labelledby="compareGameTitle" aria-describedby="compareGameStatus">
+    <header class="compare-game-toolbar"><div><h2 id="compareGameTitle" data-i18n="compare.gameTitle">Perbandingan Battle Log</h2><p id="compareGameStatus" role="status" aria-live="polite"></p></div><button id="closeCompareGame" type="button" data-i18n="player.close">Tutup</button>
+      <div class="compare-game-options"><label><span data-i18n="compare.gameContent">Konten</span><select id="compareGameMode"><option value="attack" data-i18n="player.attacks">Attacks</option><option value="defense" data-i18n="player.defenses">Defenses</option><option value="all" data-i18n="compare.gameAll">Lengkap</option></select></label><label><span data-i18n="compare.battleOrder">Urutan</span><select id="compareGameOrder"><option value="oldest" data-i18n="player.oldest">Terlama</option><option value="latest" data-i18n="player.latest">Terbaru</option></select></label><button id="compareGameExport" type="button" disabled data-i18n="game.export">Gambar / Bagikan</button></div>
+    </header><iframe id="compareGameFrame" title="Perbandingan battle log bergaya game" data-i18n-title="compare.gameTitle"></iframe>
+  </dialog>
+  <dialog id="compareGameImageDialog" class="compare-game-image-dialog" aria-labelledby="compareGameImageTitle">
+    <header><h2 id="compareGameImageTitle" data-i18n="compare.gameImageTitle">Gambar perbandingan</h2><button id="closeCompareGameImage" type="button" data-i18n="player.close">Tutup</button></header>
+    <div class="compare-game-image-scroll"><img id="compareGameImagePreview" alt="Perbandingan battle log" data-i18n-alt="compare.gameTitle"></div>
+    <div class="compare-game-image-actions"><button id="downloadCompareGame" type="button" data-i18n="game.download">Unduh PNG</button><button id="shareCompareGame" type="button" data-i18n="game.share">Bagikan gambar</button></div><p id="compareGameImageStatus" role="status" aria-live="polite"></p>
+  </dialog>
   <dialog id="compareBattleDrawer" class="compare-battle-drawer" aria-labelledby="compareBattleTitle" aria-describedby="compareBattleContext">
     <header class="compare-battle-header"><div><h2 id="compareBattleTitle" data-i18n="compare.battleLog">Battle log</h2><p id="compareBattleContext"></p></div><button id="closeCompareBattle" type="button" aria-label="Tutup battle log" data-i18n-aria-label="compare.closeBattleLog" autofocus>×</button></header>
     <div class="compare-battle-body">

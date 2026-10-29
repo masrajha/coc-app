@@ -16,6 +16,7 @@ const tr = (key, variables) => window.CocI18n.t(key, variables);
 const locale = () => window.CocI18n.formatLocale;
 window.CompareBattleLog.configure({data:side=>leaguePerformance[side],name:side=>sideName(side),loading:side=>leagueLoadState[side]==='loading'});
 window.CocI18n.setPageTitle('compare');
+window.CompareGame.configure({data:side=>leaguePerformance[side],name:side=>sideName(side),loading:side=>leagueLoadState[side]==='loading'});
 
 function normalizeTag(value) {
   const tag = String(value || '').trim().replace(/^#/, '').toUpperCase();
@@ -637,6 +638,7 @@ function refreshLeagueComparison() {
   renderLeagueComparisonNote();
   renderLeagueMetrics();
   window.CompareBattleLog.refresh();
+  window.CompareGame.refresh();
 }
 
 async function loadLeagueSide(side, sessionId, requestId) {
@@ -793,6 +795,7 @@ function initializeLeagueComparison() {
     select.id = `leagueSession${side}`;
     select.setAttribute('aria-label', tr('compare.chooseLeagueSession', { player: sideName(side) }));
     const sessions = profile?.player?.leagueSessions || [];
+    let requestedSessionMissing = false;
     if (!sessions.length) select.add(new Option(tr('compare.sessionUnavailable'), ''));
     else {
       for (const session of sessions) {
@@ -800,7 +803,11 @@ function initializeLeagueComparison() {
         const sessionName = tr(session.id === 'current' ? 'player.sessionCurrent' : 'player.sessionPrevious');
         select.add(new Option(`${sessionName}${date ? ` · ${date}` : ''}`, session.id));
       }
-      select.value = profile?.player?.leagueTier?.name === 'Legend I' && sessions.some(session => session.id === 'previous')
+      const requestedSeason = Number(params.get('leagueSeason'));
+      const requestedSession = sessions.find(session => requestedSeason > 0
+        ? Number(session.seasonId) === requestedSeason : session.id === params.get('session'));
+      requestedSessionMissing = requestedSeason > 0 && !requestedSession;
+      select.value = requestedSession ? requestedSession.id : profile?.player?.leagueTier?.name === 'Legend I' && sessions.some(session => session.id === 'previous')
         ? 'previous' : sessions.some(session => session.id === 'current') ? 'current' : sessions[0].id;
     }
     select.disabled = !sessions.length;
@@ -808,6 +815,9 @@ function initializeLeagueComparison() {
     const result = textNode('div', '', 'league-result');
     result.id = `leagueResult${side}`;
     card.append(head, result);
+    if (requestedSessionMissing) {
+      card.append(textNode('p', tr('compare.requestedSeasonUnavailable'), 'league-quality-note'));
+    }
     if (profile?.player?.leagueTier?.name === 'Legend I' && sessions.some(session => session.id === 'previous')) {
       card.append(textNode('p', tr('compare.legendPreviousKept'), 'league-quality-note'));
     }
