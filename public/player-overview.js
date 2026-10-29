@@ -43,12 +43,13 @@
   };
   function model(progress) {
     const known = Object.values(progress?.score?.categories || {}).reduce((sum, category) => sum + Math.max(0, numeric(category?.knownItems) ?? 0), 0);
+    const counts = Object.fromEntries(['heroes','troops','spells','pets'].map(category => [category, Math.max(0, numeric(progress?.score?.categories?.[category]?.knownItems) ?? 0)]));
     // expectedItems in the existing categories describes only the scoring input.
     // API maxLevel does not establish the total number of unlockable item types.
     const suppliedTotal = numeric(progress?.coverage?.expectedItems);
     const total = progress?.coverage?.totalKnown === true && suppliedTotal !== null && Number.isInteger(suppliedTotal) && suppliedTotal > 0 && suppliedTotal >= known ? suppliedTotal : null;
     const suppliedScore = numeric(progress?.score?.overall);
-    return {known, total, score:suppliedScore === null ? null : Math.max(0, Math.min(100, suppliedScore)),
+    return {known, total, counts, score:suppliedScore === null ? null : Math.max(0, Math.min(100, suppliedScore)),
       status:!progress?.complete ? 'unknown' : progress.rushed?.rushed ? 'warning' : 'safe'};
   }
   function icon(name, className = '') {
@@ -89,7 +90,7 @@
       {metric:'status',image:'status',label:tr('player.status'),value:tr(values.status === 'unknown' ? 'player.rushed.unknown' : values.status === 'warning' ? 'player.rushed.yes' : 'player.rushed.no'),
         note:tr(values.status === 'unknown' ? 'profile.statusUnknown' : values.status === 'warning' ? 'profile.statusReview' : 'profile.statusScope')},
       {metric:'score',image:'progress',label:tr('player.progressScore'),value:values.score === null ? '—' : number(values.score)+'%',note:tr(progress.complete ? 'profile.scoreScope' : 'profile.scoreScopePartial')},
-      {metric:'coverage',image:'coverage',label:tr('player.coverage'),value:tr('player.items',{count:number(values.known)}),note:tr(values.total === null ? 'profile.coverageUnknown' : 'profile.coverageKnown',{known:number(values.known),total:number(values.total)})},
+      {metric:'coverage',image:'coverage',label:tr('player.coverage'),value:tr('player.items',{count:number(values.known)}),note:tr('profile.coverageBreakdown',Object.fromEntries(Object.entries(values.counts).map(([key,count]) => [key,number(count)])))},
       {metric:'trophies',image:'trophy-purple',label:tr('player.trophies'),value:number(numeric(player.trophies)),note:tr('profile.currentTrophies')}
     ];
     const root = el('playerOverviewCards'); root.replaceChildren();
@@ -108,7 +109,7 @@
       const clan = node('a',undefined,'profile-action profile-action-secondary'); clan.href = '/clan.html?'+new URLSearchParams({tag:player.clan.tag.replace(/^#/,''),lang:window.CocI18n.locale});
       clan.append(actionIcon('external'),node('span',tr('player.openClan'))); actions.append(clan);
     }
-    renderTimestamp('updated',updated); renderTimestamp('overviewUpdated',updated,true);
+    renderTimestamp('overviewUpdated',updated,true);
   }
   window.PlayerOverview = {model,render,renderName,chooseHero};
 })();

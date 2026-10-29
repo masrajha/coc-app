@@ -163,9 +163,9 @@ html[data-theme=light] .player-profile-page .profile-hero-art{opacity:1}
   .player-profile-page .profile-hero .identity-meta{gap:6px 8px}
 }
 
-/* Keep the portrait proportional, with the timestamp under the identity. */
+/* Keep the portrait proportional beside the player identity. */
 .player-profile-page .profile-hero{grid-template-columns:minmax(0,1fr) clamp(210px,26cqi,320px);gap:12px 18px;min-height:210px}
-.player-profile-page .profile-hero .identity{grid-column:1;grid-row:1;align-self:end}
+.player-profile-page .profile-hero .identity{grid-column:1;grid-row:1;align-self:center}
 .player-profile-page .profile-hero .profile-updated{grid-column:1;grid-row:2;align-self:start;margin:0;padding:0 0 0 98px;border:0;min-width:0;flex-basis:auto;width:100%;font-size:10px}
 .player-profile-page .profile-updated>div,.player-profile-page .profile-updated .updated{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px}
 .player-profile-page .profile-updated>svg{width:16px;height:16px;flex-basis:16px}
@@ -194,11 +194,18 @@ html[data-theme=light] .player-profile-page .profile-hero-art{opacity:1}
   .player-profile-page .profile-hero .profile-updated{padding-left:70px}
 }
 @container profile-content (max-width:560px){
-  .player-profile-page .profile-hero{grid-template-columns:minmax(0,1fr) 130px;min-height:0}
-  .player-profile-page .profile-hero .identity{grid-column:1/-1;grid-row:1}
-  .player-profile-page .profile-hero-art{position:relative;inset:auto;grid-column:2;grid-row:2;width:150px;max-width:none;height:150px;margin:-6px -20px -20px 0;justify-self:end;mask-image:radial-gradient(ellipse 65% 75% at 55% 45%,#000 45%,transparent 100%)}
-  .player-profile-page .profile-hero .profile-updated{grid-column:1;grid-row:2;align-self:center;padding:0}
+  .player-profile-page .profile-hero{grid-template-columns:minmax(0,1fr) clamp(86px,25cqi,140px);min-height:188px;gap:10px;padding:18px 16px}
+  .player-profile-page .profile-hero .identity{grid-column:1;grid-row:1;gap:9px;align-items:flex-start}
+  .player-profile-page .profile-badge-slot,.player-profile-page .profile-badge-slot .clan-badge,.player-profile-page .profile-badge-slot>img{width:40px;height:52px;flex-basis:40px}
+  .player-profile-page .profile-hero #playerName{font-size:clamp(19px,5.6cqi,24px);line-height:1.2}
+  .player-profile-page .profile-hero .eyebrow{font-size:8px;letter-spacing:.1em}
+  .player-profile-page .profile-hero .player-name-row{gap:6px 8px}
+  .player-profile-page .profile-hero .identity-meta{font-size:10px;gap:5px 7px}
+  .player-profile-page .profile-hero .league-rank-summary{font-size:10px;line-height:1.5}
+  .player-profile-page .profile-league-line{gap:6px;align-items:flex-start}
+  .player-profile-page .profile-hero .profile-hero-art{position:absolute;inset:-12px 0 -12px auto;grid-column:auto;grid-row:auto;width:clamp(92px,28cqi,156px);max-width:34%;height:auto;margin:0;mask-image:linear-gradient(90deg,transparent,#000 24%,#000 92%,transparent)}
 }
+
 
 /* The player masthead uses the scenery without a foreground character. */
 .player-profile-page>.command-masthead{padding-right:28px}
