@@ -2,6 +2,7 @@
   const STORAGE_KEY = 'coc-language';
   const messages = {
     id: {
+      "seo.features": "Fitur ClanIntel",
       "compare.gameOpen": "Gambar perbandingan",
       "compare.gameTitle": "Perbandingan Battle Log",
       "compare.gameComplete": "Log lengkap sesuai jumlah battle yang dilaporkan API.",
@@ -1353,6 +1354,7 @@
       'player.loadingSessionComparison': 'Memuat perbandingan sesi…'
     },
     en: {
+      "seo.features": "ClanIntel features",
       "compare.gameOpen": "Comparison image",
       "compare.gameTitle": "Battle Log Comparison",
       "compare.gameComplete": "Complete logs for the battle count reported by the API.",

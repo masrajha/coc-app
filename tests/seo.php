@@ -68,11 +68,30 @@ try {
     foreach (['/compare.html?lang=en','/compare.html?player1=28P08PG0G&player2=PJ20G29L','/player.html?lang=en','/player.html?tag=INVALID','/player.html?tag=QRCUY0YY2'] as $url) {
         $assert(str_contains((string)$get($url)->getBody(),'content="noindex,follow"'),'Empty, arbitrary or unavailable profiles must not be indexed.');
     }
-    foreach (['/guides/missing','/explore/players?page=999','/explore/players?page[]=1','/leaderboards?category[]=players','/sitemaps/players-0.xml','/sitemaps/players-2.xml'] as $url) $assert($get($url)->getStatusCode()===404,'Unknown/past-end pages must return 404: '.$url);
+    foreach (['/features/missing','/guides/missing','/explore/players?page=999','/explore/players?page[]=1','/leaderboards?category[]=players','/sitemaps/players-0.xml','/sitemaps/players-2.xml'] as $url) $assert($get($url)->getStatusCode()===404,'Unknown/past-end pages must return 404: '.$url);
     foreach (['id','en'] as $lang) {
         $guide=(string)$get('/guides/ranked-league?lang='.$lang)->getBody();
         $assert(str_contains($guide,'<html lang="'.$lang.'">')&&str_contains($guide,'application/ld+json')&&str_contains($guide,'Supercell'),'Guide content, structured data and attribution must be localized in initial HTML.');
         $assert(!str_contains($guide,'/api/'),'Guide pages must not rely on an API fetch to show content.');
+        $features=(string)$get('/features?lang='.$lang)->getBody();
+        $assert(substr_count($features,'class="seo-card-grid seo-feature-cards"')===1,'Feature hub must expose the product pages.');
+        foreach (CocTracker\SeoFeatures::all($lang) as $slug=>$feature) {
+            $path='/features/'.$slug;
+            $response=$get($path.'?lang='.$lang.'&utm_source=test');$html=(string)$response->getBody();
+            $xp=new DOMXPath($dom($html));
+            $assert($response->getStatusCode()===200&&$response->getHeaderLine('Content-Language')===$lang,'Feature pages must work in both languages.');
+            $assert($xp->query('//h1')->length===1&&$xp->evaluate('string(//h1)')===$feature['title'],'Feature heading must be localized server-rendered content.');
+            $assert($xp->evaluate('string(//meta[@name="robots"]/@content)')==='index,follow','Product pages must be indexable independently of comparison pairs.');
+            $assert($xp->evaluate('string(//link[@rel="canonical"]/@href)')==='https://clanintel.example.test'.$path.'?lang='.$lang,'Feature canonicals must omit tracking parameters.');
+            $assert($xp->query('//figure/figcaption')->length===1&&$xp->query('//article/section')->length>=4,'Feature pages need substantive content and clearly labelled visual examples.');
+            $assert($xp->query('//nav[contains(@class,"seo-feature-actions")]/a[contains(@href,"#'.$feature['tool'].'")]')->length>=1,'Feature CTA must activate the appropriate home search tab.');
+            $schema=json_decode($xp->evaluate('string(//script[@type="application/ld+json"])'),true,512,JSON_THROW_ON_ERROR);
+            $assert($schema['@type']==='WebPage'&&$schema['mainEntity']['@type']==='WebApplication'&&count($schema['mainEntity']['featureList'])>=4,'Structured data must describe actual app features.');
+            $assert(!str_contains($html,'/api/'),'Feature pages must not require an API request.');
+            $assert(str_contains($features,$path.'?lang='.$lang),'Every product page must be discoverable from the feature hub.');
+        }
+        $home=(string)$get('/?lang='.$lang)->getBody();
+        $assert(str_contains($home,'seo-feature-discovery')&&str_contains($home,'/features/player-comparison?lang='.$lang),'Home must expose feature content and links in initial HTML.');
     }
     $assert(str_contains((string)$get('/leaderboards?category=players&lang=en')->getBody(),'Ranked player'),'Rankings must show saved rows in initial HTML.');
     $assert(str_contains((string)$get('/leaderboards?category=players&location=32000087&lang=en')->getBody(),'Indonesia ranking player'),'Country rankings must use their own API endpoint cache.');

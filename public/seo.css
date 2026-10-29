@@ -13,3 +13,23 @@
 .seo-inline-list{display:flex;flex-wrap:wrap;gap:8px 24px;padding:0;list-style:none}.seo-ranking{padding:0;list-style:none;margin:24px 0;border:1px solid var(--theme-border);border-radius:12px;overflow:hidden}.seo-ranking li{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;border-bottom:1px solid var(--theme-border);background:var(--theme-panel)}.seo-ranking li:last-child{border:0}
 .seo-theme{display:flex;align-items:center;gap:8px;font-size:12px}.seo-theme select{padding:8px;border:1px solid var(--theme-border);border-radius:8px;background:var(--theme-panel);color:var(--theme-text)}
 @media(max-width:700px){.seo-main{padding:24px 16px}.seo-card-grid{grid-template-columns:1fr}.seo-article section{padding:16px}.seo-context{padding:16px}.seo-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.seo-page .command-header-nav{justify-content:flex-start;gap:8px 14px}.seo-page .header-inner{gap:14px}.seo-context .seo-links a{padding:5px 0}}
+
+/* Product feature pages and lightweight HTML examples, rendered without API data. */
+.seo-feature-discovery{clear:both;margin:28px 0 0;padding:20px;border:1px solid var(--theme-border,#35465d);border-radius:14px;background:var(--theme-panel,#1b2639);color:var(--theme-text,#eef2f8)}
+.seo-feature-discovery>h2{font-size:21px;margin:0 0 16px}.seo-feature-cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+.seo-feature-cards article{background:var(--theme-panel,#1b2639);border-color:var(--theme-border,#35465d)}
+.seo-feature-cards article>img{object-fit:contain;margin-bottom:12px}.seo-feature-cards h2{font-size:18px;line-height:1.5;margin:0 0 10px}.seo-feature-cards p{font-size:13px;line-height:1.7;color:var(--theme-secondary,#b6c8dd);margin:0}
+.seo-feature-discovery .seo-feature-cards{margin:0}.seo-feature-article{max-width:900px;margin-block:32px}
+.seo-feature-article section{margin:28px 0}.seo-feature-article p,.seo-feature-article li{color:var(--theme-secondary,#b6c8dd)}.seo-feature-article li+li{margin-top:10px}
+.seo-feature-actions{margin:22px 0}.seo-feature-actions .seo-feature-primary{display:inline-block;background:var(--theme-action-bg,#2563eb);color:var(--theme-action-text,#fff);border-radius:8px;padding:10px 16px;text-decoration:none;font-weight:700}
+.seo-feature-actions .seo-feature-primary:hover{background:var(--theme-action-hover,#1d4ed8)}
+.seo-feature-example{margin:28px 0;padding:22px;border:1px solid var(--theme-border,#35465d);border-radius:14px;background:var(--theme-panel,#1b2639);color:var(--theme-text,#eef2f8)}
+.seo-example-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--theme-muted,#9db4ce);margin-bottom:14px}
+.seo-feature-example p,.seo-feature-example figcaption{font-size:13px;color:var(--theme-secondary,#b6c8dd)}.seo-feature-example figcaption{margin-top:18px;border-top:1px solid var(--theme-border,#35465d);padding-top:12px;font-style:italic}
+.seo-example-table-wrap{overflow-x:auto}.seo-feature-example table{width:100%;border-collapse:collapse;text-align:left}.seo-feature-example caption{text-align:left;font-weight:700;margin-bottom:10px}.seo-feature-example :is(td,th){padding:10px 12px;border-bottom:1px solid var(--theme-border,#35465d);font-size:13px}.seo-feature-example thead{background:var(--theme-inset,#0c192b)}
+.seo-example-battles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.seo-example-battles h3{font-size:16px;margin:0 0 12px}.seo-example-log-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.seo-example-battle{display:grid;justify-items:center;gap:5px;padding:14px 8px;border:1px solid var(--theme-border,#35465d);border-radius:9px;background:var(--theme-inset,#0c192b)}
+.seo-example-battle.gold{background:var(--theme-gold-soft,#392d1a);border-color:var(--theme-gold-border,#967733)}.seo-example-battle.pink{background:var(--theme-red-soft,#3f2530);border-color:var(--theme-red-border,#995961)}.seo-example-battle>span{color:var(--theme-warning,#f2bd45);font-size:23px;letter-spacing:3px}
+.seo-example-war{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}.seo-example-war>div{display:grid;gap:6px;padding:16px;border:1px solid var(--theme-border,#35465d);border-radius:10px;background:var(--theme-inset,#0c192b)}.seo-example-war strong{font-size:25px;color:var(--theme-warning,#f2bd45)}
+@media(max-width:900px){.seo-feature-cards{grid-template-columns:1fr}.seo-feature-cards article{padding:16px}}
+@media(max-width:600px){.seo-feature-example{padding:16px}.seo-example-war{gap:8px}.seo-example-war>div{padding:10px}.seo-example-war strong{font-size:19px}.seo-example-battles{gap:12px}.seo-example-battle{padding:10px 5px}}
