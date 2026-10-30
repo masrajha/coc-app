@@ -20,6 +20,8 @@
 .war-map-base strong,.war-map-base small{max-width:100%;overflow-wrap:anywhere;line-height:1.35}
 .war-map-base strong{display:block;align-self:stretch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.war-map-base small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:var(--theme-muted,#aab9ce);font-size:9px;line-height:1.2}
 .war-map-stars{color:var(--theme-warning,#f2c35b);font-size:15px;line-height:1.2;min-height:18px}
+.war-map-stars .war-map-star.is-earned{color:var(--theme-warning,#f2c35b)}
+.war-map-stars .war-map-star.is-empty{color:var(--theme-muted,#9aacbf);text-shadow:none}
 .war-map-base.is-untouched .war-map-stars{color:var(--theme-muted,#aab9ce);font-size:9px;display:flex;align-items:center}
 .war-map-icon{position:relative;display:grid;place-items:center;flex:0 0 50px;height:50px;width:56px;max-width:100%}
 .war-map-icon img{width:50px;max-width:100%;height:46px;object-fit:contain}.war-map-th{position:absolute;bottom:0;padding:1px 4px;border-radius:5px;background:var(--theme-raised,#243248);color:var(--theme-secondary,#d7e0ed);font-size:8px}

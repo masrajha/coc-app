@@ -41,7 +41,16 @@
     item.classList.toggle('is-linked', Boolean(linked));
     item.setAttribute('aria-pressed', String(selected?.side === which && selected?.tag === member.tag));
     item.setAttribute('aria-label', tr('baseLabel', {position: number(member.mapPosition), name: member.name || member.tag, stars: stars(member), destruction: number(member.bestDestruction)}));
-    item.append(node('span', stars(member), 'war-map-stars'));
+    const starRow = node('span', '', 'war-map-stars');
+    starRow.setAttribute('aria-hidden', 'true');
+    const bestStars = Number(member.bestStars);
+    if (member.attacksReceived && member.bestStars != null && Number.isInteger(bestStars) && bestStars >= 0 && bestStars <= 3) {
+      for (let index = 0; index < 3; index++) {
+        const earned = index < bestStars;
+        starRow.append(node('span', earned ? '★' : '☆', 'war-map-star ' + (earned ? 'is-earned' : 'is-empty')));
+      }
+    } else starRow.textContent = stars(member);
+    item.append(starRow);
     const icon = node('span', '', 'war-map-icon');
     const level = Number(member.townhallLevel);
     if (Number.isInteger(level) && level >= 1 && level <= 18) {
