@@ -47,3 +47,12 @@
   #clan-overview :is(#overviewCwlMeta,#overviewUnbeatenNote){display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
   #clan-overview .clan-summary-link{align-self:stretch;justify-content:space-between;min-height:36px;padding-top:5px;font-size:10px;line-height:1.4}
 }
+/* Target filters keep their own row on narrow screens instead of wrapping labels. */
+.dashboard #matchup-map .target-cleanup-heading{gap:10px 16px}
+.dashboard #matchup-map .target-filters{flex-wrap:nowrap;flex-shrink:0;gap:5px;max-width:100%}
+.dashboard #matchup-map .target-filters button{flex:0 0 auto;white-space:nowrap;padding:6px 8px;font-size:10px;font-weight:650;line-height:1.3;min-height:32px}
+@media(max-width:640px){
+  .dashboard #matchup-map .target-cleanup-heading{flex-direction:column;align-items:stretch}
+  .dashboard #matchup-map .target-filters{width:100%;justify-content:flex-start}
+  .dashboard #matchup-map .target-filters button{padding:6px;font-size:10px}
+}
