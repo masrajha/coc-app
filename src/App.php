@@ -344,7 +344,7 @@ final class App
     {
         $snapshots = $this->snapshots($tag);
         $date = gmdate('Y-m-d');
-        $members = array_map(static fn($m) => ['tag' => $m['tag'] ?? null, 'name' => $m['name'] ?? null, 'role' => $m['role'] ?? null, 'warPreference' => $m['warPreference'] ?? null, 'expLevel' => $m['expLevel'] ?? null, 'trophies' => $m['trophies'] ?? 0, 'donations' => $m['donations'] ?? 0, 'donationsReceived' => $m['donationsReceived'] ?? 0, 'leagueTier' => isset($m['leagueTier']) ? ['name' => $m['leagueTier']['name'] ?? null] : null], $clan['memberList'] ?? []);
+        $members = array_map(static fn($m) => ['tag' => $m['tag'] ?? null, 'name' => $m['name'] ?? null, 'role' => $m['role'] ?? null, 'warPreference' => $m['warPreference'] ?? null, 'expLevel' => $m['expLevel'] ?? null, 'townHallLevel' => $m['townHallLevel'] ?? null, 'trophies' => $m['trophies'] ?? 0, 'donations' => $m['donations'] ?? 0, 'donationsReceived' => $m['donationsReceived'] ?? 0, 'leagueTier' => isset($m['leagueTier']) ? ['name' => $m['leagueTier']['name'] ?? null] : null], $clan['memberList'] ?? []);
         $snapshot = ['date' => $date, 'capturedAt' => gmdate('c'), 'clan' => ['tag' => '#' . $tag, 'name' => $clan['name'] ?? null, 'level' => $clan['clanLevel'] ?? null, 'points' => $clan['clanPoints'] ?? null, 'members' => $clan['members'] ?? null], 'members' => $members];
         if (is_array($clan['clanCapital'] ?? null)) $snapshot['clanCapital'] = $clan['clanCapital'];
         $snapshots = array_values(array_filter($snapshots, static fn($s) => ($s['date'] ?? '') !== $date));
@@ -375,7 +375,7 @@ final class App
             if (($member['donations'] ?? 0) === 0) $flags[] = 'Donasi nol';
             if ($delta7 === 0) $flags[] = 'Trofi 7 hari tidak berubah';
             if ($week && ($member['donations'] ?? 0) === ($week['donations'] ?? 0) && $received === ($week['donationsReceived'] ?? 0)) $flags[] = 'Donasi 7 hari tidak berubah';
-            $members[] = ['tag' => $tagKey, 'name' => $member['name'] ?? '', 'role' => $member['role'] ?? null, 'warPreference' => $member['warPreference'] ?? null, 'leagueTier' => $member['leagueTier'] ?? null, 'trophies' => $member['trophies'] ?? 0, 'donations' => $member['donations'] ?? 0, 'donationsReceived' => $received, 'donationRatio' => $received === 0 ? null : round(($member['donations'] ?? 0) / $received, 2), 'trophyDelta7' => $delta7, 'trophyDelta30' => $delta30, 'flags' => $flags, 'status' => $flags ? 'review' : 'stable'];
+            $members[] = ['tag' => $tagKey, 'name' => $member['name'] ?? '', 'role' => $member['role'] ?? null, 'warPreference' => $member['warPreference'] ?? null, 'leagueTier' => $member['leagueTier'] ?? null, 'townHallLevel' => $member['townHallLevel'] ?? null, 'trophies' => $member['trophies'] ?? 0, 'donations' => $member['donations'] ?? 0, 'donationsReceived' => $received, 'donationRatio' => $received === 0 ? null : round(($member['donations'] ?? 0) / $received, 2), 'trophyDelta7' => $delta7, 'trophyDelta30' => $delta30, 'flags' => $flags, 'status' => $flags ? 'review' : 'stable'];
         }
         usort($members, static fn($a, $b) => count($b['flags']) <=> count($a['flags']) ?: strcasecmp($a['name'], $b['name']));
         return ['clanTag' => '#' . $tag, 'clanName' => $latest['clan']['name'] ?? null, 'generatedAt' => gmdate('c'), 'latestSnapshot' => $latest['date'], 'snapshots' => count($snapshots), 'comparison' => ['sevenDayBaseline' => $seven['date'] ?? null, 'thirtyDayBaseline' => $thirty['date'] ?? null], 'summary' => ['review' => count(array_filter($members, static fn($m) => $m['status'] === 'review')), 'stable' => count(array_filter($members, static fn($m) => $m['status'] === 'stable'))], 'members' => $members];
@@ -392,14 +392,25 @@ final class App
         try {
             $report = $this->healthReport($tag, $this->snapshots($tag));
             $rows = [$this->locale === 'en'
-                ? ['Name','Tag','Role','Trophies','Delta 7d','Delta 30d','Donated','Received','Donation Ratio','Status','Flags']
-                : ['Nama','Tag','Peran','Trofi','Delta 7h','Delta 30h','Donasi','Diterima','Rasio Donasi','Status','Catatan']];
-            foreach ($report['members'] as $m) $rows[] = [$m['name'],$m['tag'],$m['role'],$m['trophies'],$m['trophyDelta7'],$m['trophyDelta30'],$m['donations'],$m['donationsReceived'],$m['donationRatio'],$this->locale === 'en' ? $m['status'] : ($m['status'] === 'review' ? 'perlu ditinjau' : 'stabil'),implode('; ', $this->locale === 'en' ? array_map(static fn($flag) => match ($flag) {
-                'Donasi nol' => 'No donations',
-                'Trofi 7 hari tidak berubah' => 'Trophies unchanged for 7 days',
-                'Donasi 7 hari tidak berubah' => 'Donations unchanged for 7 days',
-                default => $flag,
-            }, $m['flags']) : $m['flags'])];
+                ? ['Name','Tag','Role','Trophies','TH','Donations','Ratio','Status']
+                : ['Nama','Tag','Peran','Trofi','TH','Donasi','Rasio','Status']];
+            $roles = $this->locale === 'en'
+                ? ['admin'=>'Elder','leader'=>'Leader','coLeader'=>'Co Leader','member'=>'Member']
+                : ['admin'=>'Senior','leader'=>'Pemimpin','coLeader'=>'Wakil Pemimpin','member'=>'Anggota'];
+            foreach ($report['members'] as $m) {
+                $flags = $this->locale === 'en' ? array_map(static fn($flag) => match ($flag) {
+                    'Donasi nol' => 'Zero donations',
+                    'Trofi 7 hari tidak berubah' => 'Trophies unchanged for 7 days',
+                    'Donasi 7 hari tidak berubah' => 'Donations unchanged for 7 days',
+                    default => $flag,
+                }, $m['flags']) : $m['flags'];
+                $role = $m['role'] ?? '';
+                $townHall = $m['townHallLevel'] ?? null;
+                $rows[] = [$m['name'], $m['tag'], $roles[$role] ?? ($role ?: '—'), $m['trophies'],
+                    is_int($townHall) && $townHall > 0 ? $townHall : '—',
+                    $m['donations'] . ' / ' . $m['donationsReceived'], $m['donationRatio'] ?? '—',
+                    $flags ? implode(', ', $flags) : ($this->locale === 'en' ? 'Stable' : 'Stabil')];
+            }
             $csv = implode("\n", array_map(static fn($row) => implode(',', array_map(static function($value) { $value = (string)($value ?? ''); return preg_match('/[",\n]/', $value) ? '"' . str_replace('"', '""', $value) . '"' : $value; }, $row)), $rows));
             $res->getBody()->write($csv);
             return $res->withHeader('Content-Type', 'text/csv; charset=utf-8')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language')->withHeader('Content-Disposition', 'attachment; filename="clan-health-' . $tag . '-' . gmdate('Y-m-d') . '.csv"');

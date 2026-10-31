@@ -15,8 +15,8 @@ mkdir($warDir, 0775, true);
 $snapshotDir = $dataDir . '/snapshots';
 mkdir($snapshotDir, 0775, true);
 file_put_contents($snapshotDir . '/2GPP802UU.json', json_encode(['clanTag' => '#2GPP802UU', 'snapshots' => [
-    ['date' => '2026-10-05', 'capturedAt' => '2026-10-05T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50], 'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'trophies' => 6000, 'donations' => 1, 'donationsReceived' => 1, 'leagueTier' => ['name' => 'Legend II']]]],
-    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50], 'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'trophies' => 6000, 'donations' => 2, 'donationsReceived' => 1, 'leagueTier' => ['name' => 'Legend II']]]],
+    ['date' => '2026-10-05', 'capturedAt' => '2026-10-05T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50], 'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'role' => 'admin', 'townHallLevel' => 18, 'trophies' => 6000, 'donations' => 1, 'donationsReceived' => 1, 'leagueTier' => ['name' => 'Legend II']]]],
+    ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T00:00:00Z', 'clan' => ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'level' => 20, 'members' => 50], 'members' => [['tag' => '#2GPP802UU', 'name' => 'Test', 'role' => 'admin', 'townHallLevel' => 18, 'trophies' => 6000, 'donations' => 2, 'donationsReceived' => 1, 'leagueTier' => ['name' => 'Legend II']]]],
 ]]));
 file_put_contents($snapshotDir . '/9RU089PG.json', json_encode(['clanTag' => '#9RU089PG', 'snapshots' => [
     ['date' => '2026-10-06', 'capturedAt' => '2026-10-06T01:00:00Z', 'clan' => ['tag' => '#9RU089PG', 'name' => 'Home', 'level' => 18, 'members' => 42],
@@ -302,6 +302,15 @@ try {
     $indonesianCsv = $app->handle($factory->createServerRequest('GET', '/api/clan/2GPP802UU/health.csv?lang=id'));
     if ($indonesianCsv->getHeaderLine('Content-Language') !== 'id' || !str_starts_with((string)$indonesianCsv->getBody(), 'Nama,Tag,Peran,')) {
         throw new RuntimeException('Indonesian CSV headings must follow the selected language.');
+    }
+    foreach ([[$englishCsv, 'Elder', ['Name','Tag','Role','Trophies','TH','Donations','Ratio','Status']],
+        [$indonesianCsv, 'Senior', ['Nama','Tag','Peran','Trofi','TH','Donasi','Rasio','Status']]] as [$response, $role, $headings]) {
+        $lines = explode("\n", (string)$response->getBody());
+        $header = str_getcsv($lines[0], ',', '"', '');
+        $member = str_getcsv($lines[1], ',', '"', '');
+        if ($header !== $headings || count($member) !== count($headings) || $member[2] !== $role || $member[4] !== '18' || $member[5] !== '2 / 1') {
+            throw new RuntimeException('Member CSV must match the table columns, translated role, Town Hall, and donation values.');
+        }
     }
     $home = (string)$app->handle($factory->createServerRequest('GET', '/'))->getBody();
     foreach ([

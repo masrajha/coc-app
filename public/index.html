@@ -336,9 +336,9 @@
                             <thead class="sticky top-0 bg-slate-50 text-slate-600 shadow-sm">
                                 <tr>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="name" data-i18n="home.membersHeading">Anggota</button></th>
-                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="role">Role</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="role" data-i18n="clan.roleLabel">Role</button></th>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="trophies" data-i18n="player.trophies">Trofi</button></th>
-                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="delta">Delta 7h</button></th>
+                                    <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="th" title="Town Hall" data-i18n-title="seo.th">TH</button></th>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="donations" data-i18n="player.donations">Donasi</button></th>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="ratio" data-i18n="clan.ratio">Rasio</button></th>
                                     <th class="px-3 py-2" aria-sort="none"><button type="button" class="health-sort" data-health-sort="status">Status</button></th>
@@ -1366,10 +1366,21 @@
             return level ? Number(level[1]) : null;
         }
 
+        function healthTownHall(member) {
+            const level = member.townHallLevel ?? latestClanData?.memberList?.find(current => current.tag === member.tag)?.townHallLevel;
+            return Number.isInteger(level) && level > 0 ? level : null;
+        }
+
+        function memberRoleLabel(role) {
+            const keys = { admin: 'clan.role.elder', leader: 'clan.role.leader', coLeader: 'clan.role.coLeader', member: 'clan.role.member' };
+            return Object.hasOwn(keys, role) ? tr(keys[role]) : (role || '—');
+        }
+
         function healthSortValue(member, key) {
             if (key === 'league') return memberLeagueOrder(member);
-            if (key === 'name' || key === 'role') return String(member[key] || '').toLocaleLowerCase(window.CocI18n.formatLocale);
-            if (key === 'delta') return member.trophyDelta7;
+            if (key === 'role') return memberRoleLabel(member.role).toLocaleLowerCase(window.CocI18n.formatLocale);
+            if (key === 'name') return String(member.name || '').toLocaleLowerCase(window.CocI18n.formatLocale);
+            if (key === 'th') return healthTownHall(member);
             if (key === 'donations') return Number(member.donations || 0);
             if (key === 'ratio') return member.donationRatio;
             if (key === 'status') return member.status === 'stable' ? 0 : 1;
@@ -1378,7 +1389,7 @@
 
         function filteredHealthMembers() {
             return healthMembers.filter(member => {
-                const matchesQuery = !healthQuery || `${member.name || ''} ${member.role || ''}`.toLocaleLowerCase(window.CocI18n.formatLocale).includes(healthQuery);
+                const matchesQuery = !healthQuery || `${member.name || ''} ${member.role || ''} ${memberRoleLabel(member.role)}`.toLocaleLowerCase(window.CocI18n.formatLocale).includes(healthQuery);
                 const matchesStatus = healthFilter === 'all' ||
                     (healthFilter === 'review' && member.status === 'review') ||
                     (healthFilter === 'stable' && member.status === 'stable') ||
@@ -1434,9 +1445,10 @@
                 window.AccountFeatures.renderWarPreference(preference, member.warPreference);
                 if (!['in', 'out'].includes(member.warPreference)) preference.dataset.warTag = String(member.tag || '').replace(/^#/, '');
                 row.firstElementChild.appendChild(preference);
-                addCell(row, member.role);
+                addCell(row, memberRoleLabel(member.role));
                 addCell(row, member.trophies);
-                addCell(row, member.trophyDelta7 === null ? '-' : member.trophyDelta7);
+                const townHall = healthTownHall(member);
+                addCell(row, townHall === null ? '—' : formatLocalizedNumber(townHall));
                 addCell(row, `${member.donations} / ${member.donationsReceived}`);
                 addCell(row, member.donationRatio === null ? '-' : member.donationRatio);
                 addBadgeCell(row, member.flags.length ? member.flags.map(flag => {
