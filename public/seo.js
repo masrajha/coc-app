@@ -1,5 +1,10 @@
 // Localize server summaries to the active app language; never fetch data or hide content.
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.clan-directory-badge').forEach(image => {
+    const fallback = () => { image.src = '/assets/brand/clanintel-mark.svg'; };
+    image.addEventListener('error', fallback, {once:true});
+    if (image.complete && image.naturalWidth === 0) fallback();
+  });
   const i18n = window.CocI18n;
   if (i18n) {
     const summary = document.getElementById('savedProfile'); if (summary) summary.lang = i18n.locale;

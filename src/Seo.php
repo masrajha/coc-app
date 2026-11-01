@@ -7,7 +7,7 @@ final class Seo
 {
     private const CHUNK = 5000; // Two language URLs per profile: at most 10,000 entries per file.
     private const AGE = 90 * 86400;
-    private const PROFILE_FIELDS = ['tag','name','clanLevel','members','clanPoints','warWins','warLeague','location','type','requiredTownhallLevel','clanCapital',
+    private const PROFILE_FIELDS = ['tag','name','badgeUrls','clanLevel','members','clanPoints','warWins','warLeague','location','type','requiredTownhallLevel','clanCapital',
         'townHallLevel','builderHallLevel','expLevel','trophies','warStars','donations','donationsReceived','leagueTier','clan','heroes'];
     private ?array $catalog = null;
     private ?array $savedLocations = null;
@@ -355,7 +355,13 @@ final class Seo
             if ($featureSlug) $body .= '<nav class="seo-links"><a href="'.self::escape($this->url('/features/'.$featureSlug)).'">'.$this->word('Lihat fitur dan contoh tampilan','See the feature and example view').'</a></nav>';
             return [200,$this->shell($guide['title'],$guide['intro'],$body,$path,[],true,$guide)];
         }
-        if (preg_match('~^/explore/(clans|players)$~',$path,$match)) {
+        if ($path === '/explore/clans') {
+            $view = (new ClanDirectory($this->directory, $this->lang, fn(string $path, array $params) => $this->url($path, $params)))->render($this->profiles()['clans'], $query);
+            if ($view === null) return [404,''];
+            [$title,$description,$body,$params,$index] = $view;
+            return [200,$this->shell($title,$description,$body,$path,$params,$index)];
+        }
+        if (preg_match('~^/explore/(players)$~',$path,$match)) {
             $kind = $match[1]; $page = $query['page'] ?? '1';
             if (!is_string($page) || !ctype_digit($page) || (int)$page < 1 || (int)$page > 100000) return [404,''];
             $page = (int)$page; $all = $this->profiles()[$kind]; $entries = array_slice($all,($page-1)*50,50,true);
