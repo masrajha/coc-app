@@ -1,4 +1,4 @@
-@font-face{font-family:DemoLilita;src:url('./fonts/LilitaOne-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:DemoLilita;src:url('/battle-log-style/fonts/LilitaOne-Regular.ttf') format('truetype');font-weight:400;font-display:swap}
 body{background:#171c27;color:#e4e9f2;font:14px/1.5 system-ui,-apple-system,'Segoe UI',sans-serif}
 .demo-toolbar{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:18px 24px;background:#202836;border-bottom:1px solid #384253}
 .demo-intro h1{margin:0;font-size:20px}.demo-intro p{margin:3px 0 0;font-size:12px;color:#b4c0d0}

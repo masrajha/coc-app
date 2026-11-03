@@ -6,4 +6,6 @@ vendor/
 .chrome-icon-test/
 data/
 !data/.gitkeep
+public/assets/images/news/*
+!public/assets/images/news/.gitkeep
 contoh-profile-player.mhtml

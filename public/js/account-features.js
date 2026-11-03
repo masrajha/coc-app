@@ -50,7 +50,7 @@
       card.append(node('h3',district.name || tr('feature.district',{id:district.id})));
       if(Number.isInteger(level) && level>=1 && level<=(capitalPeak?10:5)){
         const image=node('img',null,'capital-district-image');
-        image.src=`/assets/capital/${capitalPeak?'capital':'district'}-hall-${level}.webp`;
+        image.src=`/assets/images/capital/${capitalPeak?'capital':'district'}-hall-${level}.webp`;
         image.alt='';image.width=96;image.height=96;image.loading='lazy';image.decoding='async';
         image.addEventListener('error',()=>image.remove(),{once:true});
         card.append(image);

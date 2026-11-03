@@ -22,7 +22,7 @@
     result.append(top);
     if (bonus) {
       const body = node('div', null, 'ranked-defense-bonus-body');
-      const image = node('img'); image.src = '/assets/trophy.png'; image.alt = ''; image.width = 22; image.height = 22;
+      const image = node('img'); image.src = '/assets/images/battle-log/trophy.png'; image.alt = ''; image.width = 22; image.height = 22;
       body.append(image, node('strong', tr('player.defenseBonus')));
       result.append(body, node('small', tr('player.defenseBonusNote')));
       return result;
@@ -70,7 +70,7 @@
     }
     for (const id of ['compareBattleFilter','compareBattleSort']) el(id).disabled=false;
     const view=window.CompareModel.battleLogRows(data,side,el('compareBattleFilter').value,el('compareBattleSort').value);
-    const image=node('img');image.src='/assets/trophy.png';image.alt='';image.width=18;image.height=18;
+    const image=node('img');image.src='/assets/images/battle-log/trophy.png';image.alt='';image.width=18;image.height=18;
     el('compareBattlePoints').append(node('span',tr('compare.battlePoints')),image,node('strong',view.points===null?'—':(view.points>=0?'+':'')+number(view.points)));
     el('compareBattleNotice').textContent=tr('compare.drawerCoverage',{shown:number(view.logs.length),total:view.count===null?'—':number(view.count+view.bonusCount)})+(view.partial?' · '+tr('compare.rankedPartial'):'');
     if(!view.logs.length)list.append(node('p',tr(el('compareBattleFilter').value==='all'?'player.battleLogUnavailable':'compare.battleNoMatches'),'empty-section'));

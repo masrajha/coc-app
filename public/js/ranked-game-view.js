@@ -28,7 +28,7 @@
     const percentage=log.bonus?'':log.destruction===null?'—':number(log.destruction)+'%';
     button.title=[name,percentage,log.stars===null?'':number(log.stars)+' / 3',points(log.points)+' '+tr('player.trophies')].filter(Boolean).join(' · ');button.setAttribute('aria-label',button.title);
     button.append(node('span',name,'demo-row-name'),node('span',percentage,'demo-row-percent'));
-    const score=node('div',points(log.points),'coc-ref-score'),image=node('img',null,'demo-trophy');image.src='/assets/trophy.png';image.alt='';image.width=23;image.height=29;score.append(image);button.append(score);
+    const score=node('div',points(log.points),'coc-ref-score'),image=node('img',null,'demo-trophy');image.src='/assets/images/battle-log/trophy.png';image.alt='';image.width=23;image.height=29;score.append(image);button.append(score);
     if(!log.bonus){const stars=node('div',null,'coc-ref-stars');stars.setAttribute('aria-hidden','true');if(log.stars===null)stars.append(node('span','—','game-unknown'));else for(let i=0;i<3;i++)stars.append(star(i<log.stars));button.append(stars);}
     button.addEventListener('click',()=>details(log));return button;
   }

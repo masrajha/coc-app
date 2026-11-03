@@ -107,7 +107,7 @@ final class ShareCard
         $bytes = null;
         if ($this->image !== null) {
             if (is_string($entity['icon'] ?? null) && preg_match('/^league-[a-z-]+\.png$/', $entity['icon'])) {
-                $file = __DIR__ . '/../public/' . $entity['icon']; if (is_file($file)) $bytes = file_get_contents($file);
+                $file = __DIR__ . '/../public/assets/images/leagues/player/' . $entity['icon']; if (is_file($file)) $bytes = file_get_contents($file);
             }
             if (!$bytes && $asset && !empty($entity['badgeUrl'])) $bytes = $asset($entity['badgeUrl']);
         }

@@ -31,7 +31,7 @@ Panel **Player Progress & Rushed Check** saat ini menyatu dengan halaman utama d
 
 ## Alur dan struktur halaman terpisah
 
-- Buat `public/player.html` dan skrip halaman profil. Parameter `tag` menentukan pemain; validasi dan normalisasi tag sebelum memanggil API. Bila URL tidak punya tag, tampilkan formulir pencarian pemain di halaman profil.
+- Buat `public/js/player.html` dan skrip halaman profil. Parameter `tag` menentukan pemain; validasi dan normalisasi tag sebelum memanggil API. Bila URL tidak punya tag, tampilkan formulir pencarian pemain di halaman profil.
 - Nama pemain di roster war, rekap CWL, grafik performa, dan auditor anggota menjadi tautan biasa ke `/player.html?tag=...`. Pertahankan konteks klan melalui parameter `clan=...` bila ada agar tombol **Kembali ke klan** menuju hasil pencarian sebelumnya.
 - Pencarian player tag pada halaman utama, bila tetap ada, mengarahkan ke URL profil. Pindahkan panel profil lama dari `public/index.html` setelah halaman baru siap dan tautan teruji.
 - Saat URL profil dibuka langsung atau di-*refresh*, halaman mengambil ulang profil dari API melalui backend. Tampilkan status memuat, data terakhir diperbarui, keadaan kosong, dan pesan gagal yang jelas.

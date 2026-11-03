@@ -3,38 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="/theme.js"></script>
-  <script src="/site.js"></script>
-  <script src="/seo.js" defer></script>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="alternate icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
+  <script src="/js/theme.js"></script>
+  <script src="/js/site.js"></script>
+  <script src="/js/seo.js" defer></script>
+  <link rel="icon" href="/assets/images/brand/favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/assets/images/brand/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/images/brand/apple-touch-icon.png">
   <title data-i18n="player.pageTitle">Profil Pemain · ClanIntel</title>
-  <link rel="stylesheet" href="/player.css">
-  <link rel="stylesheet" href="/raids.css">
-  <link rel="stylesheet" href="/account-features.css">
-  <link rel="stylesheet" href="/player-league.css">
-  <link rel="stylesheet" href="/donation.css">
-  <link rel="stylesheet" href="/theme.css">
-  <link rel="stylesheet" href="/theme-simple.css">
-  <link rel="stylesheet" href="/site.css">
-  <link rel="stylesheet" href="/seo.css">
-  <link rel="stylesheet" href="/player-profile.css">
-  <script src="/i18n.js"></script>
-  <script src="/share.js"></script>
-  <script src="/ranked-game-model.js" defer></script>
-  <script src="/ranked-game.js" defer></script>
-  <script src="/player-league.js" defer></script>
-  <script src="/recent.js" defer></script>
-  <script src="/raids.js" defer></script>
-  <script src="/account-features.js" defer></script>
-  <script src="/player-overview.js" defer></script>
-  <script src="/player.js" defer></script>
-  <script src="/donation.js" defer></script>
+  <link rel="stylesheet" href="/css/player.css">
+  <link rel="stylesheet" href="/css/raids.css">
+  <link rel="stylesheet" href="/css/account-features.css">
+  <link rel="stylesheet" href="/css/player-league.css">
+  <link rel="stylesheet" href="/css/donation.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/theme-simple.css">
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="/css/seo.css">
+  <link rel="stylesheet" href="/css/player-profile.css">
+  <script src="/js/i18n.js"></script>
+  <script src="/js/share.js"></script>
+  <script src="/js/ranked-game-model.js" defer></script>
+  <script src="/js/ranked-game.js" defer></script>
+  <script src="/js/player-league.js" defer></script>
+  <script src="/js/recent.js" defer></script>
+  <script src="/js/raids.js" defer></script>
+  <script src="/js/account-features.js" defer></script>
+  <script src="/js/player-overview.js" defer></script>
+  <script src="/js/player.js" defer></script>
+  <script src="/js/donation.js" defer></script>
 </head>
 <body class="command-ui player-profile-page">
   <header class="site-header command-header">
-    <div class="header-inner"><a class="command-brand" href="/" aria-label="ClanIntel"><img class="clanintel-mark" src="/assets/brand/clanintel-mark.svg" width="44" height="44" alt=""><span class="command-brand-copy"><strong class="clanintel-wordmark">Clan<span>Intel</span></strong><small data-i18n="design.tagline">Analisis klan &amp; pelacakan perang.</small></span></a><nav class="command-header-nav">
+    <div class="header-inner"><a class="command-brand" href="/" aria-label="ClanIntel"><img class="clanintel-mark" src="/assets/images/brand/clanintel-mark.svg" width="44" height="44" alt=""><span class="command-brand-copy"><strong class="clanintel-wordmark">Clan<span>Intel</span></strong><small data-i18n="design.tagline">Analisis klan &amp; pelacakan perang.</small></span></a><nav class="command-header-nav">
       <a id="backLink" class="back-link" href="/" data-i18n="player.back">← Kembali ke klan</a>
       <span class="brand">CoC <span>Player Profile</span></span>
       <a id="compareLink" class="back-link" href="/compare.html" data-i18n="player.compare">Bandingkan</a>
@@ -56,7 +56,7 @@
       <section class="profile-head profile-hero">
         <div class="profile-hero-art" aria-hidden="true" hidden><img id="profileHeroCharacter" class="profile-hero-character" width="560" height="700" alt="" decoding="async"></div>
         <div class="identity">
-          <div class="profile-badge-slot"><img id="clanBadge" class="clan-badge" alt="" hidden><img id="profileClanFallback" src="/assets/brand/clanintel-mark.svg" width="96" height="96" alt=""></div>
+          <div class="profile-badge-slot"><img id="clanBadge" class="clan-badge" alt="" hidden><img id="profileClanFallback" src="/assets/images/brand/clanintel-mark.svg" width="96" height="96" alt=""></div>
           <div class="profile-identity-copy">
             <div class="eyebrow">PLAYER PROFILE</div>
             <div class="player-name-row"><h1 id="playerName"></h1><div id="playerLeagueBadge" class="player-league-badge" hidden></div></div>
@@ -75,10 +75,10 @@
       <section class="stats profile-stats" data-section-tone="blue" aria-label="Ringkasan pemain" data-i18n-aria-label="player.profileSummary">
         <div class="profile-stat profile-stat-hall"><span>Town Hall</span><strong id="townHall">—</strong></div>
         <div class="profile-stat profile-stat-hall"><span>Builder Hall</span><strong id="builderHall">—</strong></div>
-        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/xp.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="profile.xpLevel">XP Level</span><strong id="exp">—</strong></div>
-        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/trophy.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="player.trophies">Trofi</span><strong id="trophies">—</strong></div>
-        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/war-star.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="profile.warStars">Bintang perang</span><strong id="warStars">—</strong></div>
-        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/profile/donation.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="player.donations">Donasi</span><strong id="donations">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/images/profile/xp.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="profile.xpLevel">XP Level</span><strong id="exp">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/images/profile/trophy.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="player.trophies">Trofi</span><strong id="trophies">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/images/profile/war-star.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="profile.warStars">Bintang perang</span><strong id="warStars">—</strong></div>
+        <div class="profile-stat"><img class="profile-stat-icon" src="/assets/images/profile/donation.svg" width="64" height="64" alt="" decoding="async"><span data-i18n="player.donations">Donasi</span><strong id="donations">—</strong></div>
       </section>
 
       <div class="player-tab-toolbar">

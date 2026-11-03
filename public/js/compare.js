@@ -565,7 +565,7 @@ function renderLeagueMetrics() {
       const item = values[side], other = values[side === 'left' ? 'right' : 'left'];
       const td = document.createElement('td');
       const value = textNode('strong', item.display ?? (metric.percent ? formatPercent(item.value) : formatNumber(item.value == null ? null : Math.round(item.value * 100) / 100)), 'league-table-value');
-      if (metric.trophy && item.value != null) { const icon = document.createElement('img'); icon.src = '/assets/trophy.png'; icon.alt = ''; icon.width = 16; icon.height = 16; value.prepend(icon); }
+      if (metric.trophy && item.value != null) { const icon = document.createElement('img'); icon.src = '/assets/images/battle-log/trophy.png'; icon.alt = ''; icon.width = 16; icon.height = 16; value.prepend(icon); }
       const mark = leagueMetricMark(item.value, other.value, metric.lower, metric.mark !== false && item.comparable !== false && other.comparable !== false);
       if (mark) value.appendChild(comparisonMark(mark, 'league-mark'));
       td.appendChild(value);

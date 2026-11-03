@@ -2,18 +2,18 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-const source = fs.readFileSync('public/i18n.js', 'utf8');
+const source = fs.readFileSync('public/js/i18n.js', 'utf8');
 const inlineDashboard = fs.readFileSync('public/index.html', 'utf8').match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(inlineDashboard, 'Dashboard script is missing');
 new vm.Script(inlineDashboard[1], { filename: 'public/index.html' });
 const pages = ['public/index.html', 'public/player.html', 'public/compare.html', 'public/compare-clan.html'];
 const keys = pages.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/data-i18n(?:-placeholder|-aria-label|-title|-alt)?="([^"]+)"/g)].map(match => match[1]));
-const scripts = ['public/index.html', 'public/player-overview.js', 'public/war-summary.js', 'public/rankings.js', 'public/player.js', 'public/player-league.js', 'public/compare.js', 'public/compare-overview.js', 'public/compare-game.js', 'public/compare-ranked-layout.js', 'public/compare-game-view.js', 'public/donation.js', 'public/raids.js', 'public/clan-compare.js', 'public/clan-labels.js', 'public/account-features.js', 'public/clan-tabs.js'];
+const scripts = ['public/index.html', 'public/js/player-overview.js', 'public/js/war-summary.js', 'public/js/rankings.js', 'public/js/player.js', 'public/js/player-league.js', 'public/js/compare.js', 'public/js/compare-overview.js', 'public/js/compare-game.js', 'public/js/compare-ranked-layout.js', 'public/js/compare-game-view.js', 'public/js/donation.js', 'public/js/raids.js', 'public/js/clan-compare.js', 'public/js/clan-labels.js', 'public/js/account-features.js', 'public/js/clan-tabs.js', 'public/js/news.js'];
 const scriptKeys = scripts.flatMap(page => [...fs.readFileSync(page, 'utf8').matchAll(/\btr\(['"]([^'"]+)['"]/g)].map(match => match[1]));
 const warMapKeys = [...source.matchAll(/"(warMap\.[^"]+)"\s*:/g)].map(match => match[1]);
 const seoKeys = [...fs.readFileSync('src/Seo.php', 'utf8').matchAll(/["'](seo\.[a-zA-Z]+)["']/g)].map(match => match[1]);
-const warSummaryKeys = [...fs.readFileSync('public/war-summary.js', 'utf8').matchAll(/["'](clan\.layout\.[a-zA-Z]+)["']/g)].map(match => match[1]);
-const rankedMetricHintKeys = [...fs.readFileSync('public/compare-ranked-layout.js','utf8').matchAll(/'[^']+':\['[^']+','([^']+)'\]/g)].map(match=>'compare.metricHint.'+match[1]);
+const warSummaryKeys = [...fs.readFileSync('public/js/war-summary.js', 'utf8').matchAll(/["'](clan\.layout\.[a-zA-Z]+)["']/g)].map(match => match[1]);
+const rankedMetricHintKeys = [...fs.readFileSync('public/js/compare-ranked-layout.js','utf8').matchAll(/'[^']+':\['[^']+','([^']+)'\]/g)].map(match=>'compare.metricHint.'+match[1]);
 const translationKeys = [...new Set([...keys, ...scriptKeys, ...warMapKeys, ...seoKeys, ...warSummaryKeys, ...rankedMetricHintKeys])];
 const computedKeys = ['theme.label', 'theme.dark', 'theme.light', 'theme.system', 'theme.dark-simple', 'theme.light-simple', ...['wars','cwl','trophies','friendly','games','builder','design','farming','donator','social','talkative','underdog','relaxed','competitive','capital','newbie'].map(key => 'labels.name.' + key), 'compare.quality.rendah', 'compare.quality.cukup', 'compare.quality.baik', 'clan.flag.Donasi nol', 'clan.flag.Trofi 7 hari tidak berubah', 'clan.flag.Donasi 7 hari tidak berubah'];
 
@@ -75,7 +75,7 @@ assert.equal(english.context.window.CocI18n.apiUrl('/api/clan/ABC/war?round=2'),
 english.context.window.CocI18n.apiFetch('/api/clan/ABC/war?round=2');
 assert.equal(english.requests[0].url, '/api/clan/ABC/war?round=2&lang=en');
 const indonesian = createContext('id');
-const raidScript = fs.readFileSync('public/raids.js', 'utf8');
+const raidScript = fs.readFileSync('public/js/raids.js', 'utf8');
 const raidDate = raidScript.slice(raidScript.indexOf('  function date('), raidScript.indexOf('  function stateName('));
 for (const context of [indonesian.context, english.context]) {
   const formatted = vm.runInNewContext(`${raidDate}; date('20261023T070000.000Z')`, context);
@@ -92,7 +92,7 @@ for (const page of pages) {
   assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1(?:\.0)?">/, `${page}: missing mobile viewport`);
   assert.match(html, /data-language-switch/, `${page}: missing language switch`);
 }
-for (const file of ['public/index.css', 'public/player.css', 'public/compare.css']) {
+for (const file of ['public/css/index.css', 'public/css/player.css', 'public/css/compare.css']) {
   const css = fs.readFileSync(file, 'utf8');
   assert.match(css, /\.loading-spinner\s*\{[^}]*animation:/, `${file}: loading animation missing`);
   assert.doesNotMatch(css, /\\n\+\.loading-state/, `${file}: invalid loading CSS`);

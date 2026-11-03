@@ -39,7 +39,7 @@ foreach ($tags as $tag) {
     }
 }
 
-$directory = $root . '/public/icons';
+$directory = $root . '/public/assets/images/army';
 if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
     fwrite(STDERR, "Tidak dapat membuat public/icons.\n");
     exit(1);

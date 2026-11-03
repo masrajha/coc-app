@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const source = fs.readFileSync('public/theme.js', 'utf8');
+const source = fs.readFileSync('public/js/theme.js', 'utf8');
 function setup(saved, systemDark = false, storageBlocked = false) {
   const events = {}, documentEvents = {}, mediaEvents = {};
   const storage = new Map(saved ? [['coc-theme',saved]] : []);
@@ -58,8 +58,8 @@ for (const mode of ['dark-simple', 'light-simple']) {
 }
 for(const page of ['index','player','compare','compare-clan']) {
   const html=fs.readFileSync(`public/${page}.html`,'utf8');
-  assert.ok(html.indexOf('/theme.js')<html.indexOf('rel="stylesheet"'),`${page}: theme must be applied before styles.`);
-  assert.ok(html.includes('/theme.css'),`${page}: missing shared theme styles.`);
-  assert.ok(html.includes('/theme-simple.css'),`${page}: missing backup theme styles.`);
+  assert.ok(html.indexOf('/js/theme.js')<html.indexOf('rel="stylesheet"'),`${page}: theme must be applied before styles.`);
+  assert.ok(html.includes('/css/theme.css'),`${page}: missing shared theme styles.`);
+  assert.ok(html.includes('/css/theme-simple.css'),`${page}: missing backup theme styles.`);
 }
 console.log('Theme tests passed: startup, persistence, system changes, storage failures, cross-tab sync and page wiring.');

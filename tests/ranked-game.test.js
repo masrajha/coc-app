@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict');
 const {test}=require('node:test');
-const model=require('../public/ranked-game-model.js');
+const model=require('../public/js/ranked-game-model.js');
 const sample=()=>({session:{id:'previous'},leagueRule:{battles:24},player:{trophies:108,attackCount:2,defenseCount:1},
   attack:{logs:[{trophies:28,stars:2,destructionPercentage:85,timestamp:'20261021T020000.000Z',opponentName:'B'},
     {trophies:40,stars:3,destructionPercentage:100,timestamp:'2026-10-21T01:00:00Z',opponentName:'A'}]},

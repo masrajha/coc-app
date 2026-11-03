@@ -66,7 +66,7 @@ function renderBaseLevel(id, level, type) {
   }
   const label = type === 'th' ? 'Town Hall' : 'Builder Hall';
   const icon = document.createElement('img');
-  icon.src = `/${type}-${numericLevel}.webp`;
+  icon.src = `/assets/images/${type === 'th' ? 'town-hall' : 'builder-hall'}/${type}-${numericLevel}.webp`;
   icon.alt = `${label} level ${numericLevel}`;
   icon.loading = 'eager';
   icon.addEventListener('error', () => icon.remove());

@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
-const model = require('../public/compare-model.js');
+const model = require('../public/js/compare-model.js');
 
 const legendProfile = (tier = 'Legend I', week = 1792990800, updated = '2026-10-27T00:00:00Z') => ({
   lastUpdated: updated, player: {leagueTier:{name:tier},leagueTransition:{seasonId:week}}

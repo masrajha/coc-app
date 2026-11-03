@@ -98,7 +98,7 @@ $seedApiCache('/clanwarleagues/wars/%23WARROUND3', [
 $seedApiCache('/locations/global/rankings/clans?limit=25', ['items' => [
     ['tag' => '#2GPP802UU', 'name' => 'Top Clan', 'rank' => 1, 'clanLevel' => 20, 'members' => 50, 'clanPoints' => 50000]
 ]]);
-$iconDir = dirname(__DIR__) . '/public/icons';
+$iconDir = dirname(__DIR__) . '/public/assets/images/army';
 if (!is_dir($iconDir)) mkdir($iconDir, 0775, true);
 $iconPath = $iconDir . '/' . hash('sha256', 'heroes:Test Icon') . '.png';
 $iconBytes = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aVZkAAAAASUVORK5CYII=', true);
@@ -177,50 +177,50 @@ $checks = [
     '/clan.html' => [200, 'text/html'],
     '/player.html' => [200, 'text/html'],
     '/compare.html' => [200, 'text/html'],
-    '/player.css' => [200, 'text/css'],
-    '/war-summary.js' => [200, 'text/javascript'],
-    '/war-summary.css' => [200, 'text/css'],
-    '/player-profile.css' => [200, 'text/css'],
-    '/player-overview.js' => [200, 'text/javascript'],
-    '/assets/profile/status.svg' => [200, 'image/svg+xml'],
-    '/assets/profile/coverage.svg' => [200, 'image/svg+xml'],
-    '/player-league.css' => [200, 'text/css'],
-    '/player-league.js' => [200, 'text/javascript'],
-    '/th-1.webp' => [200, 'image/webp'],
-    '/th-17.webp' => [200, 'image/webp'],
-    '/th-18.webp' => [200, 'image/webp'],
-    '/bh-1.webp' => [200, 'image/webp'],
-    '/bh-10.webp' => [200, 'image/webp'],
-    '/donation.css' => [200, 'text/css'],
-    '/donation.js' => [200, 'text/javascript'],
-    '/recent.js' => [200, 'text/javascript'],
-    '/compare-battles.js' => [200, 'text/javascript'],
-    '/compare-overview-model.js' => [200, 'text/javascript'],
-    '/compare-overview.js' => [200, 'text/javascript'],
-    '/compare-overview.css' => [200, 'text/css'],
-    '/compare-ranked-layout.js' => [200, 'text/javascript'],
-    '/compare-ranked-layout.css' => [200, 'text/css'],
-    '/compare-game.js' => [200, 'text/javascript'],
-    '/compare-game-view.js' => [200, 'text/javascript'],
-    '/compare-game-view.css' => [200, 'text/css'],
+    '/css/player.css' => [200, 'text/css'],
+    '/js/war-summary.js' => [200, 'text/javascript'],
+    '/css/war-summary.css' => [200, 'text/css'],
+    '/css/player-profile.css' => [200, 'text/css'],
+    '/js/player-overview.js' => [200, 'text/javascript'],
+    '/assets/images/profile/status.svg' => [200, 'image/svg+xml'],
+    '/assets/images/profile/coverage.svg' => [200, 'image/svg+xml'],
+    '/css/player-league.css' => [200, 'text/css'],
+    '/js/player-league.js' => [200, 'text/javascript'],
+    '/assets/images/town-hall/th-1.webp' => [200, 'image/webp'],
+    '/assets/images/town-hall/th-17.webp' => [200, 'image/webp'],
+    '/assets/images/town-hall/th-18.webp' => [200, 'image/webp'],
+    '/assets/images/builder-hall/bh-1.webp' => [200, 'image/webp'],
+    '/assets/images/builder-hall/bh-10.webp' => [200, 'image/webp'],
+    '/css/donation.css' => [200, 'text/css'],
+    '/js/donation.js' => [200, 'text/javascript'],
+    '/js/recent.js' => [200, 'text/javascript'],
+    '/js/compare-battles.js' => [200, 'text/javascript'],
+    '/js/compare-overview-model.js' => [200, 'text/javascript'],
+    '/js/compare-overview.js' => [200, 'text/javascript'],
+    '/css/compare-overview.css' => [200, 'text/css'],
+    '/js/compare-ranked-layout.js' => [200, 'text/javascript'],
+    '/css/compare-ranked-layout.css' => [200, 'text/css'],
+    '/js/compare-game.js' => [200, 'text/javascript'],
+    '/js/compare-game-view.js' => [200, 'text/javascript'],
+    '/css/compare-game-view.css' => [200, 'text/css'],
     '/battle-log-style/compare-view.html' => [200, 'text/html'],
-    '/assets/libs/html-to-image/html-to-image.js' => [200, 'text/javascript'],
-    '/favicon.svg' => [200, 'image/svg+xml'],
-    '/assets/brand/clanintel-mark.svg' => [200, 'image/svg+xml'],
-    '/assets/brand/apple-touch-icon.png' => [200, 'image/png'],
-    '/ranked-game.js' => [200, 'text/javascript'],
-    '/ranked-game-model.js' => [200, 'text/javascript'],
-    '/ranked-game-view.js' => [200, 'text/javascript'],
-    '/ranked-game-view.css' => [200, 'text/css'],
+    '/js/vendor/html-to-image/html-to-image.js' => [200, 'text/javascript'],
+    '/assets/images/brand/favicon.svg' => [200, 'image/svg+xml'],
+    '/assets/images/brand/clanintel-mark.svg' => [200, 'image/svg+xml'],
+    '/assets/images/brand/apple-touch-icon.png' => [200, 'image/png'],
+    '/js/ranked-game.js' => [200, 'text/javascript'],
+    '/js/ranked-game-model.js' => [200, 'text/javascript'],
+    '/js/ranked-game-view.js' => [200, 'text/javascript'],
+    '/css/ranked-game-view.css' => [200, 'text/css'],
     '/battle-log-style/player-view.html' => [200, 'text/html'],
-    '/cwl-master-1.png' => [200, 'image/png'],
-    '/cwl-legend.png' => [200, 'image/png'],
-    '/league-legend.png' => [200, 'image/png'],
-    '/league-electro-dragon.png' => [200, 'image/png'],
-    '/rankings.js' => [200, 'text/javascript'],
-    '/theme.js' => [200, 'text/javascript'],
-    '/theme.css' => [200, 'text/css'],
-    '/theme-simple.css' => [200, 'text/css'],
+    '/assets/images/leagues/cwl/cwl-master-1.png' => [200, 'image/png'],
+    '/assets/images/leagues/cwl/cwl-legend.png' => [200, 'image/png'],
+    '/assets/images/leagues/player/league-legend.png' => [200, 'image/png'],
+    '/assets/images/leagues/player/league-electro-dragon.png' => [200, 'image/png'],
+    '/js/rankings.js' => [200, 'text/javascript'],
+    '/js/theme.js' => [200, 'text/javascript'],
+    '/css/theme.css' => [200, 'text/css'],
+    '/css/theme-simple.css' => [200, 'text/css'],
     '/api/clan/INVALID' => [400, 'application/json'],
     '/api/clan/2GPP802UU/summary' => [200, 'application/json'],
     '/api/clan/INVALID/summary' => [400, 'application/json'],
@@ -330,23 +330,23 @@ try {
     $playerPage = (string)$app->handle($factory->createServerRequest('GET', '/player.html'))->getBody();
     $comparePage = (string)$app->handle($factory->createServerRequest('GET', '/compare.html'))->getBody();
     foreach ([$home, $playerPage, $comparePage] as $page) {
-        foreach (['/donation.css', '/donation.js', 'Dukung pengembangan'] as $marker) {
+        foreach (['/css/donation.css', '/js/donation.js', 'Dukung pengembangan'] as $marker) {
             if (!str_contains($page, $marker)) throw new RuntimeException('Kontrol donasi belum tersedia di seluruh halaman.');
         }
     }
     $clanComparePage = (string)$app->handle($factory->createServerRequest('GET', '/compare-clan.html'))->getBody();
     foreach ([$home, $playerPage, $comparePage, $clanComparePage] as $page) {
-        foreach (['ClanIntel', '/favicon.svg', '/assets/brand/clanintel-mark.svg', 'data-i18n="brand.disclaimer"', 'https://www.supercell.com/fan-content-policy'] as $brandMarker) {
+        foreach (['ClanIntel', '/assets/images/brand/favicon.svg', '/assets/images/brand/clanintel-mark.svg', 'data-i18n="brand.disclaimer"', 'https://www.supercell.com/fan-content-policy'] as $brandMarker) {
             if (!str_contains($page, $brandMarker)) throw new RuntimeException('ClanIntel branding or disclaimer missing: ' . $brandMarker);
         }
     }
-    foreach (['/i18n.js', 'data-language-switch', 'data-i18n="snapshot.title"'] as $marker) {
+    foreach (['/js/i18n.js', 'data-language-switch', 'data-i18n="snapshot.title"'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Pemilih bahasa halaman player belum lengkap: ' . $marker);
     }
-    foreach (['/i18n.js', 'data-language-switch', 'data-i18n="compare.heading"'] as $marker) {
+    foreach (['/js/i18n.js', 'data-language-switch', 'data-i18n="compare.heading"'] as $marker) {
         if (!str_contains($comparePage, $marker)) throw new RuntimeException('Pemilih bahasa halaman compare belum lengkap: ' . $marker);
     }
-    foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Kenali klanmu. Pantau perang.', '/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
+    foreach (['landing-sidebar', 'recentClans', 'recentPlayers', 'popularClans', 'Clan populer', 'Kenali klanmu. Pantau perang.', '/js/recent.js', 'RecentlyOpened', '/api/clans/popular', 'data-health-sort', 'memberLeagueBadge', 'renderHealthRows'] as $marker) {
         if (!str_contains($home, $marker)) throw new RuntimeException('Landing operasional atau riwayat terakhir dibuka belum tersedia.');
     }
     foreach (['clanSectionNav', 'clan-overview', 'warCommandStrip', 'warProjection', 'rosterTownHall', 'rosterSort', 'matchup-map', 'warMemberDialog', 'renderWarCommand', 'rosterTheoreticalLimit', 'ourReachableMaximum', 'openWarMemberDialog', 'window.ClanTabs.activateFromHash'] as $marker) {
@@ -359,12 +359,12 @@ try {
         if (!str_contains($home, $marker)) throw new RuntimeException('Analitik dan laporan clan CL4-CL7 belum lengkap: ' . $marker);
     }
     foreach ([
-        [$home, '/index.css', 'public/index.css'],
-        [$home, '/rankings.js', 'public/rankings.js'],
-        [$playerPage, '/player.css', 'public/player.css'],
-        [$playerPage, '/player-league.js', 'public/player-league.js'],
-        [$comparePage, '/compare.css', 'public/compare.css'],
-        [$comparePage, '/compare.js', 'public/compare.js']
+        [$home, '/css/index.css', 'public/css/index.css'],
+        [$home, '/js/rankings.js', 'public/js/rankings.js'],
+        [$playerPage, '/css/player.css', 'public/css/player.css'],
+        [$playerPage, '/js/player-league.js', 'public/js/player-league.js'],
+        [$comparePage, '/css/compare.css', 'public/css/compare.css'],
+        [$comparePage, '/js/compare.js', 'public/js/compare.js']
     ] as [$pageHtml, $assetUrl, $assetFile]) {
         $version = substr(hash_file('sha256', dirname(__DIR__) . '/' . $assetFile), 0, 16);
         if (!str_contains($pageHtml, $assetUrl . '?v=' . $version)) {
@@ -374,17 +374,17 @@ try {
     foreach (['href="#army"', 'href="#war-cwl"', 'href="#ranked-league"', 'leagueComparisonGrid', 'Performa liga', 'stickyCompareHeader', 'overviewScore', 'armyMode', 'armyDifferencesOnly', 'armySort', 'headToHeadChart', 'warAdvanced', 'activityPeriod', 'activityMetric', 'copyCompareLink'] as $marker) {
         if (!str_contains($comparePage, $marker)) throw new RuntimeException('Panel perbandingan Ranked League tidak tersedia: ' . $marker);
     }
-    $compareScript = (string)$app->handle($factory->createServerRequest('GET', '/compare.js'))->getBody();
+    $compareScript = (string)$app->handle($factory->createServerRequest('GET', '/js/compare.js'))->getBody();
     foreach (['/war-history', 'leagueTier', 'leagueSummary', 'renderLeagueMetrics', 'compare.starsPerAttack', 'compare.warArchiveNote', 'leagueSession${side}', 'leagueResult${side}', 'sameLeagueSeason', 'leagueMetricMark', 'defenseDestruction', 'compare.differentTiers', 'compare.differentGroups', 'renderComparisonOverview', 'renderStickyCompareHeader', 'itemComparison', 'activateCompareTab', "window.addEventListener('hashchange'", 'renderHeadToHead', 'sampleQuality', 'tripleRate', 'copyComparisonLink', 'compare.contextRecommendations'] as $marker) {
         if (!str_contains($compareScript, $marker)) throw new RuntimeException('Perbandingan War/Ranked League tidak lengkap: ' . $marker);
     }
-    $compareStyles = (string)$app->handle($factory->createServerRequest('GET', '/compare.css'))->getBody();
+    $compareStyles = (string)$app->handle($factory->createServerRequest('GET', '/css/compare.css'))->getBody();
     if (!str_contains($compareStyles, '.league-comparison-grid') || !str_contains($compareStyles, '.war-player-history')
         || !str_contains($compareStyles, '.head-to-head-chart') || !str_contains($compareStyles, '.war-advanced-grid')
         || !str_contains($compareStyles, '.resume-section')) {
         throw new RuntimeException('Style panel comparison War/Ranked League tidak tersedia.');
     }
-    $playerScript = (string)$app->handle($factory->createServerRequest('GET', '/player.js'))->getBody();
+    $playerScript = (string)$app->handle($factory->createServerRequest('GET', '/js/player.js'))->getBody();
     foreach ([
         'renderBaseLevel',
         '/${type}-${numericLevel}.webp',
@@ -395,13 +395,13 @@ try {
         if (!str_contains($playerScript, $marker)) throw new RuntimeException('Navigasi profil tidak menggunakan tag clan dari data pemain.');
     }
     $htmlResponse = $app->handle($factory->createServerRequest('GET', '/'));
-    $assetResponse = $app->handle($factory->createServerRequest('GET', '/index.css'));
+    $assetResponse = $app->handle($factory->createServerRequest('GET', '/css/index.css'));
     if (!str_contains($htmlResponse->getHeaderLine('Cache-Control'), 'no-cache')
         || !str_contains($assetResponse->getHeaderLine('Cache-Control'), 'immutable')
         || $assetResponse->getHeaderLine('ETag') === '') {
         throw new RuntimeException('Header cache HTML/CSS tidak mendukung asset versioning.');
     }
-    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', 'leagueStandingsView', 'leagueRankingInsights', 'leagueStatisticsView', 'leagueStatisticsMetric', 'leagueStatisticsSummary', 'leagueDistributionChart', 'leagueBoxplotChart', 'leagueTopAttack', 'leagueTopAttackMeta', 'leagueTopDefense', 'leagueTopDefenseMeta', 'leagueZones', 'data-league-view="statistics"', '/player-league.js'] as $marker) {
+    foreach (['leagueSession', 'leagueMembers', 'leaguePrev', 'leagueNext', 'leagueRankSummary', 'leagueSidebarEyebrow', 'playerLeagueBadge', 'sidebarLeagueBadge', 'leagueStandingsView', 'leagueRankingInsights', 'leagueStatisticsView', 'leagueStatisticsMetric', 'leagueStatisticsSummary', 'leagueDistributionChart', 'leagueBoxplotChart', 'leagueTopAttack', 'leagueTopAttackMeta', 'leagueTopDefense', 'leagueTopDefenseMeta', 'leagueZones', 'data-league-view="statistics"', '/js/player-league.js'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Kontrol peringkat grup liga tidak tersedia: ' . $marker);
     }
     foreach (['data-tab="ranked-battles"', 'rankedBattleSession', 'rankedBattleSummary', 'rankedSessionComparison', 'rankedComparisonChart', 'rankedComparisonInsights', 'rankedAttackLogs', 'rankedDefenseLogs'] as $marker) {
@@ -416,28 +416,28 @@ try {
     foreach (['performanceQuality', 'performanceDistribution', 'playerResume', 'playerResumeText', 'dataSourceNote', 'copyPlayerResume', 'copyPlayerLink', 'exportPlayerCsv'] as $marker) {
         if (!str_contains($playerPage, $marker)) throw new RuntimeException('Statistik dan resume player P10-P14 tidak lengkap: ' . $marker);
     }
-    $leagueScript = (string)$app->handle($factory->createServerRequest('GET', '/player-league.js'))->getBody();
+    $leagueScript = (string)$app->handle($factory->createServerRequest('GET', '/js/player-league.js'))->getBody();
     foreach (['loadPlayerBattleLog', 'renderPlayerBattleLog', 'renderBattleLogList', 'loadRankedComparison', 'renderRankedComparison', 'renderRankedInsights', 'starDistribution', 'sessionLabel', "timeZone: 'Asia/Jakarta'", 'destructionPercentage', 'ranked-battle-stars'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Renderer battle log Ranked League tidak lengkap: ' . $marker);
     }
     foreach (['topByPerformance', 'renderTopList', 'loadLeagueStatistics', 'detail=statistics', 'attackTriples', 'defenseStops', 'player.attackTriples', 'player.defenseStops', 'renderZones', 'setLeagueView', 'playerLeagueHref', 'standingsZone', 'row.classList.add(`is-${zone}-zone`)', 'leagueRule', 'describeValues', 'standardDeviation', 'renderDescriptiveStatistics', 'renderDistribution', 'renderBoxplot', '1.5 * iqr'] as $marker) {
         if (!str_contains($leagueScript, $marker) && !str_contains($playerPage, $marker)) throw new RuntimeException('Statistik sidebar Ranked League tidak lengkap: ' . $marker);
     }
-    if (!str_contains($leagueScript, '/assets/trophy.png')) throw new RuntimeException('Aset ikon trofi battle log belum digunakan.');
+    if (!str_contains($leagueScript, '/assets/images/battle-log/trophy.png')) throw new RuntimeException('Aset ikon trofi battle log belum digunakan.');
     foreach (["className = 'league-battle-info'", 'showBattle(member, row, true, info)', "aria-haspopup', 'dialog'", "event.key === 'Escape'", 'state.pinned'] as $marker) {
         if (!str_contains($leagueScript, $marker)) throw new RuntimeException('Popup detail pertempuran belum mendukung interaksi tap: ' . $marker);
     }
     if (!str_contains($leagueScript, "family === 'legend' ? roman?.[1].toUpperCase() || null : numeric?.[1] || null")) {
         throw new RuntimeException('Label badge liga harus memakai Romawi hanya untuk Legend dan angka untuk liga lain.');
     }
-    $leagueStyles = (string)$app->handle($factory->createServerRequest('GET', '/player-league.css'))->getBody();
+    $leagueStyles = (string)$app->handle($factory->createServerRequest('GET', '/css/player-league.css'))->getBody();
     if (!str_contains($leagueStyles, '@media(hover:none)') || !str_contains($leagueStyles, '.league-battle-info{display:inline-grid')) {
         throw new RuntimeException('Ikon popup tidak diaktifkan untuk perangkat layar sentuh.');
     }
     foreach (['.league-view-tabs', '.league-top-member', '.league-member.is-promotion-zone', '.league-member.is-demotion-zone', '.league-zone.is-promotion', '.league-zone.is-demotion', '.league-stat-summary', '.league-distribution-chart', '.league-density-curve', '.league-boxplot-box'] as $marker) {
         if (!str_contains($leagueStyles, $marker)) throw new RuntimeException('Style statistik sidebar Ranked League tidak lengkap: ' . $marker);
     }
-    $playerStyles = (string)$app->handle($factory->createServerRequest('GET', '/player.css'))->getBody();
+    $playerStyles = (string)$app->handle($factory->createServerRequest('GET', '/css/player.css'))->getBody();
     foreach (['.ranked-session-comparison', '.ranked-comparison-layout', '.ranked-comparison-row', '.ranked-comparison-series.is-current', '.ranked-comparison-metric .is-up', '.ranked-comparison-metric .is-down', '.ranked-comparison-insights', '.ranked-star-bar', '.ranked-insight-note'] as $marker) {
         if (!str_contains($playerStyles, $marker)) throw new RuntimeException('Style perbandingan sesi Ranked League tidak lengkap: ' . $marker);
     }
@@ -450,11 +450,11 @@ try {
     if (!str_contains($home, 'href="/" class="home-brand"') || !str_contains($home, 'aria-label="ClanIntel"')) {
         throw new RuntimeException('Navigasi kembali ke home tidak tersedia di header.');
     }
-    $rankingScript = (string)$app->handle($factory->createServerRequest('GET', '/rankings.js'))->getBody();
+    $rankingScript = (string)$app->handle($factory->createServerRequest('GET', '/js/rankings.js'))->getBody();
     foreach (['home.clanLocationColumn', 'home.attacks', 'home.defenses', 'home.notAvailable', '/summary', 'data.location?.name', 'item.attackWins', 'item.defenseWins', 'item.leagueTier?.name'] as $marker) {
         if (!str_contains($rankingScript, $marker)) throw new RuntimeException('Leaderboard pemain tidak menampilkan kolom ranking yang diharapkan.');
     }
-    $i18nScript = (string)$app->handle($factory->createServerRequest('GET', '/i18n.js'))->getBody();
+    $i18nScript = (string)$app->handle($factory->createServerRequest('GET', '/js/i18n.js'))->getBody();
     foreach (['data-language-switch', 'data-i18n', 'coc-language', 'id-ID', 'en-US', "'home.rankingsTitle'", "'clan.joinRules'"] as $marker) {
         if (!str_contains($i18nScript, $marker)) throw new RuntimeException('Fondasi multibahasa beranda belum lengkap: ' . $marker);
     }
@@ -503,12 +503,12 @@ try {
     }
     $profileResponse = $app->handle($factory->createServerRequest('GET', '/api/player/2GPP802UU/profile'));
     $profile = json_decode((string)$profileResponse->getBody(), true);
-    if ($profileResponse->getStatusCode() !== 200 || ($profile['army']['heroes'][0]['iconUrls'][0] ?? null) !== '/public/icons/' . basename($iconPath)) {
+    if ($profileResponse->getStatusCode() !== 200 || ($profile['army']['heroes'][0]['iconUrls'][0] ?? null) !== '/assets/images/army/' . basename($iconPath)) {
         throw new RuntimeException('Profil tidak memprioritaskan ikon lokal.');
     }
     $pendant = $profile['army']['heroEquipment'][0] ?? [];
     if (($pendant['equipmentHero'] ?? null) !== 'Minion Prince' || ($pendant['maxLevel'] ?? null) !== 27
-        || ($pendant['iconUrls'][0] ?? null) !== '/public/icons/6670fe7511b1b140b321380d46c64f4194bb820a8cbe7b370ad33d5cbdf1135d.webp') {
+        || ($pendant['iconUrls'][0] ?? null) !== '/assets/images/army/6670fe7511b1b140b321380d46c64f4194bb820a8cbe7b370ad33d5cbdf1135d.webp') {
         throw new RuntimeException('Portal Pendant harus masuk ke Minion Prince dan memakai ikon lokal.');
     }
     if (($profile['army']['heroEquipment'][1]['name'] ?? null) !== 'Future Gear'

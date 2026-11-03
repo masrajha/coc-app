@@ -56,11 +56,11 @@ html[data-page=clan] .home-showcase{display:none}
 .command-ui.dashboard .home-showcase .landing-description{color:#d7e0ed;max-width:590px;font-size:14px;line-height:1.6}
 .command-ui.dashboard .landing-panel{position:relative;margin:-46px 0 26px;padding:0;border:0;background:transparent;box-shadow:none}
 .command-ui .landing-layout{grid-template-columns:minmax(0,1fr) 330px;gap:20px;align-items:start}
-.command-ui .landing-sidebar{padding:0;border:0}.command-ui .recent-overview{gap:14px}
-.command-ui .landing-sidebar .recent-panel{padding:14px;border-radius:12px;background:var(--theme-inset,#0c1320);box-shadow:0 4px 18px var(--theme-shadow,#03071133)}
+.command-ui .landing-sidebar{padding:0;border:0}.command-ui .recent-overview{gap:10px}
+.command-ui .landing-sidebar .recent-panel{padding:10px;border-radius:12px;background:var(--theme-inset,#0c1320);box-shadow:0 4px 18px var(--theme-shadow,#03071133)}
 .command-ui .recent-heading{align-items:center}.command-ui .recent-heading h3{font-size:12px;font-weight:800}
-.command-ui .recent-list{margin-top:10px}.command-ui .recent-item{padding:9px 6px;min-height:47px}
-.command-ui .recent-avatar{width:28px;height:28px;flex-basis:28px}.command-ui .recent-copy{gap:3px}.command-ui .recent-copy strong{font-size:11px}.command-ui .recent-copy small{font-size:10px}
+.command-ui .recent-list{margin-top:7px}.command-ui .recent-item{padding:5px 6px;min-height:40px}
+.command-ui .recent-avatar{width:28px;height:28px;flex-basis:28px}.command-ui .recent-copy{gap:1px}.command-ui .recent-copy strong{font-size:11px}.command-ui .recent-copy small{font-size:10px}
 .command-ui .quick-search{max-width:none;position:relative;border:1px solid var(--theme-blue-border,#587394);border-radius:15px;background:var(--theme-inset,#0c1320);box-shadow:0 12px 28px #0003,inset 0 0 0 4px var(--theme-panel,#1b2639);padding:4px}
 .command-ui.dashboard .quick-search-tabs{padding:6px 6px 0;gap:4px;background:transparent;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
 .command-ui.dashboard .quick-search-tab{padding:13px 7px;font-size:12px;font-weight:750;border-radius:9px 9px 0 0;display:flex;align-items:center;justify-content:center;gap:7px}

@@ -20,9 +20,12 @@ foreach ($manifest as $entry) {
 $assert($total < 900 * 1024, 'The complete derivative pack must remain below 900 KiB.');
 foreach (['index','player','compare','compare-clan'] as $page) {
     $html = file_get_contents($root . '/' . $page . '.html');
-    $assert(str_contains($html, '/site.css') && str_contains($html, '/site.js'), 'Every page must load the shared shell.');
+    $assert(str_contains($html, '/css/site.css') && str_contains($html, '/js/site.js'), 'Every page must load the shared shell.');
     preg_match_all('~(?:src|srcset)="(/assets/images/[^" ]+)~', $html, $matches);
-    foreach ($matches[1] as $image) $assert(str_starts_with($image, '/assets/images/optimized/'), 'Pages must reference web derivatives instead of PNG masters.');
+    foreach ($matches[1] as $image) {
+        $assert((bool)preg_match('~^/assets/images/(optimized|brand|profile|battle-log)/~', $image), 'Pages must reference web derivatives or small utility icons instead of artwork masters.');
+        $assert(is_file($root . $image), 'Every local page image must exist at its organized path.');
+    }
 }
 $app = App::create(); $factory = new ServerRequestFactory();
 $request = $factory->createServerRequest('GET', '/assets/images/optimized/hero-mobile.webp');

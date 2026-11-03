@@ -35,7 +35,7 @@
   const portraits=new Map();
   function portrait(profile){
     const tag=profile?.player?.tag;
-    if(!tag)return '/assets/brand/clanintel-mark.svg';
+    if(!tag)return '/assets/images/brand/clanintel-mark.svg';
     const key=String(tag).replace(/^#/,'').toUpperCase();
     if(!portraits.has(key)){
       // Keep each player's random portrait stable during session/filter/language updates.
@@ -48,7 +48,7 @@
   function playerHeading(side,profile,data,name){
     const box=node('div',null,'ranked-player-heading is-'+side);
     const avatar=node('img',null,'ranked-player-avatar');avatar.src=portrait(profile);avatar.alt='';avatar.width=58;avatar.height=58;avatar.decoding='async';
-    avatar.onerror=()=>{avatar.onerror=null;avatar.src='/assets/brand/clanintel-mark.svg';};
+    avatar.onerror=()=>{avatar.onerror=null;avatar.src='/assets/images/brand/clanintel-mark.svg';};
     const copy=node('div',null,'ranked-player-copy');copy.append(node('strong',name));
     const rank=data?.playerRank!=null?'#'+window.CocI18n.number(data.playerRank)+(data.totalMembers!=null?' / '+window.CocI18n.number(data.totalMembers):''):'—';
     copy.append(node('span',rank,'ranked-player-position'),node('small',data?.leagueTier||tr('compare.tierUnavailable')));

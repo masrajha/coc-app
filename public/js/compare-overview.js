@@ -13,7 +13,7 @@
     const root=el('overviewScore');let article=root.querySelector(`[data-overview-card="${card.id}"]`);
     if(!article){
       article=node('article',null,'comparison-aspect-card');article.dataset.overviewCard=card.id;
-      const head=node('div',null,'comparison-aspect-head'),image=node('img');image.src='/assets/profile/'+card.icon+'.svg';image.alt='';image.width=36;image.height=36;
+      const head=node('div',null,'comparison-aspect-head'),image=node('img');image.src='/assets/images/profile/'+card.icon+'.svg';image.alt='';image.width=36;image.height=36;
       head.append(image,node('h3',card.title),node('span','','comparison-aspect-badge'));
       const metric=node('p',card.metric,'comparison-aspect-metric'),pair=node('div',null,'comparison-aspect-pair');
       for(const side of ['left','right']){

@@ -23,13 +23,13 @@ No API data, application theme changes, or image-sharing integration is included
 The demo uses local `fonts/LilitaOne-Regular.ttf`, downloaded unmodified from
 https://github.com/google/fonts/tree/main/ofl/lilitaone with its bundled OFL.txt.
 Lilita One is not the official Clash of Clans game font. Trophy artwork comes
-from the application's existing `/assets/trophy.png`.
+from the application's existing `/assets/images/battle-log/trophy.png`.
 
 ## Integrated player view
 
 `player-view.html` is the application frame for Player Ranked League Game mode.
 It receives real session data from its same-origin parent using postMessage;
-`/ranked-game-view.js` renders it without demo fixtures or API requests.
+`/js/ranked-game-view.js` renders it without demo fixtures or API requests.
 The standalone `demo.html` remains available for visual reference.
 
-Mode Game terintegrasi menyediakan Gambar / Bagikan, pratinjau PNG 1440 px, unduh, dan native file sharing bila didukung. Ekspor mengikuti mode kotak/daftar serta urutan aktif. Library html-to-image 1.11.13 disimpan lokal di `public/assets/libs/html-to-image/` dengan lisensi MIT.
+Mode Game terintegrasi menyediakan Gambar / Bagikan, pratinjau PNG 1440 px, unduh, dan native file sharing bila didukung. Ekspor mengikuti mode kotak/daftar serta urutan aktif. Library html-to-image 1.11.13 disimpan lokal di `public/js/vendor/html-to-image/` dengan lisensi MIT.

@@ -36,7 +36,7 @@
 .profile-name-accent{color:var(--profile-gold)}
 .profile-hero .player-league-badge .league-icon,.profile-hero .player-league-badge .league-icon img{width:46px;height:46px}
 .player-profile-page .profile-hero .war-preference{display:inline-flex;align-items:center;gap:6px;margin:0;padding:6px 9px;border-radius:10px;font-size:11px;line-height:1.4;background:var(--profile-raised);color:var(--profile-secondary);border-color:var(--profile-border)}
-.profile-hero .war-preference:before{content:"";display:block;width:16px;height:16px;flex:0 0 16px;background:currentColor;mask:url('/assets/profile/war.svg') center/contain no-repeat}
+.profile-hero .war-preference:before{content:"";display:block;width:16px;height:16px;flex:0 0 16px;background:currentColor;mask:url('/assets/images/profile/war.svg') center/contain no-repeat}
 .player-profile-page .profile-hero .war-in{background:var(--profile-green-bg);color:var(--profile-success);border-color:var(--profile-green-border)}
 .player-profile-page .profile-hero .war-out{color:var(--profile-danger)}
 .player-profile-page .profile-hero .identity-meta{margin-top:10px;font-size:12px;gap:8px 12px;color:var(--profile-secondary)}

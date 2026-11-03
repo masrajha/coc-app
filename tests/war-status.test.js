@@ -15,7 +15,7 @@ function fixture() {
   });
   const el = id => {if(!nodes.has(id))nodes.set(id,makeNode());return nodes.get(id);};
   const window={CocI18n:{t:(key,values)=>key+(values?' '+JSON.stringify(values):''),number:(value,options)=>new Intl.NumberFormat('en-US',options).format(value)}};
-  vm.runInNewContext(fs.readFileSync('public/war-summary.js','utf8'),{window,Date,document:{getElementById:el,createElement:makeNode,createTextNode:value=>String(value)}});
+  vm.runInNewContext(fs.readFileSync('public/js/war-summary.js','utf8'),{window,Date,document:{getElementById:el,createElement:makeNode,createTextNode:value=>String(value)}});
   return {view:window.ClanWarSummary,el};
 }
 const end='20261029T010237.000Z';

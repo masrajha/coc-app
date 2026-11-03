@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const model = require('../public/compare-model');
+const model = require('../public/js/compare-model');
 
 function profile(tag, th, complete = true) {
   return { player: { tag, townHallLevel: th }, progress: {
@@ -121,7 +121,7 @@ test('halaman perbandingan dan profil tetap ada di frontend PHP', () => {
   assert.match(html, /data-tab="war"/);
   assert.match(html, /data-tab="activity"/);
   assert.match(html, /id="comparisonResume"/);
-  assert.ok(fs.existsSync(path.join(publicDir, 'compare.js')));
+  assert.ok(fs.existsSync(path.join(publicDir, 'js/compare.js')));
   assert.match(profile, /id="compareLink"/);
   assert.match(home, /id="comparePlayersLink"/);
 });

@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const test = require('node:test');
 const window = {};
-vm.runInNewContext(fs.readFileSync('public/player-overview.js','utf8'), {window});
+vm.runInNewContext(fs.readFileSync('public/js/player-overview.js','utf8'), {window});
 const model = window.PlayerOverview.model;
 const progress = {complete:true,tableExactMatch:true,score:{overall:93.29,categories:{heroes:{knownItems:6,expectedItems:6},troops:{knownItems:40,expectedItems:40},spells:{knownItems:20,expectedItems:20},pets:{knownItems:11,expectedItems:11}}},rushed:{rushed:false}};
 

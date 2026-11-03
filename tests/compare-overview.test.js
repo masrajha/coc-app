@@ -1,6 +1,6 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const model=require('../public/compare-overview-model.js');
+const model=require('../public/js/compare-overview-model.js');
 const profile=(tag,th=18)=>({player:{tag,townHallLevel:th},progress:{complete:true,tableVersion:'same',baselineSource:'api',score:{overall:90,categories:{heroes:{percent:80}}}}});
 const history=(stars,date='2026-10-20T00:00:00Z')=>({wars:[{id:'war',type:'CWL',startTime:date,state:'warEnded',quota:1,attacks:[{stars,destructionPercentage:90}]}],trend:[]});
 const context={profiles:{left:profile('#2GPP802UU'),right:profile('#28P08PG0G')},warPeriod:'30d',now:new Date('2026-10-29T00:00:00Z')};

@@ -157,7 +157,7 @@
     snapshot.feeds[kind]=payload;paintCards();
   }
   function icon(name, className = '') {
-    const image = node('img'); image.src = '/assets/profile/' + name + '.svg'; image.alt = ''; image.width = 56; image.height = 56; image.className = className; return image;
+    const image = node('img'); image.src = '/assets/images/profile/' + name + '.svg'; image.alt = ''; image.width = 56; image.height = 56; image.className = className; return image;
   }
   const actionPaths = {
     compare:'<circle cx="8" cy="7" r="3"/><path d="M2 20v-3a6 6 0 0 1 12 0v3H2Zm14-16a3 3 0 0 1 0 6m1 3a5 5 0 0 1 5 5v2h-5"/>',

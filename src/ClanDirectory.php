@@ -111,7 +111,7 @@ final class ClanDirectory
     {
         $data = $entry['data'];
         $badge = $data['badgeUrls']['small'] ?? $data['badgeUrls']['medium'] ?? '';
-        if (!is_string($badge) || !filter_var($badge, FILTER_VALIDATE_URL) || parse_url($badge, PHP_URL_SCHEME) !== 'https') $badge = '/assets/brand/clanintel-mark.svg';
+        if (!is_string($badge) || !filter_var($badge, FILTER_VALIDATE_URL) || parse_url($badge, PHP_URL_SCHEME) !== 'https') $badge = '/assets/images/brand/clanintel-mark.svg';
         $body = '<article class="directory-clan"><div class="directory-identity"><img class="clan-directory-badge" src="'.$this->escape($badge).'" width="44" height="48" alt="" loading="lazy" decoding="async"><div><h2><a href="'.$this->link('/clan.html',['tag'=>$tag]).'">'.$this->escape($data['name']).'</a></h2><p>#'.$tag.'</p></div></div>';
         $meta = array_filter([$data['location']['name'] ?? null, $data['warLeague']['name'] ?? null], 'is_string');
         if ($meta) $body .= '<p class="directory-clan-meta">'.$this->escape(implode(' · ', $meta)).'</p>';

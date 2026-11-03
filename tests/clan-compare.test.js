@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const model = require('../public/clan-compare-model.js');
+const model = require('../public/js/clan-compare-model.js');
 const profile = model.profile({members:4,memberList:[{townHallLevel:18,donations:0},{townHallLevel:16,donations:10},{townHallLevel:null},{}]});
 assert.equal(profile.average,17);assert.equal(profile.known,2);assert.equal(profile.donations,10);assert.equal(profile.donationKnown,2);assert.equal(profile.donors,1);
 assert.equal(model.profile({members:5}).average,null);assert.equal(model.profile({}).donations,null);

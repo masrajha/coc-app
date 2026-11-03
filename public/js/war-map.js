@@ -54,7 +54,7 @@
     const icon = node('span', '', 'war-map-icon');
     const level = Number(member.townhallLevel);
     if (Number.isInteger(level) && level >= 1 && level <= 18) {
-      const image = document.createElement('img'); image.src = `/th-${level}.webp`; image.alt = ''; image.loading = 'lazy';
+      const image = document.createElement('img'); image.src = `/assets/images/town-hall/th-${level}.webp`; image.alt = ''; image.loading = 'lazy';
       image.addEventListener('error', () => { image.remove(); icon.classList.add('no-image'); }); icon.append(image);
     } else icon.classList.add('no-image');
     icon.append(node('span', `TH ${number(member.townhallLevel)}`, 'war-map-th')); item.append(icon);

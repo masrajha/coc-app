@@ -1,7 +1,7 @@
 // Localize server summaries to the active app language; never fetch data or hide content.
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.clan-directory-badge').forEach(image => {
-    const fallback = () => { image.src = '/assets/brand/clanintel-mark.svg'; };
+    const fallback = () => { image.src = '/assets/images/brand/clanintel-mark.svg'; };
     image.addEventListener('error', fallback, {once:true});
     if (image.complete && image.naturalWidth === 0) fallback();
   });

@@ -32,7 +32,7 @@
       icon.className = 'donation-method-icon';
       icon.setAttribute('aria-hidden', 'true');
       const image = document.createElement('img');
-      image.src = `/assets/donation/${method}.png`;
+      image.src = `/assets/images/donation/${method}.png`;
       image.alt = ''; image.width = 26; image.height = 26; image.decoding = 'async';
       icon.appendChild(image);
       const label = document.createElement('span');

@@ -5,7 +5,7 @@
   const tr=key=>payload.labels[key]||key;
   const num=value=>value==null?'—':new Intl.NumberFormat(payload.locale,{maximumFractionDigits:2}).format(value);
   const points=value=>value==null?'—':(value>0?'+':'')+num(value);
-  const trophy=()=>{const img=node('img',null,'demo-trophy');img.src='/assets/trophy.png';img.alt='';img.width=24;img.height=29;return img;};
+  const trophy=()=>{const img=node('img',null,'demo-trophy');img.src='/assets/images/battle-log/trophy.png';img.alt='';img.width=24;img.height=29;return img;};
   function star(active){
     const e=node('span',null,'coc-ref-star');
     e.innerHTML=`<svg viewBox="0 0 35 35" aria-hidden="true"><path d="M17.5 2.2 22.5 12l10.8 1.5-7.9 7.6 1.9 10.8-9.8-5.1-9.8 5.1 1.9-10.8-7.9-7.6L12.5 12Z" fill="${active?'#bedce7':'#9c9693'}" stroke="#373435" stroke-width="2.1" stroke-linejoin="round"/></svg>`;
@@ -29,7 +29,7 @@
     const families=[['legend','legend'],['electro','electro-dragon'],['titan','electro-titan'],['dragon','dragon'],['pekka','pekka'],['p.e.k.k.a','pekka'],['golem','golem'],['witch','witch'],['valkyrie','valkyrie'],['wizard','wizard'],['archer','archer'],['barbarian','barbarian'],['skeleton','skeleton']];
     const family=families.find(([key])=>String(tier).toLowerCase().includes(key));
     if(!family)return null;
-    const image=node('img',null,'comparison-league');image.src='/league-'+family[1]+'.png';image.alt='';image.width=64;image.height=64;return image;
+    const image=node('img',null,'comparison-league');image.src='/assets/images/leagues/player/league-'+family[1]+'.png';image.alt='';image.width=64;image.height=64;return image;
   }
   function board(side){
     const source=payload.players[side],data=source.data,view=data?window.RankedGameModel.prepare(data,payload.order):null;

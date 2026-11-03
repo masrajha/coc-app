@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-const source = fs.readFileSync('public/share.js', 'utf8');
+const source = fs.readFileSync('public/js/share.js', 'utf8');
 function shared(address, language = 'en', session) {
   const context = {URL, location: new URL(address), window: {CocI18n: {locale: language}}, document: {getElementById: () => session ? {value: session} : null}};
   vm.runInNewContext(source, context);
@@ -27,6 +27,6 @@ assert.equal(url.searchParams.get('view'), 'achievements');
 url = shared('https://share.example.test/player.html?tag=28P08PG0G#%invalid');
 assert.equal(url.searchParams.get('view'), 'army');
 for (const page of ['index', 'player', 'compare', 'compare-clan']) {
-  assert.match(fs.readFileSync(`public/${page}.html`, 'utf8'), /src="\/share\.js"/, `${page}: missing share helper`);
+  assert.match(fs.readFileSync(`public/${page}.html`, 'utf8'), /src="\/js\/share\.js"/, `${page}: missing share helper`);
 }
 console.log('Share URL tests passed: language, view, legacy clan links, session and comparisons.');

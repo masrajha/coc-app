@@ -45,7 +45,7 @@
     const name=document.createElement('span');name.className='demo-row-name';name.textContent=log.opponentName;
     const percent=document.createElement('span');percent.className='demo-row-percent';percent.textContent=log.bonus?'':log.destruction+'%';button.append(name,percent);
     const score=document.createElement('div');score.className='coc-ref-score';score.append(document.createTextNode(log.points>0?'+'+log.points:String(log.points)));
-    const trophy=document.createElement('img');trophy.className='demo-trophy';trophy.src='/assets/trophy.png';trophy.alt='';trophy.width=23;trophy.height=29;score.append(trophy);button.append(score);
+    const trophy=document.createElement('img');trophy.className='demo-trophy';trophy.src='/assets/images/battle-log/trophy.png';trophy.alt='';trophy.width=23;trophy.height=29;score.append(trophy);button.append(score);
     if(!log.bonus){const stars=document.createElement('div');stars.className='coc-ref-stars';stars.setAttribute('aria-hidden','true');for(let i=0;i<3;i++)stars.append(star(i<log.stars));button.append(stars);}
     button.addEventListener('click',()=>showDetails(log,index));return button;
   }

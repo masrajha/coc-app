@@ -151,6 +151,7 @@ final class App
             return $handler->handle($request);
         });
         $app->options('/{routes:.*}', fn($request, $response) => $response);
+        $app->get('/api/news/latest', fn($req, $res) => $self->officialNews($res));
         $app->get('/api/rankings/locations', fn($req, $res) => $self->rankingLocations($res));
         $app->get('/api/rankings/{type}', fn($req, $res, $args) => $self->rankings($req, $res, $args['type']));
         $app->get('/api/clans/search', fn($req, $res) => $self->searchClans($req, $res));
@@ -198,6 +199,14 @@ final class App
         }
         $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE));
         return $response->withHeader('Content-Type', 'application/json; charset=utf-8')->withHeader('Content-Language', $this->locale)->withHeader('Vary', 'Accept-Language')->withStatus($status);
+    }
+
+    private function officialNews(ResponseInterface $res): ResponseInterface
+    {
+        $service = new OfficialNews($this->file('news'), __DIR__ . '/../public/assets/images/news');
+        $result = $service->latest($this->locale);
+        $status = $result['article'] ? 200 : ($result['retryAfter'] ? 202 : 503);
+        return $this->respond($res, $result, $status)->withHeader('Cache-Control', 'no-store');
     }
 
     private function empty(ResponseInterface $response, int $status): ResponseInterface { return $response->withStatus($status); }
@@ -421,6 +430,11 @@ final class App
     {
         $safe = str_replace('\\', '/', rawurldecode($requested));
         if ($safe === '' || str_contains($safe, '..') || str_starts_with($safe, '/')) return $res->withStatus(404);
+        $relocated = AssetPaths::relocated($safe);
+        if ($relocated !== null && is_file(__DIR__ . '/../public/' . $relocated)) {
+            $query = $req?->getUri()->getQuery() ?? '';
+            return $res->withStatus(301)->withHeader('Location', '/' . $relocated . ($query !== '' ? '?' . $query : ''));
+        }
         $path = realpath(__DIR__ . '/../public/' . $safe);
         $root = realpath(__DIR__ . '/../public');
         if (!$path || !$root || !str_starts_with($path, $root . DIRECTORY_SEPARATOR) || !is_file($path)) return $res->withStatus(404);
@@ -586,10 +600,10 @@ final class App
     }
     private function localIcon(string $name, string $section): ?array
     {
-        $base = dirname(__DIR__) . '/public/icons/' . hash('sha256', $section . ':' . $name);
+        $base = dirname(__DIR__) . '/public/assets/images/army/' . hash('sha256', $section . ':' . $name);
         foreach (['png' => 'image/png', 'webp' => 'image/webp', 'jpg' => 'image/jpeg', 'gif' => 'image/gif'] as $extension => $type) {
             $path = $base . '.' . $extension;
-            if (is_file($path) && filesize($path) > 0 && filesize($path) <= 400000) return ['path' => $path, 'type' => $type, 'url' => '/public/icons/' . basename($path)];
+            if (is_file($path) && filesize($path) > 0 && filesize($path) <= 400000) return ['path' => $path, 'type' => $type, 'url' => '/assets/images/army/' . basename($path)];
         }
         return null;
     }

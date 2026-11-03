@@ -48,7 +48,7 @@
     const badge = document.createElement('span');
     badge.className = 'league-icon';
     const image = document.createElement('img');
-    image.src = `/league-${family}.png`;
+    image.src = `/assets/images/leagues/player/league-${family}.png`;
     image.alt = '';
     image.width = 52;
     image.height = 52;
@@ -854,7 +854,7 @@
       top.append(number, trophies);
       if (bonus) {
         const bonusBody = document.createElement('div'); bonusBody.className = 'ranked-defense-bonus-body';
-        const trophy = document.createElement('img'); trophy.src = '/assets/trophy.png'; trophy.alt = ''; trophy.width = 22; trophy.height = 22;
+        const trophy = document.createElement('img'); trophy.src = '/assets/images/battle-log/trophy.png'; trophy.alt = ''; trophy.width = 22; trophy.height = 22;
         const label = document.createElement('strong'); label.textContent = tr('player.defenseBonus');
         bonusBody.append(trophy, label);
         const note = document.createElement('small'); note.textContent = tr('player.defenseBonusNote');
@@ -897,7 +897,7 @@
     const trophyMetric = document.createElement('div');
     const trophyCaption = document.createElement('span'); trophyCaption.textContent = tr('player.totalTrophies');
     const trophyValue = document.createElement('strong'); trophyValue.className = 'summary-trophy-value';
-    const trophyImage = document.createElement('img'); trophyImage.src = '/assets/trophy.png'; trophyImage.alt = ''; trophyImage.width = 20; trophyImage.height = 20;
+    const trophyImage = document.createElement('img'); trophyImage.src = '/assets/images/battle-log/trophy.png'; trophyImage.alt = ''; trophyImage.width = 20; trophyImage.height = 20;
     trophyValue.append(trophyImage, document.createTextNode(`${totalTrophies >= 0 ? '+' : ''}${localizedNumber(totalTrophies)}`));
     trophyMetric.append(trophyCaption, trophyValue); summary.insertBefore(trophyMetric, summary.children[1]);
     const prepare = logs => logs.filter(log => state.logFilter === 'all' || (state.logFilter === 'triple' && Number(log.stars) === 3) || (state.logFilter === 'low' && Number(log.stars) <= 1) || (state.logFilter === 'highDestruction' && Number(log.destructionPercentage) >= 80)).sort((a, b) => state.logSort === 'stars' ? Number(b.stars || 0) - Number(a.stars || 0) : state.logSort === 'destruction' ? Number(b.destructionPercentage || 0) - Number(a.destructionPercentage || 0) : state.logSort === 'trophies' ? Number(b.trophies || 0) - Number(a.trophies || 0) : state.logSort === 'oldest' ? String(a.timestamp || '').localeCompare(String(b.timestamp || '')) : String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
@@ -905,7 +905,7 @@
     const defenses = [...prepare(Array.isArray(data.defense?.logs) ? data.defense.logs : []), ...(state.logFilter === 'all' ? defenseBonusLogs : [])];
     setText('rankedAttackTotal', tr('player.battleCount', { count: localizedNumber(allAttackLogs.length) })); setText('rankedDefenseTotal', tr(defenseBonusLogs.length ? 'player.battleBonusCount' : 'player.battleCount', { count: localizedNumber(allDefenseLogs.length), bonus: localizedNumber(defenseBonusLogs.length) }));
     const trophyTotal = logs => logs.reduce((sum, log) => sum + (Number.isFinite(Number(log.trophies)) ? Number(log.trophies) : 0), 0);
-    const trophyLabel = value => { const image = document.createElement('img'); image.src = '/assets/trophy.png'; image.alt = ''; image.width = 16; image.height = 16; const span = document.createElement('span'); span.textContent = `${value >= 0 ? '+' : ''}${localizedNumber(value)}`; span.prepend(image); return span; };
+    const trophyLabel = value => { const image = document.createElement('img'); image.src = '/assets/images/battle-log/trophy.png'; image.alt = ''; image.width = 16; image.height = 16; const span = document.createElement('span'); span.textContent = `${value >= 0 ? '+' : ''}${localizedNumber(value)}`; span.prepend(image); return span; };
     document.getElementById('rankedAttackTrophies').replaceChildren(trophyLabel(trophyTotal(allAttackLogs)));
     document.getElementById('rankedDefenseTrophies').replaceChildren(trophyLabel(trophyTotal([...allDefenseLogs, ...defenseBonusLogs])));
     renderBattleLogList('rankedAttackLogs', attacks, tr('player.noAttackHistory'));
