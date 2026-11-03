@@ -38,6 +38,8 @@ public/
 
 Unggah direktori `public` beserta perubahan backend di `src` dalam rilis yang sama. Sertakan library lokal ekspor gambar beserta lisensinya.
 
+Library ekspor wajib tersedia di `/js/vendor/html-to-image/html-to-image.js` (file lokal: `public/js/vendor/html-to-image/html-to-image.js`). Jika muncul pesan library tidak tersedia, periksa URL tersebut: respons harus JavaScript dengan status 200. Sertakan juga `LICENSE` dari folder yang sama. Aturan Git `/vendor/` hanya mengabaikan dependensi PHP di root; jangan mengubahnya menjadi `vendor/` karena akan ikut mengabaikan library publik ini.
+
 Jika deployment sebelumnya menyalin berkas aset langsung ke document root hosting, hapus salinan lama tersebut setelah rilis baru lengkap. Berkas nyata yang masih tertinggal bisa dilayani Apache/LiteSpeed sebelum pengalihan PHP dijalankan.
 
 Tidak diperlukan perubahan `.env` atau migrasi data klan/pemain. Pembersihan cache aset/CDN diperlukan jika hosting masih menyajikan salinan lama; halaman aplikasi memberi versi pada referensi JS/CSS.
