@@ -27,7 +27,7 @@ final class SharePreview
 
     public function context(string $path, array $query): array
     {
-        $kind = match ($path) {'/player.html' => 'player', '/compare.html' => 'compare', '/compare-clan.html' => 'compareClan', '/clan.html' => 'clan', default => 'home'};
+        $kind = match ($path) {'/tools/zapquake', '/zapquake.html' => 'zapquake', '/player.html' => 'player', '/compare.html' => 'compare', '/compare-clan.html' => 'compareClan', '/clan.html' => 'clan', default => 'home'};
         if ($kind === 'home' && ($this->tag($query['tag'] ?? null) || $this->tag($query['clan'] ?? null))) $kind = 'clan';
         $tags = match ($kind) {
             'player' => [$this->tag($query['tag'] ?? null)],
@@ -149,7 +149,7 @@ final class SharePreview
         if ($cached && ($cached['expires'] ?? 0) > time()) return $cached['metadata'] + ['origin' => $this->baseUrl];
         $kind = $context['kind'];
         $heading = match ($kind) {'player' => $this->word('Profil Pemain', 'Player Profile'), 'clan' => $this->word('Profil Clan', 'Clan Profile'),
-            'compare' => $this->word('Perbandingan Pemain', 'Player Comparison'), 'compareClan' => $this->word('Perbandingan Clan', 'Clan Comparison'), default => 'ClanIntel'};
+            'compare' => $this->word('Perbandingan Pemain', 'Player Comparison'), 'compareClan' => $this->word('Perbandingan Clan', 'Clan Comparison'), 'zapquake'=>$this->word('Kalkulator Zapquake','Zapquake Calculator'), default => 'ClanIntel'};
         $entities = [];
         foreach ($context['tags'] as $index => $tag) $entities[] = in_array($kind, ['player', 'compare'], true) ? $this->player($tag, $context, $index) : $this->clan($tag, $context, $index);
         $view = $context['view'];
@@ -158,10 +158,20 @@ final class SharePreview
             'progress' => $this->word('Progres', 'Progress'), 'achievements' => $this->word('Pencapaian', 'Achievements'), 'army' => 'Army', default => $this->word('Ringkasan', 'Overview')};
         if (!$entities) $entities[] = ['name' => 'ClanIntel', 'tag' => 'Clash of Clans', 'badgeText' => 'CI', 'subtitle' => $this->word('Pantau clan, war, dan progres pemain', 'Track clans, wars, and player progress'),
             'metrics' => [['Clan', 'War & CWL'], ['Player', 'Ranked League'], ['Compare', 'Clan / Player']]];
+        if ($kind==='zapquake') {
+            $viewName='Lightning + Earthquake + Hero Equipment';
+            $entities=[['name'=>'Lightning + Earthquake','tag'=>'Hero Equipment','badgeText'=>'ZQ','tool'=>'zapquake',
+                'subtitle'=>$this->word('Simulasi damage spell dan hero equipment','Simulate spell and hero equipment damage'),
+                'metrics'=>[[$this->word('Target','Targets'),$this->word('Bangunan / Hero','Buildings / Heroes')],
+                    [$this->word('Kondisi','Conditions'),'Ranked / CWL / Custom'],
+                    [$this->word('Preset TH','TH presets'),$this->word('Penyerang / Bertahan','Attacker / Defender')]]]];
+        }
         $names = array_column($entities, 'name');
-        $title = $kind === 'home' ? $heading : $heading . ': ' . implode(' vs ', $names);
+        $title = in_array($kind,['home','zapquake'],true) ? $heading : $heading . ': ' . implode(' vs ', $names);
         $description = $kind === 'home' ? $this->word('Statistik clan, perang, Ranked League, dan perbandingan pemain Clash of Clans.', 'Clash of Clans clan statistics, wars, Ranked League, and player comparisons.')
             : $viewName . ' · ' . implode(' vs ', $names) . ' · ClanIntel';
+        if ($kind==='zapquake') $description=$this->word('Hitung kombinasi Lightning, Earthquake, dan hero equipment untuk bangunan serta hero. Sesuaikan TH penyerang, TH bertahan, dan modifier pertempuran.',
+            'Calculate Lightning, Earthquake, and hero equipment combinations for buildings and heroes. Set attacker TH, defender TH, and battle modifiers.');
         $card = ['heading' => $heading, 'context' => $viewName . ' · Clash of Clans', 'entities' => $entities,
             'notice' => $this->partial ? $this->word('Sebagian data belum tersedia', 'Some data is currently unavailable') : ($this->saved ? $this->word('Menggunakan data tersimpan', 'Using saved data') : ''),
             'footer' => $this->word('Snapshot dibuat ', 'Snapshot generated ') . gmdate('d M Y H:i') . ' UTC · ' . (parse_url($this->baseUrl, PHP_URL_HOST) ?: 'ClanIntel')];
@@ -175,10 +185,10 @@ final class SharePreview
     public function urls(array $metadata): array
     {
         $context = $metadata['context']; $kind = $context['kind'];
-        $path = match ($kind) {'player'=>'/player.html','clan'=>'/clan.html','compare'=>'/compare.html','compareClan'=>'/compare-clan.html',default=>'/'};
+        $path = match ($kind) {'zapquake'=>'/tools/zapquake','player'=>'/player.html','clan'=>'/clan.html','compare'=>'/compare.html','compareClan'=>'/compare-clan.html',default=>'/'};
         $params = ['lang' => $context['lang']];
         foreach ($context['tags'] as $index => $tag) if ($tag) $params[match ($kind) {'compare'=>'player' . ($index + 1),'compareClan'=>'clan' . ($index + 1),default=>'tag'}] = $tag;
-        if ($kind !== 'home') $params['view'] = $context['view'];
+        if (!in_array($kind,['home','zapquake'],true)) $params['view'] = $context['view'];
         if (in_array($context['view'], ['ranked-battles', 'ranked-league'], true)) $params['session'] = $context['session'];
         return ['url' => $this->baseUrl . $path . '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986), 'image' => $this->baseUrl . '/share/image/' . $metadata['imageId'] . '.png'];
     }

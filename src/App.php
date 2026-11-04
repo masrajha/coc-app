@@ -466,6 +466,15 @@ final class App
                 foreach (['id','en'] as $language) $links .= '<link rel="alternate" hreflang="'.$language.'" href="'.htmlspecialchars($origin.$language, ENT_QUOTES, 'UTF-8').'">';
                 $links .= '<link rel="alternate" hreflang="x-default" href="'.htmlspecialchars($origin.'id', ENT_QUOTES, 'UTF-8').'">';
                 $content = str_replace('</head>', $links.'</head>', $content);
+                try {
+                    $share=$this->shareService($req);
+                    $metadata=$share->metadata($share->context('/tools/zapquake',$req->getQueryParams()));
+                    // Keep one canonical and description when adding server-rendered social metadata.
+                    $socialContent=preg_replace('~<link rel="canonical"[^>]*>|<meta name="description"[^>]*>~i','',$content);
+                    $content=$share->html($socialContent,$metadata);
+                } catch (\Throwable $error) {
+                    error_log('Zapquake share preview unavailable: '.get_class($error));
+                }
             }
             if ($req && in_array($req->getUri()->getPath(), ['/', '/index.html', '/clan.html', '/player.html', '/compare.html', '/compare-clan.html'], true)) {
                 try {

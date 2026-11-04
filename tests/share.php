@@ -62,6 +62,23 @@ try {
     $assert(str_contains($clanComparison['og:title'], 'ISTIMEWA vs Other Clan'), 'Clan comparison must use both names.');
     $home = $metadata((string)$get('/?lang=id')->getBody());
     $assert(isset($home['og:image'], $home['og:description']), 'Home must have a generic share card.');
+    $toolImages=[];
+    foreach (['id'=>'Kalkulator Zapquake','en'=>'Zapquake Calculator'] as $language=>$toolTitle) {
+        $toolHtml=(string)$get('/tools/zapquake?lang='.$language)->getBody();$tool=$metadata($toolHtml);
+        $assert($tool['og:title']===$toolTitle.' - ClanIntel' && $tool['og:title']===$tool['title'],'Calculator needs its own localized social title.');
+        $assert($tool['og:url']==='https://share.example.test/tools/zapquake?lang='.$language,'Calculator social URL must point to the tool, not home.');
+        $assert($tool['og:image']!==$home['og:image'] && str_contains($tool['og:description'],'Lightning'),'Calculator share preview must describe the calculator.');
+        $assert(substr_count($toolHtml,'rel="canonical"')===1 && substr_count($toolHtml,'name="description"')===1,'Calculator social metadata must not duplicate canonical or description.');
+        $assert(str_contains($toolHtml,'name="twitter:card" content="summary_large_image"'),'Calculator also provides a large Twitter card.');
+        $toolPng=$get(parse_url($tool['og:image'],PHP_URL_PATH));$size=getimagesizefromstring((string)$toolPng->getBody());
+        $assert($toolPng->getStatusCode()===200 && $size[0]===1200 && $size[1]===630,'Calculator image must be publicly retrievable without JavaScript.');
+        $toolImages[]=$tool['og:image'];
+    }
+    $assert($toolImages[0]!==$toolImages[1],'Calculator preview images are localized.');
+    $toolFetches=0;
+    $toolService=new SharePreview($directory.'/tool-only',static function() use (&$toolFetches){$toolFetches++;throw new RuntimeException('No upstream call expected');},'https://share.example.test','en');
+    $toolService->metadata($toolService->context('/tools/zapquake',[]));
+    $assert($toolFetches===0,'Calculator share previews must not call the player or clan API.');
     $previous = $metadata((string)$get('/player.html?tag=28P08PG0G&lang=en&view=ranked-battles&session=previous')->getBody());
     $assert($previous['og:image'] !== $meta['og:image'] && str_contains($previous['og:url'], 'session=previous'), 'League sessions must have separate snapshot identities.');
     // Force the snapshot cache to expire, then make the source profile change.

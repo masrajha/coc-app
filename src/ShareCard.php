@@ -106,6 +106,10 @@ final class ShareCard
     {
         $bytes = null;
         if ($this->image !== null) {
+            if (($entity['tool'] ?? null)==='zapquake') {
+                $file=__DIR__.'/../public/assets/images/army/d7eb0549763668f2b795554e608b916725cf07b653cfddc2358996f6b163ce19.webp';
+                if (is_file($file)) $bytes=file_get_contents($file);
+            }
             if (is_string($entity['icon'] ?? null) && preg_match('/^league-[a-z-]+\.png$/', $entity['icon'])) {
                 $file = __DIR__ . '/../public/assets/images/leagues/player/' . $entity['icon']; if (is_file($file)) $bytes = file_get_contents($file);
             }
