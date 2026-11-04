@@ -1,0 +1,1320 @@
+{
+  "targetSourceCommit": "431f8da169ba93b730d182dfec0ca4820998db0d",
+  "note": "Target artwork from the pinned clash-of-clans-data repository; Fireball supplied by the user from Clash of Clans Wiki. Game artwork belongs to Supercell.",
+  "assets": [
+    {
+      "file": "air-defense-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/air-defense/normal/level-1.png",
+      "bytes": 3882,
+      "sha256": "80159692c210ff93fb298e0b8828c87dced23f7c8064cd75e41bece9c2cfc670"
+    },
+    {
+      "file": "air-defense-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/air-defense/normal/level-2.png",
+      "bytes": 5202,
+      "sha256": "1da0ef930176174e3844ba23b565aba166fe4dcf7997cdefc705a057eaee2486"
+    },
+    {
+      "file": "air-defense-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/air-defense/normal/level-3.png",
+      "bytes": 4498,
+      "sha256": "365ba4d57bd052d1452ccdf51680f3c05c5814a77665a4a44a24da6d2a2cb30c"
+    },
+    {
+      "file": "air-defense-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/air-defense/normal/level-4.png",
+      "bytes": 5716,
+      "sha256": "5ba8709c62149864e7e1ab65a262a002d3a3f8b0366a2bad7e6b286ab7303603"
+    },
+    {
+      "file": "air-defense-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/air-defense/normal/level-5.png",
+      "bytes": 6292,
+      "sha256": "6a9460a48716c9ce330af9ae41e093a6249cf6356dbfa0d9e30b54199599508b"
+    },
+    {
+      "file": "air-defense-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-6.png",
+      "bytes": 4714,
+      "sha256": "0887a2e6b06afe4b6fc35d8e431258e7a8f1fbfb45895fed92c561e0f76c11b9"
+    },
+    {
+      "file": "air-defense-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-7.png",
+      "bytes": 5448,
+      "sha256": "069422a438bbce08f2a26e63effaff51181c0c1690e35ed621b3d1d409371680"
+    },
+    {
+      "file": "air-defense-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-8.png",
+      "bytes": 6462,
+      "sha256": "53147cf801bc366f3cbf64a71fc383c519e1d11d26038b1757611125cfc02c32"
+    },
+    {
+      "file": "air-defense-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-9.png",
+      "bytes": 6564,
+      "sha256": "f691fa6936969a31e617f252009a0dae6b4466dbeaea80082b95cc305f0424b8"
+    },
+    {
+      "file": "air-defense-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-10.png",
+      "bytes": 6426,
+      "sha256": "3f97957d6c8704f2ad136344946c328e2d47ff76b452d0d538d0d275ad1bb1e8"
+    },
+    {
+      "file": "air-defense-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-11.png",
+      "bytes": 6536,
+      "sha256": "3e88742718a5e88be26c7cab2b077eb48198f07ca3e0169156ddc22612ed5ad0"
+    },
+    {
+      "file": "air-defense-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-12.png",
+      "bytes": 7044,
+      "sha256": "aeb7591b1155ce89ae614dc3ecb3679b965fb0ec0c3e0de58ef3c10f8fc15f46"
+    },
+    {
+      "file": "air-defense-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-13.png",
+      "bytes": 7170,
+      "sha256": "31bd39a653f17c1f6d79a025d5c814855016748d9742246fa5ff36fd7cb0d426"
+    },
+    {
+      "file": "air-defense-14.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-14.png",
+      "bytes": 7440,
+      "sha256": "ce25cca10d809d3ea008227daccf27f2f2ef1d0cafe23268ec9804397593b977"
+    },
+    {
+      "file": "air-defense-15.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-15.png",
+      "bytes": 6940,
+      "sha256": "3cecba433cccaf32ffd00b76eb9aecaf7a80ca266785957023cc7d33982a89aa"
+    },
+    {
+      "file": "air-defense-16.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-defense/normal/level-16.png",
+      "bytes": 6664,
+      "sha256": "1fd8c7bb5d78964a562bb0164997449e962e4934790e73536ad8739c2b8bc8b3"
+    },
+    {
+      "file": "air-sweeper-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-sweeper/normal/level-1.png",
+      "bytes": 6216,
+      "sha256": "f79596754251380b99e2596fe93c54d523dd9790d268269cf40b555d29a34da2"
+    },
+    {
+      "file": "air-sweeper-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-sweeper/normal/level-2.png",
+      "bytes": 6134,
+      "sha256": "f21906c3e24efb523efab481a46ab4f20e916748dd49d10b8ea56f0d544d3b68"
+    },
+    {
+      "file": "air-sweeper-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-sweeper/normal/level-3.png",
+      "bytes": 6294,
+      "sha256": "e5fd7eee4970256612d7ec91498a885969f224e5dc0e8b8da97994b530769b22"
+    },
+    {
+      "file": "air-sweeper-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-sweeper/normal/level-4.png",
+      "bytes": 6702,
+      "sha256": "0c8a07accfb3824b6c595615803f0bbaa6b5bbb8afc41327855ff5baa681be4b"
+    },
+    {
+      "file": "air-sweeper-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-sweeper/normal/level-5.png",
+      "bytes": 7178,
+      "sha256": "7eb0c8c14d20114826d81b12709224b363fe93aa557aedfce890d18dd5a2cccd"
+    },
+    {
+      "file": "air-sweeper-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-sweeper/normal/level-6.png",
+      "bytes": 7286,
+      "sha256": "0bec34c1d686beb9bb9c70942de995dc4db6b2ab7d9942325e5cee1fef257ab4"
+    },
+    {
+      "file": "air-sweeper-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/air-sweeper/normal/level-7.png",
+      "bytes": 7664,
+      "sha256": "cb1f0fb8b073044555590b5d09aa1e84e52e2be44353d9ea195e58af4e3929ea"
+    },
+    {
+      "file": "archer-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-1.png",
+      "bytes": 5316,
+      "sha256": "fd7344e9de2a895644784aa04b1ec67e4c314b279a6b490d7ea959ff419e7350"
+    },
+    {
+      "file": "archer-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-2.png",
+      "bytes": 5976,
+      "sha256": "168d3297ba4cc9adfe9388778ddf4b71130eab3731a6269c94475c21619811b0"
+    },
+    {
+      "file": "archer-tower-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-3.png",
+      "bytes": 6354,
+      "sha256": "acf257813e37dfde08e32228701e6c82d962f11d87399d15c987000eecd47cd4"
+    },
+    {
+      "file": "archer-tower-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-4.png",
+      "bytes": 6398,
+      "sha256": "a65c3bddffbfe35ba4106b50cc1e3322072d9342cbcbdd9c8fc558289c5bd219"
+    },
+    {
+      "file": "archer-tower-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-5.png",
+      "bytes": 6496,
+      "sha256": "4a7bf992428d15ffee91e5c1d50a3286f1441a3809e9f0214ea1d49c7d748cad"
+    },
+    {
+      "file": "archer-tower-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-6.png",
+      "bytes": 6874,
+      "sha256": "a50a4a032f6ab24d9ba028d20a95226bf5a5354eed32d1acd5bab73ec1261343"
+    },
+    {
+      "file": "archer-tower-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-7.png",
+      "bytes": 6836,
+      "sha256": "997ce6543b133affb30630da7335f6bca9c3f603733d54d089ca6583e73f6f80"
+    },
+    {
+      "file": "archer-tower-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-8.png",
+      "bytes": 7052,
+      "sha256": "f0e1beeaf023128789808de3f04ab816a4c69ba7c484e8aedf833182f0c14ac1"
+    },
+    {
+      "file": "archer-tower-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-9.png",
+      "bytes": 7472,
+      "sha256": "223193798835f62e9a341b67581df22f2f74fdee67fd00215968667f4312fbac"
+    },
+    {
+      "file": "archer-tower-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/archer-tower/normal/level-10.png",
+      "bytes": 7274,
+      "sha256": "fcc3f81add2141b24d676afa333f338b76d4041bf89b7e3e4d87324aef3bb87d"
+    },
+    {
+      "file": "archer-tower-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-11.png",
+      "bytes": 5760,
+      "sha256": "071db484c37f23b4be451fbf97f9a1a8e12416e6b2f0147c219d4002d230b4cd"
+    },
+    {
+      "file": "archer-tower-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-12.png",
+      "bytes": 6068,
+      "sha256": "686c7b9633198a9ff26a4453a051fd6b541e5db2b262abe291102322a1513433"
+    },
+    {
+      "file": "archer-tower-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-13.png",
+      "bytes": 5728,
+      "sha256": "e2ede80db2ef6108015a9715ec9c4a720d5de75c53fd9bcbfd85761db52f39eb"
+    },
+    {
+      "file": "archer-tower-14.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-14.png",
+      "bytes": 6058,
+      "sha256": "ee45a48a7fcbf460c29d1a9ca0e64cc0d0137780b0195d460e6e82fca95e3ecd"
+    },
+    {
+      "file": "archer-tower-15.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-15.png",
+      "bytes": 5998,
+      "sha256": "dfdc4848895c1b4062f4b1716bcc103423db0051f0ff3c36e4e2fb0c1834782e"
+    },
+    {
+      "file": "archer-tower-16.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-16.png",
+      "bytes": 5498,
+      "sha256": "fd460fc4c17f51f4dbb68e9d0e59e3575b24586a72b6eab5748cfff2731ba034"
+    },
+    {
+      "file": "archer-tower-17.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-17.png",
+      "bytes": 5968,
+      "sha256": "96af7c4de81c006cbdbd79e6bba08b35d0613ee332e782aacd96f7093bf5d247"
+    },
+    {
+      "file": "archer-tower-18.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-18.png",
+      "bytes": 6026,
+      "sha256": "0601c2b4b89ecaf73e94e3d9634cb2303accf1267f59a9545b754a71b30f1ebb"
+    },
+    {
+      "file": "archer-tower-19.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-19.png",
+      "bytes": 6216,
+      "sha256": "7cc83b3a1db41362f7f7aa499f0aa55234b7fcd9b9b6583f10957cf92e01f258"
+    },
+    {
+      "file": "archer-tower-20.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-20.png",
+      "bytes": 6532,
+      "sha256": "0e13ecc69d27e77e87c705200110bb2b1be68c46d1ebc8117f960940ce7c6fd2"
+    },
+    {
+      "file": "archer-tower-21.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/archer-tower/normal/level-21.png",
+      "bytes": 5872,
+      "sha256": "4952dfa47ad8b9d12d728e3b68b58474d4ebebad878a8c157b9f7774d01635ef"
+    },
+    {
+      "file": "bomb-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/bomb-tower/normal/level-1.png",
+      "bytes": 3638,
+      "sha256": "b384c1b0d9fad594d776a63858187d3388b6f2dc07e2deb4eb305f977e49c687"
+    },
+    {
+      "file": "bomb-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/bomb-tower/normal/level-2.png",
+      "bytes": 4380,
+      "sha256": "d7263674bcb2487ccb7e76b4ceb74606f4e2bee63d297ce0bc6c3ce51402eab3"
+    },
+    {
+      "file": "bomb-tower-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/bomb-tower/normal/level-3.png",
+      "bytes": 4262,
+      "sha256": "c94dc4bac5e54181e36686945eb8a093530f4e9af8cfc36ca79dd7424f64e624"
+    },
+    {
+      "file": "bomb-tower-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/bomb-tower/normal/level-4.png",
+      "bytes": 4626,
+      "sha256": "9f93dfd2c773fa5289df621ba6e9078b09fc14e919e1f4da252b01e2b0bd9003"
+    },
+    {
+      "file": "bomb-tower-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/bomb-tower/normal/level-5.png",
+      "bytes": 4462,
+      "sha256": "53d28066e1dc264866ae380b8b732958def3d547ea8cbb5b3bacea2d6d8b057c"
+    },
+    {
+      "file": "bomb-tower-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-6.png",
+      "bytes": 6688,
+      "sha256": "62eaba438ce022823be88fc375aebb6c9f347a02f0fa06ca1985da820b23b8c3"
+    },
+    {
+      "file": "bomb-tower-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-7.png",
+      "bytes": 6410,
+      "sha256": "54d9873b002d1ac627452f5bf7dd72a328e076803028a64e6c01cfb3b5f795c1"
+    },
+    {
+      "file": "bomb-tower-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-8.png",
+      "bytes": 6554,
+      "sha256": "15601070eb9f58a8e7917fb554113775d5519dd667bd2b3c952d46bbd2a9fc9a"
+    },
+    {
+      "file": "bomb-tower-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-9.png",
+      "bytes": 5776,
+      "sha256": "db642b95ff2e4ecfc479081df0dd4c9b3b00dd27df46541be3a18630f11c8d1e"
+    },
+    {
+      "file": "bomb-tower-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-10.png",
+      "bytes": 5114,
+      "sha256": "0f414c3b1a0ddacc3a1fedcc22e387d7d4f291c38871c4f87e2b1a05ce3a33ad"
+    },
+    {
+      "file": "bomb-tower-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-11.png",
+      "bytes": 6762,
+      "sha256": "8a279b42bf284d26d63913ca78c5f64a743ab1628effa3b479123be3f73c0494"
+    },
+    {
+      "file": "bomb-tower-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-12.png",
+      "bytes": 6982,
+      "sha256": "2f7f83ee58784e65e10b924469d417114be70368b0b8d3721ebf14c071d56699"
+    },
+    {
+      "file": "bomb-tower-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/bomb-tower/normal/level-13.png",
+      "bytes": 7198,
+      "sha256": "c4e6857a47ebc103318c9fbf8cd6cde81e2d21b0d31e4190933ef992d0332775"
+    },
+    {
+      "file": "builders-hut-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-1.png",
+      "bytes": 3504,
+      "sha256": "6060effcda05349e8fd7e8db44c16ce75d12fe115f5fe1c8b5c9f4492233ea4a"
+    },
+    {
+      "file": "builders-hut-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-2.png",
+      "bytes": 3420,
+      "sha256": "91fe1307e9603bfff40601c70bc01c2e687ab5fb307ce48abe63e6a6c2d1ac5d"
+    },
+    {
+      "file": "builders-hut-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-3.png",
+      "bytes": 4272,
+      "sha256": "9eebfa00718adac9ec57331034c175115aa8c6dbd6547a78b5b09e9786a73f10"
+    },
+    {
+      "file": "builders-hut-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-4.png",
+      "bytes": 4856,
+      "sha256": "3889d48fa62a91e3c0de00674721ee25eacd176410457028fa92bf7d45294b9a"
+    },
+    {
+      "file": "builders-hut-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-5.png",
+      "bytes": 5224,
+      "sha256": "7b77281ea353d8b7982dba63420890aa8f90c09edd378a3d45ece425a4054019"
+    },
+    {
+      "file": "builders-hut-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-6.png",
+      "bytes": 5328,
+      "sha256": "80744728056f52c3fb4ff854003f4994af175e97a03d40d120e8a95c962a1519"
+    },
+    {
+      "file": "builders-hut-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-7.png",
+      "bytes": 5268,
+      "sha256": "11af088865c5f10ddaa8147eeb2902b2a786fe01be3b5e9a755055122baca012"
+    },
+    {
+      "file": "builders-hut-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/builders-hut/normal/level-8.png",
+      "bytes": 6474,
+      "sha256": "8fd8d36ea12e5e06626098a8e74f30408a83dd8254cc5d85881754480d864ea5"
+    },
+    {
+      "file": "cannon-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-1.png",
+      "bytes": 1760,
+      "sha256": "614a285ae4dc0978b305e54d600160e059a44d234b0038d8d1f44ba8b5cb9105"
+    },
+    {
+      "file": "cannon-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-2.png",
+      "bytes": 2214,
+      "sha256": "f9516a711873e6b325307bb1ae37d642e72a0daae1b2cb42a7c3c925e2013470"
+    },
+    {
+      "file": "cannon-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-3.png",
+      "bytes": 2346,
+      "sha256": "e076d925660de8a8d231e04981947def372146175e2fc41e303d649b45d641c2"
+    },
+    {
+      "file": "cannon-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-4.png",
+      "bytes": 2538,
+      "sha256": "c73139f2a237f3bc790b30b10f44a13d06e60117351ebf936032b70b69152f30"
+    },
+    {
+      "file": "cannon-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-5.png",
+      "bytes": 2734,
+      "sha256": "a726e878bea349915b0a57c0241e5be6896cb5ffa58ba30bf2dc77357b987e53"
+    },
+    {
+      "file": "cannon-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-6.png",
+      "bytes": 3200,
+      "sha256": "a89fc15521cd03693202e9591b5cf56fb518142c245493a1e0cc90214f22de4b"
+    },
+    {
+      "file": "cannon-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-7.png",
+      "bytes": 3386,
+      "sha256": "9d11ab1beb98a78538ce01a56a16e98339f145231c2a45d4a412fa9fd7b27e63"
+    },
+    {
+      "file": "cannon-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-8.png",
+      "bytes": 3390,
+      "sha256": "61ecf1e4d6d66fe130454e3b02428fb6a310753c2daee9c47f7506217d0a5bf9"
+    },
+    {
+      "file": "cannon-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-9.png",
+      "bytes": 3808,
+      "sha256": "77f01b24dd8fad8e109487e2b0c820b1fcd5016d3ff691f5e5e89590d5666079"
+    },
+    {
+      "file": "cannon-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/cannon/normal/level-10.png",
+      "bytes": 3894,
+      "sha256": "a46932bc49b447a4956a3847ce570a0a8fea54b54bd4220481e2b47c7024a84b"
+    },
+    {
+      "file": "cannon-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-11.png",
+      "bytes": 3938,
+      "sha256": "13ebe9044644887e74c0a462d40dcff455beca9445128a55107e82aecf139fd8"
+    },
+    {
+      "file": "cannon-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-12.png",
+      "bytes": 3880,
+      "sha256": "5541bc6372c443fbfa988cc96e44c78dde1b836aa62923656bc064cdb7902f49"
+    },
+    {
+      "file": "cannon-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-13.png",
+      "bytes": 4384,
+      "sha256": "217f61fc290cb4eb739b67b000f3aab6a6d92809cdfe31dbb79f867e16844ee1"
+    },
+    {
+      "file": "cannon-14.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-14.png",
+      "bytes": 4884,
+      "sha256": "584190fe329147982490165078cb1895a163dea421c724600a7a4ab6ca2088f3"
+    },
+    {
+      "file": "cannon-15.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-15.png",
+      "bytes": 4658,
+      "sha256": "0cba51d75b9bf0cf8c0f5f9f65afe12e76699e6e30d15da0d17308390845e0da"
+    },
+    {
+      "file": "cannon-16.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-16.png",
+      "bytes": 4416,
+      "sha256": "bd968815a2f84e6d2043f9e08963503a76e1ba712cf5a36faf0cdc6457bef64d"
+    },
+    {
+      "file": "cannon-17.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-17.png",
+      "bytes": 4664,
+      "sha256": "d5ff170927d4f16e442b17c0e088b00f97947fec1380cdc30919adfc166c2743"
+    },
+    {
+      "file": "cannon-18.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-18.png",
+      "bytes": 4860,
+      "sha256": "dc2286161bfb1ec57c96395faa5a375de4b84923c70fae6157ed40c133050f26"
+    },
+    {
+      "file": "cannon-19.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-19.png",
+      "bytes": 4896,
+      "sha256": "fdca8fe38e6fa3f204bd540d94d6373a6a428326d7a659102fc5150670580172"
+    },
+    {
+      "file": "cannon-20.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-20.png",
+      "bytes": 5894,
+      "sha256": "a5a17d8b60c58c994a734660fd7e94b5b5b17db8b871b6851a3dfb358d96778b"
+    },
+    {
+      "file": "cannon-21.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/cannon/normal/level-21.png",
+      "bytes": 5254,
+      "sha256": "47a1bd80915a2028892b0e2b1d12fd1ce1b74fc5244ef00a0500d3cdfd7bf62d"
+    },
+    {
+      "file": "clan-castle-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-1.png",
+      "bytes": 6870,
+      "sha256": "5d178fd5785b45c846641696772f65e006016b73c418a68304d3ebae240b4b21"
+    },
+    {
+      "file": "clan-castle-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-2.png",
+      "bytes": 7110,
+      "sha256": "c95a93664d119ea8b29e22c23185e614c5be53db65c3dede4eec2d2a5b7f5488"
+    },
+    {
+      "file": "clan-castle-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-3.png",
+      "bytes": 6994,
+      "sha256": "19f398c0e0f1dbae1a1cf20dde8cf4e5db60756bf05d7843ce28732b2570f663"
+    },
+    {
+      "file": "clan-castle-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-4.png",
+      "bytes": 7400,
+      "sha256": "485cb892098eded98cdf3b08786a92e6798f5b4250351f94a1f7028a588a2ae3"
+    },
+    {
+      "file": "clan-castle-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-5.png",
+      "bytes": 6762,
+      "sha256": "63c9986eb5e80ea9b7e5bc69a0aac140e2ec4d8ea39b2f530b285a4a2b62b0d5"
+    },
+    {
+      "file": "clan-castle-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-6.png",
+      "bytes": 6786,
+      "sha256": "6e7aa80706bd0cc5fd470a26920281c5bd98f764ae017f43b3390b9904a09c83"
+    },
+    {
+      "file": "clan-castle-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-7.png",
+      "bytes": 7066,
+      "sha256": "82539f125d2a5a3ed1454a8d3542bc2ecd260512f3db5843cc1ce8a9a2d07120"
+    },
+    {
+      "file": "clan-castle-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-8.png",
+      "bytes": 7298,
+      "sha256": "e2d0e8a1697b5ffb3fa4cdbc30653f02d081cc5c01557b6198d48ca3689b5daa"
+    },
+    {
+      "file": "clan-castle-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-9.png",
+      "bytes": 7010,
+      "sha256": "ef6894d5c44fdbf7e0af4666851fcd8a09cef0c8797a7e2fe74dd3a1617bc69e"
+    },
+    {
+      "file": "clan-castle-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-10.png",
+      "bytes": 6796,
+      "sha256": "ae4d4139f2291e43ffdb738d9362c5284172f022423098f589574218a35ab0b5"
+    },
+    {
+      "file": "clan-castle-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-11.png",
+      "bytes": 6650,
+      "sha256": "e0521c350da3bd267b61282d16958b7075a91906c232cf69c787785ad2474113"
+    },
+    {
+      "file": "clan-castle-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-12.png",
+      "bytes": 7074,
+      "sha256": "3def027fadedf077be29ccf3cdf0f42d35aec612dc3041a63bf6399e53e9b721"
+    },
+    {
+      "file": "clan-castle-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-13.png",
+      "bytes": 6462,
+      "sha256": "a6c0508bd2151eac0e1a12ee3e06cbb0780ebd45ca266627075c4c57a84e0006"
+    },
+    {
+      "file": "clan-castle-14.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/resource-buildings/clan-castle/normal/level-14.png",
+      "bytes": 8736,
+      "sha256": "b62e45fc373500b6afa9d5537578587f199fff5f686acc3c43f7b56b1630886b"
+    },
+    {
+      "file": "eagle-artillery-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/eagle-artillery/normal/level-1.png",
+      "bytes": 6884,
+      "sha256": "c600f3309680c1d8e821a77f9d30562abb8a0a1aa662bc9f5a2d34fdc778840d"
+    },
+    {
+      "file": "eagle-artillery-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/eagle-artillery/normal/level-2.png",
+      "bytes": 7178,
+      "sha256": "255f1a291b9b885841c92da94963cb9fb681c7bc1bf177c232a33ab4f8c1fdda"
+    },
+    {
+      "file": "eagle-artillery-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/eagle-artillery/normal/level-3.png",
+      "bytes": 6966,
+      "sha256": "d7f5205e04d6e2da56d815b88eedfdac8791fc3398b741d80c95c0623a179750"
+    },
+    {
+      "file": "eagle-artillery-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/eagle-artillery/normal/level-4.png",
+      "bytes": 7054,
+      "sha256": "87e323910442bd12afb0d5f6d4c0a03e11b76e5d79b71d8310f658135b315768"
+    },
+    {
+      "file": "eagle-artillery-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/eagle-artillery/normal/level-5.png",
+      "bytes": 7298,
+      "sha256": "51cb3d06e7e7ea88c773c8a2cb1203bc8bab7a7aa811e493de259b1c6016cff9"
+    },
+    {
+      "file": "eagle-artillery-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/eagle-artillery/normal/level-6.png",
+      "bytes": 7418,
+      "sha256": "db5dbf4d3bcb2b3e36b086638f9596b2d3cad8d009bfc75edbd012465d94d39d"
+    },
+    {
+      "file": "eagle-artillery-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/eagle-artillery/normal/level-7.png",
+      "bytes": 7874,
+      "sha256": "a5f071f0b3c5194e8412b9cf2115f3e14a235a6e00d9d14260c0159968a8f066"
+    },
+    {
+      "file": "firespitter-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/firespitter/normal/level-1.png",
+      "bytes": 7608,
+      "sha256": "3785f4395db2c78041a87714586907635b40310d0dd723366c991d9b314eb302"
+    },
+    {
+      "file": "firespitter-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/firespitter/normal/level-2.png",
+      "bytes": 7660,
+      "sha256": "89825af613da758377db63edffebfce8aa2d2250a3b609c6e8983170cb8792f9"
+    },
+    {
+      "file": "firespitter-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/firespitter/normal/level-3.png",
+      "bytes": 8430,
+      "sha256": "07d98ef803f614b4768e62080ea638ced279d3b5ccb27c4e791ff84fd179a0f0"
+    },
+    {
+      "file": "hidden-tesla-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-1.png",
+      "bytes": 4626,
+      "sha256": "c4255f6b1bffbe16dcbaba961f09beaefe3aa2ac96a07a2a4ad12bc3fc7288a6"
+    },
+    {
+      "file": "hidden-tesla-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-2.png",
+      "bytes": 4900,
+      "sha256": "1948b7c978ad724e5c6f28f2e2e8231dc0dc49011e22188e6d896c4dc1e808ca"
+    },
+    {
+      "file": "hidden-tesla-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-3.png",
+      "bytes": 5332,
+      "sha256": "fb40b59cdc4713d18fb799bcf23125ecd0b60cff8bd23ad3bb6f5fc0d0470360"
+    },
+    {
+      "file": "hidden-tesla-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-4.png",
+      "bytes": 5276,
+      "sha256": "0268a0f3626360c4807c5c559e7a41ba40df8595a7f63af8ae3725a9ee3464dc"
+    },
+    {
+      "file": "hidden-tesla-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-5.png",
+      "bytes": 5404,
+      "sha256": "b0dc89e5c7be9354c8442cc314c91a8197d465c37de5d41b37726f749b2604aa"
+    },
+    {
+      "file": "hidden-tesla-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-6.png",
+      "bytes": 5472,
+      "sha256": "57c4830d4eac867d7f3ec58be7111bb9c9980e8b900a0bffba7588e6a2f42066"
+    },
+    {
+      "file": "hidden-tesla-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-7.png",
+      "bytes": 5466,
+      "sha256": "2aa67ee50790dd75a428ac680f66a35be9f847327f1359287948e3bb796e87be"
+    },
+    {
+      "file": "hidden-tesla-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-8.png",
+      "bytes": 6028,
+      "sha256": "74d2e0f0a8dd3cef3a31f254e8af22eed0600029b22dcf8ac9753ce3941a00b5"
+    },
+    {
+      "file": "hidden-tesla-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-9.png",
+      "bytes": 5986,
+      "sha256": "dae11a98a91739db055bbd57f8825152b04854642000c73d5031566cd68c15d4"
+    },
+    {
+      "file": "hidden-tesla-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/hidden-tesla/normal/level-10.png",
+      "bytes": 5882,
+      "sha256": "13388e62379df8b2050bc8e9b3180589182c0c5102f6e40cb1df13b51df0a676"
+    },
+    {
+      "file": "hidden-tesla-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/hidden-tesla/normal/level-11.png",
+      "bytes": 5456,
+      "sha256": "b52f31d04c7516022db8573a51b3171285c6e92ee426a18ef66119fc4d1d58ee"
+    },
+    {
+      "file": "hidden-tesla-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/hidden-tesla/normal/level-12.png",
+      "bytes": 5686,
+      "sha256": "a9deb6302e09823d38bd4688104fb805a1d2d2c8aeccc4a6904d4f173285ae1d"
+    },
+    {
+      "file": "hidden-tesla-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/hidden-tesla/normal/level-13.png",
+      "bytes": 5806,
+      "sha256": "569cde8710c7049bc604b2d00e1e60c7bfffc378fddf14517c38b22909ece42c"
+    },
+    {
+      "file": "hidden-tesla-14.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/hidden-tesla/normal/level-14.png",
+      "bytes": 5726,
+      "sha256": "fca69487169d49cc37e6bde6df3179bc92487897077ba7df25d58fa903709b12"
+    },
+    {
+      "file": "hidden-tesla-15.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/hidden-tesla/normal/level-15.png",
+      "bytes": 6116,
+      "sha256": "0ba5c824b06463933e58ffa22855e469c29c8fc1b9d7a588afbe52232246afdc"
+    },
+    {
+      "file": "hidden-tesla-16.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/hidden-tesla/normal/level-16.png",
+      "bytes": 5624,
+      "sha256": "132bf6402648fca9c1f3176b56d10abdecedfcd105e6918ec1663bfa8928f517"
+    },
+    {
+      "file": "hidden-tesla-17.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/hidden-tesla/normal/level-17.png",
+      "bytes": 5942,
+      "sha256": "475a7364a2590063231107f134f1843c85d957e1030f951c5efa47939c215937"
+    },
+    {
+      "file": "inferno-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/inferno-tower/normal/level-1.png",
+      "bytes": 4204,
+      "sha256": "fc2104e1fcdd2ebda2e927d720e31b01fa9152dbf84be82e8b43b67b257fb674"
+    },
+    {
+      "file": "inferno-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/inferno-tower/normal/level-2.png",
+      "bytes": 4920,
+      "sha256": "a77b7ae901f9f89c876b3a6939f48c89c45419a69af06d3875302fa84101cca8"
+    },
+    {
+      "file": "inferno-tower-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/inferno-tower/normal/level-3.png",
+      "bytes": 5482,
+      "sha256": "4ec819985e5742b25b7bd054171673b29f68852b3a9928174801efbf48a1442e"
+    },
+    {
+      "file": "inferno-tower-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/inferno-tower/normal/level-4.png",
+      "bytes": 5888,
+      "sha256": "dd8fdf8abbd6964b5f972ec02a4438736255c9d93779285ac25bbabe0a7e6c11"
+    },
+    {
+      "file": "inferno-tower-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/inferno-tower/normal/level-5.png",
+      "bytes": 6450,
+      "sha256": "517b526358b32a032d18adcaac15a0c31297bfa229a4a72b6e45dc671d49ab5f"
+    },
+    {
+      "file": "inferno-tower-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/inferno-tower/normal/level-6.png",
+      "bytes": 5666,
+      "sha256": "db870bcf1f06efb1f7a3bc0014cdc2a592530610922948857e14d24056cd3d7f"
+    },
+    {
+      "file": "inferno-tower-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/inferno-tower/normal/level-7.png",
+      "bytes": 5830,
+      "sha256": "7809b30ca92368fc735e77e5e46a8b0c0be51df069fb2a34f95ae1221f6fdb28"
+    },
+    {
+      "file": "inferno-tower-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/inferno-tower/normal/level-8.png",
+      "bytes": 6326,
+      "sha256": "f0081dae305fb47c158829f246aaa6bdbfd32b358737aace3d1db61b77f5fb93"
+    },
+    {
+      "file": "inferno-tower-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/inferno-tower/normal/level-9.png",
+      "bytes": 6072,
+      "sha256": "eff8734770983f404ab7893c032b3d4d1e0c35f7476c3fbea78f94480b94c6f7"
+    },
+    {
+      "file": "inferno-tower-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/inferno-tower/normal/level-10.png",
+      "bytes": 6350,
+      "sha256": "6db14ea6143f89b61f6d5b6df18d51faba1f21f4b8ba15d6c424a768eab584ec"
+    },
+    {
+      "file": "inferno-tower-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/inferno-tower/normal/level-11.png",
+      "bytes": 6502,
+      "sha256": "b0fc3a7dcf174dd1f75a2f90ec55792f66b6a8c6d4b637b2c95cada94ae64b24"
+    },
+    {
+      "file": "inferno-tower-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/inferno-tower/normal/level-12.png",
+      "bytes": 6780,
+      "sha256": "f1bd8babce5cd5b033d821ffda5a2814e5954640b3733a983415121ec1513d65"
+    },
+    {
+      "file": "monolith-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/monolith/normal/level-1.png",
+      "bytes": 5012,
+      "sha256": "b838528751450b462394b5a5a4e0b96537c34b11ccd6637de55595c5b1305580"
+    },
+    {
+      "file": "monolith-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/monolith/normal/level-2.png",
+      "bytes": 5558,
+      "sha256": "e4d1895079fc8496e7cd58446f9daf25e32bfca7d1227ecdba40fd4a38ae2ef6"
+    },
+    {
+      "file": "monolith-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/monolith/normal/level-3.png",
+      "bytes": 5272,
+      "sha256": "90a34a43632e9a052b14ca11976c2e49dbabdd373c6664fda91f21aef259e3e6"
+    },
+    {
+      "file": "monolith-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/monolith/normal/level-4.png",
+      "bytes": 5618,
+      "sha256": "a7067c89cd03b5455799ee0d7f0dca231c597e27af352a67c4e28c1d601c18f9"
+    },
+    {
+      "file": "monolith-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/monolith/normal/level-5.png",
+      "bytes": 5864,
+      "sha256": "108ff728e0ef0924f596ceac0a9a738c5cc272abdfb239ddea020becbbef5745"
+    },
+    {
+      "file": "mortar-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-1.png",
+      "bytes": 2398,
+      "sha256": "e55f97006378389a1ec497e8a802d79c998700fdd6ce0803e420802df591ef75"
+    },
+    {
+      "file": "mortar-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-2.png",
+      "bytes": 2650,
+      "sha256": "359ab84541d695e8624f7656d2e1f60faf8484bdf70ac5fb838b330ebcaa2ec2"
+    },
+    {
+      "file": "mortar-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-3.png",
+      "bytes": 3504,
+      "sha256": "6126271903f3ce6acddbeb0040dfa080af6b10cdc220a2e5674a07b15b633f61"
+    },
+    {
+      "file": "mortar-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-4.png",
+      "bytes": 3728,
+      "sha256": "431e5c4ba383a99bb84adc29642e07a0955c079ea3e25a94c47e1f6108b1ca37"
+    },
+    {
+      "file": "mortar-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-5.png",
+      "bytes": 3746,
+      "sha256": "cf7ca3adb4448567dc6b9261c75d15f03521bde986e97ccb72e87141788c3261"
+    },
+    {
+      "file": "mortar-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-6.png",
+      "bytes": 3700,
+      "sha256": "4e12a6fed7534035de108f25bf3f78cb7b8f52ab7ada687ca7625a327585673e"
+    },
+    {
+      "file": "mortar-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-7.png",
+      "bytes": 4932,
+      "sha256": "730fe18a6afba084e769c4eade9f412b6da74648b546f6092aa77648180580f7"
+    },
+    {
+      "file": "mortar-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-8.png",
+      "bytes": 6084,
+      "sha256": "9cd91fc93f3f694a49d1d13da7d29afd245a8dce19893b95160cb58ddcd37633"
+    },
+    {
+      "file": "mortar-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-9.png",
+      "bytes": 6320,
+      "sha256": "8fd3c9a9c7c0d2b22830073c8648d2ff8f28f89361ff5146750ea24b9aa49a90"
+    },
+    {
+      "file": "mortar-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-10.png",
+      "bytes": 8128,
+      "sha256": "edbec28ce2a99793c95f143558e153d0c8643bb6c520bec6f48a85a2cd04fd2c"
+    },
+    {
+      "file": "mortar-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-11.png",
+      "bytes": 7426,
+      "sha256": "2f442cc749643584e5606f66b6114474d583101211fce1fd94c4b6e26ec68667"
+    },
+    {
+      "file": "mortar-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-12.png",
+      "bytes": 7992,
+      "sha256": "550d0247f2a0e973bd2d973843d6f53ffdc9f037566b53834442c9a808c4b43b"
+    },
+    {
+      "file": "mortar-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-13.png",
+      "bytes": 7402,
+      "sha256": "7367504b1a43a7f54b783ea2d8ce57b75b3b85da21751d4eb63d779c1d39d252"
+    },
+    {
+      "file": "mortar-14.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-14.png",
+      "bytes": 7668,
+      "sha256": "ea70547c716bfe2ef40c5eb117b9d6f1c3bfadabb045f27f13ae58c18b7b44f2"
+    },
+    {
+      "file": "mortar-15.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-15.png",
+      "bytes": 6600,
+      "sha256": "c8db7fbde364a768b37f4f44bdd9f0f02e2caf484a06f62bcb9f0414c34ae374"
+    },
+    {
+      "file": "mortar-16.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-16.png",
+      "bytes": 7762,
+      "sha256": "b1eef34ca6ae23f4f801adc8f94fb0a8ee5d52a6f571162db815774ddd4cc13f"
+    },
+    {
+      "file": "mortar-17.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-17.png",
+      "bytes": 7478,
+      "sha256": "858c8e3a9bcfea19e47292f4369225ac8294bd97dcc253b44b9636299d333c88"
+    },
+    {
+      "file": "mortar-18.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/mortar/normal/level-18.png",
+      "bytes": 7634,
+      "sha256": "ac6fee0858f53a9d3125b0a2526412044941c7f5ea70bcfb77047f306ef905f9"
+    },
+    {
+      "file": "multi-archer-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/multi-archer-tower/normal/level-1.png",
+      "bytes": 6682,
+      "sha256": "e4702d6fed7badfddb71baad5f519c1b1cad1cf7abfeed095faf660426506892"
+    },
+    {
+      "file": "multi-archer-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/multi-archer-tower/normal/level-2.png",
+      "bytes": 7592,
+      "sha256": "44792b79e6d138165b4f9f341ba5334f1146d59d29e4ef2bb891aa89e84312d5"
+    },
+    {
+      "file": "multi-archer-tower-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/multi-archer-tower/normal/level-3.png",
+      "bytes": 6786,
+      "sha256": "6bf41d1f662cf0c38b365ba4a973d78c69b1b3a458365620b6e586eb18b19f73"
+    },
+    {
+      "file": "multi-archer-tower-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/multi-archer-tower/normal/level-4.png",
+      "bytes": 7398,
+      "sha256": "566dc9eaf631adaaaff66234308f08e2ce1a16c7235cf1a08a1f7e39a9461dd4"
+    },
+    {
+      "file": "multi-gear-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/multi-gear-tower/normal/level-1.png",
+      "bytes": 5648,
+      "sha256": "d646dfc1aeccba79d93a8123002f53bbe2cfe0b3ad7167ab966b9bf119c3c678"
+    },
+    {
+      "file": "multi-gear-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/multi-gear-tower/normal/level-2.png",
+      "bytes": 5776,
+      "sha256": "7f5629d8b4cc5bff9ab99bda7a54d7f7dac67ce12410ec3523fedf34968f47b8"
+    },
+    {
+      "file": "multi-gear-tower-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/multi-gear-tower/normal/level-3.png",
+      "bytes": 5774,
+      "sha256": "774fec3c44e57a61eed4c1fcb075485ebc12641cb5456e7d143d81d95b301053"
+    },
+    {
+      "file": "revenge-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/revenge-tower/normal/level-1.png",
+      "bytes": 6816,
+      "sha256": "608e0fd702cb5fbaa0d96f5913e60e3b2486afa21989cac97cc880dc0969cf29"
+    },
+    {
+      "file": "revenge-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/revenge-tower/normal/level-2.png",
+      "bytes": 6866,
+      "sha256": "72d10a4df74c90b8b0e1d15d537654a694f7f3cc8446b6fa8e0129087cd1c68d"
+    },
+    {
+      "file": "ricochet-cannon-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/ricochet-cannon/normal/level-1.png",
+      "bytes": 7462,
+      "sha256": "212716d7fce447e798d69f5790bf4e6b0efde04fc20f080f6f531cc0e85dfeb0"
+    },
+    {
+      "file": "ricochet-cannon-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/ricochet-cannon/normal/level-2.png",
+      "bytes": 8254,
+      "sha256": "6ad6a3d584480f2bfe6f6720992eac65e0c3f4946904c14239fa3f84a71feea8"
+    },
+    {
+      "file": "ricochet-cannon-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/ricochet-cannon/normal/level-3.png",
+      "bytes": 6232,
+      "sha256": "b4d9686c3c2b80c41d8414f6818bf5d52eec508d16106d0aa5e601f30f746f69"
+    },
+    {
+      "file": "ricochet-cannon-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/ricochet-cannon/normal/level-4.png",
+      "bytes": 7256,
+      "sha256": "7db1d1722e08467db273eb391e54919bc32af5f1927dc5169041a56bf66445b9"
+    },
+    {
+      "file": "scattershot-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/scattershot/normal/level-1.png",
+      "bytes": 7538,
+      "sha256": "35427bae4dae9abdbc8359e5a93673ffc7c97fdbfeaf8e8317e29a4d44eca207"
+    },
+    {
+      "file": "scattershot-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/scattershot/normal/level-2.png",
+      "bytes": 8188,
+      "sha256": "14176bbee9342b38b8ed76d66d19bc0742ea0cb01dda0c4957b555019f766b0c"
+    },
+    {
+      "file": "scattershot-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/scattershot/normal/level-3.png",
+      "bytes": 7672,
+      "sha256": "5bbb96384b77e27c4ee467db6acd747147dbceca58479a5b76341d4227fd8f1d"
+    },
+    {
+      "file": "scattershot-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/scattershot/normal/level-4.png",
+      "bytes": 7534,
+      "sha256": "f7d8fa3ee7bb6c9daefd04135ee62b74d391be55a8d2ba3b310605afc9e21145"
+    },
+    {
+      "file": "scattershot-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/scattershot/normal/level-5.png",
+      "bytes": 6836,
+      "sha256": "b6d41e0d32b4f23b918363e5bd34b38be70cd8e50fab929a63ff5025bd880c16"
+    },
+    {
+      "file": "scattershot-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/scattershot/normal/level-6.png",
+      "bytes": 6816,
+      "sha256": "c91b0460d848c01888e94ee7cccf8bb2bf4456ee1f7b6956752fe7a1a0fa0aca"
+    },
+    {
+      "file": "scattershot-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/scattershot/normal/level-7.png",
+      "bytes": 5052,
+      "sha256": "6821c7753029c329944c07e7ea4a46ce946b73e7dc06e06a8dbb32751c505319"
+    },
+    {
+      "file": "spell-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/spell-tower/normal/level-1.png",
+      "bytes": 5794,
+      "sha256": "7a1070f72c236110d2f417c1745bf16e591cfc377ed39c3be36039fca2c9e2bc"
+    },
+    {
+      "file": "spell-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/spell-tower/normal/level-2.png",
+      "bytes": 6170,
+      "sha256": "2fae891803e7dc4a7100a7e201b42cbec174034039e353bffe07653c869135f9"
+    },
+    {
+      "file": "spell-tower-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/spell-tower/normal/level-3.png",
+      "bytes": 6342,
+      "sha256": "2908919e6a1f8005fc89d1cad54208df7b4a5295d4d9544edb0ee8ad3535b453"
+    },
+    {
+      "file": "spell-tower-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/spell-tower/normal/level-4.png",
+      "bytes": 6310,
+      "sha256": "a4f63cda4e112d5d93f38bc2ec18684438578acaf1611756609da744a37539c1"
+    },
+    {
+      "file": "super-wizard-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/super-wizard-tower/normal/level-1.png",
+      "bytes": 4586,
+      "sha256": "704dbe8faab9b32212273afb3056481cfccf956e82ca25710b8c60abba163bfd"
+    },
+    {
+      "file": "super-wizard-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/clan-capital/defenses/super-wizard-tower/normal/level-2.png",
+      "bytes": 4662,
+      "sha256": "3122791030b0a253139c46ba60a77dbeb686e4a4df962a2cb7ec4e21985b4138"
+    },
+    {
+      "file": "wizard-tower-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-1.png",
+      "bytes": 4338,
+      "sha256": "ba61874176bfe9408fad7666cb2301a485fbe678a44e70078f8e3031432422f8"
+    },
+    {
+      "file": "wizard-tower-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-2.png",
+      "bytes": 4616,
+      "sha256": "f6a84e7ff525317a2ca1a977d927a812b9e2215284494bba0de3ec08006e9ba6"
+    },
+    {
+      "file": "wizard-tower-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-3.png",
+      "bytes": 4664,
+      "sha256": "7bac9f94e0855370c963d9b8f909443b4665dd7d0496930cb6ac8db09f9b15a9"
+    },
+    {
+      "file": "wizard-tower-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-4.png",
+      "bytes": 4976,
+      "sha256": "01c3bdd33a669c394fb0d8db0e09dddcb005316f13a0ed88967bde8701ef8d97"
+    },
+    {
+      "file": "wizard-tower-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-5.png",
+      "bytes": 4710,
+      "sha256": "e60ff5f6d1cbedcf31e8482f284d7ab3566136db5f8f8901d829c250db6e1dfc"
+    },
+    {
+      "file": "wizard-tower-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-6.png",
+      "bytes": 4796,
+      "sha256": "7844f8ad9fe15cc2ac2d46f0c7a9e3de5bd0eeb8e3d6620ab584b3eedb2e9cd1"
+    },
+    {
+      "file": "wizard-tower-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-7.png",
+      "bytes": 5442,
+      "sha256": "ae58391384ecebd8b6b69bdaf5f4d1cf96dc94d60864ff7977d75c39cf4535b0"
+    },
+    {
+      "file": "wizard-tower-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-8.png",
+      "bytes": 5532,
+      "sha256": "d648898fda4445b0bd5cf0780ad8b8899c2913b66663659206b60e06a2b932a8"
+    },
+    {
+      "file": "wizard-tower-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-9.png",
+      "bytes": 6144,
+      "sha256": "fd8f757f2287aee4c72266af0a496cb04a173e76cdfa4e2ce719d635c43be208"
+    },
+    {
+      "file": "wizard-tower-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-10.png",
+      "bytes": 6394,
+      "sha256": "a80277a09ee34f9d0b96324e22e9b974467cba71327fc39ae59b333d95db8a05"
+    },
+    {
+      "file": "wizard-tower-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-11.png",
+      "bytes": 6876,
+      "sha256": "b8d34785e0509eb1150fa264fceb7360662cfc399003ce4bc71e8bdcb3373a4b"
+    },
+    {
+      "file": "wizard-tower-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-12.png",
+      "bytes": 5908,
+      "sha256": "e010d47ddddc7f4749a0f44593c3478f98b3ad11588e9f8c3c146b7fc80b4b87"
+    },
+    {
+      "file": "wizard-tower-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-13.png",
+      "bytes": 6260,
+      "sha256": "37f01e0956767034e851e9e126c23f6e2773005c17e79672ed3a8009329147d0"
+    },
+    {
+      "file": "wizard-tower-14.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-14.png",
+      "bytes": 6240,
+      "sha256": "d4ca8f921576f0e6da42f165d9455e7bc165bd6c5ac41a171dfba9449b851b2c"
+    },
+    {
+      "file": "wizard-tower-15.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-15.png",
+      "bytes": 6388,
+      "sha256": "2fc761a8d0d6a188f256ee570dd4ce6db325ff022cb839d2b3a1ff4bbb9f3b9f"
+    },
+    {
+      "file": "wizard-tower-16.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-16.png",
+      "bytes": 7016,
+      "sha256": "0cafce478949d3bfb0f9b8f1cd84b39a277ea3be7feac2a87dbd4b2ec660d123"
+    },
+    {
+      "file": "wizard-tower-17.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/wizard-tower/normal/level-17.png",
+      "bytes": 6276,
+      "sha256": "669e93d352325121a6676d0f7ffb1c81dee0e9e4a3323676e452d741cff19653"
+    },
+    {
+      "file": "x-bow-1.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/x-bow/normal/level-1.png",
+      "bytes": 5800,
+      "sha256": "9ed4e425d6fc427676acb0c395e939855cd557450c587806c8f8d61096c09307"
+    },
+    {
+      "file": "x-bow-2.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/x-bow/normal/level-2.png",
+      "bytes": 6258,
+      "sha256": "779341557f7bb057cf2bf99f83108066e31fa70c54102107a0fdeca7571f49ec"
+    },
+    {
+      "file": "x-bow-3.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/x-bow/normal/level-3.png",
+      "bytes": 6300,
+      "sha256": "123f01c02cd7175b7b9a6407239d4bdd17fa597044043b6821b1de17f75eb37f"
+    },
+    {
+      "file": "x-bow-4.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/x-bow/normal/level-4.png",
+      "bytes": 6580,
+      "sha256": "feaad6c75786a662663a0759b6c5e81756b68ec4d6998f11f0ca9e333f951715"
+    },
+    {
+      "file": "x-bow-5.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/builder/defenses/x-bow/normal/level-5.png",
+      "bytes": 6976,
+      "sha256": "1b8462b7cf742033c5b27bb3469e8ee69379385f0110c1f498a8d6959590093b"
+    },
+    {
+      "file": "x-bow-6.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-6.png",
+      "bytes": 7008,
+      "sha256": "1f28061791bfcc43528ac866da07fb838e6ae37db7d3615789730f9de7531f1d"
+    },
+    {
+      "file": "x-bow-7.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-7.png",
+      "bytes": 7448,
+      "sha256": "7aae0baf62a25bd28f25eb6457e74c7c379182941c5fc99b64eb8cb25d084036"
+    },
+    {
+      "file": "x-bow-8.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-8.png",
+      "bytes": 7710,
+      "sha256": "49cfb00073d1daf92b915f8bb5b10641120f75e14a92ca489fb9581c1d77b44a"
+    },
+    {
+      "file": "x-bow-9.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-9.png",
+      "bytes": 7666,
+      "sha256": "33945a2a377875f036074b268e5301ca6b1bbb9d18cc1fc2501304786d84f1e5"
+    },
+    {
+      "file": "x-bow-10.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-10.png",
+      "bytes": 6944,
+      "sha256": "5267d3a1f24c9aa76ac32c513508c33c638d0f6e2080a1f0214b26de9092bd78"
+    },
+    {
+      "file": "x-bow-11.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-11.png",
+      "bytes": 7058,
+      "sha256": "22e253be275e6aa488279db5b994927f0e4ee4e4e6889d2d8fa3ec5bb60ac85e"
+    },
+    {
+      "file": "x-bow-12.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-12.png",
+      "bytes": 7314,
+      "sha256": "df469cafc4d7ee2303b34af463227a2bf98b49933213816c2147a32701beb799"
+    },
+    {
+      "file": "x-bow-13.webp",
+      "source": "https://raw.githubusercontent.com/chiefpansancolt/clash-of-clans-data/431f8da169ba93b730d182dfec0ca4820998db0d/images/home/defenses/x-bow/normal/level-13.png",
+      "bytes": 7118,
+      "sha256": "0f5a85ad5252591cc76d94ebd5296ecda74c254a03340fb2faf49e92c095c223"
+    },
+    {
+      "file": "fireball.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/4/49/Fireball_Equipment.png/revision/latest/scale-to-width-down/200?cb=20240311163556",
+      "bytes": 6030,
+      "sha256": "2fea7c7fc3866206583e7ef5f11fbc31ac94132339d0bac55ccd61eb56dbbad4"
+    }
+  ]
+}

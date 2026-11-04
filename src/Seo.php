@@ -259,7 +259,7 @@ final class Seo
         }
         $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
         if ($group === 'pages' && $page === 1) {
-            foreach (['/','/guides','/features'] as $path) $xml .= $this->xmlEntry($path);
+            foreach (['/','/guides','/features','/tools/zapquake'] as $path) $xml .= $this->xmlEntry($path);
             foreach (SeoFeatures::all('en') as $slug=>$_) $xml .= $this->xmlEntry('/features/'.$slug,[],SeoFeatures::UPDATED);
             foreach ($this->profiles() as $kind=>$profiles) if ($profiles) $xml .= $this->xmlEntry('/explore/'.$kind);
         }

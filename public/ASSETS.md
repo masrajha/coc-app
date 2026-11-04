@@ -22,6 +22,7 @@ public/
     battle-log/                Trofi untuk battle log
     optimized/                 Gambar turunan untuk tampilan web
     backgrounds/, hero/, ...   Artwork yang sudah dikelompokkan
+  assets/data/zapquake/        Dataset statistik berversi, manifest, dan lisensi sumber
   fonts/                       Font kartu share server
   battle-log-style/            Halaman demo/iframe dan font game
 ```
@@ -37,6 +38,8 @@ public/
 ## Deployment
 
 Unggah direktori `public` beserta perubahan backend di `src` dalam rilis yang sama. Sertakan library lokal ekspor gambar beserta lisensinya.
+
+Dataset Zapquake memakai `assets/data/zapquake/<version>/dataset.json` dan LICENSE. Unggah direktori versi lengkap sebelum memperbarui `manifest.json`; pertahankan versi lama untuk link/rollback. Petunjuk pengelolaan tersedia di `ZAPQUAKE_DATA_AUDIT.md` pada root proyek. Statistik referensi dipisahkan dari mesin kalkulator JavaScript. Dukungan equipment, modifier, serta worker didokumentasikan dalam `ZAPQUAKE_ADVANCED.md`.
 
 Library ekspor wajib tersedia di `/js/vendor/html-to-image/html-to-image.js` (file lokal: `public/js/vendor/html-to-image/html-to-image.js`). Jika muncul pesan library tidak tersedia, periksa URL tersebut: respons harus JavaScript dengan status 200. Sertakan juga `LICENSE` dari folder yang sama. Aturan Git `/vendor/` hanya mengabaikan dependensi PHP di root; jangan mengubahnya menjadi `vendor/` karena akan ikut mengabaikan library publik ini.
 

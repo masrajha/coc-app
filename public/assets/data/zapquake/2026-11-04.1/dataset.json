@@ -1,0 +1,1742 @@
+{
+    "schemaVersion": 1,
+    "dataVersion": "2026-11-04.1",
+    "normalizerVersion": "1.0.0",
+    "engineVersion": null,
+    "effectiveAt": null,
+    "reviewedAt": "2026-11-04",
+    "status": "reference-data-only",
+    "calculationReady": false,
+    "source": {
+        "repository": "https://github.com/chiefpansancolt/clash-of-clans-data",
+        "revision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+        "packageVersion": "0.19.1",
+        "license": "MIT",
+        "files": [
+            {
+                "path": "data/home/defenses/air-defense.json",
+                "sha256": "ca7edd8f9be41d048bf1436bb0432e5351e9c9fc1e57423598b97a481548fab0",
+                "bytes": 10228
+            },
+            {
+                "path": "data/home/defenses/air-sweeper.json",
+                "sha256": "02eb2b4a724df714df5b41f02a476d0444f6e16d6ab52cd0261c1e1fc8bbb5f6",
+                "bytes": 4507
+            },
+            {
+                "path": "data/home/defenses/archer-tower.json",
+                "sha256": "1ad5f8e83cf9f7ed515bd79927ba0202359c79c5ce5e6cb72a8e5f18856eaaf8",
+                "bytes": 15681
+            },
+            {
+                "path": "data/home/defenses/bomb-tower.json",
+                "sha256": "7d863a85ffab3c3d12ffe0081aee094df4ee91592612b0e7b9727e53ee946c6c",
+                "bytes": 8866
+            },
+            {
+                "path": "data/home/defenses/builders-hut.json",
+                "sha256": "76a236725b49689600db9968d2eb46647e58277f0a4039683829c7c318685d4a",
+                "bytes": 8483
+            },
+            {
+                "path": "data/home/defenses/cannon.json",
+                "sha256": "a2411a77327f18ad30018b5384e34ee6c03b7a8f0e3429381f69de1cd0919aa7",
+                "bytes": 16191
+            },
+            {
+                "path": "data/home/defenses/crafting-station.json",
+                "sha256": "ebb4a9da4aa0b7544146abc893acf93baf364903548ecfce895749b34c13066d",
+                "bytes": 913
+            },
+            {
+                "path": "data/home/defenses/eagle-artillery.json",
+                "sha256": "5951e44f6930573ca8397c2fc3a14dc04a33a0c19cc22848704ddd4b7ffb478a",
+                "bytes": 6014
+            },
+            {
+                "path": "data/home/defenses/firespitter.json",
+                "sha256": "618e272a8e964cd777963733fc313e19c8f5ccc30b1d43978eca47830d24f8c4",
+                "bytes": 3255
+            },
+            {
+                "path": "data/home/defenses/hidden-tesla.json",
+                "sha256": "b7e470a01643866c5e9b605c8b628fbfacca78d3446f744ac0385600bce6ecbb",
+                "bytes": 10667
+            },
+            {
+                "path": "data/home/defenses/inferno-tower.json",
+                "sha256": "8e541fe624f16e143f0c9152b5358075e1f832264c05cf12045e99be0f3992c5",
+                "bytes": 14789
+            },
+            {
+                "path": "data/home/defenses/monolith.json",
+                "sha256": "abd9ce5602a5a409a0239e307be285218693b7e10ac8effbcee58213840c18a2",
+                "bytes": 4642
+            },
+            {
+                "path": "data/home/defenses/mortar.json",
+                "sha256": "a2db6c2b922a74cd0729a5555f18c7d1a49377673428fdb827fa275a37e87985",
+                "bytes": 14517
+            },
+            {
+                "path": "data/home/defenses/multi-archer-tower.json",
+                "sha256": "6f742f1ae2e10e47ce713ce521f1c366891faf5fdb53e47b210bbe2dafef4356",
+                "bytes": 3718
+            },
+            {
+                "path": "data/home/defenses/multi-gear-tower.json",
+                "sha256": "db6fa96f6cc308dfc649b6b57b343cfbac9f2eb30004de48184447cb0d7450a3",
+                "bytes": 4250
+            },
+            {
+                "path": "data/home/defenses/revenge-tower.json",
+                "sha256": "5044ff5a8dd76a96d3ff3d3fd3184957e2ebd48ca397a9752f9000e5228e2264",
+                "bytes": 5129
+            },
+            {
+                "path": "data/home/defenses/ricochet-cannon.json",
+                "sha256": "5fcd7f1bea5240c00453b797d6079379fb55887e640e832d84d40842596e1eda",
+                "bytes": 3984
+            },
+            {
+                "path": "data/home/defenses/scattershot.json",
+                "sha256": "42c85ce18c5558d8412eca95b3de144efe760911966ed34df540fa2c7f6ca154",
+                "bytes": 7027
+            },
+            {
+                "path": "data/home/defenses/spell-tower.json",
+                "sha256": "f36bf54d3c131f1d40de47009668a010df0ee2deb5e985344278ddf20ea2ef62",
+                "bytes": 3608
+            },
+            {
+                "path": "data/home/defenses/super-wizard-tower.json",
+                "sha256": "04974cac945eeaf41c19e337ce54fd3d7a08ba918caa25cb7561dc0baffb0c40",
+                "bytes": 2792
+            },
+            {
+                "path": "data/home/defenses/wizard-tower.json",
+                "sha256": "46198244e1a42c99b8e2278e09e43f1075345242e24586ed628304d662eb27e3",
+                "bytes": 9672
+            },
+            {
+                "path": "data/home/defenses/x-bow.json",
+                "sha256": "da9556ea3999e7446aa7e12e604a47faca759619d5d45fc8cd6813c15cfa8586",
+                "bytes": 12535
+            },
+            {
+                "path": "data/home/spells/lightning-spell.json",
+                "sha256": "0198a8e18dcbdc1db205f4f380ef5fa202c0e1a49252fa15e57b7b606c55026e",
+                "bytes": 4471
+            },
+            {
+                "path": "data/home/spells/earthquake-spell.json",
+                "sha256": "280f5e4e22c8b9b23e7ac7fcc75662fc29fde2e178808ce90231161515d610d4",
+                "bytes": 3500
+            },
+            {
+                "path": "LICENSE",
+                "sha256": "c2e299582ddd6374469f44d154203672c6586aaebf31e21c71f67b9a6423f4a3",
+                "bytes": 1074
+            },
+            {
+                "path": "package.json",
+                "sha256": "5c37e8e67508da56c20f9c1b37c5a6c3f1bbe3b91ddc4ac30f269b0a85d120f6",
+                "bytes": 2059
+            }
+        ]
+    },
+    "coverage": {
+        "base": "home",
+        "buildingScope": "standard-defenses",
+        "excludedBuildings": {
+            "crafting-station": "Crafted defense/module mechanics are not covered by the station HP row."
+        },
+        "equipment": "deferred-Z5",
+        "modifiers": "not-verified",
+        "supercharge": "reference-only-unverified-base-binding"
+    },
+    "rules": {
+        "targetEligibility": null,
+        "earthquakeRepeatedHits": null,
+        "rounding": null,
+        "stacking": null
+    },
+    "buildings": [
+        {
+            "id": "air-defense",
+            "dataId": 1000012,
+            "name": "Air Defense",
+            "sourceFile": "data/home/defenses/air-defense.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 4,
+                    "hitpoints": 800
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 4,
+                    "hitpoints": 850
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 5,
+                    "hitpoints": 900
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 6,
+                    "hitpoints": 950
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 7,
+                    "hitpoints": 1000
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 8,
+                    "hitpoints": 1050
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 9,
+                    "hitpoints": 1100
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 10,
+                    "hitpoints": 1210
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 11,
+                    "hitpoints": 1300
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 12,
+                    "hitpoints": 1400
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 13,
+                    "hitpoints": 1500
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 14,
+                    "hitpoints": 1650
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 15,
+                    "hitpoints": 1750
+                },
+                {
+                    "level": 14,
+                    "townHallRequired": 16,
+                    "hitpoints": 1850
+                },
+                {
+                    "level": 15,
+                    "townHallRequired": 17,
+                    "hitpoints": 1950
+                },
+                {
+                    "level": 16,
+                    "townHallRequired": 18,
+                    "hitpoints": 2000
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 2000,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 2000,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "air-sweeper",
+            "dataId": 1000028,
+            "name": "Air Sweeper",
+            "sourceFile": "data/home/defenses/air-sweeper.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 6,
+                    "hitpoints": 750
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 6,
+                    "hitpoints": 800
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 7,
+                    "hitpoints": 850
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 8,
+                    "hitpoints": 900
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 9,
+                    "hitpoints": 950
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 10,
+                    "hitpoints": 1000
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 11,
+                    "hitpoints": 1050
+                }
+            ],
+            "supercharges": []
+        },
+        {
+            "id": "archer-tower",
+            "dataId": 1000009,
+            "name": "Archer Tower",
+            "sourceFile": "data/home/defenses/archer-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 2,
+                    "hitpoints": 380
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 2,
+                    "hitpoints": 420
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 3,
+                    "hitpoints": 460
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 4,
+                    "hitpoints": 500
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 5,
+                    "hitpoints": 540
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 5,
+                    "hitpoints": 580
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 6,
+                    "hitpoints": 630
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 7,
+                    "hitpoints": 690
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 8,
+                    "hitpoints": 750
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 8,
+                    "hitpoints": 810
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 9,
+                    "hitpoints": 890
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 10,
+                    "hitpoints": 970
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 10,
+                    "hitpoints": 1050
+                },
+                {
+                    "level": 14,
+                    "townHallRequired": 11,
+                    "hitpoints": 1130
+                },
+                {
+                    "level": 15,
+                    "townHallRequired": 11,
+                    "hitpoints": 1230
+                },
+                {
+                    "level": 16,
+                    "townHallRequired": 12,
+                    "hitpoints": 1310
+                },
+                {
+                    "level": 17,
+                    "townHallRequired": 12,
+                    "hitpoints": 1390
+                },
+                {
+                    "level": 18,
+                    "townHallRequired": 13,
+                    "hitpoints": 1510
+                },
+                {
+                    "level": 19,
+                    "townHallRequired": 13,
+                    "hitpoints": 1600
+                },
+                {
+                    "level": 20,
+                    "townHallRequired": 14,
+                    "hitpoints": 1700
+                },
+                {
+                    "level": 21,
+                    "townHallRequired": 15,
+                    "hitpoints": 1800
+                }
+            ],
+            "supercharges": []
+        },
+        {
+            "id": "bomb-tower",
+            "dataId": 1000032,
+            "name": "Bomb Tower",
+            "sourceFile": "data/home/defenses/bomb-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 8,
+                    "hitpoints": 650
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 8,
+                    "hitpoints": 700
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 9,
+                    "hitpoints": 750
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 10,
+                    "hitpoints": 850
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 11,
+                    "hitpoints": 1050
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 11,
+                    "hitpoints": 1300
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 12,
+                    "hitpoints": 1600
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 13,
+                    "hitpoints": 1900
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 14,
+                    "hitpoints": 2300
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 15,
+                    "hitpoints": 2500
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 16,
+                    "hitpoints": 2700
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 17,
+                    "hitpoints": 2900
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 18,
+                    "hitpoints": 3050
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 3050,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 3150,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "builders-hut",
+            "dataId": 1000015,
+            "name": "Builder's Hut",
+            "sourceFile": "data/home/defenses/builders-hut.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 1,
+                    "hitpoints": 250
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 14,
+                    "hitpoints": 1000
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 14,
+                    "hitpoints": 1300
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 14,
+                    "hitpoints": 1600
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 15,
+                    "hitpoints": 1800
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 16,
+                    "hitpoints": 1900
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 17,
+                    "hitpoints": 2000
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 18,
+                    "hitpoints": 2100
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 2100,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 2150,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "cannon",
+            "dataId": 1000008,
+            "name": "Cannon",
+            "sourceFile": "data/home/defenses/cannon.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 1,
+                    "hitpoints": 300
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 1,
+                    "hitpoints": 360
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 2,
+                    "hitpoints": 420
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 3,
+                    "hitpoints": 500
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 4,
+                    "hitpoints": 600
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 5,
+                    "hitpoints": 660
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 6,
+                    "hitpoints": 730
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 7,
+                    "hitpoints": 800
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 8,
+                    "hitpoints": 880
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 8,
+                    "hitpoints": 960
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 9,
+                    "hitpoints": 1060
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 10,
+                    "hitpoints": 1160
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 10,
+                    "hitpoints": 1260
+                },
+                {
+                    "level": 14,
+                    "townHallRequired": 11,
+                    "hitpoints": 1380
+                },
+                {
+                    "level": 15,
+                    "townHallRequired": 11,
+                    "hitpoints": 1500
+                },
+                {
+                    "level": 16,
+                    "townHallRequired": 12,
+                    "hitpoints": 1620
+                },
+                {
+                    "level": 17,
+                    "townHallRequired": 12,
+                    "hitpoints": 1740
+                },
+                {
+                    "level": 18,
+                    "townHallRequired": 13,
+                    "hitpoints": 1870
+                },
+                {
+                    "level": 19,
+                    "townHallRequired": 13,
+                    "hitpoints": 2000
+                },
+                {
+                    "level": 20,
+                    "townHallRequired": 14,
+                    "hitpoints": 2150
+                },
+                {
+                    "level": 21,
+                    "townHallRequired": 15,
+                    "hitpoints": 2250
+                }
+            ],
+            "supercharges": []
+        },
+        {
+            "id": "eagle-artillery",
+            "dataId": 1000031,
+            "name": "Eagle Artillery",
+            "sourceFile": "data/home/defenses/eagle-artillery.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 11,
+                    "hitpoints": 4000
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 11,
+                    "hitpoints": 4400
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 12,
+                    "hitpoints": 4800
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 13,
+                    "hitpoints": 5200
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 14,
+                    "hitpoints": 5600
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 15,
+                    "hitpoints": 5900
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 16,
+                    "hitpoints": 6200
+                }
+            ],
+            "supercharges": []
+        },
+        {
+            "id": "firespitter",
+            "dataId": 1000089,
+            "name": "Firespitter",
+            "sourceFile": "data/home/defenses/firespitter.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 17,
+                    "hitpoints": 4500
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 17,
+                    "hitpoints": 5000
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 18,
+                    "hitpoints": 5300
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 5300,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 5550,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "hidden-tesla",
+            "dataId": 1000019,
+            "name": "Hidden Tesla",
+            "sourceFile": "data/home/defenses/hidden-tesla.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 7,
+                    "hitpoints": 600
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 7,
+                    "hitpoints": 630
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 7,
+                    "hitpoints": 660
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 8,
+                    "hitpoints": 690
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 8,
+                    "hitpoints": 730
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 8,
+                    "hitpoints": 770
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 9,
+                    "hitpoints": 810
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 10,
+                    "hitpoints": 850
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 11,
+                    "hitpoints": 900
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 12,
+                    "hitpoints": 980
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 13,
+                    "hitpoints": 1100
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 13,
+                    "hitpoints": 1200
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 14,
+                    "hitpoints": 1350
+                },
+                {
+                    "level": 14,
+                    "townHallRequired": 15,
+                    "hitpoints": 1450
+                },
+                {
+                    "level": 15,
+                    "townHallRequired": 16,
+                    "hitpoints": 1550
+                },
+                {
+                    "level": 16,
+                    "townHallRequired": 17,
+                    "hitpoints": 1650
+                },
+                {
+                    "level": 17,
+                    "townHallRequired": 18,
+                    "hitpoints": 1750
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 1750,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 1800,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "inferno-tower",
+            "dataId": 1000027,
+            "name": "Inferno Tower",
+            "sourceFile": "data/home/defenses/inferno-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 10,
+                    "hitpoints": 1500
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 10,
+                    "hitpoints": 1800
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 10,
+                    "hitpoints": 2100
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 11,
+                    "hitpoints": 2400
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 11,
+                    "hitpoints": 2700
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 12,
+                    "hitpoints": 3000
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 13,
+                    "hitpoints": 3300
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 14,
+                    "hitpoints": 3700
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 15,
+                    "hitpoints": 4000
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 16,
+                    "hitpoints": 4400
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 17,
+                    "hitpoints": 4800
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 18,
+                    "hitpoints": 5100
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 5100,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 5300,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "monolith",
+            "dataId": 1000077,
+            "name": "Monolith",
+            "sourceFile": "data/home/defenses/monolith.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 15,
+                    "hitpoints": 4747
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 15,
+                    "hitpoints": 5050
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 16,
+                    "hitpoints": 5353
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 17,
+                    "hitpoints": 5656
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 18,
+                    "hitpoints": 5959
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 5959,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 6161,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "mortar",
+            "dataId": 1000013,
+            "name": "Mortar",
+            "sourceFile": "data/home/defenses/mortar.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 3,
+                    "hitpoints": 400
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 4,
+                    "hitpoints": 450
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 5,
+                    "hitpoints": 500
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 6,
+                    "hitpoints": 550
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 7,
+                    "hitpoints": 600
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 8,
+                    "hitpoints": 650
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 9,
+                    "hitpoints": 700
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 10,
+                    "hitpoints": 800
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 11,
+                    "hitpoints": 950
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 11,
+                    "hitpoints": 1100
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 12,
+                    "hitpoints": 1300
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 12,
+                    "hitpoints": 1500
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 13,
+                    "hitpoints": 1700
+                },
+                {
+                    "level": 14,
+                    "townHallRequired": 14,
+                    "hitpoints": 1950
+                },
+                {
+                    "level": 15,
+                    "townHallRequired": 15,
+                    "hitpoints": 2150
+                },
+                {
+                    "level": 16,
+                    "townHallRequired": 16,
+                    "hitpoints": 2300
+                },
+                {
+                    "level": 17,
+                    "townHallRequired": 17,
+                    "hitpoints": 2450
+                },
+                {
+                    "level": 18,
+                    "townHallRequired": 18,
+                    "hitpoints": 2550
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 2550,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 2625,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "multi-archer-tower",
+            "dataId": 1000084,
+            "name": "Multi-Archer Tower",
+            "sourceFile": "data/home/defenses/multi-archer-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 16,
+                    "hitpoints": 5000
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 16,
+                    "hitpoints": 5200
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 17,
+                    "hitpoints": 5400
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 18,
+                    "hitpoints": 5500
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 5500,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 5600,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "multi-gear-tower",
+            "dataId": 1000079,
+            "name": "Multi-Gear Tower",
+            "sourceFile": "data/home/defenses/multi-gear-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 17,
+                    "hitpoints": 4000
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 17,
+                    "hitpoints": 4200
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 18,
+                    "hitpoints": 4350
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 4350,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 4500,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "revenge-tower",
+            "dataId": 1000086,
+            "name": "Revenge Tower",
+            "sourceFile": "data/home/defenses/revenge-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 18,
+                    "hitpoints": 5800
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 18,
+                    "hitpoints": 6200
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 6200,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 6300,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "ricochet-cannon",
+            "dataId": 1000085,
+            "name": "Ricochet Cannon",
+            "sourceFile": "data/home/defenses/ricochet-cannon.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 16,
+                    "hitpoints": 5400
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 16,
+                    "hitpoints": 5700
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 17,
+                    "hitpoints": 6000
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 18,
+                    "hitpoints": 6100
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 6100,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 6250,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "scattershot",
+            "dataId": 1000067,
+            "name": "Scattershot",
+            "sourceFile": "data/home/defenses/scattershot.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 13,
+                    "hitpoints": 3600
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 13,
+                    "hitpoints": 4200
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 14,
+                    "hitpoints": 4800
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 15,
+                    "hitpoints": 5100
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 16,
+                    "hitpoints": 5410
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 17,
+                    "hitpoints": 5600
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 18,
+                    "hitpoints": 5800
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 5800,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 5950,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "spell-tower",
+            "dataId": 1000072,
+            "name": "Spell Tower",
+            "sourceFile": "data/home/defenses/spell-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 15,
+                    "hitpoints": 2500
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 15,
+                    "hitpoints": 2800
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 15,
+                    "hitpoints": 3100
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 17,
+                    "hitpoints": 3200
+                }
+            ],
+            "supercharges": []
+        },
+        {
+            "id": "super-wizard-tower",
+            "dataId": 1000102,
+            "name": "Super Wizard Tower",
+            "sourceFile": "data/home/defenses/super-wizard-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 18,
+                    "hitpoints": 6000
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 18,
+                    "hitpoints": 6300
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 6300,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 6450,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        },
+        {
+            "id": "wizard-tower",
+            "dataId": 1000011,
+            "name": "Wizard Tower",
+            "sourceFile": "data/home/defenses/wizard-tower.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 5,
+                    "hitpoints": 620
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 5,
+                    "hitpoints": 650
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 6,
+                    "hitpoints": 680
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 7,
+                    "hitpoints": 730
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 8,
+                    "hitpoints": 840
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 8,
+                    "hitpoints": 960
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 9,
+                    "hitpoints": 1200
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 10,
+                    "hitpoints": 1440
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 10,
+                    "hitpoints": 1600
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 11,
+                    "hitpoints": 1900
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 12,
+                    "hitpoints": 2120
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 13,
+                    "hitpoints": 2240
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 13,
+                    "hitpoints": 2500
+                },
+                {
+                    "level": 14,
+                    "townHallRequired": 14,
+                    "hitpoints": 2800
+                },
+                {
+                    "level": 15,
+                    "townHallRequired": 15,
+                    "hitpoints": 3000
+                },
+                {
+                    "level": 16,
+                    "townHallRequired": 16,
+                    "hitpoints": 3150
+                },
+                {
+                    "level": 17,
+                    "townHallRequired": 17,
+                    "hitpoints": 3300
+                }
+            ],
+            "supercharges": []
+        },
+        {
+            "id": "x-bow",
+            "dataId": 1000021,
+            "name": "X-Bow",
+            "sourceFile": "data/home/defenses/x-bow.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 9,
+                    "hitpoints": 1500
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 9,
+                    "hitpoints": 1900
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 9,
+                    "hitpoints": 2300
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 10,
+                    "hitpoints": 2700
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 11,
+                    "hitpoints": 3100
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 12,
+                    "hitpoints": 3400
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 13,
+                    "hitpoints": 3700
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 13,
+                    "hitpoints": 4000
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 14,
+                    "hitpoints": 4200
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 15,
+                    "hitpoints": 4400
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 16,
+                    "hitpoints": 4600
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 17,
+                    "hitpoints": 4800
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 18,
+                    "hitpoints": 5000
+                }
+            ],
+            "supercharges": [
+                {
+                    "step": 1,
+                    "sourceHitpoints": 5000,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                },
+                {
+                    "step": 2,
+                    "sourceHitpoints": 5100,
+                    "townHallRequired": 18,
+                    "baseLevel": null,
+                    "status": "unverified-base-binding"
+                }
+            ]
+        }
+    ],
+    "spells": [
+        {
+            "id": "earthquake-spell",
+            "dataId": 26000010,
+            "name": "Earthquake Spell",
+            "sourceFile": "data/home/spells/earthquake-spell.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 8,
+                    "buildingDamagePercent": 14.5,
+                    "troopDamagePercent": null,
+                    "radius": 3.5
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 8,
+                    "buildingDamagePercent": 17,
+                    "troopDamagePercent": null,
+                    "radius": 3.8
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 9,
+                    "buildingDamagePercent": 21,
+                    "troopDamagePercent": null,
+                    "radius": 4.1
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 10,
+                    "buildingDamagePercent": 25,
+                    "troopDamagePercent": null,
+                    "radius": 4.4
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 11,
+                    "buildingDamagePercent": 29,
+                    "troopDamagePercent": null,
+                    "radius": 4.7
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 14,
+                    "buildingDamagePercent": 29,
+                    "troopDamagePercent": 5,
+                    "radius": 4.7
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 16,
+                    "buildingDamagePercent": 29,
+                    "troopDamagePercent": 10,
+                    "radius": 4.7
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 17,
+                    "buildingDamagePercent": 29,
+                    "troopDamagePercent": 14.5,
+                    "radius": 4.7
+                }
+            ],
+            "housingSpace": 1
+        },
+        {
+            "id": "lightning-spell",
+            "dataId": 26000000,
+            "name": "Lightning Spell",
+            "sourceFile": "data/home/spells/lightning-spell.json",
+            "levels": [
+                {
+                    "level": 1,
+                    "townHallRequired": 5,
+                    "damage": 150
+                },
+                {
+                    "level": 2,
+                    "townHallRequired": 5,
+                    "damage": 180
+                },
+                {
+                    "level": 3,
+                    "townHallRequired": 5,
+                    "damage": 210
+                },
+                {
+                    "level": 4,
+                    "townHallRequired": 5,
+                    "damage": 240
+                },
+                {
+                    "level": 5,
+                    "townHallRequired": 8,
+                    "damage": 270
+                },
+                {
+                    "level": 6,
+                    "townHallRequired": 9,
+                    "damage": 320
+                },
+                {
+                    "level": 7,
+                    "townHallRequired": 10,
+                    "damage": 400
+                },
+                {
+                    "level": 8,
+                    "townHallRequired": 11,
+                    "damage": 480
+                },
+                {
+                    "level": 9,
+                    "townHallRequired": 12,
+                    "damage": 560
+                },
+                {
+                    "level": 10,
+                    "townHallRequired": 15,
+                    "damage": 600
+                },
+                {
+                    "level": 11,
+                    "townHallRequired": 16,
+                    "damage": 640
+                },
+                {
+                    "level": 12,
+                    "townHallRequired": 17,
+                    "damage": 680
+                },
+                {
+                    "level": 13,
+                    "townHallRequired": 17,
+                    "damage": 720
+                }
+            ],
+            "housingSpace": 1
+        }
+    ],
+    "modifiers": []
+}

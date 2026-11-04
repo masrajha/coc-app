@@ -8,7 +8,7 @@ RewriteEngine On
 RewriteRule ^(src|vendor|data|test|tests|scripts)(/|$) - [F,L,NC]
 
 # HTML app pages need PHP-generated Open Graph metadata, even if a root copy exists.
-RewriteRule ^(?:index|clan|player|compare|compare-clan)\.html$ index.php [L,QSA]
+RewriteRule ^(?:index|clan|player|compare|compare-clan|zapquake)\.html$ index.php [L,QSA]
 
 # SEO documents are generated from current saved data, not stale root copies.
 RewriteRule ^(?:robots\.txt|sitemap\.xml|sitemaps/[^/]+\.xml|(?:guides|features)(?:/[^/]+)?|explore/(?:clans|players)|leaderboards)$ index.php [L,QSA]

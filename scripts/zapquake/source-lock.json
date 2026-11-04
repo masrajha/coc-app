@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "dataVersion": "2026-11-04.5",
+  "reviewedAt": "2026-11-04",
+  "effectiveAt": null,
+  "repository": "https://github.com/chiefpansancolt/clash-of-clans-data",
+  "revision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+  "packageVersion": "0.19.1",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "c2e299582ddd6374469f44d154203672c6586aaebf31e21c71f67b9a6423f4a3",
+      "bytes": 1074
+    },
+    {
+      "path": "data/home/army-buildings/blacksmith.json",
+      "sha256": "03c9db08e8ed3cf4b6a5b979fee632acf0f8ea42e910508c843072b225c48c54",
+      "bytes": 7629
+    },
+    {
+      "path": "data/home/army-buildings/hero-hall.json",
+      "sha256": "56ac161e2d35866f3e5a5bceefa539657735888ab9a35563361c1ac22946130d",
+      "bytes": 9467
+    },
+    {
+      "path": "data/home/defenses/air-defense.json",
+      "sha256": "ca7edd8f9be41d048bf1436bb0432e5351e9c9fc1e57423598b97a481548fab0",
+      "bytes": 10228
+    },
+    {
+      "path": "data/home/defenses/air-sweeper.json",
+      "sha256": "02eb2b4a724df714df5b41f02a476d0444f6e16d6ab52cd0261c1e1fc8bbb5f6",
+      "bytes": 4507
+    },
+    {
+      "path": "data/home/defenses/archer-tower.json",
+      "sha256": "1ad5f8e83cf9f7ed515bd79927ba0202359c79c5ce5e6cb72a8e5f18856eaaf8",
+      "bytes": 15681
+    },
+    {
+      "path": "data/home/defenses/bomb-tower.json",
+      "sha256": "7d863a85ffab3c3d12ffe0081aee094df4ee91592612b0e7b9727e53ee946c6c",
+      "bytes": 8866
+    },
+    {
+      "path": "data/home/defenses/builders-hut.json",
+      "sha256": "76a236725b49689600db9968d2eb46647e58277f0a4039683829c7c318685d4a",
+      "bytes": 8483
+    },
+    {
+      "path": "data/home/defenses/cannon.json",
+      "sha256": "a2411a77327f18ad30018b5384e34ee6c03b7a8f0e3429381f69de1cd0919aa7",
+      "bytes": 16191
+    },
+    {
+      "path": "data/home/defenses/crafting-station.json",
+      "sha256": "ebb4a9da4aa0b7544146abc893acf93baf364903548ecfce895749b34c13066d",
+      "bytes": 913
+    },
+    {
+      "path": "data/home/defenses/eagle-artillery.json",
+      "sha256": "5951e44f6930573ca8397c2fc3a14dc04a33a0c19cc22848704ddd4b7ffb478a",
+      "bytes": 6014
+    },
+    {
+      "path": "data/home/defenses/firespitter.json",
+      "sha256": "618e272a8e964cd777963733fc313e19c8f5ccc30b1d43978eca47830d24f8c4",
+      "bytes": 3255
+    },
+    {
+      "path": "data/home/defenses/hidden-tesla.json",
+      "sha256": "b7e470a01643866c5e9b605c8b628fbfacca78d3446f744ac0385600bce6ecbb",
+      "bytes": 10667
+    },
+    {
+      "path": "data/home/defenses/inferno-tower.json",
+      "sha256": "8e541fe624f16e143f0c9152b5358075e1f832264c05cf12045e99be0f3992c5",
+      "bytes": 14789
+    },
+    {
+      "path": "data/home/defenses/monolith.json",
+      "sha256": "abd9ce5602a5a409a0239e307be285218693b7e10ac8effbcee58213840c18a2",
+      "bytes": 4642
+    },
+    {
+      "path": "data/home/defenses/mortar.json",
+      "sha256": "a2db6c2b922a74cd0729a5555f18c7d1a49377673428fdb827fa275a37e87985",
+      "bytes": 14517
+    },
+    {
+      "path": "data/home/defenses/multi-archer-tower.json",
+      "sha256": "6f742f1ae2e10e47ce713ce521f1c366891faf5fdb53e47b210bbe2dafef4356",
+      "bytes": 3718
+    },
+    {
+      "path": "data/home/defenses/multi-gear-tower.json",
+      "sha256": "db6fa96f6cc308dfc649b6b57b343cfbac9f2eb30004de48184447cb0d7450a3",
+      "bytes": 4250
+    },
+    {
+      "path": "data/home/defenses/revenge-tower.json",
+      "sha256": "5044ff5a8dd76a96d3ff3d3fd3184957e2ebd48ca397a9752f9000e5228e2264",
+      "bytes": 5129
+    },
+    {
+      "path": "data/home/defenses/ricochet-cannon.json",
+      "sha256": "5fcd7f1bea5240c00453b797d6079379fb55887e640e832d84d40842596e1eda",
+      "bytes": 3984
+    },
+    {
+      "path": "data/home/defenses/scattershot.json",
+      "sha256": "42c85ce18c5558d8412eca95b3de144efe760911966ed34df540fa2c7f6ca154",
+      "bytes": 7027
+    },
+    {
+      "path": "data/home/defenses/spell-tower.json",
+      "sha256": "f36bf54d3c131f1d40de47009668a010df0ee2deb5e985344278ddf20ea2ef62",
+      "bytes": 3608
+    },
+    {
+      "path": "data/home/defenses/super-wizard-tower.json",
+      "sha256": "04974cac945eeaf41c19e337ce54fd3d7a08ba918caa25cb7561dc0baffb0c40",
+      "bytes": 2792
+    },
+    {
+      "path": "data/home/defenses/wizard-tower.json",
+      "sha256": "46198244e1a42c99b8e2278e09e43f1075345242e24586ed628304d662eb27e3",
+      "bytes": 9672
+    },
+    {
+      "path": "data/home/defenses/x-bow.json",
+      "sha256": "da9556ea3999e7446aa7e12e604a47faca759619d5d45fc8cd6813c15cfa8586",
+      "bytes": 12535
+    },
+    {
+      "path": "data/home/hero-equipment/earthquake-boots.json",
+      "sha256": "1735c786de0d01487707b23ebd6aaa70fa4761100358d7093ad9ea41b6096c2e",
+      "bytes": 6226
+    },
+    {
+      "path": "data/home/hero-equipment/electro-boots.json",
+      "sha256": "ebac2d6bb44a1c973b33937e2166d37c1c0ad1d9167596f7ff22f5d9a347a38c",
+      "bytes": 9039
+    },
+    {
+      "path": "data/home/hero-equipment/fireball.json",
+      "sha256": "3c16f6a505753cd95c804c512dab1a2dce22f527a95f186df9bf9a41a7c53cfc",
+      "bytes": 8256
+    },
+    {
+      "path": "data/home/hero-equipment/flame-blower.json",
+      "sha256": "e6318eaad5c0e68b1635d957ec292c30525a1edc89ae7e05f4a2bc17489efc11",
+      "bytes": 5479
+    },
+    {
+      "path": "data/home/hero-equipment/giant-arrow.json",
+      "sha256": "36f04955f63f20e95cdceacb42f9b36a977b07fd6b1fbeda32733938363a9bfb",
+      "bytes": 5398
+    },
+    {
+      "path": "data/home/hero-equipment/rocket-backpack.json",
+      "sha256": "e232a0f83df1814cee9b8c9fa740728e75e3fc5cdbb3167a4715739ccac6a7f4",
+      "bytes": 8782
+    },
+    {
+      "path": "data/home/hero-equipment/seeking-shield.json",
+      "sha256": "6590f3c970bb7d4007607d3ff2fcd90a338d2cc256a65e15353622866288518d",
+      "bytes": 4955
+    },
+    {
+      "path": "data/home/hero-equipment/spiky-ball.json",
+      "sha256": "5dc2e353d540e7c85d10c8cf79fdd58c7042b3ad7a54baad05c4c339b0c96528",
+      "bytes": 9259
+    },
+    {
+      "path": "data/home/heroes/archer-queen.json",
+      "sha256": "2defebf11198bd478d3373d37b9497d98da8744b3eb3cf6c1096368ce3b3c714",
+      "bytes": 40741
+    },
+    {
+      "path": "data/home/heroes/barbarian-king.json",
+      "sha256": "4b46cae39a0857d9d2dadea68a5db7e0342d6bb3925857bb1ac9251e358f7c3b",
+      "bytes": 40760
+    },
+    {
+      "path": "data/home/heroes/dragon-duke.json",
+      "sha256": "2542cd852a57230021e9120eb410be02e95317c709310036d79cbfce18ceec85",
+      "bytes": 9906
+    },
+    {
+      "path": "data/home/heroes/grand-warden.json",
+      "sha256": "279e827468f818269e3fedf60ad161d6a4562f4d5c232074cf19aa2c668d8ced",
+      "bytes": 31300
+    },
+    {
+      "path": "data/home/heroes/minion-prince.json",
+      "sha256": "dcf18479942c4029c04562c1418575a892cc97ca5080471cc273e2d4bd9aade3",
+      "bytes": 35285
+    },
+    {
+      "path": "data/home/heroes/royal-champion.json",
+      "sha256": "eba5e535e1b3f8dbb0d154e2fd59b5f490d8ab47e80c59abc6849d48ffffbc8e",
+      "bytes": 20661
+    },
+    {
+      "path": "data/home/resource-buildings/clan-castle.json",
+      "sha256": "a1995805f4efdf12c7bbbc0e2594df767b2acaf9ca5db283573323104add28bf",
+      "bytes": 8414
+    },
+    {
+      "path": "data/home/spells/earthquake-spell.json",
+      "sha256": "280f5e4e22c8b9b23e7ac7fcc75662fc29fde2e178808ce90231161515d610d4",
+      "bytes": 3500
+    },
+    {
+      "path": "data/home/spells/lightning-spell.json",
+      "sha256": "0198a8e18dcbdc1db205f4f380ef5fa202c0e1a49252fa15e57b7b606c55026e",
+      "bytes": 4471
+    },
+    {
+      "path": "data/home/town-hall/town-hall.json",
+      "sha256": "fb16ac01736272a64d6988268b443abb8f5bc70fdfa88b73c116abedb0be572d",
+      "bytes": 17228
+    },
+    {
+      "path": "package.json",
+      "sha256": "5c37e8e67508da56c20f9c1b37c5a6c3f1bbe3b91ddc4ac30f269b0a85d120f6",
+      "bytes": 2059
+    }
+  ],
+  "excludedBuildings": {
+    "crafting-station": "Crafted defense/module mechanics are not covered by the station HP row."
+  }
+}

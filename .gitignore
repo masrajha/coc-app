@@ -4,7 +4,7 @@ node_modules/
 /vendor/
 .phpunit.cache/
 .chrome-icon-test/
-data/
+/data/
 !data/.gitkeep
 public/assets/images/news/*
 !public/assets/images/news/.gitkeep

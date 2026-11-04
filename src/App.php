@@ -188,6 +188,9 @@ final class App
         $app->get('/share/image/{hash}.png', fn($req, $res, $args) => $self->shareImage($req, $res, $args['hash']));
         $app->get('/', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
         $app->get('/clan.html', fn($req, $res) => $self->staticFile($res, 'index.html', $req));
+        $app->get('/tools/zapquake', fn($req, $res) => $self->staticFile($res, 'zapquake.html', $req));
+        $app->get('/tools/zapquake/', fn($req, $res) => $res->withStatus(301)->withHeader('Location', '/tools/zapquake'.($req->getUri()->getQuery() !== '' ? '?'.$req->getUri()->getQuery() : '')));
+        $app->get('/zapquake.html', fn($req, $res) => $res->withStatus(301)->withHeader('Location', '/tools/zapquake'.($req->getUri()->getQuery() !== '' ? '?'.$req->getUri()->getQuery() : '')));
         $app->get('/{path:.*}', fn($req, $res, $args) => $self->staticFile($res, $args['path'] ?? '', $req));
         return $app;
     }
@@ -452,6 +455,18 @@ final class App
             default => mime_content_type($path) ?: 'application/octet-stream'
         };
         if ($extension === 'html') {
+            if ($safe === 'zapquake.html' && $req) {
+                $title = $this->locale === 'en' ? 'Zapquake Calculator - ClanIntel' : 'Kalkulator Zapquake - ClanIntel';
+                $description = $this->locale === 'en' ? 'Calculate Lightning and Earthquake combinations for defenses, Town Hall, Clan Castle, and heroes using your selected levels.' : 'Hitung kombinasi Lightning dan Earthquake untuk defense, Town Hall, Clan Castle, dan hero dengan level pilihan Anda.';
+                $content = preg_replace('/<html lang="[^"]*"/', '<html lang="'.$this->locale.'"', $content, 1);
+                $content = preg_replace('/<title>.*?<\/title>/s', '<title>'.$title.'</title>', $content, 1);
+                $content = preg_replace('/<meta name="description" content="[^"]*">/', '<meta name="description" content="'.htmlspecialchars($description, ENT_QUOTES, 'UTF-8').'">', $content, 1);
+                $origin = $this->publicOrigin($req).'/tools/zapquake?lang=';
+                $links = '<link rel="canonical" href="'.htmlspecialchars($origin.$this->locale, ENT_QUOTES, 'UTF-8').'">';
+                foreach (['id','en'] as $language) $links .= '<link rel="alternate" hreflang="'.$language.'" href="'.htmlspecialchars($origin.$language, ENT_QUOTES, 'UTF-8').'">';
+                $links .= '<link rel="alternate" hreflang="x-default" href="'.htmlspecialchars($origin.'id', ENT_QUOTES, 'UTF-8').'">';
+                $content = str_replace('</head>', $links.'</head>', $content);
+            }
             if ($req && in_array($req->getUri()->getPath(), ['/', '/index.html', '/clan.html', '/player.html', '/compare.html', '/compare-clan.html'], true)) {
                 try {
                     $share = $this->shareService($req);
@@ -467,6 +482,12 @@ final class App
                 catch (\Throwable $error) { error_log('SEO summary unavailable: ' . get_class($error)); }
             }
             $content = $this->versionHtmlAssets($content, $root);
+        }
+        if ($safe === 'assets/data/zapquake/manifest.json') $res = $res->withHeader('Cache-Control', 'no-cache, must-revalidate');
+        if (preg_match('~^assets/data/zapquake/[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}/(?:dataset\.json|LICENSE\.txt)$~', $safe)) {
+            $etag = '"'.hash('sha256', $content).'"';
+            $res = $res->withHeader('Cache-Control', 'public, max-age=31536000, immutable')->withHeader('ETag', $etag);
+            if ($req?->getHeaderLine('If-None-Match') === $etag) return $res->withStatus(304);
         }
         if (str_starts_with($safe, 'assets/images/optimized/') && $extension === 'webp') {
             $etag = '"' . hash('sha256', $content) . '"';
