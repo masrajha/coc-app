@@ -70,6 +70,15 @@ try {
     }
     foreach (['/features/missing','/guides/missing','/explore/players?page=999','/explore/players?page[]=1','/leaderboards?category[]=players','/sitemaps/players-0.xml','/sitemaps/players-2.xml'] as $url) $assert($get($url)->getStatusCode()===404,'Unknown/past-end pages must return 404: '.$url);
     foreach (['id','en'] as $lang) {
+        $toolHtml=(string)$get('/tools/zapquake?lang='.$lang)->getBody();$toolXp=new DOMXPath($dom($toolHtml));
+        $assert($toolXp->query('//section[@aria-labelledby="zapSeoTitle"]//details/summary')->length===4,'Calculator FAQ must be present in initial HTML.');
+        $toolSchema=json_decode($toolXp->evaluate('string(//script[@type="application/ld+json"])'),true,512,JSON_THROW_ON_ERROR);
+        $assert($toolSchema['@type']==='WebApplication' && $toolSchema['url']==='https://clanintel.example.test/tools/zapquake?lang='.$lang && $toolSchema['inLanguage']===$lang,'Calculator schema must describe its canonical tool URL and locale.');
+        $assert($toolXp->query('//section[@aria-labelledby="zapSeoTitle"]//a[contains(@href,"/features/zapquake-calculator")]')->length===1 && $toolXp->query('//section[@aria-labelledby="zapSeoTitle"]//a[contains(@href,"/guides/zapquake")]')->length===1,'Calculator must link to the explanatory feature page and guide.');
+        $assert($toolXp->query('//h1')->length===1,'SEO content must not add another calculator H1.');
+        $zapGuide=(string)$get('/guides/zapquake?lang='.$lang)->getBody();
+        $assert(str_contains($zapGuide,'832')&&str_contains($zapGuide,'Earthquake Boots')&&str_contains($zapGuide,'/tools/zapquake?lang='.$lang),'Zapquake guide needs a worked calculation and direct calculator link.');
+        $assert(in_array('https://clanintel.example.test/features/zapquake-calculator?lang='.$lang,$allUrls,true)&&in_array('https://clanintel.example.test/guides/zapquake?lang='.$lang,$allUrls,true),'Both localized Zapquake content pages must be in the sitemap.');
         $guide=(string)$get('/guides/ranked-league?lang='.$lang)->getBody();
         $assert(str_contains($guide,'<html lang="'.$lang.'">')&&str_contains($guide,'application/ld+json')&&str_contains($guide,'Supercell'),'Guide content, structured data and attribution must be localized in initial HTML.');
         $assert(!str_contains($guide,'/api/'),'Guide pages must not rely on an API fetch to show content.');
@@ -84,7 +93,8 @@ try {
             $assert($xp->evaluate('string(//meta[@name="robots"]/@content)')==='index,follow','Product pages must be indexable independently of comparison pairs.');
             $assert($xp->evaluate('string(//link[@rel="canonical"]/@href)')==='https://clanintel.example.test'.$path.'?lang='.$lang,'Feature canonicals must omit tracking parameters.');
             $assert($xp->query('//figure/figcaption')->length===1&&$xp->query('//article/section')->length>=4,'Feature pages need substantive content and clearly labelled visual examples.');
-            $assert($xp->query('//nav[contains(@class,"seo-feature-actions")]/a[contains(@href,"#'.$feature['tool'].'")]')->length>=1,'Feature CTA must activate the appropriate home search tab.');
+            $toolHref='https://clanintel.example.test'.($feature['toolPath'] ?? '/').'?lang='.$lang.(isset($feature['toolPath'])?'':'#'.$feature['tool']);
+            $assert($xp->query('//nav[contains(@class,"seo-feature-actions")]/a[@href="'.$toolHref.'"]')->length>=1,'Feature CTA must open its tool or appropriate home search tab.');
             $schema=json_decode($xp->evaluate('string(//script[@type="application/ld+json"])'),true,512,JSON_THROW_ON_ERROR);
             $assert($schema['@type']==='WebPage'&&$schema['mainEntity']['@type']==='WebApplication'&&count($schema['mainEntity']['featureList'])>=4,'Structured data must describe actual app features.');
             $assert(!str_contains($html,'/api/'),'Feature pages must not require an API request.');

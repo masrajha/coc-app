@@ -3144,6 +3144,18 @@
     'zap.error.heroMode':'The defending type does not match this hero. For Grand Warden, choose ground or air.',
     'zap.immuneScope':'Lightning does not damage Town Hall or Clan Castle. Earthquake does not damage air heroes; levels 1–5 do not damage ground heroes. Defending type follows the hero automatically, except Grand Warden, which is selected manually.'
   });
+  Object.assign(messages.id, {
+    'globalNav.home':'Beranda','globalNav.clan':'Cari klan','globalNav.player':'Cari pemain',
+    'globalNav.comparePlayers':'Bandingkan pemain','globalNav.compareClans':'Bandingkan klan',
+    'globalNav.rankings':'Leaderboard','globalNav.features':'Fitur','globalNav.guides':'Panduan',
+    'globalNav.clans':'Direktori klan','globalNav.players':'Direktori pemain'
+  });
+  Object.assign(messages.en, {
+    'globalNav.home':'Home','globalNav.clan':'Find clan','globalNav.player':'Find player',
+    'globalNav.comparePlayers':'Compare players','globalNav.compareClans':'Compare clans',
+    'globalNav.rankings':'Leaderboard','globalNav.features':'Features','globalNav.guides':'Guides',
+    'globalNav.clans':'Clan directory','globalNav.players':'Player directory'
+  });
   window.CocI18n = {
     t, apply, setLocale, apiUrl, apiFetch, setPageTitle,
     hasTranslation: (key, language) => Object.hasOwn(messages[language] || {}, key),

@@ -9,6 +9,7 @@ final class SeoGuides
     public static function all(string $lang): array
     {
         if ($lang === 'en') return [
+            'zapquake'=>SeoZapquake::guide($lang),
             'ranked-league' => [
                 'title' => 'Clash of Clans Ranked League: battle logs, trophies and league changes',
                 'intro' => 'Read a Ranked League session in ClanIntel: identify the correct league, separate attack and defense trophies, and understand what the available data can tell you.',
@@ -59,7 +60,7 @@ final class SeoGuides
             ],
         ];
         return [
-            'ranked-league' => [
+            'zapquake'=>SeoZapquake::guide($lang),            'ranked-league' => [
                 'title' => 'Panduan Ranked League CoC: battle log, poin trofi dan perubahan liga',
                 'intro' => 'Pahami sesi Ranked League di ClanIntel: pilih level liga yang tepat, pisahkan poin serangan dan pertahanan, serta kenali batas informasi yang tersedia.',
                 'sections' => [

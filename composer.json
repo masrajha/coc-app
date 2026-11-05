@@ -17,6 +17,6 @@
   },
   "scripts": {
     "test:zapquake": ["php tests/zapquake-data.php", "node --test tests/zapquake-model.test.js tests/zapquake-catalog.test.js"],
-    "test": ["php tests/smoke.php", "php tests/ranked-sessions.php", "php tests/raids.php", "php tests/account-features.php", "php tests/share.php", "php tests/war-map.php", "php tests/web-assets.php", "php tests/assets-layout.php", "php tests/seo.php", "php tests/seo-memory.php", "php tests/clan-directory.php", "php tests/official-news.php", "php tests/zapquake-data.php"]
+    "test": ["php tests/smoke.php", "php tests/ranked-sessions.php", "php tests/raids.php", "php tests/account-features.php", "php tests/share.php", "php tests/war-map.php", "php tests/web-assets.php", "php tests/navigation.php", "php tests/assets-layout.php", "php tests/seo.php", "php tests/seo-memory.php", "php tests/clan-directory.php", "php tests/official-news.php", "php tests/zapquake-data.php"]
   }
 }

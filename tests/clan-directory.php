@@ -48,7 +48,7 @@ try {
         }
         $next=$xp->evaluate('string(//a[@rel="next"]/@href)');
         $assert(str_contains($next,'minLevel=20')&&str_contains($next,'minMembers=10')&&str_contains($next,'maxMembers=40')&&str_contains($next,'sort=points')&&str_contains($next,'lang='.$lang),'Pagination must retain all filters, sort, and language.');
-        $assert($xp->query('//nav[contains(@class,"command-header-nav")]/a[@lang="en" and contains(@href,"minLevel=20")]')->length===1,'Language switches must retain directory state.');
+        $assert($xp->query('//div[contains(@class,"global-appearance")]/a[@lang="en" and contains(@href,"minLevel=20")]')->length===1,'Language switches must retain directory state.');
         [$status,$html]=$seo->page('/explore/clans',['sort'=>'points']);$xp=$parse($html);
         $assert(str_contains($xp->query('//article[@class="directory-clan"]')->item(0)->textContent,'Elite'),'Highest points must sort first.');
         $assert(str_contains($html,'https://example.test/badge.png')&&!str_contains($html,'javascript:alert'),'Badge URLs must use HTTPS, with a local fallback for invalid sources.');

@@ -193,7 +193,7 @@ final class Seo
         $head = '<link rel="canonical" href="' . self::escape($this->url($canonicalPath,$params)) . '">' . $this->alternates($canonicalPath,$params)
             . '<meta name="robots" content="' . ($indexable ? 'index,follow' : 'noindex,follow') . '">';
         $html = str_replace('</head>',$head.'</head>',$html);
-        if ($canonicalPath === '/' && !$kind) $summary .= '<section class="seo-feature-discovery"><h2>' . $this->word('Compare pemain, battle log dan analisis War/CWL','Player comparison, battle logs and War/CWL analysis') . '</h2>' . $this->featureCards() . '</section>';
+        if ($canonicalPath === '/' && !$kind) $summary .= '<section class="seo-feature-discovery"><h2>' . $this->word('Alat analisis dan kalkulator Clash of Clans','Clash of Clans analysis tools and calculators') . '</h2>' . $this->featureCards() . '</section>';
         if ($summary !== '') $html = preg_replace_callback('~</main>~', fn() => $summary . '</main>', $html, 1);
         $links = '<nav class="seo-links seo-footer-links" aria-label="ClanIntel"><a href="' . self::escape($this->url('/guides')) . '" data-i18n="seo.guides">' . $this->word('Panduan','Guides') . '</a><a href="' . self::escape($this->url('/explore/clans')) . '" data-i18n="seo.clans">' . $this->word('Direktori klan','Clan directory') . '</a><a href="' . self::escape($this->url('/explore/players')) . '" data-i18n="seo.players">' . $this->word('Direktori pemain','Player directory') . '</a><a href="' . self::escape($this->url('/leaderboards')) . '" data-i18n="seo.rankings">Leaderboard</a></nav>';
         $links = str_replace('</nav>', '<a href="' . self::escape($this->url('/features')) . '" data-i18n="seo.features">' . $this->word('Fitur ClanIntel','ClanIntel features') . '</a></nav>', $links);
@@ -259,11 +259,12 @@ final class Seo
         }
         $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
         if ($group === 'pages' && $page === 1) {
-            foreach (['/','/guides','/features','/tools/zapquake'] as $path) $xml .= $this->xmlEntry($path);
-            foreach (SeoFeatures::all('en') as $slug=>$_) $xml .= $this->xmlEntry('/features/'.$slug,[],SeoFeatures::UPDATED);
+            foreach (['/','/guides','/features'] as $path) $xml .= $this->xmlEntry($path);
+            $xml.=$this->xmlEntry('/tools/zapquake',[],SeoZapquake::UPDATED);
+            foreach (SeoFeatures::all('en') as $slug=>$feature) $xml .= $this->xmlEntry('/features/'.$slug,[],$feature['updated'] ?? SeoFeatures::UPDATED);
             foreach ($this->profiles() as $kind=>$profiles) if ($profiles) $xml .= $this->xmlEntry('/explore/'.$kind);
         }
-        elseif ($group === 'guides' && $page === 1) foreach (SeoGuides::all('en') as $slug=>$_) $xml .= $this->xmlEntry('/guides/'.$slug,[],SeoGuides::UPDATED);
+        elseif ($group === 'guides' && $page === 1) foreach (SeoGuides::all('en') as $slug=>$guide) $xml .= $this->xmlEntry('/guides/'.$slug,[],$guide['updated'] ?? SeoGuides::UPDATED);
         elseif (in_array($group,['clans','players'],true) && $page >= 1) {
             $profiles = array_slice($this->profiles()[$group],($page-1)*self::CHUNK,self::CHUNK,true);
             if (!$profiles) return null;
@@ -272,6 +273,11 @@ final class Seo
         // Include ranking categories only when saved rows exist; no thin placeholder sitemap entries.
         if ($group === 'pages') foreach ($this->rankingPages() as $params) $xml .= $this->xmlEntry('/leaderboards',$params);
         return $xml.'</urlset>';
+    }
+
+    private function toolUrl(array $entry): string
+    {
+        return isset($entry['toolPath'])?$this->url($entry['toolPath']):$this->url('/').'#'.$entry['tool'];
     }
 
     private function featureCards(?string $exclude = null): string
@@ -300,6 +306,10 @@ final class Seo
                 $html .= '</div></section>';
             }
             $html .= '</div><p>'.$this->word('Poin serangan dan pertahanan terpisah. Bonus sesi selesai ditampilkan sebagai kotak tersendiri tanpa bintang.','Attack and defense points are separate. Completed-session bonuses appear as their own cards without stars.').'</p>';
+        } elseif ($slug === 'zapquake-calculator') {
+            $html.='<div class="seo-example-table-wrap"><table><caption>'.$this->word('Air Defense level 1, tanpa equipment atau modifier','Level-1 Air Defense, no equipment or modifiers').'</caption><tbody>';
+            foreach ([[$this->word('HP target','Target HP'),'800'],['Lightning Lv 1','4 × 150'],['Earthquake Lv 8','29% × 800 = 232'],[$this->word('Total damage','Total damage'),'832'],[$this->word('Slot spell / overkill','Spell slots / overkill'),'5 / 32 HP']] as [$label,$value]) $html.='<tr><th scope="row">'.$label.'</th><td>'.$value.'</td></tr>';
+            $html.='</tbody></table></div><p>'.$this->word('Earthquake lebih dahulu, lalu empat Lightning; seluruh spell diasumsikan mengenai target.','Earthquake first, then four Lightning; every spell is assumed to hit the target.').'</p>';
         } else {
             $html .= '<div class="seo-example-war"><div><span>'.$this->word('Klan A','Clan A').'</span><strong>87 / 90 ★</strong></div><b>VS</b><div><span>'.$this->word('Klan B','Clan B').'</span><strong>84 / 90 ★</strong></div></div><p>'.$this->word('Perang berlangsung · 45/60 serangan terpakai · 15 serangan tersisa','War in progress · 45/60 attacks used · 15 attacks remaining').'</p><p>'.$this->word('Lanjutkan ke roster, peta dua sisi, dan target cleanup untuk memeriksa peluang yang tersisa.','Continue to the roster, two-sided map and cleanup targets to inspect remaining opportunities.').'</p>';
         }
@@ -312,26 +322,26 @@ final class Seo
         $head = '<title>'.$escape($title).' - ClanIntel</title><meta name="description" content="'.$escape($description).'"><link rel="canonical" href="'.$escape($canonical).'">'.$this->alternates($path,$params).'<meta name="robots" content="'.($index?'index,follow':'noindex,follow').'">';
         foreach (['og:type'=>$article?'article':'website','og:site_name'=>'ClanIntel','og:title'=>$title.' - ClanIntel','og:description'=>$description,'og:url'=>$canonical,'og:locale'=>$this->lang==='en'?'en_US':'id_ID'] as $name=>$value) $head .= '<meta property="'.$name.'" content="'.$escape($value).'">';
         $schema = ['@context'=>'https://schema.org','@type'=>$article?'Article':($feature?'WebPage':'CollectionPage'),'name'=>$title,'description'=>$description,'url'=>$canonical,'inLanguage'=>$this->lang];
-        if ($article) $schema += ['headline'=>$title,'dateModified'=>SeoGuides::UPDATED,'author'=>['@type'=>'Organization','name'=>'ClanIntel']];
-        if ($feature) $schema += ['dateModified'=>SeoFeatures::UPDATED,'mainEntity'=>['@type'=>'WebApplication','name'=>'ClanIntel','url'=>$this->url('/'),'applicationCategory'=>'GameApplication','operatingSystem'=>'Web','featureList'=>array_column($feature['sections'],0)]];
+        if ($article) $schema += ['headline'=>$title,'dateModified'=>$article['updated'] ?? SeoGuides::UPDATED,'author'=>['@type'=>'Organization','name'=>'ClanIntel']];
+        if ($feature) $schema += ['dateModified'=>$feature['updated'] ?? SeoFeatures::UPDATED,'mainEntity'=>['@type'=>'WebApplication','name'=>'ClanIntel','url'=>$this->url($feature['toolPath'] ?? '/'),'applicationCategory'=>'GameApplication','operatingSystem'=>'Web','featureList'=>array_column($feature['sections'],0)]];
         $head .= '<script type="application/ld+json">'.json_encode($schema,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE).'</script>';
         $languageLinks = '<a href="'.$escape($this->url($path,$params,'id')).'" lang="id" hreflang="id">Indonesia</a><a href="'.$escape($this->url($path,$params,'en')).'" lang="en" hreflang="en">English</a>';
         $theme = '<label class="seo-theme">'.$this->word('Tema','Theme').'<select data-seo-theme data-theme-switch aria-label="'.$this->word('Tema','Theme').'">';
         foreach (['dark'=>['Gelap','Dark'],'light'=>['Terang','Light'],'dark-simple'=>['Gelap Simple','Dark Simple'],'light-simple'=>['Terang Simple','Light Simple'],'system'=>['Sistem','System']] as $value=>$labels) $theme .= '<option value="'.$value.'">'.$this->word(...$labels).'</option>';
         $theme .= '</select></label>';
-        return '<!doctype html><html lang="'.$this->lang.'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'.$head.'<link rel="icon" href="/assets/images/brand/favicon.svg" type="image/svg+xml"><link rel="alternate icon" href="/assets/images/brand/favicon.ico"><link rel="apple-touch-icon" href="/assets/images/brand/apple-touch-icon.png"><script src="/js/theme.js"></script><script src="/js/seo.js" defer></script><link rel="stylesheet" href="/css/theme.css"><link rel="stylesheet" href="/css/theme-simple.css"><link rel="stylesheet" href="/css/site.css"><link rel="stylesheet" href="/css/seo.css"></head><body class="command-ui seo-page"><header class="site-header command-header"><div class="header-inner"><a class="command-brand" href="'.$escape($this->url('/')).'"><img class="clanintel-mark" src="/assets/images/brand/clanintel-mark.svg" width="44" height="44" alt=""><span class="clanintel-wordmark">Clan<span>Intel</span></span></a><nav class="command-header-nav"><a href="'.$escape($this->url('/features')).'">'.$this->word('Fitur','Features').'</a><a href="'.$escape($this->url('/guides')).'">'.$this->word('Panduan','Guides').'</a><a href="'.$escape($this->url('/explore/clans')).'">'.$this->word('Klan','Clans').'</a><a href="'.$escape($this->url('/explore/players')).'">'.$this->word('Pemain','Players').'</a>'.$languageLinks.$theme.'</nav></div></header><main class="seo-main"><h1>'.$escape($title).'</h1><p class="seo-intro">'.$escape($description).'</p>'.$body.'</main><footer class="footer"><a href="'.$escape($this->url('/')).'">ClanIntel</a><p class="brand-disclaimer">'.$this->word('Konten ini tidak berafiliasi dengan, didukung, disponsori, atau disetujui secara khusus oleh Supercell, dan Supercell tidak bertanggung jawab atas konten ini. Untuk informasi lebih lanjut, lihat','This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. For more information see').' <a href="https://www.supercell.com/fan-content-policy" target="_blank" rel="noopener noreferrer"><strong>'.$this->word('Kebijakan Konten Penggemar Supercell','Supercell’s Fan Content Policy').'</strong></a>.</p></footer></body></html>';
+        return SiteNavigation::decorate('<!doctype html><html lang="'.$this->lang.'"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'.$head.'<link rel="icon" href="/assets/images/brand/favicon.svg" type="image/svg+xml"><link rel="alternate icon" href="/assets/images/brand/favicon.ico"><link rel="apple-touch-icon" href="/assets/images/brand/apple-touch-icon.png"><script src="/js/theme.js"></script><script src="/js/seo.js" defer></script><link rel="stylesheet" href="/css/theme.css"><link rel="stylesheet" href="/css/theme-simple.css"><link rel="stylesheet" href="/css/site.css"><link rel="stylesheet" href="/css/seo.css"></head><body class="command-ui seo-page"><header class="site-header command-header"><div class="header-inner"><a class="command-brand" href="'.$escape($this->url('/')).'"><img class="clanintel-mark" src="/assets/images/brand/clanintel-mark.svg" width="44" height="44" alt=""><span class="clanintel-wordmark">Clan<span>Intel</span></span></a><nav class="command-header-nav"><a href="'.$escape($this->url('/features')).'">'.$this->word('Fitur','Features').'</a><a href="'.$escape($this->url('/guides')).'">'.$this->word('Panduan','Guides').'</a><a href="'.$escape($this->url('/explore/clans')).'">'.$this->word('Klan','Clans').'</a><a href="'.$escape($this->url('/explore/players')).'">'.$this->word('Pemain','Players').'</a>'.$languageLinks.$theme.'</nav></div></header><main class="seo-main"><h1>'.$escape($title).'</h1><p class="seo-intro">'.$escape($description).'</p>'.$body.'</main><footer class="footer"><a href="'.$escape($this->url('/')).'">ClanIntel</a><p class="brand-disclaimer">'.$this->word('Konten ini tidak berafiliasi dengan, didukung, disponsori, atau disetujui secara khusus oleh Supercell, dan Supercell tidak bertanggung jawab atas konten ini. Untuk informasi lebih lanjut, lihat','This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. For more information see').' <a href="https://www.supercell.com/fan-content-policy" target="_blank" rel="noopener noreferrer"><strong>'.$this->word('Kebijakan Konten Penggemar Supercell','Supercell’s Fan Content Policy').'</strong></a>.</p></footer></body></html>', $this->lang, $path);
     }
 
     /** Returns [status, html], always from saved data. */
     public function page(string $path, array $query): array
     {
         if ($path === '/features') {
-            return [200,$this->shell($this->word('Fitur ClanIntel: compare pemain, Ranked Battle Log dan War/CWL','ClanIntel features: player comparison, Ranked Battle Log and War/CWL'),$this->word('Kenali alat analisis Clash of Clans untuk membandingkan pemain, membaca battle log, dan mengevaluasi perang dengan konteks data yang jelas.','Explore Clash of Clans tools for comparing players, reading battle logs and evaluating wars with clear data context.'),$this->featureCards(),$path)];
+            return [200,$this->shell($this->word('Fitur ClanIntel: kalkulator Zapquake dan analisis CoC','ClanIntel tools: Zapquake calculator and CoC analysis'),$this->word('Gunakan kalkulator Zapquake, compare pemain, battle log, dan analisis War/CWL dengan konteks data yang jelas.','Explore the Zapquake calculator, player comparisons, battle logs and War/CWL analysis with clear data context.'),$this->featureCards(),$path)];
         }
         if (str_starts_with($path,'/features/')) {
             $slug = substr($path,10); $feature = SeoFeatures::all($this->lang)[$slug] ?? null;
             if (!$feature) return [404,$this->shell($this->word('Fitur tidak ditemukan','Feature not found'),'','',$path,[],false)];
-            $tool = $this->url('/').'#'.$feature['tool'];
+            $tool = $this->toolUrl($feature);
             $actions = '<nav class="seo-links seo-feature-actions"><a class="seo-feature-primary" href="'.self::escape($tool).'">'.self::escape($feature['cta']).' →</a><a href="'.self::escape($this->url('/guides/'.$feature['guide'])).'">'.$this->word('Panduan membaca statistik','How to read the statistics').'</a></nav>';
             $body = $actions.$this->featureExample($slug).'<article class="seo-feature-article">';
             foreach ($feature['sections'] as [$heading,$text]) $body .= '<section><h2>'.self::escape($heading).'</h2><p>'.self::escape($text).'</p></section>';
@@ -343,15 +353,16 @@ final class Seo
         if ($path === '/guides') {
             $body = '<div class="seo-card-grid">';
             foreach (SeoGuides::all($this->lang) as $slug=>$guide) $body .= '<article><h2><a href="'.self::escape($this->url('/guides/'.$slug)).'">'.self::escape($guide['title']).'</a></h2><p>'.self::escape($guide['intro']).'</p></article>';
-            return [200,$this->shell($this->word('Panduan statistik Clash of Clans','Clash of Clans statistics guides'),$this->word('Pelajari Ranked League, War & CWL, progres pemain dan Clan Capital dengan konteks serta batas data yang jelas.','Understand Ranked League, War & CWL, player progress and Clan Capital with clear context and data limitations.'),$body.'</div>',$path)];
+            return [200,$this->shell($this->word('Panduan statistik Clash of Clans','Clash of Clans statistics guides'),$this->word('Pelajari perhitungan Zapquake, Ranked League, War & CWL, progres pemain dan Clan Capital dengan batas data yang jelas.','Understand Zapquake calculations, Ranked League, War & CWL, player progress and Clan Capital with clear data limitations.'),$body.'</div>',$path)];
         }
         if (str_starts_with($path,'/guides/')) {
             $slug = substr($path,8); $guide = SeoGuides::all($this->lang)[$slug] ?? null;
             if (!$guide) return [404,$this->shell($this->word('Panduan tidak ditemukan','Guide not found'),'','',$path,[],false)];
-            $body = '<article class="seo-article"><p>'.$this->word('Diperbarui','Updated').': <time datetime="'.SeoGuides::UPDATED.'">'.SeoGuides::UPDATED.'</time></p>';
+            $updated=$guide['updated'] ?? SeoGuides::UPDATED;
+            $body = '<article class="seo-article"><p>'.$this->word('Diperbarui','Updated').': <time datetime="'.$updated.'">'.$updated.'</time></p>';
             foreach ($guide['sections'] as [$heading,$text]) $body .= '<section><h2>'.self::escape($heading).'</h2><p>'.self::escape($text).'</p></section>';
-            $body .= '<p>'.$this->word('Rujukan resmi','Official reference').': <a href="'.self::escape($guide['source'][1]).'" target="_blank" rel="noopener noreferrer">'.self::escape($guide['source'][0]).'</a></p><nav class="seo-links"><a href="'.self::escape($this->url('/')).'#'.$guide['tool'].'">'.$this->word('Coba di ClanIntel','Try it in ClanIntel').'</a><a href="'.self::escape($this->url('/guides')).'">'.$this->word('Semua panduan','All guides').'</a></nav></article>';
-            $featureSlug = ['ranked-league'=>'ranked-battle-log','war-cwl'=>'war-cwl-analysis','player-progress'=>'player-comparison'][$slug] ?? null;
+            $body .= '<p>'.self::escape($guide['sourceLabel'] ?? $this->word('Rujukan resmi','Official reference')).': <a href="'.self::escape($guide['source'][1]).'" target="_blank" rel="noopener noreferrer">'.self::escape($guide['source'][0]).'</a></p><nav class="seo-links"><a href="'.self::escape($this->toolUrl($guide)).'">'.$this->word('Coba di ClanIntel','Try it in ClanIntel').'</a><a href="'.self::escape($this->url('/guides')).'">'.$this->word('Semua panduan','All guides').'</a></nav></article>';
+            $featureSlug = ['zapquake'=>'zapquake-calculator','ranked-league'=>'ranked-battle-log','war-cwl'=>'war-cwl-analysis','player-progress'=>'player-comparison'][$slug] ?? null;
             if ($featureSlug) $body .= '<nav class="seo-links"><a href="'.self::escape($this->url('/features/'.$featureSlug)).'">'.$this->word('Lihat fitur dan contoh tampilan','See the feature and example view').'</a></nav>';
             return [200,$this->shell($guide['title'],$guide['intro'],$body,$path,[],true,$guide)];
         }

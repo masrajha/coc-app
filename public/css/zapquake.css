@@ -43,3 +43,5 @@
 
 .zap-catalog-toolbar{grid-template-columns:minmax(0,2fr) minmax(180px,1fr) minmax(180px,1fr)}.zap-defender-help{grid-column:1/-1;margin:0}
 @media(max-width:650px){.zap-catalog-toolbar{grid-template-columns:minmax(0,1fr)}}
+
+.zap-seo-content{font-size:13px;line-height:1.75;color:var(--theme-secondary)}.zap-seo-content h2,.zap-seo-content h3{color:var(--theme-text)}.zap-seo-content h3{font-size:15px;margin:20px 0 10px}.zap-seo-content li{margin:8px 0}.zap-seo-content details{padding:10px 0;border-top:1px solid var(--theme-border)}.zap-seo-content summary{color:var(--theme-link)}.zap-seo-content details p{margin:10px 0}

@@ -464,7 +464,7 @@ final class App
                 $origin = $this->publicOrigin($req).'/tools/zapquake?lang=';
                 $links = '<link rel="canonical" href="'.htmlspecialchars($origin.$this->locale, ENT_QUOTES, 'UTF-8').'">';
                 foreach (['id','en'] as $language) $links .= '<link rel="alternate" hreflang="'.$language.'" href="'.htmlspecialchars($origin.$language, ENT_QUOTES, 'UTF-8').'">';
-                $links .= '<link rel="alternate" hreflang="x-default" href="'.htmlspecialchars($origin.'id', ENT_QUOTES, 'UTF-8').'">';
+                $links .= '<link rel="alternate" hreflang="x-default" href="'.htmlspecialchars($origin.'en', ENT_QUOTES, 'UTF-8').'">';
                 $content = str_replace('</head>', $links.'</head>', $content);
                 try {
                     $share=$this->shareService($req);
@@ -475,6 +475,7 @@ final class App
                 } catch (\Throwable $error) {
                     error_log('Zapquake share preview unavailable: '.get_class($error));
                 }
+                $content=SeoZapquake::decorate($content,$this->locale,$this->publicOrigin($req));
             }
             if ($req && in_array($req->getUri()->getPath(), ['/', '/index.html', '/clan.html', '/player.html', '/compare.html', '/compare-clan.html'], true)) {
                 try {
@@ -490,6 +491,7 @@ final class App
                 try { $content = (new Seo($this->dataDir, $this->publicOrigin($req), $this->locale))->decorate($content, $req->getUri()->getPath(), $req->getQueryParams()); }
                 catch (\Throwable $error) { error_log('SEO summary unavailable: ' . get_class($error)); }
             }
+            if ($req) $content=SiteNavigation::decorate($content,$this->locale,$req->getUri()->getPath(),$req->getQueryParams());
             $content = $this->versionHtmlAssets($content, $root);
         }
         if ($safe === 'assets/data/zapquake/manifest.json') $res = $res->withHeader('Cache-Control', 'no-cache, must-revalidate');

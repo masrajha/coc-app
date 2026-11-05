@@ -10,6 +10,7 @@ final class SeoFeatures
     public static function all(string $lang): array
     {
         if ($lang === 'en') return [
+            'zapquake-calculator'=>SeoZapquake::feature($lang),
             'player-comparison' => [
                 'title'=>'CoC player comparison: progress, War/CWL and Ranked League',
                 'intro'=>'Compare two Clash of Clans players with Town Hall context, army progress, War/CWL performance and Ranked League battle logs in ClanIntel.',
@@ -48,7 +49,7 @@ final class SeoFeatures
             ],
         ];
         return [
-            'player-comparison' => [
+            'zapquake-calculator'=>SeoZapquake::feature($lang),            'player-comparison' => [
                 'title'=>'Bandingkan pemain CoC: progres, performa War/CWL dan Ranked League',
                 'intro'=>'Bandingkan dua pemain Clash of Clans dengan konteks Town Hall, progres Army, performa War/CWL, dan battle log Ranked League di ClanIntel.',
                 'icon'=>'icon-swords.webp', 'tool'=>'compare', 'cta'=>'Bandingkan dua pemain', 'guide'=>'player-progress',
