@@ -3156,6 +3156,22 @@
     'globalNav.rankings':'Leaderboard','globalNav.features':'Features','globalNav.guides':'Guides',
     'globalNav.clans':'Clan directory','globalNav.players':'Player directory'
   });
+  Object.assign(messages.id, {
+    'player.memberStarsHelp':'Rata-rata {average} bintang per serangan dari {count} serangan dengan data bintang pada sesi ini.',
+    'player.memberAttackHelp':'Jumlah serangan: {count}.',
+    'player.memberDefenseHelp':'Jumlah pertahanan: {count}.',
+    'player.topAttacker':'Penyerang Unggul',
+    'player.memberStarsAverage':'{average} ★/serangan',
+    'player.topAttackerHelp':'Penyerang Unggul — rata-rata {average} bintang dari {count} serangan tercatat pada sesi dan level liga ini. Syarat: minimal 5 serangan dan rata-rata ≥ 2,70; bukan peringkat kekuatan mutlak antarliga.'
+  });
+  Object.assign(messages.en, {
+    'player.memberStarsHelp':'Average {average} stars per attack from {count} attacks with star data in this session.',
+    'player.memberAttackHelp':'Attacks recorded: {count}.',
+    'player.memberDefenseHelp':'Defenses recorded: {count}.',
+    'player.topAttacker':'Top Attacker',
+    'player.memberStarsAverage':'{average} ★/attack',
+    'player.topAttackerHelp':'Top Attacker — {average} stars on average from {count} recorded attacks in this session and league tier. Requires at least 5 attacks and an average ≥ 2.70; not an absolute strength ranking across leagues.'
+  });
   window.CocI18n = {
     t, apply, setLocale, apiUrl, apiFetch, setPageTitle,
     hasTranslation: (key, language) => Object.hasOwn(messages[language] || {}, key),

@@ -181,3 +181,22 @@ body.ranked-game-open{overflow:hidden}
 .league-compare-bar :is(a,button):focus-visible,.league-compare-check:focus-visible,.league-compare-quick:focus-visible{outline:2px solid var(--theme-warning,#e3b23b);outline-offset:3px}
 
 @media(max-width:1100px){.league-members{overflow-y:auto;scrollbar-color:var(--theme-track,#516780) var(--theme-inset,#17212e)}}
+
+.league-member-name{display:flex;align-items:center;gap:3px;min-width:0}.league-member-name>a{min-width:0;flex:0 1 auto}
+.league-member-identity .league-top-attacker{display:inline-flex;align-items:center;justify-content:center;gap:4px;flex:0 0 auto;min-height:22px;margin:0;padding:3px 5px;border:1px solid var(--theme-gold-border,#8a7446);border-radius:6px;background:var(--theme-gold-soft,#332d20);color:var(--theme-warning,#e0b84a);font:700 9px/1.3 system-ui,sans-serif;cursor:pointer}
+.league-top-attacker-icon{font-family:"Segoe UI Symbol","Noto Sans Symbols 2",sans-serif;font-size:11px;line-height:1;color:var(--theme-warning,#e0b84a)}.league-top-attacker:focus-visible{outline:2px solid var(--theme-warning,#e0b84a);outline-offset:2px}
+.league-member-identity .league-top-attacker-detail{white-space:normal;overflow:visible;color:var(--theme-warning,#e0b84a);font-size:10px;line-height:1.5;margin-top:3px}
+.league-member-stars{color:var(--theme-warning,#e0b84a)}
+.league-member-identity .league-top-attacker{width:16px;height:16px;min-height:16px;padding:1px;border-radius:4px;transform:translateY(-4px)}
+
+.league-member .league-member-activity,.league-member.has-compare .league-member-activity{flex-wrap:nowrap;gap:6px;min-width:0;white-space:nowrap}
+.league-member-activity .league-member-metric{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;min-height:20px;margin:0;padding:0;border:0;background:transparent;color:var(--theme-secondary,#a9bdd7);font:inherit;line-height:1.4;cursor:pointer}
+.league-member-activity .league-member-metric svg,.league-compare-quick svg{width:12px;height:12px;flex:0 0 12px}
+.league-member-activity .league-member-metric.is-stars{color:var(--theme-warning,#e0b84a)}
+.league-member-activity .league-member-metric.is-defense{color:var(--theme-chart-blue,var(--theme-link,#9ac4ff))}
+.league-member-activity .league-compare-quick{display:inline-flex;align-items:center;justify-content:center;flex:0 0 20px;width:20px;height:20px;margin-left:auto;text-decoration:none;border:1px solid var(--theme-border,#40516a);border-radius:4px;background:var(--theme-raised,#243248)}
+.league-member-activity .league-battle-info{flex:0 0 auto;margin-left:0}
+.league-member-metric:focus-visible{outline:2px solid var(--theme-link,#9ac4ff);outline-offset:2px;border-radius:3px}
+.league-member-identity .league-member-metric-help{white-space:normal;overflow:visible;color:var(--theme-secondary,#a9bdd7);font-size:10px;line-height:1.5;margin-top:3px}
+
+.league-member-actions{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;margin-left:auto}

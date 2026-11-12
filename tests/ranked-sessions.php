@@ -25,6 +25,9 @@ $snapshot = static fn(string $date, string $tier): array => ['date' => $date,
     'members' => [['tag' => '#28P08PG0G', 'leagueTier' => ['name' => $tier]]]];
 $check = static function (bool $ok, string $message): void { if (!$ok) throw new RuntimeException($message); };
 try {
+    $quality=$type->getMethod('rankedAttackQuality');
+    $check($quality->invoke(null,[['stars'=>3],['stars'=>2],['stars'=>0],['stars'=>null],[],['stars'=>4],['stars'=>-1],['stars'=>2.5]])===['attackStarsTotal'=>5,'attackStarsSampleSize'=>3],'Attack quality must include zero-star attacks and exclude unknown or invalid star values.');
+    $check($quality->invoke(null,array_fill(0,5,['stars'=>3]))===['attackStarsTotal'=>15,'attackStarsSampleSize'=>5],'Five recorded triples qualify as a complete minimum badge sample.');
     $saveSnapshots([$snapshot('2026-10-18', 'Legend I'), $snapshot('2026-10-25', 'Legend III'), $snapshot('2026-10-26', 'Legend II')]);
     $tier = $resolve->invoke($app, $player, $session, '2026-10-26T10:00:00Z');
     $check($tier === 'Legend III', 'Promotion must use the tier observed during the previous season.');

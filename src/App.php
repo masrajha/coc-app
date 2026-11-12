@@ -1206,9 +1206,19 @@ final class App
         return null;
     }
 
+    private static function rankedAttackQuality(array $logs): array
+    {
+        $stars=[];
+        foreach ($logs as $log) {
+            $value=is_array($log)?($log['stars'] ?? null):null;
+            if (is_numeric($value) && (float)$value>=0 && (float)$value<=3 && floor((float)$value)===(float)$value) $stars[]=(int)$value;
+        }
+        return ['attackStarsTotal'=>array_sum($stars),'attackStarsSampleSize'=>count($stars)];
+    }
+
     private function rankedLeagueStatistics(array $session, array $members, bool $previous): array
     {
-        $cachePath = 'ranked-stats/' . hash('sha256', (string)$session['groupTag'] . ':' . (string)$session['seasonId']) . '.json';
+        $cachePath = 'ranked-stats/v2-' . hash('sha256', (string)$session['groupTag'] . ':' . (string)$session['seasonId']) . '.json';
         $cached = $this->readJson($cachePath, []);
         if (($cached['expires'] ?? 0) > time() && is_array($cached['data'] ?? null)) return $cached['data'];
 
@@ -1248,7 +1258,7 @@ final class App
                     'defensePoints' => $points($defenseLogs),
                     'defenseStops' => count(array_filter($defenseLogs, static fn(array $log): bool => is_numeric($log['stars'] ?? null) && (int)$log['stars'] < 3)),
                     'defenseCount' => count($defenseLogs)
-                ];
+                ] + self::rankedAttackQuality($attackLogs);
             },
             'rejected' => static function (): void {}
         ]);

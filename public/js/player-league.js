@@ -387,6 +387,56 @@
     renderCompareBar();
   }
 
+  function memberIcon(type) {
+    const icon=svgNode('svg',{viewBox:'0 0 24 24','aria-hidden':'true',fill:type==='stars'?'currentColor':'none',stroke:'currentColor','stroke-width':'1.8','stroke-linecap':'round','stroke-linejoin':'round'});
+    const paths={stars:'m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z',attack:'m14.5 3-1 6.5-7 7 1 1 7-7L21 9.5V3z M3 14l7 7 M3 21l3-3',defense:'M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z',compare:'m7 3-4 4 4 4 M3 7h18 m-4 6 4 4-4 4 M21 17H3'};
+    icon.append(svgNode('path',{d:paths[type]}));return icon;
+  }
+
+  function memberMetric(type,value,description) {
+    const metric=document.createElement('button');metric.type='button';metric.className='league-member-metric is-'+type;
+    metric.title=description;metric.setAttribute('aria-label',description);metric.setAttribute('aria-expanded','false');
+    const number=document.createElement('span');number.textContent=value;metric.append(memberIcon(type),number);
+    metric.addEventListener('click',event=>{
+      event.stopPropagation();hideBattle(true);const row=metric.closest('.league-member');let help=row.querySelector('.league-member-metric-help');
+      if(!help){help=document.createElement('small');help.className='league-member-metric-help';help.hidden=true;row.querySelector('.league-member-identity').append(help);}
+      const show=help.hidden||help.textContent!==description;help.textContent=description;help.hidden=!show;
+      for(const button of row.querySelectorAll('.league-member-metric'))button.setAttribute('aria-expanded',String(button===metric&&show));
+    });
+    metric.addEventListener('keydown',event=>{if(event.key==='Escape'){const row=metric.closest('.league-member');const help=row.querySelector('.league-member-metric-help');if(help)help.hidden=true;for(const button of row.querySelectorAll('.league-member-metric'))button.setAttribute('aria-expanded','false');event.stopPropagation();}});
+    return metric;
+  }
+
+  function attackQuality(member) {
+    const total=member?.attackStarsTotal,count=member?.attackStarsSampleSize;
+    if (!Number.isInteger(total)||!Number.isInteger(count)||count<1||total<0||total>3*count) return null;
+    return {total,count,average:total/count,qualified:count>=5 && total*10>=27*count};
+  }
+
+  function renderAttackQuality() {
+    const stats=state.statisticsSession===element('leagueSession').value?state.leagueStats?.members:[];
+    const byTag=new Map((stats || []).map(member=>[normalizeTag(member.tag),member]));
+    for (const row of element('leagueMembers').children) {
+      const quality=attackQuality(byTag.get(row.dataset.memberTag));
+      row.querySelectorAll('.league-top-attacker,.league-top-attacker-detail,.league-member-stars').forEach(item=>item.remove());
+      if (!quality) continue;
+      const {count}=quality,average=localizedNumber(quality.average,{minimumFractionDigits:2,maximumFractionDigits:2});
+      const metric=memberMetric('stars',average,tr('player.memberStarsHelp',{average,count:localizedNumber(count)}));metric.classList.add('league-member-stars');
+      row.querySelector('.league-member-activity').prepend(metric);
+      if (!quality.qualified) continue;
+      const badge=document.createElement('button');badge.type='button';badge.className='league-top-attacker';
+      const description=tr('player.topAttackerHelp',{average,count:localizedNumber(count)});
+      badge.title=description;badge.setAttribute('aria-label',description);badge.setAttribute('aria-expanded','false');
+      const id='leagueAttackQuality-'+row.dataset.memberTag;badge.setAttribute('aria-controls',id);
+      const icon=document.createElement('span');icon.className='league-top-attacker-icon';icon.setAttribute('aria-hidden','true');
+      icon.textContent='\u2694\uFE0E';badge.append(icon);
+      const help=document.createElement('small');help.id=id;help.className='league-top-attacker-detail';help.textContent=description;help.hidden=true;
+      badge.addEventListener('click',event=>{event.stopPropagation();hideBattle(true);help.hidden=!help.hidden;badge.setAttribute('aria-expanded',String(!help.hidden));});
+      badge.addEventListener('keydown',event=>{if(event.key==='Escape'){help.hidden=true;badge.setAttribute('aria-expanded','false');event.stopPropagation();}});
+      row.querySelector('.league-member-name').append(badge);row.querySelector('.league-member-identity').append(help);
+    }
+  }
+
   function renderPage() {
     const list = element('leagueMembers');
     list.replaceChildren();
@@ -396,6 +446,7 @@
       const row = document.createElement('li');
       row.className = 'league-member';
       const memberTag = normalizeTag(member.tag);
+      row.dataset.memberTag=memberTag || '';
       if (memberTag) {
         row.classList.add('has-compare');
         const check = document.createElement('input'); check.type = 'checkbox'; check.className = 'league-compare-check'; check.value = memberTag;
@@ -422,22 +473,20 @@
       if (isCurrent) link.setAttribute('aria-current', 'page');
       const clan = document.createElement('small');
       clan.textContent = member.clanName || tr('player.noClan');
-      identity.append(link, clan);
+      const nameRow=document.createElement('span');nameRow.className='league-member-name';nameRow.append(link);
+      identity.append(nameRow, clan);
       const trophies = document.createElement('strong');
       trophies.className = 'league-member-trophies';
       trophies.textContent = localizedNumber(Number(member.trophies || 0));
       trophies.title = tr('player.leagueTrophies');
       const activity = document.createElement('span');
       activity.className = 'league-member-activity';
-      const attacks = document.createElement('span');
-      const defenses = document.createElement('span');
       const attackCount = Number.isFinite(Number(member.attackCount)) && member.attackCount !== null ? Number(member.attackCount) : null;
       const defenseCount = Number.isFinite(Number(member.defenseCount)) && member.defenseCount !== null ? Number(member.defenseCount) : null;
-      attacks.textContent = tr('player.attackCountShort', { count: attackCount ?? '—' });
-      defenses.textContent = tr('player.defenseCountShort', { count: defenseCount ?? '—' });
-      attacks.title = tr('player.attackCountTitle');
-      defenses.title = tr('player.defenseCountTitle');
+      const attacks=memberMetric('attack',attackCount===null?'—':localizedNumber(attackCount),tr('player.memberAttackHelp',{count:attackCount===null?'—':localizedNumber(attackCount)}));
+      const defenses=memberMetric('defense',defenseCount===null?'—':localizedNumber(defenseCount),tr('player.memberDefenseHelp',{count:defenseCount===null?'—':localizedNumber(defenseCount)}));
       activity.append(attacks, defenses);
+      const actions=document.createElement('span');actions.className='league-member-actions';
       const info = document.createElement('button');
       info.type = 'button';
       info.className = 'league-battle-info';
@@ -454,12 +503,12 @@
       });
       if (memberTag && !isCurrent && state.playerTag) {
         const quick = document.createElement('a'); quick.className = 'league-compare-quick';
-        quick.textContent = tr('player.groupCompareProfile');
+        quick.append(memberIcon('compare'));
         quick.title = tr('player.groupComparePair',{name:member.name || member.tag,player:comparison.playerName});
         quick.setAttribute('aria-label',quick.title); quick.href = compareHref([state.playerTag,memberTag]);
-        activity.append(quick);
+        actions.append(quick);
       }
-      activity.appendChild(info);
+      actions.appendChild(info);activity.append(actions);
       const zone = standingsZone(member.rank);
       if (zone) row.classList.add(`is-${zone}-zone`);
       row.append(rank, identity, trophies, activity);
@@ -469,13 +518,14 @@
       });
       row.addEventListener('mouseleave', hideBattle);
       row.addEventListener('focusin', event => {
-        if (event.target.closest('.league-compare-check,.league-compare-quick')) { hideBattle(true); return; }
+        if (event.target.closest('.league-compare-check,.league-compare-quick,.league-top-attacker,.league-member-metric')) { hideBattle(true); return; }
         showBattle(member, row);
       });
       row.addEventListener('focusout', hideBattle);
       list.appendChild(row);
     }
     updateCompareSelection();
+    renderAttackQuality();
     setText('leagueMemberCount', tr('player.playersCount', { count: localizedNumber(state.members.length) }));
     setText('leaguePageInfo', totalPages ? `${state.page + 1} / ${totalPages}` : '—');
     element('leaguePrev').disabled = state.page <= 0;
@@ -812,6 +862,7 @@
       if (!response.ok) throw new Error(data.error || tr('player.statsFailed'));
       state.statisticsLoadingSession = null;
       state.leagueStats = data;
+      renderAttackQuality();
       renderStatistics();
     } catch (error) {
       if (request !== state.statisticsRequest) return;
