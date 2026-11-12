@@ -12,7 +12,7 @@
     return e;
   }
   function card(log){
-    const e=node('div',null,'coc-ref-card'+(log.bonus?' blue':log.stars===3?log.side==='attack'?' gold':' red':''));
+    const e=node('div',null,'coc-ref-card'+(log.bonus?' blue':window.RankedGameModel.cardTone(log)?' '+window.RankedGameModel.cardTone(log):''));
     const score=node('div',points(log.points),'coc-ref-score');score.append(trophy());e.append(score);
     if(log.bonus){e.append(node('small',tr('player.defenseBonus'),'comparison-bonus'));return e;}
     const stars=node('div',null,'coc-ref-stars');

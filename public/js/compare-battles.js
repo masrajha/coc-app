@@ -15,7 +15,8 @@
 
   function card(log) {
     const bonus = log.kind === 'defenseBonus';
-    const result = node('article', null, `ranked-battle-card ranked-${side}${Number(log.stars) === 3 && !bonus ? ' ranked-triple' : ''}${bonus ? ' ranked-defense-bonus' : ''}`);
+    const tone=window.RankedGameModel.cardTone(log,side);
+    const result = node('article', null, `ranked-battle-card ranked-${side}${Number(log.stars) === 3 && !bonus ? ' ranked-triple' : ''}${tone==='gold'?' ranked-gold':tone==='red'?' ranked-pink':''}${bonus ? ' ranked-defense-bonus' : ''}`);
     const top = node('div', null, 'ranked-battle-card-top');
     const points = finite(log.trophies) ? tr('player.trophyValue', {value:(Number(log.trophies) >= 0 ? '+' : '') + number(Number(log.trophies))}) : tr('player.unavailable');
     top.append(node('span', bonus ? tr('compare.bonusShort') : `#${number(log.battleNumber)}`), node('strong', points));

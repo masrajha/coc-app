@@ -7,6 +7,14 @@
     const result=Date.parse(compact?`${compact[1]}-${compact[2]}-${compact[3]}T${compact[4]}:${compact[5]}:${compact[6]}.${compact[7]}Z`:text);
     return Number.isFinite(result)?result:null;
   }
+  function cardTone(log,side=log?.side){
+    if(!log||log.bonus||log.kind==='defenseBonus')return '';
+    const points=numeric(log.points??log.trophies),stars=numeric(log.stars);
+    if(side==='defense'&&points===40)return 'gold';
+    if(side==='attack'&&points===0)return 'red';
+    if(stars===3)return side==='attack'?'gold':side==='defense'?'red':'';
+    return '';
+  }
   function prepare(data,order='oldest'){
     const sides={};let partial=false;
     for(const side of ['attack','defense']){
@@ -31,6 +39,6 @@
     const quota=numeric(data?.leagueRule?.battles??data?.defense?.battleQuota);
     return {...sides,total:official??sum,partial,quota:Number.isInteger(quota)&&quota>0&&quota<=56?quota:null};
   }
-  const api={prepare,time};
+  const api={prepare,time,cardTone};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.RankedGameModel=api;
 })(typeof window!=='undefined'?window:globalThis);

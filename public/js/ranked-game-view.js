@@ -23,7 +23,7 @@
     el('demoDetails').showModal();
   }
   function card(log){
-    const button=node('button');button.type='button';button.className='coc-ref-card'+(log.bonus?' blue no-stars':log.stars===3?log.side==='attack'?' gold':' red':'');
+    const button=node('button');button.type='button';button.className='coc-ref-card'+(log.bonus?' blue no-stars':window.RankedGameModel.cardTone(log)?' '+window.RankedGameModel.cardTone(log):'');
     const name=log.bonus?tr('player.defenseBonus'):log.opponentName||log.opponentTag||tr('player.unavailable');
     const percentage=log.bonus?'':log.destruction===null?'—':number(log.destruction)+'%';
     button.title=[name,percentage,log.stars===null?'':number(log.stars)+' / 3',points(log.points)+' '+tr('player.trophies')].filter(Boolean).join(' · ');button.setAttribute('aria-label',button.title);

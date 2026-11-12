@@ -48,8 +48,8 @@ html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home
 html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:nth-of-type(2){--menu-bg:#f0e7fa;--menu-border:#bca1d5;--menu-text:#623c88;--menu-hover:#e4d5f4}
 html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:nth-of-type(3){--menu-bg:#e0f2ef;--menu-border:#85b8ae;--menu-text:#205f58;--menu-hover:#c9e9e3}
 html:where(:not([data-theme-variant=simple]))[data-theme=light] .dashboard .home-header-links>a:hover{color:var(--menu-text)}
-html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-attack.ranked-triple){background:#fff0bf;border-color:#c49a36;box-shadow:inset 0 1px #fff8dd}
-html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-defense.ranked-triple){background:#fce0e8;border-color:#d98fa4;box-shadow:inset 0 1px #fff2f6}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-gold){background:#fff0bf;border-color:#c49a36;box-shadow:inset 0 1px #fff8dd}
+html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-pink){background:#fce0e8;border-color:#d98fa4;box-shadow:inset 0 1px #fff2f6}
 html:where(:not([data-theme-variant=simple]))[data-theme=light] :is(.ranked-battle-card.ranked-defense-bonus){background:#e9e8fa;border-color:#aaa4cf}
 html:where(:not([data-theme-variant=simple]))[data-theme=light] .ranked-battle-stars .earned{color:#8c5f05;text-shadow:none}
 html:where(:not([data-theme-variant=simple]))[data-theme=light] .ranked-battle-card.ranked-defense.ranked-triple .ranked-battle-stars .earned{color:#9d3557;text-shadow:none}

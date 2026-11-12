@@ -898,7 +898,8 @@
     logs.forEach((log, index) => {
       const side = id === 'rankedAttackLogs' ? 'attack' : 'defense';
       const bonus = log.kind === 'defenseBonus';
-      const card = document.createElement('article'); card.className = `ranked-battle-card ranked-${side}${Number(log.stars) === 3 ? ' ranked-triple' : ''}${bonus ? ' ranked-defense-bonus' : ''}`;
+      const tone=window.RankedGameModel.cardTone(log,side);
+      const card = document.createElement('article'); card.className = `ranked-battle-card ranked-${side}${Number(log.stars) === 3 ? ' ranked-triple' : ''}${tone==='gold'?' ranked-gold':tone==='red'?' ranked-pink':''}${bonus ? ' ranked-defense-bonus' : ''}`;
       const top = document.createElement('div'); top.className = 'ranked-battle-card-top';
       const number = document.createElement('span'); number.textContent = bonus ? 'BONUS' : `#${index + 1}`;
       const trophies = document.createElement('strong'); trophies.textContent = log.trophies === null || log.trophies === undefined ? `${tr('player.trophies')} —` : tr('player.trophyValue', { value: `${Number(log.trophies) >= 0 ? '+' : ''}${localizedNumber(Number(log.trophies))}` });

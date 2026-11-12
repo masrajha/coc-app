@@ -30,3 +30,19 @@ test('official totals and unknown rules are preserved',()=>{
   assert.equal(model.time('20261021T020000.000Z'),Date.parse('2026-10-21T02:00:00Z'));
   assert.equal(model.time(1792548000),1792548000000);assert.equal(model.time('bad-date'),null);
 });
+
+
+test('battle colors include successful defenses and failed attacks without coloring bonuses or unknown points',()=>{
+ assert.equal(model.cardTone({side:'defense',stars:0,points:40}),'gold');
+ assert.equal(model.cardTone({stars:0,trophies:40},'defense'),'gold');
+ assert.equal(model.cardTone({side:'attack',stars:0,points:0}),'red');
+ assert.equal(model.cardTone({stars:0,trophies:0},'attack'),'red');
+ assert.equal(model.cardTone({side:'attack',stars:3,points:40}),'gold');
+ assert.equal(model.cardTone({side:'defense',stars:3,points:0}),'red');
+ assert.equal(model.cardTone({side:'defense',stars:2,points:12}),'');
+ for(const value of [null,undefined,'',NaN])assert.equal(model.cardTone({side:'attack',stars:null,points:value}),'');
+ assert.equal(model.cardTone({side:'defense',bonus:true,points:40}),'');
+ assert.equal(model.cardTone({kind:'defenseBonus',trophies:40},'defense'),'');
+ const view=model.prepare({session:{id:'previous'},attack:{logs:[{stars:0,trophies:0}]},defense:{logs:[{stars:0,trophies:40}],bonusLogs:[{trophies:40}]}});
+ assert.equal(model.cardTone(view.attack.logs[0]),'red');assert.equal(model.cardTone(view.defense.logs[0]),'gold');assert.equal(model.cardTone(view.defense.logs[1]),'');
+});
