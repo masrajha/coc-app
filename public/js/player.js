@@ -96,6 +96,17 @@ function wikiIconCandidates(item, section) {
   return [...new Set([...(item.iconUrls || []), verified, ...candidates, local].filter(Boolean))];
 }
 
+function isItemAtMaxLevel(item, section) {
+  // Super Troop API levels may only be unlock markers; use the mapped base troop.
+  if (section === 'Super Troops' && item.levelSource !== 'baseTroop') return false;
+  const positiveLevel = value => value !== null && value !== undefined &&
+    value !== '' && Number.isInteger(Number(value)) && Number(value) > 0;
+  if (!positiveLevel(item.level)) return false;
+  // This fallback is only a visual badge, never a cap for progress scoring.
+  const cap = positiveLevel(item.progressMaxLevel) ? item.progressMaxLevel : item.maxLevel;
+  return positiveLevel(cap) && Number(item.level) === Number(cap);
+}
+
 function makeIcon(item, section) {
   const box = document.createElement('div');
   box.className = 'icon-box';
@@ -120,10 +131,7 @@ function makeIcon(item, section) {
   box.appendChild(img);
   const level = document.createElement('span');
   level.className = 'level';
-  const displayCap = item.progressMaxLevel ?? (item.progressCapStatus ? null : item.maxLevel);
-  const isMaxLevel = displayCap != null && Number.isFinite(Number(item.level)) &&
-    Number.isFinite(Number(displayCap)) && Number(displayCap) > 0 && Number(item.level) === Number(displayCap);
-  if (isMaxLevel) level.classList.add('max-level');
+  if (isItemAtMaxLevel(item, section)) level.classList.add('max-level');
   level.textContent = item.level ?? '—';
   box.appendChild(level);
   return box;
