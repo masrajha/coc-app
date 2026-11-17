@@ -120,9 +120,9 @@ function makeIcon(item, section) {
   box.appendChild(img);
   const level = document.createElement('span');
   level.className = 'level';
-  const isMaxLevel = Number.isFinite(Number(item.level)) &&
-    Number.isFinite(Number(item.maxLevel)) && Number(item.maxLevel) > 0 &&
-    Number(item.level) >= Number(item.maxLevel);
+  const displayCap = item.progressMaxLevel ?? (item.progressCapStatus ? null : item.maxLevel);
+  const isMaxLevel = displayCap != null && Number.isFinite(Number(item.level)) &&
+    Number.isFinite(Number(displayCap)) && Number(displayCap) > 0 && Number(item.level) === Number(displayCap);
   if (isMaxLevel) level.classList.add('max-level');
   level.textContent = item.level ?? '—';
   box.appendChild(level);
@@ -146,6 +146,7 @@ function showItem(item, section) {
   addDetail(tr('player.detailCategory'), section);
   addDetail(tr('player.detailPlayerLevel'), item.level);
   addDetail(tr('player.detailApiMax'), item.maxLevel);
+  if (item.progressCapStatus) addDetail(tr('player.detailTownHallMax'), item.progressMaxLevel);
   addDetail(tr('player.detailVillage'), item.village === 'builderBase' ? 'Builder Base' : 'Home Village');
   if (item.equipmentHero) addDetail('Hero', item.equipmentHero);
   const link = document.getElementById('wikiLink');
@@ -193,6 +194,46 @@ function renderEquipment(container, items) {
   container.appendChild(grid);
 }
 
+function renderNewEntities(data, player) {
+  let panel = document.getElementById('playerNewEntities');
+  if (!panel) { panel=document.createElement('details');panel.id='playerNewEntities';panel.className='player-new-entities';document.getElementById('armySections').after(panel); }
+  panel.replaceChildren();panel.hidden=!data || Number(player.townHallLevel)<8;
+  if(panel.hidden)return;
+  const node=(tag,text,className)=>{const el=document.createElement(tag);if(text!=null)el.textContent=text;if(className)el.className=className;return el;};
+  panel.append(node('summary',tr('entities.title')),node('p',tr('entities.scope'),'entities-note'));
+  const grid=node('div',null,'entities-grid');panel.append(grid);
+  const card=(title,asset)=>{const el=node('section',null,'entities-card'),heading=node('h3',title);if(asset){const image=node('img');image.src=asset;image.alt='';image.width=36;image.height=36;image.loading='lazy';image.onerror=()=>{image.onerror=null;image.src='/assets/images/profile/status.svg';};heading.prepend(image);}el.append(heading);grid.append(el);return el;};
+  const reported=(root,section)=>{
+    root.append(node('p',tr(section?.status==='unavailable'?'entities.unavailable':section?.status==='partial'?'entities.partial':'entities.reported'),'entities-note'));
+    for(const item of section?.items||[])root.append(node('p',tr('entities.itemLevel',{name:item.name,level:localizedNumber(item.level)})));
+    if(section?.status==='reported' && !section.items.length)root.append(node('p',tr('entities.empty')));
+  };
+  const squad=card('Squads','/assets/images/th19/squad-barracks.webp');reported(squad,data.squads);
+  squad.append(node('p',tr('entities.squadLevels'),'entities-note'));
+  const guide=node('details'),guideGrid=node('div',null,'entities-grid');guide.append(node('summary',tr('entities.squadGuide',{count:localizedNumber(data.squads?.reference?.length||0)})),guideGrid);squad.append(guide);
+  for(const item of data.squads?.reference||[]){
+    const el=node('article',null,'entities-reference');el.append(node('strong',item.name),node('p',tr('entities.squadUnlock',{th:item.unlockTownHall,slots:item.housingSpace})));
+    el.append(node('p',item.composition.map(member=>localizedNumber(member.count)+' '+member.name+(member.reportedTroopLevel!=null?' (Lv '+localizedNumber(member.reportedTroopLevel)+')':'')).join(' + ')));
+    const ability=item.ability,abilityKey='entities.ability.'+ability.id;el.append(node('small',tr(abilityKey)+(ability.level2!=null?' / '+tr('entities.abilityLevels',{level2:ability.level2,level3:ability.level3}):'')));
+    if(item.housingSpaceLevel3!=null)el.append(node('small',tr('entities.squadLevel3Slots',{slots:item.housingSpaceLevel3})));
+    guideGrid.append(el);
+  }
+  if(Number(player.townHallLevel)>=18 || data.guardians?.items?.length){const guardian=card('Guardians');reported(guardian,data.guardians);}
+  if(Number(player.townHallLevel)>=19){
+    const shrine=card('Guardian Shrine','/assets/images/th19/guardian-shrine.webp');shrine.append(node('p',tr('entities.shrine')));
+    const town=card('Town Hall troops','/assets/images/town-hall/th-19.webp');
+    town.append(node('p',data.townHallTroops?.selection?tr('entities.selectedTroop',{name:data.townHallTroops.selection.name}):tr(data.townHallTroops?.status==='partial'?'entities.partial':'entities.unavailable')));
+    town.append(node('p',tr('entities.townTroops'),'entities-note'));
+  }
+  if(Number(player.townHallLevel)>=17){
+    const spell=card('Heroic Spell','/assets/images/th19/heroic-spell.webp');spell.append(node('p',tr('entities.heroicScope'),'entities-note'));
+    const current=(currentArmy?.spells||[]).find(item=>item.name==='Heroic Spell');
+    if(current && typeof current.level==='number')spell.append(node('p',tr('entities.itemLevel',{name:current.name,level:localizedNumber(current.level)})));
+    for(const row of data.heroicSpell?.levels||[])spell.append(node('p',tr('entities.heroicLevel',{level:row.level,th:row.townHallRequired,reduction:localizedNumber(row.damageReductionPercent),seconds:localizedNumber(row.durationSeconds)})));
+  }
+  if(data.source?.startsWith('https://supercell.com/')){const link=node('a',tr('entities.source'));link.href=data.source;link.target='_blank';link.rel='noopener noreferrer';panel.append(link);}
+}
+
 function renderArmy(army) {
   const root = document.getElementById('armySections');
   root.replaceChildren();
@@ -230,9 +271,10 @@ function renderProgress(progress) {
   const categories = Object.entries(progress.score.categories);
   const known = categories.reduce((sum, [, value]) => sum + value.knownItems, 0);
   const expected = categories.reduce((sum, [, value]) => sum + value.expectedItems, 0);
-  setText('coverage', `${known}/${expected}`);
-  const source = progress.tableExactMatch ? tr('player.apiMaxSource') : tr('player.localTableSource', { th: progress.tableTownHallLevel });
-  const limits = [tr('player.limitBuildings'), tr(progress.tableExactMatch ? 'player.limitApi' : 'player.limitLocal', { th: progress.tableTownHallLevel }), tr('player.limitScope')];
+  setText('coverage', progress.capStatus === 'unavailable' ? tr('player.unavailable') : `${known}/${expected}`);
+  const capUnavailable = progress.capStatus === 'unavailable';
+  const source = capUnavailable ? tr('player.capUnavailableSource', {th:progress.player?.townHallLevel}) : tr('player.catalogSource', {th:progress.tableTownHallLevel,version:progress.tableVersion});
+  const limits = [tr('player.limitBuildings'), tr(capUnavailable ? 'player.limitCapUnavailable' : 'player.limitCatalog', { th: progress.tableTownHallLevel }), tr('player.limitScope')];
   setText('progressNotice', `${source}. ${limits.join(' ')}`);
   const grid = document.getElementById('categoryProgress');
   grid.replaceChildren();
@@ -438,6 +480,7 @@ function renderProfile(data) {
   renderArmy(data.army);
   renderProgress(data.progress);
   currentArmy = data.army;
+  renderNewEntities(data.newEntities,player);
   renderPlayerOverview(player, data.progress, data.lastUpdated, {army:data.army,achievements:data.achievements});
   renderPlayerResume(player, data.progress);
   PlayerLeague.initialize(player);
@@ -501,7 +544,11 @@ updatePlayerCopyContext();
 ['progressSearch', 'progressFilter', 'progressSort'].forEach(id => document.getElementById(id)?.addEventListener(id === 'progressSearch' ? 'input' : 'change', () => currentProgress && renderProgressTools(currentProgress)));
 document.getElementById('copyPlayerResume').addEventListener('click', async () => { try { await navigator.clipboard.writeText(document.getElementById('playerResumeText').textContent); setText('copyPlayerResume', tr('player.copied')); } catch {} });
 document.getElementById('copyPlayerLink').addEventListener('click', event => window.CocShare.copyLink(event.currentTarget,document.getElementById('playerLinkStatus')));
-document.getElementById('exportPlayerCsv').addEventListener('click', () => { const p = currentProfileData?.player; if (!p) return; const csv = `\uFEFFfield,value\r\nname,"${String(p.name || '').replaceAll('"', '""')}"\r\ntag,"${p.tag || ''}"\r\ntownHall,${p.townHallLevel || ''}\r\ntrophies,${p.trophies || ''}\r\nwarStars,${p.warStars || ''}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); const link = document.createElement('a'); link.href = url; link.download = `player-${normalizeTag(p.tag)}.csv`; link.click(); URL.revokeObjectURL(url); });
+document.getElementById('exportPlayerCsv').addEventListener('click', () => {
+  const p=currentProfileData?.player;if(!p)return;
+  const csv=window.ProfileExport.csv(window.ProfileExport.playerRows(currentProfileData,tr,localizedNumber));
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download=`player-${normalizeTag(p.tag)}.csv`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 const tabFromHash = location.hash.replace('#', '') || params.get('view');
 if (['army', 'progress', 'performance', 'ranked-battles', 'capital-raids', 'achievements'].includes(tabFromHash)) document.querySelector(`.tabs button[data-tab="${tabFromHash}"]`)?.click();
 if (params.has('tag')) loadProfile(params.get('tag'));

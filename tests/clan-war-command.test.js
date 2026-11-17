@@ -7,13 +7,19 @@ const page = fs.readFileSync('public/index.html', 'utf8');
 const source = page.slice(page.indexOf('function renderWarCommand('), page.indexOf('function showWarStatus('));
 function render(overrides = {}) {
   const elements = new Map();
-  const node = () => ({ textContent: '', dataset: {}, hidden: false, children: [], append(...children) { this.children.push(...children); }, appendChild(child) { this.children.push(child); }, replaceChildren() { this.children = []; } });
+  const node = () => ({ textContent: '', dataset: {}, hidden: false, children: [], removeAttribute(key) { delete this[key]; }, append(...children) { this.children.push(...children); }, appendChild(child) { this.children.push(child); }, replaceChildren() { this.children = []; } });
   const get = id => { if (!elements.has(id)) elements.set(id, node()); return elements.get(id); };
   const context = { document: { getElementById: get, createElement: node },
     setText: (id, text) => { get(id).textContent = text; },
     tr: (key, variables = {}) => JSON.stringify({ key, ...variables }),
     formatLocalizedNumber: (value, options) => new Intl.NumberFormat('en-US', options).format(value) };
-  vm.createContext(context); vm.runInContext(source, context);
+  context.window={CocI18n:{t:context.tr,number:context.formatLocalizedNumber}};
+  context.document.createTextNode=value=>String(value);
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync('public/js/war-summary.js','utf8'),context);
+  const present=context.window.ClanWarSummary.render;
+  context.window.ClanWarSummary.render=(data,report)=>{context.report=report;present(data,report);};
+  vm.runInContext(source, context);
   const data = { state: 'inWar', teamSize: 45, attacksPerMember: 2, attacksRemaining: 22,
     clan: { stars: 135, destructionPercentage: 100, attacks: 68 },
     opponent: { stars: 135, destructionPercentage: 100, attacks: 79 },
@@ -21,19 +27,19 @@ function render(overrides = {}) {
     ...overrides };
   context.renderWarCommand(data, new Date(Date.now() + 3600000));
   return { headline: JSON.parse(get('warCommandText').textContent),
-    status: JSON.parse(get('warProjection').children[2].children[1].textContent),
+    status: JSON.parse(context.report.status),
     tone: get('warCommandStrip').dataset.tone, pendingHidden: get('showPendingRoster').hidden,
     pendingLabel: JSON.parse(get('warPendingLabel').textContent).key,
-    limit: get('warProjection').children[0].children[1].textContent };
+    limit: context.report.ourTheoreticalLimit };
 }
 
 test('135 stars and 100% on both sides locks a draw and removes follow-up urgency', () => {
   const result = render();
   assert.equal(result.status.key, 'clan.warPerfectDraw');
-  assert.equal(result.headline.key, 'clan.warPerfectDrawHeadline');
-  assert.equal(result.headline.attacks, 22);
+  assert.equal(result.headline.key, 'clan.layout.perfectScore');
+  assert.equal(result.headline.stars, '135');
   assert.equal(result.tone, 'info');
-  assert.equal(result.pendingHidden, true);
+  assert.equal(result.pendingHidden, false); // Remaining/unused attacks stay inspectable without changing result urgency.
   assert.equal(result.pendingLabel, 'clan.playersWithAttacksLeft');
 });
 
@@ -41,7 +47,7 @@ test('a perfect clan waits for the opponent instead of requesting more stars', (
   const result = render({ opponent: { stars: 134, destructionPercentage: 99, attacks: 79 } });
   assert.equal(result.status.key, 'clan.warPerfectWaiting');
   assert.equal(result.tone, 'safe');
-  assert.equal(result.pendingHidden, true);
+  assert.equal(result.pendingHidden, false); // Remaining/unused attacks stay inspectable without changing result urgency.
 });
 
 test('a 15-player CWL war has a 45-star cap and supports the same perfect draw state', () => {
@@ -49,7 +55,7 @@ test('a 15-player CWL war has a 45-star cap and supports the same perfect draw s
     clan: { stars: 45, destructionPercentage: 100, attacks: 12 },
     opponent: { stars: 45, destructionPercentage: 100, attacks: 15 },
     members: Array.from({ length: 15 }, () => ({ attacksRemaining: 0 })) });
-  assert.equal(result.limit, '45★');
+  assert.equal(result.limit, 45);
   assert.equal(result.status.key, 'clan.warPerfectDraw');
   assert.equal(result.tone, 'info');
 });
@@ -71,13 +77,13 @@ test('a finished war uses destruction to resolve equal stars', () => {
     const result = render({ state: 'warEnded', clan: { stars: 130, destructionPercentage, attacks: 90 }, opponent });
     assert.equal(result.status.key, expected);
     assert.equal(result.tone, tone);
-    assert.equal(result.pendingHidden, true);
+    assert.equal(result.pendingHidden, false); // Remaining/unused attacks stay inspectable without changing result urgency.
   }
 });
 
 test('team size sets the star cap even if only part of the roster is available', () => {
   const result = render({ members: [{ attacksRemaining: 1 }], clan: { stars: 130, destructionPercentage: 95 }, opponent: { stars: 131, destructionPercentage: 96, attacks: 79 } });
-  assert.equal(result.limit, '135★');
+  assert.equal(result.limit, 135);
   assert.equal(result.status.key, 'clan.starsNeeded');
   assert.equal(result.status.stars, 2);
 });

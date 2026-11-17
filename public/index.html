@@ -627,6 +627,12 @@
             row.appendChild(cell);
         }
 
+        function addTownHallCell(row, level) {
+            addCell(row, Number.isInteger(Number(level)) && Number(level)>0 ? formatLocalizedNumber(Number(level)) : '-');
+            const cell=row.lastElementChild;cell.classList.add('town-hall-cell');
+            if(Number.isInteger(Number(level)) && Number(level)>=1 && Number(level)<=19){const img=document.createElement('img');img.src=`/assets/images/town-hall/th-${Number(level)}.webp`;img.alt='';img.width=24;img.height=24;img.loading='lazy';img.onerror=()=>img.remove();cell.prepend(img);}
+        }
+
         function playerProfileUrl(tag) {
             const params = new URLSearchParams({ tag: String(tag).replace(/^#/, '').toUpperCase() });
             if (activeTag) params.set('clan', activeTag);
@@ -931,7 +937,7 @@
                 const status = tr(missed ? 'clan.missed' : member.attacksRemaining > 0 ? 'clan.pending' : 'clan.done');
                 addCell(row, member.mapPosition);
                 addPlayerLinkCell(row, member);
-                addCell(row, member.townhallLevel);
+                addTownHallCell(row, member.townhallLevel);
                 addCell(row, member.attacksUsed);
                 addCell(row, member.attacksRemaining);
                 addCell(row, member.starsEarned);
@@ -967,7 +973,7 @@
                 const best = `${target.bestStars || 0}★ / ${formatPercent(target.bestDestruction)}%`;
                 addCell(row, target.mapPosition);
                 addPlayerLinkCell(row, target);
-                addCell(row, target.townhallLevel);
+                addTownHallCell(row, target.townhallLevel);
                 addCell(row, best);
                 addCell(row, target.attacksReceived);
                 addCell(row, `${status.label}${target.bestAttackerName ? ` · ${target.bestAttackerName}` : ''}`);
@@ -1457,7 +1463,7 @@
                 addCell(row, memberRoleLabel(member.role));
                 addCell(row, member.trophies);
                 const townHall = healthTownHall(member);
-                addCell(row, townHall === null ? '—' : formatLocalizedNumber(townHall));
+                addTownHallCell(row, townHall);
                 addCell(row, `${member.donations} / ${member.donationsReceived}`);
                 addCell(row, member.donationRatio === null ? '-' : member.donationRatio);
                 addBadgeCell(row, member.flags.length ? member.flags.map(flag => {

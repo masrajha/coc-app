@@ -108,10 +108,11 @@ try {
         $item=$supers[$super];
         $assert($item['level']===$level && $item['maxLevel']===$max && $item['baseTroop']===$base,'Super troop badges must use the matching Home Village base level: '.$super);
         $assert($item['apiLevel']===1 && $item['apiMaxLevel']===1,'Raw API unlock markers must remain available.');
-        $assert($item['progressMaxLevel']===$max,'Comparison progress limits must follow the base troop too.');
+        $baseItem=array_column($superProfile['army']['troops'],null,'name')[$base];
+        $assert($item['progressMaxLevel']===$baseItem['progressMaxLevel'] && $item['progressCapStatus']===$baseItem['progressCapStatus'],'Super Troop progress must use the same per-TH resolver as its base.');
     }
     $assert($superProfile['army']['builderBase'][0]['level']===99,'Builder Base levels must not be altered or used as the Home Village source.');
-    $assert($superProfile['progress']['score']['categories']['troops']['knownItems']===17,'Super troop normalization must not double count progress items.');
+    $assert($superProfile['progress']['score']['categories']['troops']['observedItems']===17,'Super troop normalization must not double count progress items.');
     $seed('/players/%2392GQCPJL9',['tag'=>'#92GQCPJL9','name'=>'Partial super troop test','townHallLevel'=>18,'troops'=>[
         ['name'=>'Super Archer','level'=>1,'maxLevel'=>1,'village'=>'home'],
         ['name'=>'Super Barbarian','level'=>1,'maxLevel'=>1,'village'=>'home'],

@@ -35,7 +35,7 @@
       const categoryText=node('span',tr('zap.group'));categoryText.dataset.i18n='zap.group';const categorySelect=node('select');categorySelect.id='zapCatalogKind';
       for(const [value,key] of [['all','zap.catalogAll'],['buildings','zap.buildings'],['heroes','zap.heroes']]){const item=option(value,tr(key));item.dataset.i18n=key;categorySelect.append(item);}
       const defenderLabel=node('label'),defenderTitle=node('span',tr('zap.defenderTH')),defender=node('select');defenderTitle.dataset.i18n='zap.defenderTH';defender.id='zapDefenderTH';
-      const manual=option(0,tr('zap.allLevels'));manual.dataset.i18n='zap.allLevels';defender.append(manual);for(let th=1;th<=18;th++)defender.append(option(th,'TH '+number(th)));
+      const manual=option(0,tr('zap.allLevels'));manual.dataset.i18n='zap.allLevels';defender.append(manual);for(let th=1;th<=19;th++)defender.append(option(th,'TH '+number(th)));
       defenderLabel.append(defenderTitle,defender);defender.addEventListener('change',applyDefenderPreset);
       const defenderHelp=node('p',tr('zap.defenderHelp'),'zap-hint zap-defender-help');defenderHelp.dataset.i18n='zap.defenderHelp';
       category.append(categoryText,categorySelect);toolbar.append(filterLabel,defenderLabel,category,defenderHelp);fieldset.append(toolbar);
@@ -77,6 +77,8 @@
     function scheduleCatalog(){clearTimeout(galleryTimer);galleryWorker?.terminate();const token=++galleryRun;if(!engine||loading)return;el('zapCatalog').setAttribute('aria-busy','true');galleryTimer=setTimeout(()=>catalog(token),180);}
     async function catalog(token){
       if(el('zapDetail').open)saveTarget();
+      let coverage=el('zapTH19Coverage');if(!coverage){coverage=node('p',null,'zap-hint');coverage.id='zapTH19Coverage';el('zapCatalog').before(coverage);}
+      coverage.hidden=numeric('zapDefenderTH')!==19 && numeric('zapTownHall')!==19;coverage.textContent=tr('zap.th19Coverage');
       const grid=el('zapCatalog'), query=el('zapFilter').value.trim().toLocaleLowerCase(), category=el('zapCatalogKind').value;
       const entries=['buildings','heroes'].filter(kind=>category==='all'||category===kind).flatMap(kind=>data[kind].filter(item=>item.name.toLocaleLowerCase().includes(query)&&targetRows(kind,item).length).map(item=>({kind,item})));
       const inputs=entries.map(({kind,item})=>{const saved=targetState.get(kind+':'+item.id)||{},rows=targetRows(kind,item),modes=kind==='heroes'?window.ZapquakeModel.heroModes(item.id):[];return {...config(),kind,target:item.id,supercharge:false,superchargeHitpoints:0,targetWeaponActive:false,healingPerSecond:0,...saved,defendingMode:modes.length===1?modes[0]:saved.defendingMode||'',level:rows.some(row=>row.level===saved.level)?saved.level:rows.at(-1).level};});
@@ -146,7 +148,7 @@
       for (const item of data.equipment || []) {
         const townHall=numeric('zapTownHall'),heroHall=data.requirements['hero-hall'].filter(row=>!townHall||row.townHallRequired<=townHall).at(-1),blacksmith=data.requirements.blacksmith.filter(row=>!townHall||row.townHallRequired<=townHall).at(-1);
         const owner=data.heroes.find(hero=>hero.id===item.hero);
-        const rows=!townHall?item.levels:!heroHall||!blacksmith||owner.levels[0].heroHallLevelRequired>heroHall.level?[]:item.levels.filter(row=>row.blacksmithLevelRequired<=blacksmith.level&&row.level<=blacksmith[item.rarity]);
+        const rows=townHall===19 && data.coverage?.th19?.equipmentPresetVerified===false && el('zapLoadout').value!=='experiment'?[]:!townHall?item.levels:!heroHall||!blacksmith||owner.levels[0].heroHallLevelRequired>heroHall.level?[]:item.levels.filter(row=>row.blacksmithLevelRequired<=blacksmith.level&&row.level<=blacksmith[item.rarity]);
         const checkbox=el('eq-'+item.id+'-enabled'),fields=el('eq-'+item.id+'-fields'),card=fields.closest('.zap-equipment-card'),levelSelect=el('eq-'+item.id+'-level'),previous=Number(levelSelect.value);
         card.hidden=!rows.length;checkbox.disabled=!rows.length;if(!rows.length)checkbox.checked=false;
         levelSelect.replaceChildren(...rows.map(row=>option(row.level,number(row.level))));levelSelect.value=String(rows.some(row=>row.level===previous)?previous:rows.at(-1)?.level||'');
@@ -167,7 +169,7 @@
       el('zapLeagueField').hidden=!['ranked','cwl','friendly'].includes(environment);league.disabled=el('zapLeagueField').hidden;
       el('zapRulesDateField').hidden=['normal','custom'].includes(environment);el('zapRulesDate').disabled=el('zapRulesDateField').hidden;
       el('zapCustomFields').hidden=environment!=='custom';for(const field of el('zapCustomFields').querySelectorAll('input'))field.disabled=environment!=='custom';
-      const target=selected();el('zapSuperchargeFields').hidden=el('zapKind').value!=='buildings'||!target?.supercharges?.length;
+      const target=selected();el('zapSuperchargeFields').hidden=el('zapKind').value!=='buildings'||!(el('zapRulesDate').value<'2026-11-16' ? target?.historicalSupercharges ?? target?.supercharges : target?.supercharges)?.length;
       el('zapSuperchargeHP').disabled=el('zapSuperchargeFields').hidden||!el('zapSupercharge').checked;
       el('zapWeaponField').hidden=target?.id!=='town-hall'||target?.levels[numeric('zapTargetLevel')-1]?.weaponAvailable!==true;
       refreshEquipment();
@@ -190,7 +192,7 @@
       el('zapTargetPreview').hidden = !row;
       if (!row) return;
       el('zapTargetName').textContent = `${target.name} · ${tr('zap.level')} ${number(level)}`;
-      el('zapTargetHP').textContent = `${number(row.hitpoints)} HP`;
+      el('zapTargetHP').textContent = `${number((row.historicalHitpoints||[]).find(entry=>el('zapRulesDate').value<entry.before)?.hitpoints ?? row.hitpoints)} HP`;
       el('zapRequirement').textContent = el('zapKind').value === 'heroes' ? tr('zap.heroHall', {level:number(row.heroHallLevelRequired)}) : `TH ${number(row.townHallRequired)}`;
       const image = el('zapTargetImage');
       artwork(image,targetArtwork(el('zapKind').value,target.id,level));
@@ -336,6 +338,9 @@
         }
         if (file.value.dataVersion !== manifest.dataVersion) throw new Error('data');
         data = file.value; engine = window.ZapquakeModel.create(data);
+        const maximum=data.maxTownHall??18;
+        for(const id of ['zapTownHall','zapDefenderTH']){const select=el(id),previous=Number(select.value);select.replaceChildren(option(0,tr('zap.allLevels')),...Array.from({length:maximum},(_,index)=>option(index+1,'TH '+number(index+1))));select.value=String(previous>=0&&previous<=maximum?previous:0);}
+        targetState.clear();
         const defenderSupported=data.buildings.every(item=>Array.isArray(item.availablePerTownHall));
         el('zapDefenderTH').disabled=!defenderSupported;if(!defenderSupported)el('zapDefenderTH').value='0';
         const defenderHelp=document.querySelector('.zap-defender-help');defenderHelp.dataset.i18n=defenderSupported?'zap.defenderHelp':'zap.defenderUnsupported';defenderHelp.textContent=tr(defenderHelp.dataset.i18n);
@@ -348,7 +353,7 @@
         el('zapResult').dataset.outcome = 'error'; el('zapResultBody').replaceChildren(node('p', tr('zap.loadError')));
       }
     }
-    for (let th = 1; th <= 18; th++) el('zapTownHall').append(option(th, `TH ${number(th)}`));
+    for (let th = 1; th <= 19; th++) el('zapTownHall').append(option(th, `TH ${number(th)}`));
     el('zapLightningLevel').setAttribute('aria-label', `Lightning · ${tr('zap.level')}`);
     el('zapEarthquakeLevel').setAttribute('aria-label', `Earthquake · ${tr('zap.level')}`);
     document.title = tr('zap.title') + ' - ClanIntel';

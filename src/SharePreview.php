@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 final class SharePreview
 {
     public const TTL = 900;
-    private const VERSION = 2;
+    private const VERSION = 3;
     private float $deadline;
     private bool $partial = false;
     private bool $saved = false;
@@ -80,7 +80,7 @@ final class SharePreview
         $raw = $tag ? $this->data('/players/' . rawurlencode('#' . $tag)) : null;
         $name = $raw['name'] ?? ($tag ? '#' . $tag : $this->word('Pemain ', 'Player ') . ($index + 1));
         $league = $raw['leagueTier']['name'] ?? $raw['league']['name'] ?? null;
-        $entity = ['name' => $name, 'tag' => $tag ? '#' . $tag : '—', 'badgeText' => 'TH', 'icon' => $this->icon($league),
+        $entity = ['name' => $name, 'tag' => $tag ? '#' . $tag : '—', 'badgeText' => 'TH', 'townHall'=>is_numeric($raw['townHallLevel']??null)?(int)$raw['townHallLevel']:null, 'icon' => $this->icon($league),
             'badgeUrl' => $raw['clan']['badgeUrls']['medium'] ?? $raw['clan']['badgeUrls']['small'] ?? null,
             'subtitle' => ($league ?: $this->word('Profil pemain', 'Player profile')) . (!empty($raw['clan']['name']) ? ' · ' . $raw['clan']['name'] : ''),
             'metrics' => [['Town Hall', $this->number($raw['townHallLevel'] ?? null)], [$this->word('Trofi', 'Trophies'), $this->number($raw['trophies'] ?? null)], ['War Stars', $this->number($raw['warStars'] ?? null)]]];
@@ -175,6 +175,7 @@ final class SharePreview
         $card = ['heading' => $heading, 'context' => $viewName . ' · Clash of Clans', 'entities' => $entities,
             'notice' => $this->partial ? $this->word('Sebagian data belum tersedia', 'Some data is currently unavailable') : ($this->saved ? $this->word('Menggunakan data tersimpan', 'Using saved data') : ''),
             'footer' => $this->word('Snapshot dibuat ', 'Snapshot generated ') . gmdate('d M Y H:i') . ' UTC · ' . (parse_url($this->baseUrl, PHP_URL_HOST) ?: 'ClanIntel')];
+        if($kind==='zapquake')$card['notice']=$this->word('TH19: Spiky/Firecracker saja. HP hero/TH baru dan damage Lightning 14 belum tersedia.','TH19: Spiky/Firecracker only. New hero/TH HP and Lightning 14 damage unavailable.');
         $hash = hash('sha256', json_encode($card, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE));
         $this->write($this->directory . '/images/' . $hash . '.json', json_encode($card, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR));
         $metadata = ['title' => $kind === 'home' ? $this->word('ClanIntel - Pantau Clan, War & Pemain', 'ClanIntel - Clan, War & Player Tracker') : $title . ' - ClanIntel', 'description' => $description, 'imageId' => $hash, 'context' => $context];

@@ -71,7 +71,7 @@ try {
     foreach (['/features/missing','/guides/missing','/explore/players?page=999','/explore/players?page[]=1','/leaderboards?category[]=players','/sitemaps/players-0.xml','/sitemaps/players-2.xml'] as $url) $assert($get($url)->getStatusCode()===404,'Unknown/past-end pages must return 404: '.$url);
     foreach (['id','en'] as $lang) {
         $toolHtml=(string)$get('/tools/zapquake?lang='.$lang)->getBody();$toolXp=new DOMXPath($dom($toolHtml));
-        $assert($toolXp->query('//section[@aria-labelledby="zapSeoTitle"]//details/summary')->length===4,'Calculator FAQ must be present in initial HTML.');
+        $assert($toolXp->query('//section[@aria-labelledby="zapSeoTitle"]//details/summary')->length===5,'Calculator FAQ must be present in initial HTML.');
         $toolSchema=json_decode($toolXp->evaluate('string(//script[@type="application/ld+json"])'),true,512,JSON_THROW_ON_ERROR);
         $assert($toolSchema['@type']==='WebApplication' && $toolSchema['url']==='https://clanintel.example.test/tools/zapquake?lang='.$lang && $toolSchema['inLanguage']===$lang,'Calculator schema must describe its canonical tool URL and locale.');
         $assert($toolXp->query('//section[@aria-labelledby="zapSeoTitle"]//a[contains(@href,"/features/zapquake-calculator")]')->length===1 && $toolXp->query('//section[@aria-labelledby="zapSeoTitle"]//a[contains(@href,"/guides/zapquake")]')->length===1,'Calculator must link to the explanatory feature page and guide.');

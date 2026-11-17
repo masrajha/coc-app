@@ -172,6 +172,6 @@ test('periodic aura uses explicit ticks and manual activation time; healing is c
   rejects({healingPerSecond:10},'healingTiming');
 });
 test('supercharged HP is manual and explicit; unsupported categories fail rather than ignoring it',()=>{
-  const result=engine.calculate(input({...noSpells,supercharge:true,superchargeHitpoints:900}));assert.equal(result.hitpoints,900);assert.equal(result.baseHitpoints,800);
+  const result=engine.calculate(input({...noSpells,rulesDate:'2026-11-04',supercharge:true,superchargeHitpoints:900}));assert.equal(result.hitpoints,900);assert.equal(result.baseHitpoints,800);
   assert.ok(result.notes.includes('manualSupercharge'));rejects({...profile,supercharge:true,superchargeHitpoints:900},'supercharge');
 });

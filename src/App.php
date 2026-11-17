@@ -84,16 +84,6 @@ final class App
         'Fire Heart' => ['hero' => 'Dragon Duke'], 'Flame Blower' => ['hero' => 'Dragon Duke'], 'Stun Blaster' => ['hero' => 'Dragon Duke'],
         'Electro Fangs' => ['hero' => 'Dragon Duke'], 'Rocket Backpack' => ['hero' => 'Dragon Duke'], 'Revenge Deck' => ['hero' => 'Dragon Duke']
     ];
-    private const MAX_LEVELS = [
-        11 => ['heroes' => ['Barbarian King' => 50, 'Archer Queen' => 50, 'Grand Warden' => 20], 'troops' => ['Barbarian' => 8, 'Archer' => 8, 'Giant' => 8, 'Wizard' => 8, 'Dragon' => 6, 'P.E.K.K.A' => 7, 'Baby Dragon' => 5, 'Miner' => 5, 'Electro Dragon' => 2, 'Bowler' => 3], 'spells' => ['Lightning Spell' => 8, 'Healing Spell' => 7, 'Rage Spell' => 5, 'Jump Spell' => 3, 'Freeze Spell' => 6, 'Poison Spell' => 5, 'Haste Spell' => 5], 'pets' => []],
-        12 => ['heroes' => ['Barbarian King' => 65, 'Archer Queen' => 65, 'Grand Warden' => 40], 'troops' => ['Barbarian' => 9, 'Archer' => 9, 'Giant' => 9, 'Wizard' => 9, 'Dragon' => 7, 'P.E.K.K.A' => 8, 'Baby Dragon' => 6, 'Miner' => 6, 'Electro Dragon' => 3, 'Bowler' => 4, 'Yeti' => 2], 'spells' => ['Lightning Spell' => 9, 'Healing Spell' => 7, 'Rage Spell' => 6, 'Jump Spell' => 3, 'Freeze Spell' => 7, 'Poison Spell' => 6, 'Haste Spell' => 5, 'Bat Spell' => 5], 'pets' => []],
-        13 => ['heroes' => ['Barbarian King' => 75, 'Archer Queen' => 75, 'Grand Warden' => 50, 'Royal Champion' => 25], 'troops' => ['Barbarian' => 9, 'Archer' => 9, 'Giant' => 10, 'Wizard' => 10, 'Dragon' => 8, 'P.E.K.K.A' => 9, 'Baby Dragon' => 7, 'Miner' => 7, 'Electro Dragon' => 4, 'Bowler' => 5, 'Yeti' => 3, 'Dragon Rider' => 2], 'spells' => ['Lightning Spell' => 9, 'Healing Spell' => 8, 'Rage Spell' => 6, 'Jump Spell' => 4, 'Freeze Spell' => 7, 'Poison Spell' => 7, 'Haste Spell' => 5, 'Bat Spell' => 5], 'pets' => []],
-        14 => ['heroes' => ['Barbarian King' => 80, 'Archer Queen' => 80, 'Grand Warden' => 55, 'Royal Champion' => 30], 'troops' => ['Barbarian' => 10, 'Archer' => 10, 'Giant' => 10, 'Wizard' => 10, 'Dragon' => 9, 'P.E.K.K.A' => 9, 'Baby Dragon' => 8, 'Miner' => 8, 'Electro Dragon' => 5, 'Bowler' => 6, 'Yeti' => 4, 'Dragon Rider' => 3], 'spells' => ['Lightning Spell' => 9, 'Healing Spell' => 8, 'Rage Spell' => 6, 'Jump Spell' => 4, 'Freeze Spell' => 7, 'Poison Spell' => 8, 'Haste Spell' => 5, 'Bat Spell' => 5, 'Invisibility Spell' => 4], 'pets' => ['L.A.S.S.I' => 10, 'Electro Owl' => 10, 'Mighty Yak' => 10, 'Unicorn' => 10]],
-        15 => ['heroes' => ['Barbarian King' => 90, 'Archer Queen' => 90, 'Grand Warden' => 65, 'Royal Champion' => 40], 'troops' => ['Barbarian' => 11, 'Archer' => 11, 'Giant' => 11, 'Wizard' => 11, 'Dragon' => 10, 'P.E.K.K.A' => 10, 'Baby Dragon' => 9, 'Miner' => 9, 'Electro Dragon' => 6, 'Bowler' => 7, 'Yeti' => 5, 'Dragon Rider' => 4, 'Electro Titan' => 3, 'Root Rider' => 2], 'spells' => ['Lightning Spell' => 10, 'Healing Spell' => 9, 'Rage Spell' => 6, 'Jump Spell' => 4, 'Freeze Spell' => 7, 'Poison Spell' => 9, 'Haste Spell' => 5, 'Bat Spell' => 6, 'Invisibility Spell' => 4, 'Recall Spell' => 4], 'pets' => ['L.A.S.S.I' => 10, 'Electro Owl' => 10, 'Mighty Yak' => 10, 'Unicorn' => 10, 'Frosty' => 10, 'Diggy' => 10, 'Poison Lizard' => 10, 'Phoenix' => 10]],
-        16 => ['heroes' => ['Barbarian King' => 95, 'Archer Queen' => 95, 'Grand Warden' => 70, 'Royal Champion' => 45], 'troops' => ['Barbarian' => 12, 'Archer' => 12, 'Giant' => 12, 'Wizard' => 12, 'Dragon' => 11, 'P.E.K.K.A' => 11, 'Baby Dragon' => 10, 'Miner' => 10, 'Electro Dragon' => 7, 'Bowler' => 8, 'Yeti' => 6, 'Dragon Rider' => 5, 'Electro Titan' => 4, 'Root Rider' => 3, 'Druid' => 2], 'spells' => ['Lightning Spell' => 11, 'Healing Spell' => 10, 'Rage Spell' => 6, 'Jump Spell' => 5, 'Freeze Spell' => 7, 'Poison Spell' => 10, 'Haste Spell' => 5, 'Bat Spell' => 6, 'Invisibility Spell' => 4, 'Recall Spell' => 5, 'Overgrowth Spell' => 3], 'pets' => ['L.A.S.S.I' => 15, 'Electro Owl' => 15, 'Mighty Yak' => 15, 'Unicorn' => 15, 'Frosty' => 10, 'Diggy' => 10, 'Poison Lizard' => 10, 'Phoenix' => 10, 'Spirit Fox' => 10, 'Angry Jelly' => 10]],
-        17 => ['heroes' => ['Barbarian King' => 100, 'Archer Queen' => 100, 'Grand Warden' => 75, 'Royal Champion' => 50, 'Minion Prince' => 70], 'troops' => ['Barbarian' => 13, 'Archer' => 13, 'Giant' => 13, 'Wizard' => 13, 'Dragon' => 12, 'P.E.K.K.A' => 12, 'Baby Dragon' => 11, 'Miner' => 11, 'Electro Dragon' => 8, 'Bowler' => 9, 'Yeti' => 7, 'Dragon Rider' => 6, 'Electro Titan' => 5, 'Root Rider' => 4, 'Druid' => 3], 'spells' => ['Lightning Spell' => 12, 'Healing Spell' => 11, 'Rage Spell' => 7, 'Jump Spell' => 5, 'Freeze Spell' => 8, 'Poison Spell' => 11, 'Haste Spell' => 6, 'Bat Spell' => 7, 'Invisibility Spell' => 5, 'Recall Spell' => 6, 'Overgrowth Spell' => 4], 'pets' => ['L.A.S.S.I' => 15, 'Electro Owl' => 15, 'Mighty Yak' => 15, 'Unicorn' => 15, 'Frosty' => 15, 'Diggy' => 15, 'Poison Lizard' => 15, 'Phoenix' => 15, 'Spirit Fox' => 10, 'Angry Jelly' => 10]]
-    ];
-
     private string $dataDir;
     private Client $http;
     private array $cache = [];
@@ -632,6 +622,10 @@ final class App
     }
     private function localIcon(string $name, string $section): ?array
     {
+        if ($section==='spells' && $name==='Heroic Spell') {
+            $path=dirname(__DIR__).'/public/assets/images/th19/heroic-spell.webp';
+            if(is_file($path))return ['path'=>$path,'type'=>'image/webp','url'=>'/assets/images/th19/heroic-spell.webp'];
+        }
         $base = dirname(__DIR__) . '/public/assets/images/army/' . hash('sha256', $section . ':' . $name);
         foreach (['png' => 'image/png', 'webp' => 'image/webp', 'jpg' => 'image/jpeg', 'gif' => 'image/gif'] as $extension => $type) {
             $path = $base . '.' . $extension;
@@ -639,9 +633,26 @@ final class App
         }
         return null;
     }
+    private ?GameCatalog $gameCatalog = null;
+    private bool $gameCatalogLoaded = false;
+
+    private function gameCatalog(): ?GameCatalog
+    {
+        if (!$this->gameCatalogLoaded) {
+            $this->gameCatalog = GameCatalog::load(dirname(__DIR__).'/public/assets/data/game-catalog');
+            $this->gameCatalogLoaded = true;
+        }
+        return $this->gameCatalog;
+    }
+
+    private function isPet(string $name): bool
+    {
+        return $this->gameCatalog()?->item('pets', $name) !== null || in_array($name, self::PETS, true);
+    }
+
     private function playerItem(array $item): array
     {
-        $equipmentHero = self::EQUIPMENT[$item['name'] ?? '']['hero'] ?? null;
+        $equipmentHero = $this->gameCatalog()?->equipmentHero($item['name'] ?? '') ?? self::EQUIPMENT[$item['name'] ?? '']['hero'] ?? null;
         return ['name' => $item['name'] ?? null, 'level' => $item['level'] ?? null, 'maxLevel' => $item['maxLevel'] ?? null, 'village' => $item['village'] ?? 'home', 'equipmentHero' => $equipmentHero];
     }
     private function scoreItems(array $items, array $table, bool $api, string $village = 'home'): array
@@ -652,29 +663,62 @@ final class App
         $known=[]; $missing=[];
         foreach ($limits as $name => $max) {
             if (!isset($itemMap[$name])) { $missing[]=['name'=>$name,'level'=>0,'maxLevel'=>$max]; continue; }
-            $level=(int)($itemMap[$name]['level'] ?? 0); $known[]=['name'=>$name,'level'=>$level,'maxLevel'=>$max,'percent'=>$max ? round(min(100,$level/$max*100),2) : 0];
+            $rawLevel=$itemMap[$name]['level'] ?? null; if (!is_numeric($rawLevel) || (float)$rawLevel < 0 || floor((float)$rawLevel)!=(float)$rawLevel) continue; $level=(int)$rawLevel; if ($level > $max) continue; $known[]=['name'=>$name,'level'=>$level,'maxLevel'=>$max,'percent'=>$max ? round(min(100,$level/$max*100),2) : 0];
         }
         $sum=array_sum(array_column($known,'level')); $maxSum=array_sum(array_column($known,'maxLevel')); $lowest=array_values(array_filter($known,static fn($i)=>$i['percent']<100));
-        usort($lowest,static fn($a,$b)=>$a['percent']<=>$b['percent']); $unmapped=array_values(array_diff(array_keys($itemMap),array_keys($limits)));
-        return ['percent'=>$maxSum ? round($sum/$maxSum*100,2) : null,'knownItems'=>count($known),'expectedItems'=>count($limits),'missingItems'=>count($missing),'unmappedItems'=>$unmapped,'lowest'=>array_slice($lowest,0,5),'items'=>$known,'missing'=>$missing];
+        usort($lowest,static fn($a,$b)=>$a['percent']<=>$b['percent']); $unmapped=array_values(array_diff(array_keys($itemMap),array_column($known,'name')));
+        return ['percent'=>$maxSum ? round($sum/$maxSum*100,2) : null,'observedItems'=>count($itemMap),'knownItems'=>count($known),'expectedItems'=>count($limits),'missingItems'=>count($missing),'unmappedItems'=>$unmapped,'lowest'=>array_slice($lowest,0,5),'items'=>$known,'missing'=>$missing];
     }
     private function progress(array $player): array
     {
-        $th=(int)($player['townHallLevel'] ?? $player['townhallLevel'] ?? 0); $table=self::MAX_LEVELS[$th] ?? [];
-        if (!$table) { $levels=array_keys(self::MAX_LEVELS); $fallback=max(array_filter($levels,static fn($n)=>$n<=$th) ?: [$levels[0]]); $table=self::MAX_LEVELS[$fallback]; } else $fallback=$th;
-        $api=$th===18; $pets=$player['heroPets'] ?? $player['pets'] ?? array_values(array_filter($player['troops'] ?? [],static fn($i)=>in_array($i['name'] ?? '',self::PETS,true)));
-        $troops=array_values(array_filter($player['troops'] ?? [],static fn($i)=>!isset(self::SUPER_TROOPS[$i['name'] ?? ''])&&!in_array($i['name'] ?? '',self::PETS,true)));
-        $categories=['heroes'=>$this->scoreItems($player['heroes']??[],$table['heroes']??[],$api),'troops'=>$this->scoreItems($troops,$table['troops']??[],$api),'spells'=>$this->scoreItems($player['spells']??[],$table['spells']??[],$api),'pets'=>$this->scoreItems($pets,$table['pets']??[],$api)];
-        $available=array_filter($categories,static fn($c)=>$c['percent']!==null); $weightTotal=0; foreach($available as $key=>$_)$weightTotal+=self::WEIGHTS[$key];
-        $overall=null; if($weightTotal){$overall=0;foreach($available as $key=>$cat)$overall+=$cat['percent']*self::WEIGHTS[$key]/$weightTotal;$overall=round($overall,2);}
-        $coverage=array_sum(array_column($categories,'knownItems')); $unmapped=0; foreach($categories as $cat)$unmapped+=$cat['missingItems']+count($cat['unmappedItems']);
-        $minimum=['heroes'=>5,'troops'=>20,'spells'=>12,'pets'=>10]; $complete=$api&&$coverage>0&&$unmapped===0;foreach($minimum as $key=>$count)$complete=$complete&&$categories[$key]['knownItems']>=$count;
-        $weak=[];$very=[];foreach($categories as $key=>$cat)if($cat['percent']!==null){if($cat['percent']<60)$weak[]=$key;if($cat['percent']<50)$very[]=$key;}
-        $rushed=$complete&&$overall!==null&&$overall<60&&count($very)>0;$reasons=[];if(!$complete)$reasons[]='Cakupan batas level belum lengkap; status rushed ditahan agar tidak menyesatkan.';else {if($overall<60)$reasons[]='Skor keseluruhan di bawah 60%.';foreach($very as $key)$reasons[]='Kategori ' . $key . ' di bawah 50%.';foreach(array_diff($weak,$very) as $key)$reasons[]='Kategori ' . $key . ' perlu perhatian karena di bawah 60%.';if(!$reasons)$reasons[]='Kategori utama yang tersedia masih berada di ambang aman.';}
-        $priorities=[];foreach($categories as $key=>$cat)foreach($cat['lowest'] as $item)$priorities[]=array_merge(['category'=>$key],$item,['levelsRemaining'=>max(0,$item['maxLevel']-$item['level'])]);usort($priorities,static fn($a,$b)=>$a['percent']<=>$b['percent'] ?: $b['levelsRemaining']<=>$a['levelsRemaining']);
+        $th=(int)($player['townHallLevel'] ?? $player['townhallLevel'] ?? 0);
+        $catalog=$this->gameCatalog();
+        $pets=array_merge($player['heroPets'] ?? $player['pets'] ?? [],array_values(array_filter($player['troops'] ?? [],fn($i)=>$this->isPet($i['name'] ?? ''))));
+        $troops=array_values(array_filter($player['troops'] ?? [],fn($i)=>!isset(self::SUPER_TROOPS[$i['name'] ?? ''])&&!$this->isPet($i['name'] ?? '') && PlayerNewEntities::separateKind($i['name'] ?? '')===null));
+        $inputs=['heroes'=>$player['heroes']??[],'troops'=>$troops,'spells'=>$player['spells']??[],'pets'=>$pets];
+        $categories=[];
+        foreach ($inputs as $key=>$items) {
+            $categories[$key]=$this->scoreItems($items,$catalog?->limits($key,$th) ?? [],false);
+            foreach ($categories[$key]['items'] as &$item) {
+                $cap=$catalog->resolve($key,$item['name'],$th,$item['level']);
+                $item['capSource']=$cap['source']; $item['dataVersion']=$cap['dataVersion'];
+            }
+            unset($item);
+            $observed=$categories[$key]['observedItems'];
+            $categories[$key]['coveragePercent']=$observed ? round($categories[$key]['knownItems']/$observed*100,2) : null;
+        }
+        $available=array_filter($categories,static fn($c)=>$c['percent']!==null);
+        $weightTotal=0; foreach($available as $key=>$_)$weightTotal+=self::WEIGHTS[$key];
+        $overall=null;
+        if($weightTotal){$overall=0;foreach($available as $key=>$cat)$overall+=$cat['percent']*self::WEIGHTS[$key]/$weightTotal;$overall=round($overall,2);}
+        $coverage=array_sum(array_column($categories,'knownItems'));
+        $unmapped=0;foreach($categories as $cat)$unmapped+=$cat['missingItems']+count($cat['unmappedItems']);
+        $expected=array_sum(array_column($categories,'expectedItems'));
+        $complete=$catalog?->completeAt($th) && $coverage>0 && $unmapped===0;
+        $assessable=$complete && $th>=11;
+        $capStatus=$coverage>0 ? ($complete?'verified':'partial') : 'unavailable';
+        $weak=[];$very=[];
+        foreach($categories as $key=>$cat)if($cat['percent']!==null){if($cat['percent']<60)$weak[]=$key;if($cat['percent']<50)$very[]=$key;}
+        $rushed=$assessable&&$overall!==null&&$overall<60&&count($very)>0;
+        $reasons=[];
+        if(!$assessable)$reasons[]='Cakupan batas level belum lengkap; status rushed ditahan agar tidak menyesatkan.';
+        else {if($overall<60)$reasons[]='Skor keseluruhan di bawah 60%.';foreach($very as $key)$reasons[]='Kategori ' . $key . ' di bawah 50%.';foreach(array_diff($weak,$very) as $key)$reasons[]='Kategori ' . $key . ' perlu perhatian karena di bawah 60%.';if(!$reasons)$reasons[]='Kategori utama yang tersedia masih berada di ambang aman.';}
+        $priorities=[];
+        foreach($categories as $key=>$cat)foreach($cat['lowest'] as $item)$priorities[]=array_merge(['category'=>$key],$item,['levelsRemaining'=>max(0,$item['maxLevel']-$item['level'])]);
+        usort($priorities,static fn($a,$b)=>$a['percent']<=>$b['percent'] ?: $b['levelsRemaining']<=>$a['levelsRemaining']);
         $builder=[];foreach(array_merge($player['heroes']??[],$player['troops']??[],$player['spells']??[]) as $item)if(($item['village']??'')==='builderBase')$builder[]=$item;
         $builderScore=$this->scoreItems($builder,[],(int)($player['builderHallLevel']??0)===10,'builderBase');
-        return ['tableVersion'=>'2026-10-api-max-with-partial-th-table','tableTownHallLevel'=>$fallback,'tableExactMatch'=>$api,'complete'=>$complete,'minimumCoverage'=>$minimum,'baselineSource'=>$api?'maxLevel dari API pemain pada TH 18':'tabel lokal TH ' . $fallback . ' (parsial)','player'=>['tag'=>$player['tag']??null,'name'=>$player['name']??null,'townHallLevel'=>$th,'expLevel'=>$player['expLevel']??null,'trophies'=>$player['trophies']??null,'clan'=>isset($player['clan'])?['tag'=>$player['clan']['tag']??null,'name'=>$player['clan']['name']??null]:null],'score'=>['label'=>'Progres pasukan dan hero','overall'=>$overall,'weights'=>self::WEIGHTS,'categories'=>$categories,'builderBase'=>$builderScore],'rushed'=>['rushed'=>$complete?$rushed:null,'label'=>$complete?($rushed?'Terindikasi rushed':'Tidak terindikasi rushed'):'Belum dapat dinilai','reasons'=>$reasons],'priorities'=>array_slice($priorities,0,10),'limitations'=>['API profil pemain tidak menyediakan level bangunan, tembok, dan upgrade berjalan.',$api?'Batas level TH 18 dan BH 10 diambil dari maxLevel API bila tersedia; item tanpa batas tidak masuk skor.':'Tabel lokal TH ' . $fallback . ' belum tervalidasi untuk seluruh item dan update terbaru; status rushed tidak dihitung.','Skor hanya meliputi pasukan, hero, spell, dan pet; bukan persentase maksimal seluruh akun.'],'generatedAt'=>gmdate('c')];
+        return ['tableVersion'=>$catalog?->version() ?? 'catalog-unavailable','capStatus'=>$capStatus,
+            'tableTownHallLevel'=>$coverage>0?$th:null,'tableExactMatch'=>$complete,'complete'=>$assessable,
+            'coverage'=>['expectedItems'=>$expected,'totalKnown'=>$catalog?->completeAt($th) ?? false],
+            'minimumCoverage'=>array_map(static fn($cat)=>$cat['expectedItems'],$categories),
+            'baselineSource'=>$catalog?'catalog '.$catalog->version():'catalog unavailable',
+            'player'=>['tag'=>$player['tag']??null,'name'=>$player['name']??null,'townHallLevel'=>$th,'expLevel'=>$player['expLevel']??null,'trophies'=>$player['trophies']??null,'clan'=>isset($player['clan'])?['tag'=>$player['clan']['tag']??null,'name'=>$player['clan']['name']??null]:null],
+            'score'=>['label'=>'Progres pasukan dan hero','overall'=>$overall,'weights'=>self::WEIGHTS,'categories'=>$categories,'builderBase'=>$builderScore],
+            'rushed'=>['rushed'=>$assessable?$rushed:null,'label'=>$assessable?($rushed?'Terindikasi rushed':'Tidak terindikasi rushed'):'Belum dapat dinilai','reasons'=>$reasons],
+            'priorities'=>array_slice($priorities,0,10),
+            'limitations'=>['API profil pemain tidak menyediakan level bangunan, tembok, dan upgrade berjalan.','Batas level berasal dari katalog per TH; item tanpa batas terverifikasi tidak masuk skor.','Skor hanya meliputi pasukan, hero, spell, dan pet; bukan persentase maksimal seluruh akun.'],
+            'generatedAt'=>gmdate('c')];
     }
     private function profile(array $p, string $updated): array
     {
@@ -687,15 +731,17 @@ final class App
         foreach($p['heroEquipment']??[] as $i)$army['heroEquipment'][]=$this->playerItem($i);
         foreach($p['heroPets']??$p['pets']??[] as $i)$army['pets'][]=$this->playerItem($i);
         $seen=array_column($army['pets'],'name');
-        foreach($p['troops']??[] as $i){$item=$this->playerItem($i);if(($i['village']??'')==='builderBase')$army['builderBase'][]=$item;elseif(in_array($i['name']??'',self::PETS,true)){if(!in_array($item['name'],$seen,true))$army['pets'][]=$item;$seen[]=$item['name'];}elseif(isset(self::SUPER_TROOPS[$i['name']??'']))$army['superTroops'][]=$item;else $army['troops'][]=$item;}
+        foreach($p['troops']??[] as $i){if(PlayerNewEntities::separateKind($i['name']??'')!==null)continue;$item=$this->playerItem($i);if(($i['village']??'')==='builderBase')$army['builderBase'][]=$item;elseif($this->isPet($i['name']??'')){if(!in_array($item['name'],$seen,true))$army['pets'][]=$item;$seen[]=$item['name'];}elseif(isset(self::SUPER_TROOPS[$i['name']??'']))$army['superTroops'][]=$item;else $army['troops'][]=$item;}
         foreach($p['spells']??[] as $i)$army[($i['village']??'')==='builderBase'?'builderBase':'spells'][]=$this->playerItem($i);
-        $progressSections=['heroes'=>'heroes','pets'=>'pets','troops'=>'troops','spells'=>'spells'];
-        foreach($progressSections as $section=>$category){
-            $limits=[];
-            foreach($progress['score']['categories'][$category]['items']??[] as $scoredItem)$limits[$scoredItem['name']]=(int)$scoredItem['maxLevel'];
-            foreach($army[$section] as &$item)if(isset($limits[$item['name']])){
-                $item['progressMaxLevel']=$limits[$item['name']];
-                $item['progressMaxSource']='TH '.($p['townHallLevel']??'—');
+        $progressSections=['heroes','pets','troops','spells','heroEquipment'];
+        foreach($progressSections as $section){
+            foreach($army[$section] as &$item){
+                $cap=$this->gameCatalog()?->resolve($section,$item['name'],(int)($p['townHallLevel']??0),is_numeric($item['level'])?(int)$item['level']:null);
+                $item['progressMaxLevel']=$cap['maxAtTownHall'] ?? null;
+                $item['progressCapStatus']=($cap['exactMatch']??false)?'verified':'unavailable';
+                $item['progressMaxSource']=($cap['exactMatch']??false)?'TH '.($p['townHallLevel']??''):null;
+                $item['progressDataVersion']=$cap['dataVersion'] ?? null;
+                $item['progressCapSource']=$cap['source'] ?? null;
             }
             unset($item);
         }
@@ -710,6 +756,9 @@ final class App
         // matching Home Village troop's level and cap, preserving the raw values.
         $baseTroops = array_column($army['troops'], null, 'name');
         foreach ($army['superTroops'] as &$item) {
+            $item['progressMaxLevel'] = null;
+            $item['progressMaxSource'] = null;
+            $item['progressCapStatus'] = 'unavailable';
             $baseName = self::SUPER_TROOPS[$item['name']] ?? null;
             $base = $baseTroops[$baseName] ?? null;
             if (!is_numeric($base['level'] ?? null) || (int)$base['level'] <= 0) continue;
@@ -719,7 +768,7 @@ final class App
             $item['apiMaxLevel'] = $item['maxLevel'];
             $item['level'] = $base['level'];
             $item['maxLevel'] = $base['maxLevel'];
-            foreach (['progressMaxLevel', 'progressMaxSource'] as $field) if (isset($base[$field])) $item[$field] = $base[$field];
+            foreach (['progressMaxLevel', 'progressMaxSource', 'progressCapStatus', 'progressDataVersion', 'progressCapSource'] as $field) if (array_key_exists($field, $base)) $item[$field] = $base[$field];
         }
         unset($item);
         foreach($army as $section=>&$items)foreach($items as &$item)$item['iconUrls']=$this->iconCandidates($item['name'],$section);unset($items,$item);
@@ -730,7 +779,7 @@ final class App
         $player['leagueTransition']=$this->playerLeagueTransition($p, $updated);
         $player['legendStatistics']=is_array($p['legendStatistics']??null)?$p['legendStatistics']:null;
         $player['clan']=isset($p['clan'])?['tag'=>$p['clan']['tag']??null,'name'=>$p['clan']['name']??null,'badgeUrls'=>$p['clan']['badgeUrls']??null]:null;
-        return ['player'=>$player,'army'=>$army,'progress'=>$progress,'achievements'=>is_array($p['achievements']??null)?$p['achievements']:null,'lastUpdated'=>$updated];
+        return ['player'=>$player,'army'=>$army,'progress'=>$progress,'newEntities'=>PlayerNewEntities::profile($p),'achievements'=>is_array($p['achievements']??null)?$p['achievements']:null,'lastUpdated'=>$updated];
     }
 
     private function clan(ResponseInterface $res,string $raw):ResponseInterface{$tag=$this->normalizeTag($raw);if(!$tag)return $this->tagError($res,'Tag klan tidak valid.');try{$e=$this->upstream('/clans/'.rawurlencode('#'.$tag));$capitalProgress=ClanCapitalReport::progress($e['data']['clanCapital']??[],$this->snapshots($tag),gmdate('Y-m-d'));$snapshot=$this->saveSnapshot($tag,$e['data']);$data=$e['data'];$data['capitalProgress']=$capitalProgress;$data['snapshotDate']=$snapshot['date'];return $this->respond($res,$data);}catch(\Throwable $e){return $this->failure($res,$e);}}
@@ -1190,18 +1239,18 @@ final class App
         return $tier;
     }
 
-    private function rankedRule(?string $tier): ?array
+    private function rankedRule(?string $tier, ?int $seasonId = null): ?array
     {
         if ($tier === null || trim($tier) === '') return null;
-        if (isset(self::RANKED_RULES[$tier])) return self::RANKED_RULES[$tier];
+        if (isset(self::RANKED_RULES[$tier])) return RankedRules::resolve($tier,self::RANKED_RULES[$tier],$seasonId);
 
         $normalize = static function (string $name): string {
             $withoutLeague = preg_replace('/\bleague\b/i', ' ', trim($name)) ?? $name;
-            return strtoupper(preg_replace('/[^a-z0-9]+/i', '', $withoutLeague) ?? '');
+            return str_replace('ELECTRODRAGON','ELECTRO',strtoupper(preg_replace('/[^a-z0-9]+/i', '', $withoutLeague) ?? ''));
         };
         $normalizedTier = $normalize($tier);
         foreach (self::RANKED_RULES as $name => $rule) {
-            if ($normalize($name) === $normalizedTier) return $rule;
+            if ($normalize($name) === $normalizedTier) return RankedRules::resolve($name,$rule,$seasonId);
         }
         return null;
     }
@@ -1285,13 +1334,13 @@ final class App
                 if ($candidate['id'] === 'current') $this->rankedSessionTier($profile['data'], $candidate, $profile['lastUpdated']);
             }
             $leagueTierName = $this->rankedSessionTier($profile['data'], $session, $profile['lastUpdated']);
-            $rankedRule = $this->rankedRule($leagueTierName);
+            $rankedRule = $this->rankedRule($leagueTierName,(int)$session['seasonId']);
             $path = '/leaguegroup/' . rawurlencode($session['groupTag']) . '/' . $session['seasonId'] . '?playerTag=' . rawurlencode('#' . $tag);
             $previous = $sessionId === 'previous';
             $group = $this->upstream($path, 18000, 0, $previous ? 30 * 86400 : null, $previous);
             if ($leagueTierName === null) {
                 $leagueTierName = $this->rankedSessionTier($profile['data'], $session, $group['lastUpdated'], $group['data']);
-                $rankedRule = $this->rankedRule($leagueTierName);
+                $rankedRule = $this->rankedRule($leagueTierName,(int)$session['seasonId']);
             }
             if (($req->getQueryParams()['detail'] ?? null) === 'statistics') {
                 $statistics = $this->rankedLeagueStatistics($session, $group['data']['members'] ?? [], $previous);
@@ -1311,7 +1360,7 @@ final class App
                 }
                 if ($leagueTierName === null) {
                     $leagueTierName = $this->rankedSessionTier($profile['data'], $session, $group['lastUpdated'], $group['data']);
-                    $rankedRule = $this->rankedRule($leagueTierName);
+                    $rankedRule = $this->rankedRule($leagueTierName,(int)$session['seasonId']);
                 }
                 $averages = [];
                 foreach (['attack' => 'attackLogs', 'defense' => 'defenseLogs'] as $side => $key) {

@@ -1,9 +1,9 @@
 {
     "schemaVersion": 1,
-    "dataVersion": "2026-11-04.5",
-    "dataset": "2026-11-04.5/dataset.json",
-    "license": "2026-11-04.5/LICENSE.txt",
-    "sha256": "bebd8dc95c47bbf124133915608d90b41e66afd35b82c8d173f4e0a6d143e1a8",
-    "bytes": 225713,
+    "dataVersion": "2026-11-17.3",
+    "dataset": "2026-11-17.3/dataset.json",
+    "license": "2026-11-17.3/LICENSE.txt",
+    "sha256": "945cae0e4e68d09dccdb532a66cd6c753f9271848b1f0fbbff0c091abb434baf",
+    "bytes": 232818,
     "calculationReady": false
 }

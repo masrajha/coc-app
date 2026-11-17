@@ -1,0 +1,15 @@
+{
+    "supportedTargets": [
+        "spiky-tower",
+        "firecracker-tower"
+    ],
+    "missing": [
+        "Town Hall 19 HP",
+        "New hero level HP",
+        "Lightning 14 damage",
+        "Other new target levels and TH19 counts",
+        "TH19 equipment/hero loadout bounds"
+    ],
+    "equipmentPresetVerified": false,
+    "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+}

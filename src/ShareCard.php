@@ -136,8 +136,11 @@ final class ShareCard
             $this->rectangle($x, 190, $width, 327, '#40516a');
             $this->rectangle($x + 1, 191, $width - 2, 325, '#1b2639');
             $this->emblem($entity, $x + 20, 211, $asset);
-            $this->text((string)$entity['name'], $x + 110, 214, $count === 2 ? 32 : 43, '#fff5dd', $width - 128);
-            $this->text((string)$entity['tag'], $x + 110, 261, 21, '#a99c89', $width - 128);
+            $th=$entity['townHall']??null;$thBytes=null;
+            if(is_int($th)&&$th>=1&&$th<=19){$thFile=__DIR__.'/../public/assets/images/town-hall/th-'.$th.'.webp';if(is_file($thFile))$thBytes=file_get_contents($thFile);}
+            $hasTH=$this->image($thBytes,$x+$width-64,214,42);
+            $this->text((string)$entity['name'], $x + 110, 214, $count === 2 ? 32 : 43, '#fff5dd', $width - ($hasTH?194:128));
+            $this->text((string)$entity['tag'].(is_int($th)?' / TH '.$th:''), $x + 110, 261, 21, '#a99c89', $width - 128);
             $this->text((string)($entity['subtitle'] ?? ''), $x + 23, 302, 22, '#ffd166', $width - 46);
             foreach (array_slice($entity['metrics'] ?? [], 0, 3) as $metricIndex => $metric) {
                 $y = 348 + $metricIndex * 49;

@@ -24,6 +24,15 @@ test('missing scores and partial data stay unknown, while zero remains valid', (
   assert.equal(model({score:{overall:null}}).score,null);
 });
 
+test('TH19 counts observed items without inventing caps or a best-progress hero', () => {
+  const partial = {capStatus:'unavailable',complete:false,score:{overall:null,categories:{heroes:{knownItems:0,observedItems:6,items:[]},troops:{knownItems:0,observedItems:42}}}};
+  assert.equal(model(partial).known,48);
+  assert.equal(model(partial).counts.heroes,6);
+  assert.equal(model(partial).score,null);
+  assert.equal(model(partial).status,'unknown');
+  assert.equal(window.PlayerOverview.chooseHero({heroes:[{name:'Archer Queen',level:115,maxLevel:115}]},partial),null);
+});
+
 test('profile hero uses relative progress instead of the largest level', () => {
   const player = {heroes:[
     {name:'Barbarian King',level:95,maxLevel:110},

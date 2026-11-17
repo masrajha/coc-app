@@ -1,7 +1,9 @@
 (function(scope) {
   'use strict';
-  const VERSION = '2026-11-04.1';
-  const REVIEWED_UNTIL = '2026-11-05';
+  const VERSION = '2026-11-17.1';
+  const REVIEWED_UNTIL = '2026-11-18';
+  const TH19_FROM = '2026-11-16';
+  const TH19 = 'https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/';
   const APRIL = 'https://supercell.com/en/games/clashofclans/blog/release-notes/the-sound-of-clash-update/';
   const AUGUST = 'https://supercell.com/en/games/clashofclans/blog/release-notes/august-update-3/';
   const MAY = 'https://supercell.com/en/games/clashofclans/blog/news/state-of-gameplay-part-2/';
@@ -17,7 +19,7 @@
     if (environment === 'custom') return {id:'custom', heroHPPercent:customHP, equipmentDamagePercent:customDamage, flatHP, commonReduction:0, epicReduction:0, sources:[], version:VERSION, experimental:true};
     const date = config.rulesDate;
     if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0,10) !== date
-      || date < '2026-04-27' || date >= REVIEWED_UNTIL) fail('rulesDate');
+      || date < '2026-04-27' || date >= REVIEWED_UNTIL || (date >= '2026-11-05' && date < TH19_FROM)) fail('rulesDate');
     let profile = environment === 'esports' ? 'esports' : config.league;
     const sources = [APRIL];
     if (environment === 'cwl') {
@@ -28,11 +30,13 @@
       profile = mapping[profile]; sources.push(date < '2026-08-30' ? MAY : AUGUST);
     }
     if (!['normal','legend-3','legend-2','legend-1','esports'].includes(profile) || (environment === 'ranked' && profile === 'esports')) fail('modifier');
-    const bonus = {'normal':0,'legend-3':10,'legend-2':15,'legend-1':20,esports:25}[profile];
+    const updated=date>=TH19_FROM;
+    if(updated)sources.push(TH19);
+    const bonus = (updated ? {'normal':0,'legend-3':15,'legend-2':20,'legend-1':25,esports:30} : {'normal':0,'legend-3':10,'legend-2':15,'legend-1':20,esports:25})[profile];
     return {id:profile, heroHPPercent:hero ? bonus : 0, equipmentDamagePercent:0, flatHP:0,
       commonReduction:profile === 'esports' ? 3 : 0, epicReduction:profile === 'esports' ? 6 : 0,
-      sources, validFrom:environment === 'cwl' ? (date < '2026-08-30' ? '2026-06-01' : '2026-08-30') : '2026-04-27',
-      validUntil:environment === 'cwl' && date < '2026-08-30' ? '2026-08-30' : REVIEWED_UNTIL, version:VERSION};
+      sources, validFrom:updated ? TH19_FROM : environment === 'cwl' ? (date < '2026-08-30' ? '2026-06-01' : '2026-08-30') : '2026-04-27',
+      validUntil:environment === 'cwl' && date < '2026-08-30' ? '2026-08-30' : updated ? REVIEWED_UNTIL : '2026-11-05', version:updated ? VERSION : '2026-11-04.1'};
   }
   const api = {VERSION, resolve};
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else scope.ZapquakeModifiers = api;

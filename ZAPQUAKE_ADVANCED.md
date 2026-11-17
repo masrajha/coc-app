@@ -1,5 +1,7 @@
 # Zapquake Z5–Z7 — equipment, modifier, dan timeline
 
+Pembaruan T19-4/T19-5: engine `2.3.0`, data `2026-11-17.3`, dan profil modifier `2026-11-17.1`. Cakupan terbaru serta batas data TH19 dijelaskan di [TH19_SIMULATION_AND_ENTITIES.md](TH19_SIMULATION_AND_ENTITIES.md). Angka versi/rentang pada catatan implementasi lama di bawah tetap menjadi referensi historis.
+
 Status: diimplementasikan pada halaman `/tools/zapquake`. Mesin `2.2.1`, profil modifier `2026-11-04.1`, dataset aktif `2026-11-04.5`. Semua konfigurasi tetap manual, tanpa API profil pemain.
 
 ## 1. Equipment yang didukung

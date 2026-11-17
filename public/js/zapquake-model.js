@@ -1,6 +1,6 @@
 (function (scope) {
   'use strict';
-  const VERSION = '2.2.1';
+  const VERSION = '2.3.0';
   const heroModes = id => ({'archer-queen':['ground'],'barbarian-king':['ground'],'royal-champion':['ground'],
     'dragon-duke':['air'],'minion-prince':['air'],'grand-warden':['ground','air']}[id] || []);
   const Modifiers = typeof module !== 'undefined' && module.exports ? require('./zapquake-modifiers.js') : scope.ZapquakeModifiers;
@@ -28,8 +28,9 @@
     return fraction(BigInt(text.replace('.', '')), 100n * 10n ** BigInt((text.split('.')[1] || '').length));
   };
   function create(data) {
-    if (data?.schemaVersion !== 1 || data.status !== 'reference-data-only' || data.calculationReady !== false || !['1.1.0','1.2.0','1.2.1','1.3.0'].includes(data.normalizerVersion)
+    if (data?.schemaVersion !== 1 || data.status !== 'reference-data-only' || data.calculationReady !== false || !['1.1.0','1.2.0','1.2.1','1.3.0','1.4.0'].includes(data.normalizerVersion)
       || !Array.isArray(data.modifiers) || data.modifiers.length) fail('data');
+    const maximumTownHall = data.maxTownHall ?? 18; integer(maximumTownHall,18,19,'data');
     const maps = {};
     for (const kind of ['buildings', 'heroes', 'spells']) {
       if (!Array.isArray(data[kind]) || !data[kind].length) fail('data');
@@ -40,11 +41,11 @@
           if (row.level !== index + 1) fail('data');
           if (kind !== 'spells') integer(row.hitpoints, 1, 100000000, 'data');
         }
-        if(kind==='buildings' && (item.availablePerTownHall!==undefined || data.normalizerVersion==='1.3.0')) {
+        if(kind==='buildings' && (item.availablePerTownHall!==undefined || ['1.3.0','1.4.0'].includes(data.normalizerVersion))) {
           if(!Array.isArray(item.availablePerTownHall)||!item.availablePerTownHall.length)fail('data');
           let previous=0;
           for(const row of item.availablePerTownHall){
-            integer(row.townHallLevel,1,18,'data');integer(row.count,0,100,'data');
+            integer(row.townHallLevel,1,maximumTownHall,'data');if(!(row.townHallLevel===19 && row.count===null && row.status==='unverified'))integer(row.count,0,100,'data');
             if(previous&&row.townHallLevel!==previous+1)fail('data');previous=row.townHallLevel;
             if(row.countAfterMerges!==undefined)integer(row.countAfterMerges,0,row.count,'data');
           }
@@ -79,22 +80,24 @@
       return item.levels[level - 1];
     };
     function targetLevels(kind, id, townHall = 0) {
-      integer(townHall,0,18,'defenderTH');
+      integer(townHall,0,maximumTownHall,'defenderTH');
       const item=maps[kind]?.get(id);if(!item||!['heroes','buildings'].includes(kind))fail('target');
       if(!townHall)return item.levels;
       if(kind==='heroes'){
+        if(townHall===19 && data.coverage?.th19)return [];
         const hall=(data.requirements?.['hero-hall']||[]).filter(row=>row.townHallRequired<=townHall).at(-1);
         return hall?item.levels.filter(row=>row.heroHallLevelRequired<=hall.level):[];
       }
       if(!Array.isArray(item.availablePerTownHall))fail('data');
       const availability=item.availablePerTownHall.find(row=>row.townHallLevel===townHall);
-      if(!availability||(availability.countAfterMerges??availability.count)===0)return [];
+      if(!availability||availability.status==='unverified'||(availability.countAfterMerges??availability.count)===0)return [];
       if(item.id==='town-hall')return item.levels.filter(row=>row.level===townHall);
       return item.levels.filter(row=>row.townHallRequired<=townHall);
     }
     function prepare(config) {
       if (!config || !['buildings', 'heroes'].includes(config.kind)) fail('target');
       if (config.modifiers?.length || config.hpMultiplier != null) fail('unsupported');
+      if(config.rulesDate!=null && (!/^\d{4}-\d{2}-\d{2}$/.test(config.rulesDate) || !Number.isFinite(Date.parse(config.rulesDate)) || new Date(config.rulesDate).toISOString().slice(0,10)!==config.rulesDate))fail('rulesDate');
       const row = rowAt(config.kind, config.target, config.level);
       if(!targetLevels(config.kind,config.target,config.defenderTownHall??0).some(entry=>entry.level===config.level))fail('defenderTH');
       const hero = config.kind === 'heroes';
@@ -103,9 +106,14 @@
       if (hero && !modes.includes(defendingMode)) fail('heroMode');
       if (!Modifiers) fail('data');
       const modifier = Modifiers.resolve(config, hero);
-      let baseHP = row.hitpoints;
+      if (maps[config.kind].get(config.target).availableFrom && config.rulesDate && config.rulesDate < maps[config.kind].get(config.target).availableFrom) fail('targetDate');
+      const historical=(row.historicalHitpoints||[]).find(entry=>config.rulesDate && config.rulesDate<entry.before);
+      const rowHP=historical?.hitpoints ?? row.hitpoints;
+      let baseHP = rowHP;
       if (config.supercharge) {
-        if (hero || !maps.buildings.get(config.target).supercharges?.length) fail('supercharge');
+        const building=maps.buildings.get(config.target);
+        const charges=config.rulesDate && config.rulesDate<'2026-11-16' ? building?.historicalSupercharges ?? building?.supercharges : building?.supercharges;
+        if (hero || !charges?.length) fail('supercharge');
         baseHP = integer(config.superchargeHitpoints,1,100000000,'supercharge');
       }
       const actualHP = multiply(decimal(baseHP + modifier.flatHP), add(fraction(1n), ratio(modifier.heroHPPercent)));
@@ -116,7 +124,7 @@
       const position = config.equipmentPosition || 'before'; if (!['before','after'].includes(position)) fail('timing');
       if (config.loadoutMode && !['valid','experiment'].includes(config.loadoutMode)) fail('loadout');
       const capacity = integer(config.capacity, 0, 15, 'capacity');
-      const townHall = integer(config.townHall, 0, 18, 'townHall');
+      const townHall = integer(config.townHall, 0, maximumTownHall, 'townHall');
       const source = (id, level) => {
         integer(level, 0, maps.spells.get(id).levels.length, 'level');
         if (!level) return null;
@@ -138,6 +146,7 @@
       if (config.supercharge) notes.push('manualSupercharge');
       const selected = config.equipment || []; if (!Array.isArray(selected) || selected.length > 8) fail('loadout');
       const owners = new Map(), ids = new Set(), loadout = [];
+      if(townHall===19 && selected.length && data.coverage?.th19?.equipmentPresetVerified===false && config.loadoutMode!=='experiment')fail('loadoutUnknown');
       const heroHall = (data.requirements?.['hero-hall'] || []).filter(entry => !townHall || entry.townHallRequired <= townHall).at(-1);
       const blacksmith = (data.requirements?.blacksmith || []).filter(entry => !townHall || entry.townHallRequired <= townHall).at(-1);
       for (const choice of selected) {
@@ -170,7 +179,7 @@
       if (selected.length) notes.push('equipmentAssumed');
       if (config.loadoutMode === 'experiment' && selected.length) notes.push('experimentalLoadout');
       if (healing) notes.push('manualHealing');
-      return {row, baseHP:row.hitpoints, effectiveHP, modifier, hero, defendingMode, capacity, lightning, earthquake, earthquakePercent, lightningDamage:lightning && !immune ? lightning.damage : 0,
+      return {row, baseHP:rowHP, effectiveHP, modifier, hero, defendingMode, capacity, lightning, earthquake, earthquakePercent, lightningDamage:lightning && !immune ? lightning.damage : 0,
         notes, loadout, interval, healing, position};
     }
     function run(config, prepared, zaps, quakes) {

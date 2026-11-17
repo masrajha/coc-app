@@ -20,6 +20,11 @@ def main():
     paths = [item['path'] for item in tree['tree'] if item['path'].endswith('.png')]
     jobs = []
     for target in data['buildings']:
+        if target['id'] in ['spiky-tower','firecracker-tower']:
+            for level in target['levels']:
+                if not (OUT / (target['id']+'-'+str(level['level'])+'.webp')).is_file():
+                    raise ValueError('Prepare TH19 artwork first with scripts/prepare-th19-assets.py')
+            continue
         if target['id'] == 'town-hall':
             continue  # Existing local level-specific Town Hall assets.
         for level in target['levels']:

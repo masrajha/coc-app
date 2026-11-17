@@ -1781,3 +1781,13 @@ dialog::backdrop {
 .command-ui .player-tabs button[data-tab="ranked-battles"]{position:relative;padding-right:5px}
 .command-ui .player-tabs .player-tab-hot{position:absolute;top:-15px;right:-18px;display:block;width:30px;height:19px;padding:0;border:0;background:none;pointer-events:none}
 @media(max-width:700px){.command-ui .player-tabs .player-tab-hot{width:28px;height:18px;top:-14px;right:-16px}}
+
+.player-new-entities{margin-top:16px;padding:14px;border:1px solid var(--theme-border,#304053);border-radius:12px;background:var(--theme-panel,#182233)}
+.player-new-entities>summary{cursor:pointer;font-weight:700;color:var(--theme-text,#eee)}
+.entities-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+.entities-card,.entities-reference{min-width:0;padding:12px;border:1px solid var(--theme-border,#304053);border-radius:8px;background:var(--theme-inset,#101620);overflow-wrap:anywhere}
+.entities-card h3{margin:0 0 8px}.entities-card p{margin:6px 0}.entities-note,.entities-reference small{color:var(--theme-muted,#aabbcc)}
+.entities-reference small{display:block;margin-top:5px}.entities-card>.entities-grid,.entities-card .entities-grid{grid-template-columns:1fr}
+@media(max-width:650px){.entities-grid{grid-template-columns:1fr}}
+
+.entities-card h3{display:flex;align-items:center;gap:8px}.entities-card h3 img{object-fit:contain;flex:none}

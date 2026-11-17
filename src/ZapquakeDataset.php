@@ -220,8 +220,8 @@ final class ZapquakeDataset
         $previous = null;
         foreach ($rows as $row) {
             $th=$row['townHallLevel'] ?? null; $count=$row['count'] ?? null;
-            if (!is_int($th) || $th<1 || $th>18 || ($previous!==null && $th!==$previous+1)
-                || !is_int($count) || $count<0 || $count>100) throw new \RuntimeException('Invalid building availability.');
+            if (!is_int($th) || $th<1 || $th>19 || ($previous!==null && $th!==$previous+1)
+                || !(($th===19 && $count===null && ($row['status']??null)==='unverified') || (is_int($count) && $count>=0 && $count<=100))) throw new \RuntimeException('Invalid building availability.');
             if (array_key_exists('countAfterMerges',$row) && (!is_int($row['countAfterMerges']) || $row['countAfterMerges']<0 || $row['countAfterMerges']>$count)) throw new \RuntimeException('Invalid post-merge count.');
             $previous=$th;
         }
@@ -241,9 +241,12 @@ final class ZapquakeDataset
         if (isset($data['heroes']) && !is_array($data['heroes'])) throw new \RuntimeException('Invalid heroes collection.');
         foreach (['buildings','spells','heroes'] as $kind) foreach ($data[$kind] ?? [] as $item) {
             $id = $item['id'] ?? '';
-            if (!preg_match('/^[a-z0-9-]+$/', $id) || isset($ids[$id]) || isset($dataIds[$item['dataId'] ?? 0]) || empty($item['levels'])) throw new \RuntimeException('Invalid/duplicate dataset identity.');
-            $ids[$id] = true; $dataIds[self::positive($item['dataId'] ?? null, $id.'.dataId', true)] = true;
-            if ($kind==='buildings' && (array_key_exists('availablePerTownHall',$item) || ($data['normalizerVersion'] ?? '')==='1.3.0')) self::validateAvailability($item['availablePerTownHall'] ?? null);
+            if (!preg_match('/^[a-z0-9-]+$/', $id) || isset($ids[$id]) || (isset($item['dataId']) && isset($dataIds[$item['dataId']])) || empty($item['levels'])) throw new \RuntimeException('Invalid/duplicate dataset identity.');
+            $ids[$id] = true;
+            if (($item['dataId'] ?? null) === null) {
+                if ($kind!=='buildings' || !in_array($id,['spiky-tower','firecracker-tower'],true) || ($item['sourceUrl']??null)!==ZapquakeTh19::SOURCE || ($data['overlays']['th19']['source']??null)!==ZapquakeTh19::SOURCE) throw new \RuntimeException('Missing verified official identity.');
+            } else $dataIds[self::positive($item['dataId'], $id.'.dataId', true)] = true;
+            if ($kind==='buildings' && (array_key_exists('availablePerTownHall',$item) || in_array($data['normalizerVersion'] ?? '',['1.3.0','1.4.0'],true))) self::validateAvailability($item['availablePerTownHall'] ?? null);
             $previousTH = 0; $previousValue = 0;
             foreach ($item['levels'] as $index=>$row) {
                 if ($row['level'] !== $index + 1) throw new \RuntimeException('Invalid level sequence.');

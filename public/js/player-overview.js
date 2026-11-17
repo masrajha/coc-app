@@ -11,7 +11,7 @@
   function topHeroes(player, progress) {
     const scored = progress?.score?.categories?.heroes?.items || [];
     const candidates = Object.entries(heroAssets).flatMap(([name, asset]) => {
-      const item = scored.find(hero => hero.name === name) || player?.heroes?.find(hero => hero.name === name && hero.village !== 'builderBase');
+      const item = scored.find(hero => hero.name === name) || (!progress ? player?.heroes?.find(hero => hero.name === name && hero.village !== 'builderBase') : null);
       const level = numeric(item?.level), maximum = numeric(item?.maxLevel);
       return level !== null && level > 0 && maximum !== null && maximum > 0
         ? [{name, asset, ratio:Math.min(1,level/maximum)}] : [];
@@ -42,8 +42,8 @@
     const item = document.createElement(tag); if (text !== undefined) item.textContent = text; if (className) item.className = className; return item;
   };
   function model(progress) {
-    const known = Object.values(progress?.score?.categories || {}).reduce((sum, category) => sum + Math.max(0, numeric(category?.knownItems) ?? 0), 0);
-    const counts = Object.fromEntries(['heroes','troops','spells','pets'].map(category => [category, Math.max(0, numeric(progress?.score?.categories?.[category]?.knownItems) ?? 0)]));
+    const known = Object.values(progress?.score?.categories || {}).reduce((sum, category) => sum + Math.max(0, numeric(category?.observedItems ?? category?.knownItems) ?? 0), 0);
+    const counts = Object.fromEntries(['heroes','troops','spells','pets'].map(category => [category, Math.max(0, numeric(progress?.score?.categories?.[category]?.observedItems ?? progress?.score?.categories?.[category]?.knownItems) ?? 0)]));
     // expectedItems in the existing categories describes only the scoring input.
     // API maxLevel does not establish the total number of unlockable item types.
     const suppliedTotal = numeric(progress?.coverage?.expectedItems);
@@ -92,7 +92,7 @@
         context:(details.capped ? tr('snapshot.capScope',{count:number(details.capped)}) : tr('snapshot.noCaps'))+(Array.isArray(extra.army?.heroEquipment)?' · '+tr('snapshot.equipmentCount',{count:number(extra.army.heroEquipment.length)}):'')},
       {metric:'score',image:'progress',label:tr('player.progress'),tab:'progress',value:values.score === null ? '\u2014' : number(values.score)+'%',status:values.status,
         note:tr(values.status === 'unknown' ? 'player.rushed.unknown' : values.status === 'warning' ? 'player.rushed.yes' : 'player.rushed.no'),
-        context:tr(progress?.complete?'profile.scoreScope':'profile.scoreScopePartial')+(details.weakest && categoryKeys[details.weakest.category] ? ' · '+tr('snapshot.weakest',{category:tr(categoryKeys[details.weakest.category]),percent:number(details.weakest.percent)}) : ''),progress:values.score},
+        context:tr(progress?.capStatus === 'unavailable' ? 'player.limitCapUnavailable' : progress?.complete?'profile.scoreScope':'profile.scoreScopePartial')+(details.weakest && categoryKeys[details.weakest.category] ? ' · '+tr('snapshot.weakest',{category:tr(categoryKeys[details.weakest.category]),percent:number(details.weakest.percent)}) : ''),progress:values.score},
       {metric:'ranked',image:'trophy-purple',label:'Ranked League',tab:'ranked-battles',value:'\u2014',note:empty,context:''},
       {metric:'performance',image:'status',label:tr('player.warPerformance'),tab:'performance',value:'\u2014',note:feeds.performance?.status === 'loading' ? loading : empty,context:tr('snapshot.archive')},
       {metric:'raids',image:'donation',label:'Raid Weekend',tab:'capital-raids',value:'\u2014',note:feeds.raids?.status === 'loading' ? loading : feeds.raids?.status === 'unloaded' ? tr('snapshot.openToLoad') : empty,context:''},

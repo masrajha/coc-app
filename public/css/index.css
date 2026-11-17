@@ -222,3 +222,5 @@ body.dashboard{margin:0;background:var(--theme-inset,#0e1219);color:var(--theme-
 .recent-copy{flex:1 1 0;grid-template-columns:minmax(0,1fr);line-height:1.4}
 .recent-copy strong,.recent-copy small{display:block;max-width:100%}
 .landing-sidebar .recent-empty{padding:10px 8px;line-height:1.5;overflow-wrap:anywhere}
+
+.town-hall-cell{white-space:nowrap}.town-hall-cell img{display:inline-block;vertical-align:middle;object-fit:contain;margin-right:5px}

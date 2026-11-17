@@ -1,0 +1,65 @@
+{
+  "version": "2026-11-17.2",
+  "reviewedAt": "2026-11-17",
+  "maxDimension": 144,
+  "quality": 82,
+  "assets": [
+    {
+      "input": "Town_Hall19.png",
+      "output": "town-hall/th-19.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/7/77/Town_Hall19.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "0328ecc11fd16e9991d89a59347657524371a7249dce019c50d620f5ed6f26d1",
+      "sourceBytes": 13464
+    },
+    {
+      "input": "Spiky_Tower1.png",
+      "output": "zapquake/spiky-tower-1.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/7/74/Spiky_Tower1.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "1feca684a306caf7bb40bb767b1011a595bccd246a2dcb10b1a2e15b90ee8cb1",
+      "sourceBytes": 12380
+    },
+    {
+      "input": "Spiky_Tower2.png",
+      "output": "zapquake/spiky-tower-2.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/f/f6/Spiky_Tower2.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "37a224e56afc09d9c32834f31fcd38c31ab2317a4b9e21850984a3d10ea4cbf2",
+      "sourceBytes": 12838
+    },
+    {
+      "input": "Firecracker_Tower1.png",
+      "output": "zapquake/firecracker-tower-1.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/d/df/Firecracker_Tower1.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "382e52cb396b68f4f6a1d8b1330f519980c29baf578a5cef6c868415f430479c",
+      "sourceBytes": 19350
+    },
+    {
+      "input": "Firecracker_Tower2.png",
+      "output": "zapquake/firecracker-tower-2.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/b/b3/Firecracker_Tower2.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "c9071c2205275165b264fb6e92d22a32650341eac3592fc592eb1955a2867a87",
+      "sourceBytes": 18714
+    },
+    {
+      "input": "Guardian_Shrine.png",
+      "output": "th19/guardian-shrine.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/4/4d/Guardian_Shrine.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "ecdb85e4d8300061cd1dae3651d3e124812b7a846789a340501b48214a0a4a7b",
+      "sourceBytes": 13838
+    },
+    {
+      "input": "Squad_Barracks1.png",
+      "output": "th19/squad-barracks.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/0/0e/Squad_Barracks1.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "dea88ff1d65fe21fb2f306090ad27f677de7413ce4f69f5701734cc8cff34905",
+      "sourceBytes": 17438
+    },
+    {
+      "input": "Heroic_Spell_info.png",
+      "output": "th19/heroic-spell.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/9/90/Heroic_Spell_info.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "d1028973c6ad5a7c7ab206fab185781d57d8370dffab3a53c1674260da2f539d",
+      "sourceBytes": 14352
+    }
+  ],
+  "pending": []
+}

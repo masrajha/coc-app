@@ -102,7 +102,7 @@ try {
     $releaseManifest=D::decode((string)file_get_contents($public.'/manifest.json'));
     $releaseBody=(string)file_get_contents($public.'/'.$releaseManifest['dataset']);$reference=D::decode($releaseBody);D::validate($reference);
     $assert(hash('sha256',$releaseBody)===$releaseManifest['sha256'],'Committed dataset checksum must match active manifest.');
-    $assert(count($reference['buildings'])===23 && count($reference['spells'])===2 && count($reference['heroes'])===6,'Expanded scope: defenses, TH, Castle, six heroes, two spells.');
+    $assert(count($reference['buildings'])===25 && count($reference['spells'])===2 && count($reference['heroes'])===6,'Expanded scope: defenses, TH, Castle, six heroes, two spells.');
     $indexed=array_column($reference['buildings'],null,'id');
     $assert($indexed['air-defense']['levels'][0]['hitpoints']===800 && count($indexed['air-defense']['levels'])===16,'Pin a representative real source HP row and coverage boundary.');
     $spells=array_column($reference['spells'],null,'id');

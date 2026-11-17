@@ -1,0 +1,514 @@
+{
+  "reviewedAt": "2026-11-16",
+  "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+  "effectiveAt": null,
+  "purpose": "Audit only; never consumed by runtime. Not an exhaustive game catalog or per-TH cap table.",
+  "items": [
+    {
+      "category": "heroes",
+      "id": "barbarian-king",
+      "maxLevel": 115,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "heroes",
+      "id": "archer-queen",
+      "maxLevel": 115,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "heroes",
+      "id": "minion-prince",
+      "maxLevel": 100,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "heroes",
+      "id": "grand-warden",
+      "maxLevel": 90,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "heroes",
+      "id": "royal-champion",
+      "maxLevel": 60,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "heroes",
+      "id": "dragon-duke",
+      "maxLevel": 30,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "barbarian",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "archer",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "giant",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "goblin",
+      "maxLevel": 11,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "wall-breaker",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "balloon",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "wizard",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "healer",
+      "maxLevel": 12,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "dragon",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "pekka",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "baby-dragon",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "miner",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "electro-dragon",
+      "maxLevel": 10,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "yeti",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "dragon-rider",
+      "maxLevel": 7,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "electro-titan",
+      "maxLevel": 6,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "root-rider",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "thrower",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "meteor-golem",
+      "maxLevel": 4,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "minion",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "hog-rider",
+      "maxLevel": 16,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "valkyrie",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "golem",
+      "maxLevel": 16,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "witch",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "lava-hound",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "bowler",
+      "maxLevel": 11,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "headhunter",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "druid",
+      "maxLevel": 7,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "troops",
+      "id": "ruin-witch",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "spells",
+      "id": "lightning-spell",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "spells",
+      "id": "healing-spell",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "spells",
+      "id": "poison-spell",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "spells",
+      "id": "totem-spell",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "spells",
+      "id": "haste-spell",
+      "maxLevel": 8,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "spells",
+      "id": "bat-spell",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "spells",
+      "id": "heroic-spell",
+      "maxLevel": 4,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "air-defense",
+      "maxLevel": 17,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "hidden-tesla",
+      "maxLevel": 18,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "x-bow",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "multi-archer-tower",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "multi-gear-tower",
+      "maxLevel": 4,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "ricochet-cannon",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "builders-hut",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "clan-castle",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "laboratory",
+      "maxLevel": 17,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "hero-hall",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "gold-storage",
+      "maxLevel": 20,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "elixir-storage",
+      "maxLevel": 20,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "dark-elixir-storage",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "spiky-tower",
+      "maxLevel": 2,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "firecracker-tower",
+      "maxLevel": 2,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "squad-barracks",
+      "maxLevel": 12,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "pet-house",
+      "maxLevel": 12,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "traps",
+      "id": "air-bomb",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "traps",
+      "id": "skeleton-trap",
+      "maxLevel": 6,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "traps",
+      "id": "spring-trap",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "pets",
+      "id": "angry-jelly",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "guardians",
+      "id": "smasher",
+      "maxLevel": 10,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "siege-machines",
+      "id": "flame-flinger",
+      "maxLevel": 6,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    },
+    {
+      "category": "buildings",
+      "id": "town-hall",
+      "maxLevel": 19,
+      "capStatus": "available",
+      "statisticsStatus": "unverified"
+    }
+  ],
+  "otherChanges": [
+    {
+      "id": "air-defense",
+      "level": 16,
+      "field": "hitpoints",
+      "before": 2000,
+      "announced": 2050,
+      "status": "conflict",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "spiky-tower",
+      "hitpoints": [
+        5959,
+        6363
+      ],
+      "status": "available",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "firecracker-tower",
+      "hitpoints": [
+        6500,
+        6700
+      ],
+      "status": "available",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "guardian-shrine",
+      "status": "missing",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "ranked-hero-hp",
+      "legend1": 25,
+      "legend2": 20,
+      "legend3": 15,
+      "esports": 30,
+      "effectiveAt": null,
+      "status": "available",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    }
+  ]
+}

@@ -61,6 +61,7 @@
   }
 
   function itemProgress(item) {
+    if (item?.level == null || item.level === '' || item?.progressMaxLevel == null || item.progressCapStatus === 'unavailable') return null;
     const level = Number(item?.level);
     const maxLevel = Number(item?.progressMaxLevel);
     return Number.isFinite(level) && Number.isFinite(maxLevel) && maxLevel > 0

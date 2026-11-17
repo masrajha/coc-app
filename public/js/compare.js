@@ -63,7 +63,10 @@ function renderCard(side, data) {
   const link = textNode('a', data.player.tag, 'player-tag-link');
   link.href = profileHref(data);
   identity.appendChild(link);
-  identity.appendChild(textNode('div', `${data.player.clan?.name || tr('player.noClan')} · TH ${data.player.townHallLevel ?? '—'} · BH ${data.player.builderHallLevel ?? '—'}`, 'compare-card-meta'));
+  const baseMeta=textNode('div',data.player.clan?.name || tr('player.noClan'),'compare-card-meta');
+  const th=Number(data.player.townHallLevel);
+  if(Number.isInteger(th)&&th>=1&&th<=19){const icon=document.createElement('img');icon.src=`/assets/images/town-hall/th-${th}.webp`;icon.className='compare-base-icon';icon.alt='';icon.width=24;icon.height=24;icon.loading='lazy';icon.onerror=()=>icon.remove();baseMeta.append(icon);}
+  baseMeta.append(textNode('span',`TH ${data.player.townHallLevel ?? tr('player.unavailable')} / BH ${data.player.builderHallLevel ?? tr('player.unavailable')}`));identity.appendChild(baseMeta);
   top.appendChild(identity);
   card.appendChild(top);
   const stats = textNode('div', '', 'compare-card-stats');
@@ -237,7 +240,7 @@ function itemLevel(item, mark, mode) {
   const progressLimit = item.progressMaxLevel;
   const limitLabel = progressLimit != null
     ? tr('compare.maxSource', { source: item.progressMaxSource || tr('compare.baseline'), limit: progressLimit })
-    : (item.maxLevel != null ? tr('compare.maxApi', { limit: item.maxLevel }) : tr('compare.capUnavailable'));
+    : (item.progressCapStatus === 'unavailable' ? tr('compare.capUnavailable') : item.maxLevel != null ? tr('compare.maxApi', { limit: item.maxLevel }) : tr('compare.capUnavailable'));
   const value = mode === 'progress'
     ? (progress == null ? tr('compare.levelCapMissing', { level: item.level ?? '—' }) : `${formatPercent(progress)} · ${item.level}/${progressLimit}`)
     : tr('compare.levelAndCap', { level: item.level ?? '—', cap: limitLabel });
@@ -1021,24 +1024,24 @@ function downloadFile(blob, filename) {
 function exportCsv() {
   if (!profiles.left || !profiles.right || (!displayedWars.length && sharedTrend.length < 2)) return;
   const rows = [
-    [tr('compare.csvSection'), tr('compare.csvPeriodDate'), tr('compare.csvPlayer'), tr('compare.csvType'), tr('compare.csvOpponent'), tr('compare.csvRound'), tr('compare.attacks'), tr('compare.csvStars'), tr('compare.csvAverageDestruction'), tr('player.trophies'), tr('player.donations'), tr('compare.csvDonationChange'), tr('player.status')],
-    ['Info', document.getElementById('warPeriod').selectedOptions[0].textContent, sideName('left'), '', '', '', '', '', '', '', '', '', ''],
-    ['Info', '', sideName('right'), '', '', '', '', '', '', '', '', '', '']
+    [tr('compare.csvSection'), tr('compare.csvPeriodDate'), tr('compare.csvPlayer'), tr('compare.csvType'), tr('compare.csvOpponent'), tr('compare.csvRound'), tr('compare.attacks'), tr('compare.csvStars'), tr('compare.csvAverageDestruction'), tr('player.trophies'), tr('player.donations'), tr('compare.csvDonationChange'), tr('player.status'),...window.ProfileExport.headers(tr)],
+    ['Info', document.getElementById('warPeriod').selectedOptions[0].textContent, sideName('left'), '', '', '', '', '', '', '', '', '', '',...window.ProfileExport.columns(profiles.left,tr,formatNumber)],
+    ['Info', '', sideName('right'), '', '', '', '', '', '', '', '', '', '',...window.ProfileExport.columns(profiles.right,tr,formatNumber)]
   ];
   for (const row of displayedWars) for (const side of ['left', 'right']) {
     const war = row[side];
     rows.push(['War', warDate(row.startTime || row.endTime), sideName(side), row.type, row.opponent?.name || '', row.round || '',
-      war?.attacks?.length || 0, war?.stars ?? '', war?.attacks?.length ? war.destructionAverage : '', '', '', '', warStatusLabel(war)]);
+      war?.attacks?.length || 0, war?.stars ?? '', war?.attacks?.length ? war.destructionAverage : '', '', '', '', warStatusLabel(war),...window.ProfileExport.columns(profiles[side],tr,formatNumber)]);
   }
   const leftChanges = model.donationChanges(sharedTrend, 'left');
   const rightChanges = model.donationChanges(sharedTrend, 'right');
   sharedTrend.forEach((point, index) => {
     for (const [side, change] of [['left', leftChanges[index]], ['right', rightChanges[index]]]) {
       rows.push(['Snapshot', point.date, sideName(side), '', '', '', '', '', '', point[side].trophies,
-        point[side].donations, change.reset ? tr('compare.resetChange') : change.delta ?? '', '']);
+        point[side].donations, change.reset ? tr('compare.resetChange') : change.delta ?? '', '',...window.ProfileExport.columns(profiles[side],tr,formatNumber)]);
     }
   });
-  const csv = `\ufeff${rows.map(row => row.map(csvCell).join(',')).join('\r\n')}\r\n`;
+  const csv = window.ProfileExport.csv(rows);
   downloadFile(new Blob([csv], { type: 'text/csv;charset=utf-8' }), `player-comparison-${normalizeTag(profiles.left.player.tag)}-${normalizeTag(profiles.right.player.tag)}.csv`);
 }
 
@@ -1059,10 +1062,12 @@ function exportPng() {
     ctx.fillStyle = themeColor('--theme-inset', '#192b3d'); ctx.fillRect(x, 158, 529, 130);
     ctx.fillStyle = color; ctx.font = 'bold 22px sans-serif'; ctx.fillText(profile.player.name.slice(0, 34), x + 18, 194);
     ctx.fillStyle = themeColor('--theme-text', '#dbe8f8'); ctx.font = '16px sans-serif';
-    ctx.fillText(tr('compare.pngScore', { th: profile.player.townHallLevel, score: formatPercent(profile.progress?.score?.overall) }), x + 18, 226);
+    const exportSummary=window.ProfileExport.summary(profile),exportStatus=tr(exportSummary.status==='complete'?'export.complete':exportSummary.status==='partial'?'export.partial':'export.unavailable');
+    ctx.fillText(tr('compare.pngScore', { th: profile.player.townHallLevel, score: formatPercent(profile.progress?.score?.overall)+' / '+exportStatus }), x + 18, 226,490);
     const cwl = model.warSummary(displayedWars, side, 'CWL');
     const classic = model.warSummary(displayedWars, side, 'War');
     ctx.fillText(tr('compare.pngWars', { cwlStars: cwl.stars, cwlAttacks: cwl.attacks, classicStars: classic.stars, classicAttacks: classic.attacks }), x + 18, 257);
+    ctx.font='12px sans-serif';ctx.fillText(tr('export.pngBaseline',{version:exportSummary.version||tr('export.unavailable'),known:exportSummary.known,observed:exportSummary.observed}),x+18,278,490);
   }
   ctx.fillStyle = themeColor('--theme-text', '#eef5ff'); ctx.font = 'bold 19px sans-serif'; ctx.fillText(tr('compare.pngTrend'), 56, 335);
   const values = sharedTrend.flatMap(point => [point.left.trophies, point.right.trophies]);

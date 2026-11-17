@@ -158,3 +158,5 @@ body.compare-game-open{overflow:hidden}
 .compare-game-image-scroll{overflow:auto;min-height:0}.compare-game-image-scroll img{display:block;width:100%;height:auto}
 .compare-game-image-actions{display:flex;gap:10px;flex-wrap:wrap}.compare-game-image-dialog>p{margin:0;font-size:12px;line-height:1.5;color:var(--theme-secondary,#b6c8dd)}
 @media(max-width:640px){.compare-game-dialog{width:100vw;height:100dvh;border-radius:0}.compare-game-toolbar{padding:12px;gap:10px}.compare-game-options{gap:8px}.compare-game-options label{flex:1;min-width:0}.compare-game-options select{max-width:100%}.compare-game-options>button{flex-basis:100%}.compare-game-image-dialog{padding:12px}}
+
+.compare-card-top .compare-base-icon{display:inline-block;width:24px;height:24px;margin:0 4px 0 8px;vertical-align:middle;object-fit:contain}

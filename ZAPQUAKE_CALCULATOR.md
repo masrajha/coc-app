@@ -1,5 +1,7 @@
 # Zapquake Calculator — implementasi Z3–Z4
 
+Pembaruan T19-4/T19-5: engine `2.3.0`, data `2026-11-17.3`, dan profil modifier `2026-11-17.1`. Cakupan terbaru serta batas data TH19 dijelaskan di [TH19_SIMULATION_AND_ENTITIES.md](TH19_SIMULATION_AND_ENTITIES.md). Angka versi/rentang pada catatan implementasi lama di bawah tetap menjadi referensi historis.
+
 > Catatan ini mendokumentasikan fondasi Z3-Z4. Cakupan aktif kini memakai mesin 2.0.0 dengan equipment, modifier, dan timeline Z5-Z7; lihat [ZAPQUAKE_ADVANCED.md](ZAPQUAKE_ADVANCED.md). Pernyataan batas fitur Z3-Z4 di bawah adalah riwayat cakupan tahap awal.
 
 Halaman mandiri tersedia di `/tools/zapquake`, dengan akses dari navigasi beranda. Tidak ada permintaan API pemain/klan dan tidak memerlukan tag akun.

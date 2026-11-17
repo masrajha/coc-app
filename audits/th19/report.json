@@ -1,0 +1,1695 @@
+{
+  "auditVersion": 1,
+  "reviewedAt": "2026-11-16",
+  "baseline": {
+    "reviewedAt": "2026-11-16",
+    "dataVersion": "2026-11-04.5",
+    "manifestSha256": "fe6924dd5e567bfaed80466c199a28710c6f458bcbe7fefe469b096d7b613358",
+    "sourceLockSha256": "0bac6295e034463e9244c082a4e9a4a3a05f19162ac446bfcd6e98d8b70e97fc",
+    "datasetSha256": "bebd8dc95c47bbf124133915608d90b41e66afd35b82c8d173f4e0a6d143e1a8",
+    "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+    "normalizerVersion": "1.3.0",
+    "engineVersion": "2.2.1",
+    "sourceFileCount": 44,
+    "activation": "unchanged"
+  },
+  "scope": "All active dataset categories plus announced changes; not a complete upstream game-data import.",
+  "statuses": {
+    "available": "Source explicitly provides this field; not automatically simulation-ready.",
+    "missing": "Absent from active normalized dataset.",
+    "conflict": "Announced cap differs from active cap.",
+    "unverified": "No post-update verification; unchanged is not assumed."
+  },
+  "categoriesNotInBaseline": [
+    "troops",
+    "pets",
+    "squads",
+    "guardians",
+    "traps",
+    "walls"
+  ],
+  "baselineInventory": [
+    {
+      "category": "buildings",
+      "id": "air-defense",
+      "baselineMax": 16,
+      "sourceFile": "data/home/defenses/air-defense.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 16,
+      "fieldCoverage": {
+        "hitpoints": 16,
+        "level": 16,
+        "townHallRequired": 16
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "air-sweeper",
+      "baselineMax": 7,
+      "sourceFile": "data/home/defenses/air-sweeper.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 7,
+      "fieldCoverage": {
+        "hitpoints": 7,
+        "level": 7,
+        "townHallRequired": 7
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "archer-tower",
+      "baselineMax": 21,
+      "sourceFile": "data/home/defenses/archer-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 21,
+      "fieldCoverage": {
+        "hitpoints": 21,
+        "level": 21,
+        "townHallRequired": 21
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "bomb-tower",
+      "baselineMax": 13,
+      "sourceFile": "data/home/defenses/bomb-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 13,
+      "fieldCoverage": {
+        "hitpoints": 13,
+        "level": 13,
+        "townHallRequired": 13
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "builders-hut",
+      "baselineMax": 8,
+      "sourceFile": "data/home/defenses/builders-hut.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 8,
+      "fieldCoverage": {
+        "hitpoints": 8,
+        "level": 8,
+        "townHallRequired": 8
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "cannon",
+      "baselineMax": 21,
+      "sourceFile": "data/home/defenses/cannon.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 21,
+      "fieldCoverage": {
+        "hitpoints": 21,
+        "level": 21,
+        "townHallRequired": 21
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "clan-castle",
+      "baselineMax": 14,
+      "sourceFile": "data/home/resource-buildings/clan-castle.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 14,
+      "fieldCoverage": {
+        "hitpoints": 14,
+        "level": 14,
+        "townHallRequired": 14
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "eagle-artillery",
+      "baselineMax": 7,
+      "sourceFile": "data/home/defenses/eagle-artillery.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 7,
+      "fieldCoverage": {
+        "hitpoints": 7,
+        "level": 7,
+        "townHallRequired": 7
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "firespitter",
+      "baselineMax": 3,
+      "sourceFile": "data/home/defenses/firespitter.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 3,
+      "fieldCoverage": {
+        "hitpoints": 3,
+        "level": 3,
+        "townHallRequired": 3
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "hidden-tesla",
+      "baselineMax": 17,
+      "sourceFile": "data/home/defenses/hidden-tesla.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 17,
+      "fieldCoverage": {
+        "hitpoints": 17,
+        "level": 17,
+        "townHallRequired": 17
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "inferno-tower",
+      "baselineMax": 12,
+      "sourceFile": "data/home/defenses/inferno-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 12,
+      "fieldCoverage": {
+        "hitpoints": 12,
+        "level": 12,
+        "townHallRequired": 12
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "monolith",
+      "baselineMax": 5,
+      "sourceFile": "data/home/defenses/monolith.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 5,
+      "fieldCoverage": {
+        "hitpoints": 5,
+        "level": 5,
+        "townHallRequired": 5
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "mortar",
+      "baselineMax": 18,
+      "sourceFile": "data/home/defenses/mortar.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 18,
+      "fieldCoverage": {
+        "hitpoints": 18,
+        "level": 18,
+        "townHallRequired": 18
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "multi-archer-tower",
+      "baselineMax": 4,
+      "sourceFile": "data/home/defenses/multi-archer-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 4,
+      "fieldCoverage": {
+        "hitpoints": 4,
+        "level": 4,
+        "townHallRequired": 4
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "multi-gear-tower",
+      "baselineMax": 3,
+      "sourceFile": "data/home/defenses/multi-gear-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 3,
+      "fieldCoverage": {
+        "hitpoints": 3,
+        "level": 3,
+        "townHallRequired": 3
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "revenge-tower",
+      "baselineMax": 2,
+      "sourceFile": "data/home/defenses/revenge-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 2,
+      "fieldCoverage": {
+        "hitpoints": 2,
+        "level": 2,
+        "townHallRequired": 2
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "ricochet-cannon",
+      "baselineMax": 4,
+      "sourceFile": "data/home/defenses/ricochet-cannon.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 4,
+      "fieldCoverage": {
+        "hitpoints": 4,
+        "level": 4,
+        "townHallRequired": 4
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "scattershot",
+      "baselineMax": 7,
+      "sourceFile": "data/home/defenses/scattershot.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 7,
+      "fieldCoverage": {
+        "hitpoints": 7,
+        "level": 7,
+        "townHallRequired": 7
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "spell-tower",
+      "baselineMax": 4,
+      "sourceFile": "data/home/defenses/spell-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 4,
+      "fieldCoverage": {
+        "hitpoints": 4,
+        "level": 4,
+        "townHallRequired": 4
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "super-wizard-tower",
+      "baselineMax": 2,
+      "sourceFile": "data/home/defenses/super-wizard-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 2,
+      "fieldCoverage": {
+        "hitpoints": 2,
+        "level": 2,
+        "townHallRequired": 2
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "town-hall",
+      "baselineMax": 18,
+      "sourceFile": "data/home/town-hall/town-hall.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 18,
+      "fieldCoverage": {
+        "hitpoints": 18,
+        "level": 18,
+        "townHallRequired": 18,
+        "weaponAvailable": 18
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "wizard-tower",
+      "baselineMax": 17,
+      "sourceFile": "data/home/defenses/wizard-tower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 17,
+      "fieldCoverage": {
+        "hitpoints": 17,
+        "level": 17,
+        "townHallRequired": 17
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "buildings",
+      "id": "x-bow",
+      "baselineMax": 13,
+      "sourceFile": "data/home/defenses/x-bow.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 13,
+      "fieldCoverage": {
+        "hitpoints": 13,
+        "level": 13,
+        "townHallRequired": 13
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "heroes",
+      "id": "archer-queen",
+      "baselineMax": 110,
+      "sourceFile": "data/home/heroes/archer-queen.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 110,
+      "fieldCoverage": {
+        "heroHallLevelRequired": 110,
+        "hitpoints": 110,
+        "level": 110,
+        "townHallRequired": 0
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "heroes",
+      "id": "barbarian-king",
+      "baselineMax": 110,
+      "sourceFile": "data/home/heroes/barbarian-king.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 110,
+      "fieldCoverage": {
+        "heroHallLevelRequired": 110,
+        "hitpoints": 110,
+        "level": 110,
+        "townHallRequired": 0
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "heroes",
+      "id": "dragon-duke",
+      "baselineMax": 25,
+      "sourceFile": "data/home/heroes/dragon-duke.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 25,
+      "fieldCoverage": {
+        "heroHallLevelRequired": 25,
+        "hitpoints": 25,
+        "level": 25,
+        "townHallRequired": 0
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "heroes",
+      "id": "grand-warden",
+      "baselineMax": 85,
+      "sourceFile": "data/home/heroes/grand-warden.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 85,
+      "fieldCoverage": {
+        "heroHallLevelRequired": 85,
+        "hitpoints": 85,
+        "level": 85,
+        "townHallRequired": 0
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "heroes",
+      "id": "minion-prince",
+      "baselineMax": 95,
+      "sourceFile": "data/home/heroes/minion-prince.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 95,
+      "fieldCoverage": {
+        "heroHallLevelRequired": 95,
+        "hitpoints": 95,
+        "level": 95,
+        "townHallRequired": 0
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "heroes",
+      "id": "royal-champion",
+      "baselineMax": 55,
+      "sourceFile": "data/home/heroes/royal-champion.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 55,
+      "fieldCoverage": {
+        "heroHallLevelRequired": 55,
+        "hitpoints": 55,
+        "level": 55,
+        "townHallRequired": 0
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "spells",
+      "id": "earthquake-spell",
+      "baselineMax": 8,
+      "sourceFile": "data/home/spells/earthquake-spell.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 8,
+      "fieldCoverage": {
+        "buildingDamagePercent": 8,
+        "level": 8,
+        "radius": 8,
+        "townHallRequired": 8,
+        "troopDamagePercent": 3
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "spells",
+      "id": "lightning-spell",
+      "baselineMax": 13,
+      "sourceFile": "data/home/spells/lightning-spell.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 13,
+      "fieldCoverage": {
+        "damage": 13,
+        "level": 13,
+        "townHallRequired": 13
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "earthquake-boots",
+      "baselineMax": 18,
+      "sourceFile": "data/home/hero-equipment/earthquake-boots.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 18,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 18,
+        "buildingDamagePercent": 18,
+        "level": 18,
+        "troopDamagePercent": 18
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "electro-boots",
+      "baselineMax": 27,
+      "sourceFile": "data/home/hero-equipment/electro-boots.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 27,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 27,
+        "damage": 27,
+        "level": 27
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "fireball",
+      "baselineMax": 27,
+      "sourceFile": "data/home/hero-equipment/fireball.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 27,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 27,
+        "damage": 27,
+        "level": 27
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "flame-blower",
+      "baselineMax": 18,
+      "sourceFile": "data/home/hero-equipment/flame-blower.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 18,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 18,
+        "damage": 18,
+        "level": 18
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "giant-arrow",
+      "baselineMax": 18,
+      "sourceFile": "data/home/hero-equipment/giant-arrow.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 18,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 18,
+        "damage": 18,
+        "level": 18
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "rocket-backpack",
+      "baselineMax": 27,
+      "sourceFile": "data/home/hero-equipment/rocket-backpack.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 27,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 27,
+        "damage": 27,
+        "level": 27
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "seeking-shield",
+      "baselineMax": 18,
+      "sourceFile": "data/home/hero-equipment/seeking-shield.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 18,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 18,
+        "damage": 18,
+        "level": 18
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "equipment",
+      "id": "spiky-ball",
+      "baselineMax": 27,
+      "sourceFile": "data/home/hero-equipment/spiky-ball.json",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+      "levelCount": 27,
+      "fieldCoverage": {
+        "blacksmithLevelRequired": 27,
+        "damage": 27,
+        "level": 27
+      },
+      "th19Status": "unverified",
+      "note": "Existing rows do not establish post-update TH19 coverage."
+    },
+    {
+      "category": "requirements",
+      "id": "blacksmith",
+      "baselineMax": 10,
+      "th19Status": "unverified",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d"
+    },
+    {
+      "category": "requirements",
+      "id": "hero-hall",
+      "baselineMax": 12,
+      "th19Status": "unverified",
+      "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d"
+    }
+  ],
+  "announcedDiff": [
+    {
+      "category": "heroes",
+      "id": "barbarian-king",
+      "maxLevel": 115,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 110,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "heroes",
+      "id": "archer-queen",
+      "maxLevel": 115,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 110,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "heroes",
+      "id": "minion-prince",
+      "maxLevel": 100,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 95,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "heroes",
+      "id": "grand-warden",
+      "maxLevel": 90,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 85,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "heroes",
+      "id": "royal-champion",
+      "maxLevel": 60,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 55,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "heroes",
+      "id": "dragon-duke",
+      "maxLevel": 30,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 25,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "barbarian",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "archer",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "giant",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "goblin",
+      "maxLevel": 11,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "wall-breaker",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "balloon",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "wizard",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "healer",
+      "maxLevel": 12,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "dragon",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "pekka",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "baby-dragon",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "miner",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "electro-dragon",
+      "maxLevel": 10,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "yeti",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "dragon-rider",
+      "maxLevel": 7,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "electro-titan",
+      "maxLevel": 6,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "root-rider",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "thrower",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "meteor-golem",
+      "maxLevel": 4,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "minion",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "hog-rider",
+      "maxLevel": 16,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "valkyrie",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "golem",
+      "maxLevel": 16,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "witch",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "lava-hound",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "bowler",
+      "maxLevel": 11,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "headhunter",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "druid",
+      "maxLevel": 7,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "troops",
+      "id": "ruin-witch",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "spells",
+      "id": "lightning-spell",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 13,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "spells",
+      "id": "healing-spell",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "spells",
+      "id": "poison-spell",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "spells",
+      "id": "totem-spell",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "spells",
+      "id": "haste-spell",
+      "maxLevel": 8,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "spells",
+      "id": "bat-spell",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "spells",
+      "id": "heroic-spell",
+      "maxLevel": 4,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "air-defense",
+      "maxLevel": 17,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 16,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "hidden-tesla",
+      "maxLevel": 18,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 17,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "x-bow",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 13,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "multi-archer-tower",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 4,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "multi-gear-tower",
+      "maxLevel": 4,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 3,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "ricochet-cannon",
+      "maxLevel": 5,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 4,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "builders-hut",
+      "maxLevel": 9,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 8,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "clan-castle",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 14,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "laboratory",
+      "maxLevel": 17,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "hero-hall",
+      "maxLevel": 13,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "gold-storage",
+      "maxLevel": 20,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "elixir-storage",
+      "maxLevel": 20,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "dark-elixir-storage",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "spiky-tower",
+      "maxLevel": 2,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "firecracker-tower",
+      "maxLevel": 2,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "squad-barracks",
+      "maxLevel": 12,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "pet-house",
+      "maxLevel": 12,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "traps",
+      "id": "air-bomb",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "traps",
+      "id": "skeleton-trap",
+      "maxLevel": 6,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "traps",
+      "id": "spring-trap",
+      "maxLevel": 14,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "pets",
+      "id": "angry-jelly",
+      "maxLevel": 15,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "guardians",
+      "id": "smasher",
+      "maxLevel": 10,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "siege-machines",
+      "id": "flame-flinger",
+      "maxLevel": 6,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": null,
+      "status": "missing",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    },
+    {
+      "category": "buildings",
+      "id": "town-hall",
+      "maxLevel": 19,
+      "capStatus": "available",
+      "statisticsStatus": "unverified",
+      "baselineMax": 18,
+      "status": "conflict",
+      "provenance": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+      "simulationReady": false
+    }
+  ],
+  "otherAnnouncedChanges": [
+    {
+      "id": "air-defense",
+      "level": 16,
+      "field": "hitpoints",
+      "before": 2000,
+      "announced": 2050,
+      "status": "conflict",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "spiky-tower",
+      "hitpoints": [
+        5959,
+        6363
+      ],
+      "status": "available",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "firecracker-tower",
+      "hitpoints": [
+        6500,
+        6700
+      ],
+      "status": "available",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "guardian-shrine",
+      "status": "missing",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    },
+    {
+      "id": "ranked-hero-hp",
+      "legend1": 25,
+      "legend2": 20,
+      "legend3": 15,
+      "esports": 30,
+      "effectiveAt": null,
+      "status": "available",
+      "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/"
+    }
+  ],
+  "upstreamFileDiff": {
+    "baselineRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+    "candidateRevision": "7afaa0375e5865c04021836a3a4192ffcfea092d",
+    "candidateUrl": "https://github.com/chiefpansancolt/clash-of-clans-data/commit/7afaa0375e5865c04021836a3a4192ffcfea092d",
+    "checkedAt": "2026-11-16",
+    "method": "Compare Git blob hashes from public recursive tree to checksum-verified locked source bytes. No claim that other repository files are unchanged.",
+    "files": [
+      {
+        "path": "LICENSE",
+        "baselineBlob": "b2fb174ebe7095324b3ed8539f15ed9fb4dfe017",
+        "candidateBlob": "b2fb174ebe7095324b3ed8539f15ed9fb4dfe017",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/army-buildings/blacksmith.json",
+        "baselineBlob": "14a14fda719c29a4ff860e548bcb2b6189e9a80a",
+        "candidateBlob": "14a14fda719c29a4ff860e548bcb2b6189e9a80a",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/army-buildings/hero-hall.json",
+        "baselineBlob": "01329014d600a99f1abe58cce9d383d24860a85a",
+        "candidateBlob": "01329014d600a99f1abe58cce9d383d24860a85a",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/air-defense.json",
+        "baselineBlob": "89011b557cc19f51330a04dcff5a933df5282cc1",
+        "candidateBlob": "89011b557cc19f51330a04dcff5a933df5282cc1",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/air-sweeper.json",
+        "baselineBlob": "33e0e287396105eb8dbe03598e2e1742a1d71d65",
+        "candidateBlob": "33e0e287396105eb8dbe03598e2e1742a1d71d65",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/archer-tower.json",
+        "baselineBlob": "aa70d88dc62f5608c1488ed520e84152c137217d",
+        "candidateBlob": "aa70d88dc62f5608c1488ed520e84152c137217d",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/bomb-tower.json",
+        "baselineBlob": "edf20aa94d9ed19e1c036b462458c8bd230592e9",
+        "candidateBlob": "edf20aa94d9ed19e1c036b462458c8bd230592e9",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/builders-hut.json",
+        "baselineBlob": "1dda5fecd7bb928145325e9d266474d19999e430",
+        "candidateBlob": "1dda5fecd7bb928145325e9d266474d19999e430",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/cannon.json",
+        "baselineBlob": "bdd29a122406bd34ab930aca0f287f9973ac60ac",
+        "candidateBlob": "bdd29a122406bd34ab930aca0f287f9973ac60ac",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/crafting-station.json",
+        "baselineBlob": "671afaee1bd304a5e193ca2cd3807203760a2790",
+        "candidateBlob": "671afaee1bd304a5e193ca2cd3807203760a2790",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/eagle-artillery.json",
+        "baselineBlob": "2c666719ec0cf3e5fe04c21726fdfc3aa70c7300",
+        "candidateBlob": "2c666719ec0cf3e5fe04c21726fdfc3aa70c7300",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/firespitter.json",
+        "baselineBlob": "7da9b2a2f3936b7918e74e2ee7fb7f371b4fcc88",
+        "candidateBlob": "7da9b2a2f3936b7918e74e2ee7fb7f371b4fcc88",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/hidden-tesla.json",
+        "baselineBlob": "afd9156d5ecf6742afa8fda37353f010d0d15d8d",
+        "candidateBlob": "afd9156d5ecf6742afa8fda37353f010d0d15d8d",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/inferno-tower.json",
+        "baselineBlob": "2c7418914bb982cffd8df8b9f412070172500728",
+        "candidateBlob": "2c7418914bb982cffd8df8b9f412070172500728",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/monolith.json",
+        "baselineBlob": "1476828c53bc823235e25255cd920e9f26d8a36e",
+        "candidateBlob": "1476828c53bc823235e25255cd920e9f26d8a36e",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/mortar.json",
+        "baselineBlob": "8530dbe11e2157e703def62b048e8e737b8601e6",
+        "candidateBlob": "8530dbe11e2157e703def62b048e8e737b8601e6",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/multi-archer-tower.json",
+        "baselineBlob": "908022976598ddd4ea9273d204888e3e97cd9088",
+        "candidateBlob": "908022976598ddd4ea9273d204888e3e97cd9088",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/multi-gear-tower.json",
+        "baselineBlob": "ccdea1660980d72018ae53440141afca8f5200d7",
+        "candidateBlob": "ccdea1660980d72018ae53440141afca8f5200d7",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/revenge-tower.json",
+        "baselineBlob": "b04c313cfdc3fbd6fbc7bb9403ef6cc4b8e3ee5d",
+        "candidateBlob": "b04c313cfdc3fbd6fbc7bb9403ef6cc4b8e3ee5d",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/ricochet-cannon.json",
+        "baselineBlob": "fc00dffd23537f90648015c5fe888567673a234e",
+        "candidateBlob": "fc00dffd23537f90648015c5fe888567673a234e",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/scattershot.json",
+        "baselineBlob": "2b1cf2d9d56ea0b0390cf63bbd9bf4e573ee1a14",
+        "candidateBlob": "2b1cf2d9d56ea0b0390cf63bbd9bf4e573ee1a14",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/spell-tower.json",
+        "baselineBlob": "b98b764361ed8bb43ae787689d00af7886fd3706",
+        "candidateBlob": "b98b764361ed8bb43ae787689d00af7886fd3706",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/super-wizard-tower.json",
+        "baselineBlob": "f80bdee48f20703ef85ca985eb040b4c01a1ccd1",
+        "candidateBlob": "f80bdee48f20703ef85ca985eb040b4c01a1ccd1",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/wizard-tower.json",
+        "baselineBlob": "8bd798dba674de1443252265ee675b073e85a1a7",
+        "candidateBlob": "8bd798dba674de1443252265ee675b073e85a1a7",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/defenses/x-bow.json",
+        "baselineBlob": "4e5a9c0fcdcc1d8feff4baeab19acf294b86df9c",
+        "candidateBlob": "4e5a9c0fcdcc1d8feff4baeab19acf294b86df9c",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/earthquake-boots.json",
+        "baselineBlob": "12b782acb901b3bb2c8df0d25aa6bfe3911d7940",
+        "candidateBlob": "12b782acb901b3bb2c8df0d25aa6bfe3911d7940",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/electro-boots.json",
+        "baselineBlob": "a127558124f9e328cb85cd200465a73949bc719c",
+        "candidateBlob": "a127558124f9e328cb85cd200465a73949bc719c",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/fireball.json",
+        "baselineBlob": "974f39590ddf755436436c16794647c01387322f",
+        "candidateBlob": "974f39590ddf755436436c16794647c01387322f",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/flame-blower.json",
+        "baselineBlob": "1d8f006a4032f91acd4047a3aac5aa8e2c718439",
+        "candidateBlob": "1d8f006a4032f91acd4047a3aac5aa8e2c718439",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/giant-arrow.json",
+        "baselineBlob": "5df085126f248e8e20b0d96592c454918bbccc4b",
+        "candidateBlob": "5df085126f248e8e20b0d96592c454918bbccc4b",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/rocket-backpack.json",
+        "baselineBlob": "5836fdc8ebd4fb1f2c005bca79b16d3c8c484fb2",
+        "candidateBlob": "5836fdc8ebd4fb1f2c005bca79b16d3c8c484fb2",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/seeking-shield.json",
+        "baselineBlob": "8f2fef7ee61a3742359e99ea80c7963e00f99621",
+        "candidateBlob": "8f2fef7ee61a3742359e99ea80c7963e00f99621",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/hero-equipment/spiky-ball.json",
+        "baselineBlob": "76226f267f7d63e66e86672c28b22c71f59a6d42",
+        "candidateBlob": "76226f267f7d63e66e86672c28b22c71f59a6d42",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/heroes/archer-queen.json",
+        "baselineBlob": "a317ff97705c48ecf590a79476bd51e40910c487",
+        "candidateBlob": "a317ff97705c48ecf590a79476bd51e40910c487",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/heroes/barbarian-king.json",
+        "baselineBlob": "5e6fc16e42b893b24ae8154cdd7c3217e48883db",
+        "candidateBlob": "5e6fc16e42b893b24ae8154cdd7c3217e48883db",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/heroes/dragon-duke.json",
+        "baselineBlob": "3da43b9c1b22963d2fe18a51aa3c6206d4bd1e1a",
+        "candidateBlob": "3da43b9c1b22963d2fe18a51aa3c6206d4bd1e1a",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/heroes/grand-warden.json",
+        "baselineBlob": "14ee1b381a65112a9f91a003176681fedf9bc442",
+        "candidateBlob": "14ee1b381a65112a9f91a003176681fedf9bc442",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/heroes/minion-prince.json",
+        "baselineBlob": "b22dbefd5862deb95c77a9b4857e72cc285349d0",
+        "candidateBlob": "b22dbefd5862deb95c77a9b4857e72cc285349d0",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/heroes/royal-champion.json",
+        "baselineBlob": "3e0709714638fd79a6e8d482a30feefbdd80766f",
+        "candidateBlob": "3e0709714638fd79a6e8d482a30feefbdd80766f",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/resource-buildings/clan-castle.json",
+        "baselineBlob": "bc69b735c78efac64a3c08d275feca86f3661ac8",
+        "candidateBlob": "bc69b735c78efac64a3c08d275feca86f3661ac8",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/spells/earthquake-spell.json",
+        "baselineBlob": "9504ce2790ae36855cf647473e8282ab0cd80f8e",
+        "candidateBlob": "9504ce2790ae36855cf647473e8282ab0cd80f8e",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/spells/lightning-spell.json",
+        "baselineBlob": "e29438efab8c764afc4bde66baa9013ede731dd2",
+        "candidateBlob": "e29438efab8c764afc4bde66baa9013ede731dd2",
+        "status": "unchanged"
+      },
+      {
+        "path": "data/home/town-hall/town-hall.json",
+        "baselineBlob": "55d9a1a28227d62e45492cfd0d8afcb5338d29c7",
+        "candidateBlob": "55d9a1a28227d62e45492cfd0d8afcb5338d29c7",
+        "status": "unchanged"
+      },
+      {
+        "path": "package.json",
+        "baselineBlob": "c53ee8cd41f332efbf0ea4c191a4999553097059",
+        "candidateBlob": "c53ee8cd41f332efbf0ea4c191a4999553097059",
+        "status": "unchanged"
+      }
+    ]
+  },
+  "runtimeBaselineBefore": {
+    "homeProgress": "TH18 used global API maxima; other THs used a partial TH11-17 fallback.",
+    "zapquakeMaxTownHall": 18,
+    "rules": "No modifier or historical Ranked/CWL rules activated by this phase."
+  },
+  "liveTh19Fixture": "pending: no TH19 response found in the inspected local cache",
+  "activeZapquakeVersion": "2026-11-17.3",
+  "activation": "Audit is read-only; original baseline remains immutable."
+}

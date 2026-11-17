@@ -1,0 +1,1125 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-17",
+  "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+  "items": [
+    {
+      "id": "barbarian-king",
+      "apiName": "Barbarian King",
+      "category": "heroes",
+      "caps": {
+        "19": 115
+      },
+      "levels": [
+        {
+          "level": 115,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "archer-queen",
+      "apiName": "Archer Queen",
+      "category": "heroes",
+      "caps": {
+        "19": 115
+      },
+      "levels": [
+        {
+          "level": 115,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "minion-prince",
+      "apiName": "Minion Prince",
+      "category": "heroes",
+      "caps": {
+        "19": 100
+      },
+      "levels": [
+        {
+          "level": 100,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "grand-warden",
+      "apiName": "Grand Warden",
+      "category": "heroes",
+      "caps": {
+        "19": 90
+      },
+      "levels": [
+        {
+          "level": 90,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "royal-champion",
+      "apiName": "Royal Champion",
+      "category": "heroes",
+      "caps": {
+        "19": 60
+      },
+      "levels": [
+        {
+          "level": 60,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "dragon-duke",
+      "apiName": "Dragon Duke",
+      "category": "heroes",
+      "caps": {
+        "19": 30
+      },
+      "levels": [
+        {
+          "level": 30,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "barbarian",
+      "apiName": "Barbarian",
+      "category": "troops",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "archer",
+      "apiName": "Archer",
+      "category": "troops",
+      "caps": {
+        "19": 15
+      },
+      "levels": [
+        {
+          "level": 15,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "giant",
+      "apiName": "Giant",
+      "category": "troops",
+      "caps": {
+        "19": 15
+      },
+      "levels": [
+        {
+          "level": 15,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "goblin",
+      "apiName": "Goblin",
+      "category": "troops",
+      "caps": {
+        "19": 11
+      },
+      "levels": [
+        {
+          "level": 11,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "wall-breaker",
+      "apiName": "Wall Breaker",
+      "category": "troops",
+      "caps": {
+        "19": 15
+      },
+      "levels": [
+        {
+          "level": 15,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "balloon",
+      "apiName": "Balloon",
+      "category": "troops",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "wizard",
+      "apiName": "Wizard",
+      "category": "troops",
+      "caps": {
+        "19": 15
+      },
+      "levels": [
+        {
+          "level": 15,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "healer",
+      "apiName": "Healer",
+      "category": "troops",
+      "caps": {
+        "19": 12
+      },
+      "levels": [
+        {
+          "level": 12,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "dragon",
+      "apiName": "Dragon",
+      "category": "troops",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "pekka",
+      "apiName": "P.E.K.K.A",
+      "category": "troops",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "baby-dragon",
+      "apiName": "Baby Dragon",
+      "category": "troops",
+      "caps": {
+        "19": 13
+      },
+      "levels": [
+        {
+          "level": 13,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "miner",
+      "apiName": "Miner",
+      "category": "troops",
+      "caps": {
+        "19": 13
+      },
+      "levels": [
+        {
+          "level": 13,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "electro-dragon",
+      "apiName": "Electro Dragon",
+      "category": "troops",
+      "caps": {
+        "19": 10
+      },
+      "levels": [
+        {
+          "level": 10,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "yeti",
+      "apiName": "Yeti",
+      "category": "troops",
+      "caps": {
+        "19": 9
+      },
+      "levels": [
+        {
+          "level": 9,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "dragon-rider",
+      "apiName": "Dragon Rider",
+      "category": "troops",
+      "caps": {
+        "19": 7
+      },
+      "levels": [
+        {
+          "level": 7,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "electro-titan",
+      "apiName": "Electro Titan",
+      "category": "troops",
+      "caps": {
+        "19": 6
+      },
+      "levels": [
+        {
+          "level": 6,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "root-rider",
+      "apiName": "Root Rider",
+      "category": "troops",
+      "caps": {
+        "19": 5
+      },
+      "levels": [
+        {
+          "level": 5,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "thrower",
+      "apiName": "Thrower",
+      "category": "troops",
+      "caps": {
+        "19": 5
+      },
+      "levels": [
+        {
+          "level": 5,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "meteor-golem",
+      "apiName": "Meteor Golem",
+      "category": "troops",
+      "caps": {
+        "19": 4
+      },
+      "levels": [
+        {
+          "level": 4,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "minion",
+      "apiName": "Minion",
+      "category": "troops",
+      "caps": {
+        "19": 15
+      },
+      "levels": [
+        {
+          "level": 15,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "hog-rider",
+      "apiName": "Hog Rider",
+      "category": "troops",
+      "caps": {
+        "19": 16
+      },
+      "levels": [
+        {
+          "level": 16,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "valkyrie",
+      "apiName": "Valkyrie",
+      "category": "troops",
+      "caps": {
+        "19": 13
+      },
+      "levels": [
+        {
+          "level": 13,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "golem",
+      "apiName": "Golem",
+      "category": "troops",
+      "caps": {
+        "19": 16
+      },
+      "levels": [
+        {
+          "level": 16,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "witch",
+      "apiName": "Witch",
+      "category": "troops",
+      "caps": {
+        "19": 9
+      },
+      "levels": [
+        {
+          "level": 9,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "lava-hound",
+      "apiName": "Lava Hound",
+      "category": "troops",
+      "caps": {
+        "19": 9
+      },
+      "levels": [
+        {
+          "level": 9,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "bowler",
+      "apiName": "Bowler",
+      "category": "troops",
+      "caps": {
+        "19": 11
+      },
+      "levels": [
+        {
+          "level": 11,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "headhunter",
+      "apiName": "Headhunter",
+      "category": "troops",
+      "caps": {
+        "19": 5
+      },
+      "levels": [
+        {
+          "level": 5,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "druid",
+      "apiName": "Druid",
+      "category": "troops",
+      "caps": {
+        "19": 7
+      },
+      "levels": [
+        {
+          "level": 7,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "ruin-witch",
+      "apiName": "Ruin Witch",
+      "category": "troops",
+      "caps": {
+        "19": 5
+      },
+      "levels": [
+        {
+          "level": 5,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "lightning-spell",
+      "apiName": "Lightning Spell",
+      "category": "spells",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "healing-spell",
+      "apiName": "Healing Spell",
+      "category": "spells",
+      "caps": {
+        "19": 13
+      },
+      "levels": [
+        {
+          "level": 13,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "poison-spell",
+      "apiName": "Poison Spell",
+      "category": "spells",
+      "caps": {
+        "19": 13
+      },
+      "levels": [
+        {
+          "level": 13,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "totem-spell",
+      "apiName": "Totem Spell",
+      "category": "spells",
+      "caps": {
+        "19": 5
+      },
+      "levels": [
+        {
+          "level": 5,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "haste-spell",
+      "apiName": "Haste Spell",
+      "category": "spells",
+      "caps": {
+        "19": 8
+      },
+      "levels": [
+        {
+          "level": 8,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "bat-spell",
+      "apiName": "Bat Spell",
+      "category": "spells",
+      "caps": {
+        "19": 9
+      },
+      "levels": [
+        {
+          "level": 9,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "heroic-spell",
+      "apiName": "Heroic Spell",
+      "category": "spells",
+      "caps": {
+        "17": 2,
+        "18": 3,
+        "19": 4
+      },
+      "levels": [
+        {
+          "level": 1,
+          "townHallRequired": 17,
+          "statisticsStatus": "unavailable"
+        },
+        {
+          "level": 2,
+          "townHallRequired": 17,
+          "statisticsStatus": "unavailable"
+        },
+        {
+          "level": 3,
+          "townHallRequired": 18,
+          "statisticsStatus": "unavailable"
+        },
+        {
+          "level": 4,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "air-defense",
+      "apiName": "Air Defense",
+      "category": "buildings",
+      "caps": {
+        "19": 17
+      },
+      "levels": [
+        {
+          "level": 17,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        },
+        {
+          "level": 16,
+          "hitpoints": 2050
+        }
+      ],
+      "superchargesRemoved": true,
+      "counts": {
+        "19": 5
+      }
+    },
+    {
+      "id": "hidden-tesla",
+      "apiName": "Hidden Tesla",
+      "category": "buildings",
+      "caps": {
+        "19": 18
+      },
+      "levels": [
+        {
+          "level": 18,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ],
+      "superchargesRemoved": true
+    },
+    {
+      "id": "x-bow",
+      "apiName": "X-Bow",
+      "category": "buildings",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ],
+      "superchargesRemoved": true
+    },
+    {
+      "id": "multi-archer-tower",
+      "apiName": "Multi-Archer Tower",
+      "category": "buildings",
+      "caps": {
+        "19": 5
+      },
+      "levels": [
+        {
+          "level": 5,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ],
+      "superchargesRemoved": true
+    },
+    {
+      "id": "multi-gear-tower",
+      "apiName": "Multi-Gear Tower",
+      "category": "buildings",
+      "caps": {
+        "19": 4
+      },
+      "levels": [
+        {
+          "level": 4,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ],
+      "superchargesRemoved": true
+    },
+    {
+      "id": "ricochet-cannon",
+      "apiName": "Ricochet Cannon",
+      "category": "buildings",
+      "caps": {
+        "19": 5
+      },
+      "levels": [
+        {
+          "level": 5,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ],
+      "superchargesRemoved": true
+    },
+    {
+      "id": "builders-hut",
+      "apiName": "Builder's Hut",
+      "category": "buildings",
+      "caps": {
+        "19": 9
+      },
+      "levels": [
+        {
+          "level": 9,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ],
+      "superchargesRemoved": true
+    },
+    {
+      "id": "clan-castle",
+      "apiName": "Clan Castle",
+      "category": "buildings",
+      "caps": {
+        "19": 15
+      },
+      "levels": [
+        {
+          "level": 15,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "laboratory",
+      "apiName": "Laboratory",
+      "category": "buildings",
+      "caps": {
+        "19": 17
+      },
+      "levels": [
+        {
+          "level": 17,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "hero-hall",
+      "apiName": "Hero Hall",
+      "category": "buildings",
+      "caps": {
+        "19": 13
+      },
+      "levels": [
+        {
+          "level": 13,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "gold-storage",
+      "apiName": "Gold Storage",
+      "category": "buildings",
+      "caps": {
+        "19": 20
+      },
+      "levels": [
+        {
+          "level": 20,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "elixir-storage",
+      "apiName": "Elixir Storage",
+      "category": "buildings",
+      "caps": {
+        "19": 20
+      },
+      "levels": [
+        {
+          "level": 20,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "dark-elixir-storage",
+      "apiName": "Dark Elixir Storage",
+      "category": "buildings",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "spiky-tower",
+      "apiName": "Spiky Tower",
+      "category": "buildings",
+      "caps": {
+        "19": 2
+      },
+      "levels": [
+        {
+          "level": 1,
+          "townHallRequired": 19,
+          "hitpoints": 5959,
+          "statisticsStatus": "partial"
+        },
+        {
+          "level": 2,
+          "townHallRequired": 19,
+          "hitpoints": 6363,
+          "statisticsStatus": "partial"
+        }
+      ],
+      "counts": {
+        "19": 2
+      }
+    },
+    {
+      "id": "firecracker-tower",
+      "apiName": "Firecracker Tower",
+      "category": "buildings",
+      "caps": {
+        "19": 2
+      },
+      "levels": [
+        {
+          "level": 1,
+          "townHallRequired": 19,
+          "hitpoints": 6500,
+          "statisticsStatus": "partial"
+        },
+        {
+          "level": 2,
+          "townHallRequired": 19,
+          "hitpoints": 6700,
+          "statisticsStatus": "partial"
+        }
+      ],
+      "counts": {
+        "19": 2
+      }
+    },
+    {
+      "id": "squad-barracks",
+      "apiName": "Squad Barracks",
+      "category": "buildings",
+      "caps": {
+        "8": 1,
+        "9": 2,
+        "10": 3,
+        "11": 4,
+        "12": 5,
+        "13": 6,
+        "14": 7,
+        "15": 8,
+        "16": 9,
+        "17": 10,
+        "18": 11,
+        "19": 12
+      },
+      "levels": [
+        {
+          "level": 12,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "pet-house",
+      "apiName": "Pet House",
+      "category": "buildings",
+      "caps": {
+        "18": 12,
+        "19": 12
+      },
+      "levels": []
+    },
+    {
+      "id": "air-bomb",
+      "apiName": "Air Bomb",
+      "category": "traps",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "skeleton-trap",
+      "apiName": "Skeleton Trap",
+      "category": "traps",
+      "caps": {
+        "19": 6
+      },
+      "levels": [
+        {
+          "level": 6,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "spring-trap",
+      "apiName": "Spring Trap",
+      "category": "traps",
+      "caps": {
+        "19": 14
+      },
+      "levels": [
+        {
+          "level": 14,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "angry-jelly",
+      "apiName": "Angry Jelly",
+      "category": "pets",
+      "caps": {
+        "18": 15,
+        "19": 15
+      },
+      "levels": [
+        {
+          "level": 15,
+          "townHallRequired": 18,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "smasher",
+      "apiName": "Smasher",
+      "category": "guardians",
+      "caps": {
+        "19": 10
+      },
+      "levels": [
+        {
+          "level": 10,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "flame-flinger",
+      "apiName": "Flame Flinger",
+      "category": "troops",
+      "caps": {
+        "19": 6
+      },
+      "levels": [
+        {
+          "level": 6,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "town-hall",
+      "apiName": "Town Hall",
+      "category": "buildings",
+      "caps": {
+        "19": 19
+      },
+      "levels": [
+        {
+          "level": 19,
+          "townHallRequired": 19,
+          "statisticsStatus": "unavailable"
+        }
+      ],
+      "counts": {
+        "19": 1
+      }
+    },
+    {
+      "id": "guardian-shrine",
+      "apiName": "Guardian Shrine",
+      "category": "buildings",
+      "caps": {},
+      "levels": [],
+      "counts": {
+        "19": 1
+      },
+      "note": "Target eligibility and level statistics not verified."
+    },
+    {
+      "id": "gold-mine",
+      "apiName": "Gold Mine",
+      "category": "resource-buildings",
+      "caps": {
+        "18": 18,
+        "19": 18
+      },
+      "levels": [
+        {
+          "level": 18,
+          "townHallRequired": 18,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "elixir-collector",
+      "apiName": "Elixir Collector",
+      "category": "resource-buildings",
+      "caps": {
+        "18": 18,
+        "19": 18
+      },
+      "levels": [
+        {
+          "level": 18,
+          "townHallRequired": 18,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    },
+    {
+      "id": "dark-elixir-drill",
+      "apiName": "Dark Elixir Drill",
+      "category": "resource-buildings",
+      "caps": {
+        "18": 12,
+        "19": 12
+      },
+      "levels": [
+        {
+          "level": 12,
+          "townHallRequired": 18,
+          "statisticsStatus": "unavailable"
+        }
+      ]
+    }
+  ],
+  "pending": [
+    "TH19 caps not explicitly announced are unknown, not inherited from TH18.",
+    "New level HP/damage and all simulator interactions remain unverified except explicitly sourced HP fields.",
+    "Post-update equipment statistics (including Frost Flake) need a separate field audit before simulation.",
+    "Actual TH19 API response is not yet captured.",
+    "Hero Hall summary cap conflicts are resolved using individual hero level requirements.",
+    "Supercharge base bindings were unverified; removed charge rows are retained only for provenance."
+  ]
+}

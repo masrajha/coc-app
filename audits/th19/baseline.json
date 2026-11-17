@@ -1,0 +1,12 @@
+{
+  "reviewedAt": "2026-11-16",
+  "dataVersion": "2026-11-04.5",
+  "manifestSha256": "fe6924dd5e567bfaed80466c199a28710c6f458bcbe7fefe469b096d7b613358",
+  "sourceLockSha256": "0bac6295e034463e9244c082a4e9a4a3a05f19162ac446bfcd6e98d8b70e97fc",
+  "datasetSha256": "bebd8dc95c47bbf124133915608d90b41e66afd35b82c8d173f4e0a6d143e1a8",
+  "sourceRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+  "normalizerVersion": "1.3.0",
+  "engineVersion": "2.2.1",
+  "sourceFileCount": 44,
+  "activation": "unchanged"
+}

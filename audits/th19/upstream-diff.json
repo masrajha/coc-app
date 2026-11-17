@@ -1,0 +1,273 @@
+{
+  "baselineRevision": "431f8da169ba93b730d182dfec0ca4820998db0d",
+  "candidateRevision": "7afaa0375e5865c04021836a3a4192ffcfea092d",
+  "candidateUrl": "https://github.com/chiefpansancolt/clash-of-clans-data/commit/7afaa0375e5865c04021836a3a4192ffcfea092d",
+  "checkedAt": "2026-11-16",
+  "method": "Compare Git blob hashes from public recursive tree to checksum-verified locked source bytes. No claim that other repository files are unchanged.",
+  "files": [
+    {
+      "path": "LICENSE",
+      "baselineBlob": "b2fb174ebe7095324b3ed8539f15ed9fb4dfe017",
+      "candidateBlob": "b2fb174ebe7095324b3ed8539f15ed9fb4dfe017",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/army-buildings/blacksmith.json",
+      "baselineBlob": "14a14fda719c29a4ff860e548bcb2b6189e9a80a",
+      "candidateBlob": "14a14fda719c29a4ff860e548bcb2b6189e9a80a",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/army-buildings/hero-hall.json",
+      "baselineBlob": "01329014d600a99f1abe58cce9d383d24860a85a",
+      "candidateBlob": "01329014d600a99f1abe58cce9d383d24860a85a",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/air-defense.json",
+      "baselineBlob": "89011b557cc19f51330a04dcff5a933df5282cc1",
+      "candidateBlob": "89011b557cc19f51330a04dcff5a933df5282cc1",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/air-sweeper.json",
+      "baselineBlob": "33e0e287396105eb8dbe03598e2e1742a1d71d65",
+      "candidateBlob": "33e0e287396105eb8dbe03598e2e1742a1d71d65",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/archer-tower.json",
+      "baselineBlob": "aa70d88dc62f5608c1488ed520e84152c137217d",
+      "candidateBlob": "aa70d88dc62f5608c1488ed520e84152c137217d",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/bomb-tower.json",
+      "baselineBlob": "edf20aa94d9ed19e1c036b462458c8bd230592e9",
+      "candidateBlob": "edf20aa94d9ed19e1c036b462458c8bd230592e9",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/builders-hut.json",
+      "baselineBlob": "1dda5fecd7bb928145325e9d266474d19999e430",
+      "candidateBlob": "1dda5fecd7bb928145325e9d266474d19999e430",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/cannon.json",
+      "baselineBlob": "bdd29a122406bd34ab930aca0f287f9973ac60ac",
+      "candidateBlob": "bdd29a122406bd34ab930aca0f287f9973ac60ac",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/crafting-station.json",
+      "baselineBlob": "671afaee1bd304a5e193ca2cd3807203760a2790",
+      "candidateBlob": "671afaee1bd304a5e193ca2cd3807203760a2790",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/eagle-artillery.json",
+      "baselineBlob": "2c666719ec0cf3e5fe04c21726fdfc3aa70c7300",
+      "candidateBlob": "2c666719ec0cf3e5fe04c21726fdfc3aa70c7300",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/firespitter.json",
+      "baselineBlob": "7da9b2a2f3936b7918e74e2ee7fb7f371b4fcc88",
+      "candidateBlob": "7da9b2a2f3936b7918e74e2ee7fb7f371b4fcc88",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/hidden-tesla.json",
+      "baselineBlob": "afd9156d5ecf6742afa8fda37353f010d0d15d8d",
+      "candidateBlob": "afd9156d5ecf6742afa8fda37353f010d0d15d8d",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/inferno-tower.json",
+      "baselineBlob": "2c7418914bb982cffd8df8b9f412070172500728",
+      "candidateBlob": "2c7418914bb982cffd8df8b9f412070172500728",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/monolith.json",
+      "baselineBlob": "1476828c53bc823235e25255cd920e9f26d8a36e",
+      "candidateBlob": "1476828c53bc823235e25255cd920e9f26d8a36e",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/mortar.json",
+      "baselineBlob": "8530dbe11e2157e703def62b048e8e737b8601e6",
+      "candidateBlob": "8530dbe11e2157e703def62b048e8e737b8601e6",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/multi-archer-tower.json",
+      "baselineBlob": "908022976598ddd4ea9273d204888e3e97cd9088",
+      "candidateBlob": "908022976598ddd4ea9273d204888e3e97cd9088",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/multi-gear-tower.json",
+      "baselineBlob": "ccdea1660980d72018ae53440141afca8f5200d7",
+      "candidateBlob": "ccdea1660980d72018ae53440141afca8f5200d7",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/revenge-tower.json",
+      "baselineBlob": "b04c313cfdc3fbd6fbc7bb9403ef6cc4b8e3ee5d",
+      "candidateBlob": "b04c313cfdc3fbd6fbc7bb9403ef6cc4b8e3ee5d",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/ricochet-cannon.json",
+      "baselineBlob": "fc00dffd23537f90648015c5fe888567673a234e",
+      "candidateBlob": "fc00dffd23537f90648015c5fe888567673a234e",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/scattershot.json",
+      "baselineBlob": "2b1cf2d9d56ea0b0390cf63bbd9bf4e573ee1a14",
+      "candidateBlob": "2b1cf2d9d56ea0b0390cf63bbd9bf4e573ee1a14",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/spell-tower.json",
+      "baselineBlob": "b98b764361ed8bb43ae787689d00af7886fd3706",
+      "candidateBlob": "b98b764361ed8bb43ae787689d00af7886fd3706",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/super-wizard-tower.json",
+      "baselineBlob": "f80bdee48f20703ef85ca985eb040b4c01a1ccd1",
+      "candidateBlob": "f80bdee48f20703ef85ca985eb040b4c01a1ccd1",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/wizard-tower.json",
+      "baselineBlob": "8bd798dba674de1443252265ee675b073e85a1a7",
+      "candidateBlob": "8bd798dba674de1443252265ee675b073e85a1a7",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/defenses/x-bow.json",
+      "baselineBlob": "4e5a9c0fcdcc1d8feff4baeab19acf294b86df9c",
+      "candidateBlob": "4e5a9c0fcdcc1d8feff4baeab19acf294b86df9c",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/earthquake-boots.json",
+      "baselineBlob": "12b782acb901b3bb2c8df0d25aa6bfe3911d7940",
+      "candidateBlob": "12b782acb901b3bb2c8df0d25aa6bfe3911d7940",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/electro-boots.json",
+      "baselineBlob": "a127558124f9e328cb85cd200465a73949bc719c",
+      "candidateBlob": "a127558124f9e328cb85cd200465a73949bc719c",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/fireball.json",
+      "baselineBlob": "974f39590ddf755436436c16794647c01387322f",
+      "candidateBlob": "974f39590ddf755436436c16794647c01387322f",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/flame-blower.json",
+      "baselineBlob": "1d8f006a4032f91acd4047a3aac5aa8e2c718439",
+      "candidateBlob": "1d8f006a4032f91acd4047a3aac5aa8e2c718439",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/giant-arrow.json",
+      "baselineBlob": "5df085126f248e8e20b0d96592c454918bbccc4b",
+      "candidateBlob": "5df085126f248e8e20b0d96592c454918bbccc4b",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/rocket-backpack.json",
+      "baselineBlob": "5836fdc8ebd4fb1f2c005bca79b16d3c8c484fb2",
+      "candidateBlob": "5836fdc8ebd4fb1f2c005bca79b16d3c8c484fb2",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/seeking-shield.json",
+      "baselineBlob": "8f2fef7ee61a3742359e99ea80c7963e00f99621",
+      "candidateBlob": "8f2fef7ee61a3742359e99ea80c7963e00f99621",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/hero-equipment/spiky-ball.json",
+      "baselineBlob": "76226f267f7d63e66e86672c28b22c71f59a6d42",
+      "candidateBlob": "76226f267f7d63e66e86672c28b22c71f59a6d42",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/heroes/archer-queen.json",
+      "baselineBlob": "a317ff97705c48ecf590a79476bd51e40910c487",
+      "candidateBlob": "a317ff97705c48ecf590a79476bd51e40910c487",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/heroes/barbarian-king.json",
+      "baselineBlob": "5e6fc16e42b893b24ae8154cdd7c3217e48883db",
+      "candidateBlob": "5e6fc16e42b893b24ae8154cdd7c3217e48883db",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/heroes/dragon-duke.json",
+      "baselineBlob": "3da43b9c1b22963d2fe18a51aa3c6206d4bd1e1a",
+      "candidateBlob": "3da43b9c1b22963d2fe18a51aa3c6206d4bd1e1a",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/heroes/grand-warden.json",
+      "baselineBlob": "14ee1b381a65112a9f91a003176681fedf9bc442",
+      "candidateBlob": "14ee1b381a65112a9f91a003176681fedf9bc442",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/heroes/minion-prince.json",
+      "baselineBlob": "b22dbefd5862deb95c77a9b4857e72cc285349d0",
+      "candidateBlob": "b22dbefd5862deb95c77a9b4857e72cc285349d0",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/heroes/royal-champion.json",
+      "baselineBlob": "3e0709714638fd79a6e8d482a30feefbdd80766f",
+      "candidateBlob": "3e0709714638fd79a6e8d482a30feefbdd80766f",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/resource-buildings/clan-castle.json",
+      "baselineBlob": "bc69b735c78efac64a3c08d275feca86f3661ac8",
+      "candidateBlob": "bc69b735c78efac64a3c08d275feca86f3661ac8",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/spells/earthquake-spell.json",
+      "baselineBlob": "9504ce2790ae36855cf647473e8282ab0cd80f8e",
+      "candidateBlob": "9504ce2790ae36855cf647473e8282ab0cd80f8e",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/spells/lightning-spell.json",
+      "baselineBlob": "e29438efab8c764afc4bde66baa9013ede731dd2",
+      "candidateBlob": "e29438efab8c764afc4bde66baa9013ede731dd2",
+      "status": "unchanged"
+    },
+    {
+      "path": "data/home/town-hall/town-hall.json",
+      "baselineBlob": "55d9a1a28227d62e45492cfd0d8afcb5338d29c7",
+      "candidateBlob": "55d9a1a28227d62e45492cfd0d8afcb5338d29c7",
+      "status": "unchanged"
+    },
+    {
+      "path": "package.json",
+      "baselineBlob": "c53ee8cd41f332efbf0ea4c191a4999553097059",
+      "candidateBlob": "c53ee8cd41f332efbf0ea4c191a4999553097059",
+      "status": "unchanged"
+    }
+  ]
+}

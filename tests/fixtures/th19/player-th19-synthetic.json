@@ -1,0 +1,49 @@
+{
+  "tag": "#TH19FIXTURE",
+  "name": "Synthetic TH19",
+  "townHallLevel": 19,
+  "heroes": [
+    {
+      "name": "Archer Queen",
+      "level": 115,
+      "maxLevel": 115,
+      "village": "home"
+    },
+    {
+      "name": "Future Hero",
+      "level": 7,
+      "maxLevel": 99,
+      "village": "home"
+    }
+  ],
+  "troops": [
+    {
+      "name": "Barbarian",
+      "level": 14,
+      "maxLevel": 14,
+      "village": "home"
+    },
+    {
+      "name": "Future Troop",
+      "level": 3,
+      "maxLevel": 9,
+      "village": "home"
+    }
+  ],
+  "spells": [
+    {
+      "name": "Heroic Spell",
+      "level": 4,
+      "maxLevel": 4,
+      "village": "home"
+    }
+  ],
+  "heroEquipment": [
+    {
+      "name": "Future Equipment",
+      "level": 7,
+      "maxLevel": 27,
+      "village": "home"
+    }
+  ]
+}

@@ -16,7 +16,9 @@
     }
   },
   "scripts": {
-    "test:zapquake": ["php tests/zapquake-data.php", "node --test tests/zapquake-model.test.js tests/zapquake-catalog.test.js"],
-    "test": ["php tests/smoke.php", "php tests/ranked-sessions.php", "php tests/raids.php", "php tests/account-features.php", "php tests/share.php", "php tests/war-map.php", "php tests/web-assets.php", "php tests/navigation.php", "php tests/assets-layout.php", "php tests/seo.php", "php tests/seo-memory.php", "php tests/clan-directory.php", "php tests/official-news.php", "php tests/zapquake-data.php"]
+    "test:th19": ["php tests/th19-release.php", "php tests/th19-features.php", "php tests/game-catalog.php", "node --test tests/*.test.js", "python tests/game-catalog-build.py", "python scripts/audit-th19.py"],
+    "test:catalog": ["php tests/game-catalog.php", "python tests/game-catalog-build.py"],
+    "test:zapquake": ["php tests/zapquake-data.php", "node --test tests/zapquake-model.test.js tests/zapquake-catalog.test.js tests/th19-zapquake.test.js"],
+    "test": ["php tests/smoke.php", "php tests/ranked-sessions.php", "php tests/raids.php", "php tests/account-features.php", "php tests/th19-compatibility.php", "php tests/th19-features.php", "php tests/th19-release.php", "php tests/game-catalog.php", "php tests/share.php", "php tests/war-map.php", "php tests/web-assets.php", "php tests/navigation.php", "php tests/assets-layout.php", "php tests/seo.php", "php tests/seo-memory.php", "php tests/clan-directory.php", "php tests/official-news.php", "php tests/zapquake-data.php"]
   }
 }

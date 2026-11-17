@@ -1,0 +1,332 @@
+{
+  "schemaVersion": 1,
+  "dataVersion": "2026-11-17.1",
+  "source": "https://supercell.com/en/games/clashofclans/blog/release-notes/the-clash-of-titans-update-is-rolling-out/",
+  "reviewedAt": "2026-11-17",
+  "apiContractVerified": false,
+  "squads": [
+    {
+      "id": "barch-squad",
+      "name": "Barch Squad",
+      "unlockTownHall": 8,
+      "composition": [
+        {
+          "name": "Barbarian",
+          "count": 15
+        },
+        {
+          "name": "Archer",
+          "count": 15
+        }
+      ],
+      "housingSpace": 15,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "splashResistance",
+        "unlockSquadLevel": 2,
+        "level2": 6,
+        "level3": 5
+      }
+    },
+    {
+      "id": "giant-wizard-squad",
+      "name": "Giant Wizard Squad",
+      "unlockTownHall": 9,
+      "composition": [
+        {
+          "name": "Giant",
+          "count": 3
+        },
+        {
+          "name": "Wizard",
+          "count": 5
+        }
+      ],
+      "housingSpace": 25,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "splashResistance",
+        "unlockSquadLevel": 2,
+        "level2": 5,
+        "level3": 4
+      }
+    },
+    {
+      "id": "wall-breaker-squad",
+      "name": "Wall Breaker Squad",
+      "unlockTownHall": 10,
+      "composition": [
+        {
+          "name": "Wall Breaker",
+          "count": 5
+        }
+      ],
+      "housingSpace": 8,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "stealthyStart",
+        "unlockSquadLevel": 2,
+        "level2": 3,
+        "level3": 4
+      }
+    },
+    {
+      "id": "minion-squad",
+      "name": "Minion Squad",
+      "unlockTownHall": 11,
+      "composition": [
+        {
+          "name": "Minion",
+          "count": 8
+        }
+      ],
+      "housingSpace": 12,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "splashResistance",
+        "unlockSquadLevel": 2,
+        "level2": 3,
+        "level3": 2
+      }
+    },
+    {
+      "id": "balloon-squad",
+      "name": "Balloon Squad",
+      "unlockTownHall": 12,
+      "composition": [
+        {
+          "name": "Balloon",
+          "count": 4
+        }
+      ],
+      "housingSpace": 16,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "trapSense",
+        "unlockSquadLevel": 2,
+        "level2": 15,
+        "level3": 20
+      }
+    },
+    {
+      "id": "golem-witch-squad",
+      "name": "Golem Witch Squad",
+      "unlockTownHall": 13,
+      "composition": [
+        {
+          "name": "Golem",
+          "count": 1
+        },
+        {
+          "name": "Witch",
+          "count": 4
+        }
+      ],
+      "housingSpace": 55,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "splashResistance",
+        "unlockSquadLevel": 2,
+        "level2": 3,
+        "level3": 2
+      }
+    },
+    {
+      "id": "hog-rider-squad",
+      "name": "Hog Rider Squad",
+      "unlockTownHall": 14,
+      "composition": [
+        {
+          "name": "Hog Rider",
+          "count": 12
+        }
+      ],
+      "housingSpace": 48,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "trapSense",
+        "unlockSquadLevel": 2,
+        "level2": 30,
+        "level3": 40
+      }
+    },
+    {
+      "id": "miner-squad",
+      "name": "Miner Squad",
+      "unlockTownHall": 15,
+      "composition": [
+        {
+          "name": "Miner",
+          "count": 10
+        }
+      ],
+      "housingSpace": 48,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "trapSense",
+        "unlockSquadLevel": 2,
+        "level2": 30,
+        "level3": 40
+      }
+    },
+    {
+      "id": "healer-squad",
+      "name": "Healer Squad",
+      "unlockTownHall": 16,
+      "composition": [
+        {
+          "name": "Balloon",
+          "count": 1
+        },
+        {
+          "name": "Healer",
+          "count": 5
+        }
+      ],
+      "housingSpace": 70,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "shieldedStart",
+        "unlockSquadLevel": 2,
+        "level2": 2,
+        "level3": 3
+      }
+    },
+    {
+      "id": "pekka-titan-squad",
+      "name": "P.E.K.K.A Titan Squad",
+      "unlockTownHall": 17,
+      "composition": [
+        {
+          "name": "P.E.K.K.A",
+          "count": 1
+        },
+        {
+          "name": "Electro Titan",
+          "count": 1
+        }
+      ],
+      "housingSpace": 46,
+      "housingSpaceLevel3": 44,
+      "ability": {
+        "id": "focusAttack",
+        "unlockSquadLevel": 2,
+        "level2": null,
+        "level3": null
+      }
+    },
+    {
+      "id": "dragon-squad",
+      "name": "Dragon Squad",
+      "unlockTownHall": 18,
+      "composition": [
+        {
+          "name": "Dragon",
+          "count": 2
+        },
+        {
+          "name": "Dragon Rider",
+          "count": 2
+        }
+      ],
+      "housingSpace": 85,
+      "housingSpaceLevel3": null,
+      "ability": {
+        "id": "shieldedStart",
+        "unlockSquadLevel": 2,
+        "level2": 2,
+        "level3": 3
+      }
+    },
+    {
+      "id": "baby-dragon-squad",
+      "name": "Baby Dragon Squad",
+      "unlockTownHall": 19,
+      "composition": [
+        {
+          "name": "Baby Dragon",
+          "count": 3
+        }
+      ],
+      "housingSpace": 26,
+      "housingSpaceLevel3": 24,
+      "ability": {
+        "id": "tantrum",
+        "unlockSquadLevel": 2,
+        "level2": null,
+        "level3": null
+      }
+    }
+  ],
+  "guardianNames": [
+    "Logger",
+    "Longshot",
+    "Smasher"
+  ],
+  "guardianShrine": {
+    "unlockTownHall": 19,
+    "maxCount": 1,
+    "targetEligibility": null
+  },
+  "townHallTroops": {
+    "unlockTownHall": 19,
+    "options": [
+      {
+        "name": "Barbarian",
+        "requiredTroopLevel": null
+      },
+      {
+        "name": "Archer",
+        "requiredTroopLevel": 15
+      },
+      {
+        "name": "Wizard",
+        "requiredTroopLevel": 15
+      }
+    ]
+  },
+  "heroicSpell": {
+    "name": "Heroic Spell",
+    "radius": 5,
+    "attackingOnly": true,
+    "excluded": [
+      "Siege Machines",
+      "Totems"
+    ],
+    "stacking": "strongest-reduction-only",
+    "levels": [
+      {
+        "level": 1,
+        "townHallRequired": 17,
+        "damageReductionPercent": 34,
+        "movementSpeed": 5,
+        "heroPetSpecialistSpeed": 2,
+        "durationSeconds": 9.75
+      },
+      {
+        "level": 2,
+        "townHallRequired": 17,
+        "damageReductionPercent": 36,
+        "movementSpeed": 6,
+        "heroPetSpecialistSpeed": 3,
+        "durationSeconds": 10.75
+      },
+      {
+        "level": 3,
+        "townHallRequired": 18,
+        "damageReductionPercent": 38,
+        "movementSpeed": 7,
+        "heroPetSpecialistSpeed": 3,
+        "durationSeconds": 11.75
+      },
+      {
+        "level": 4,
+        "townHallRequired": 19,
+        "damageReductionPercent": 40,
+        "movementSpeed": 8,
+        "heroPetSpecialistSpeed": 4,
+        "durationSeconds": 12.75
+      }
+    ]
+  }
+}

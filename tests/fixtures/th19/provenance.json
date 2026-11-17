@@ -1,0 +1,12 @@
+{
+  "th18": {
+    "kind": "anonymized-local-api-cache",
+    "capturedAt": "2026-10-06T00:36:37+00:00",
+    "fields": "Allowlisted levels only; all player/clan/group identifiers removed."
+  },
+  "th19": {
+    "kind": "synthetic-contract-fixture",
+    "liveResponseVerified": false,
+    "note": "No TH19 profile present in inspected local API cache. Add a sanitized real capture when available; this fixture does not prove API field availability."
+  }
+}

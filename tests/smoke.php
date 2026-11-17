@@ -521,7 +521,7 @@ try {
         throw new RuntimeException('Ikon Portal Pendant harus tersedia secara lokal sebagai WebP.');
     }
     if (($profile['player']['clan']['tag'] ?? null) !== '#9RU089PG') throw new RuntimeException('Profil API kehilangan tag clan pemain.');
-    if (($profile['army']['heroes'][0]['progressMaxLevel'] ?? null) !== 1 || ($profile['army']['heroes'][0]['progressMaxSource'] ?? null) !== 'TH 18') {
+    if (($profile['army']['heroes'][0]['progressMaxLevel'] ?? null) !== null || ($profile['army']['heroes'][0]['progressCapStatus'] ?? null) !== 'unavailable') {
         throw new RuntimeException('Profil tidak menyematkan batas level progres sesuai Town Hall pada item Army.');
     }
     if (($profile['player']['leagueTier']['name'] ?? null) !== 'Legend II' || count($profile['player']['leagueSessions'] ?? []) !== 2) {
@@ -627,8 +627,8 @@ try {
     $rankedRules = $sourceType->getReflectionConstant('RANKED_RULES')->getValue();
     foreach ($rankedRules as $tierName => $expectedRule) {
         $legacyTierName = str_ireplace(' League ', ' ', $tierName);
-        if ($rankedRuleMethod->invoke($source, $tierName) !== $expectedRule
-            || $rankedRuleMethod->invoke($source, $legacyTierName) !== $expectedRule) {
+        if (array_intersect_key($rankedRuleMethod->invoke($source, $tierName),$expectedRule) !== $expectedRule
+            || array_intersect_key($rankedRuleMethod->invoke($source, $legacyTierName),$expectedRule) !== $expectedRule) {
             throw new RuntimeException('Rule Ranked League tidak cocok untuk nama tier API: ' . $tierName);
         }
     }

@@ -1,0 +1,114 @@
+{
+  "version": "2026-11-17.2",
+  "reviewedAt": "2026-11-17",
+  "attribution": "Game artwork belongs to Supercell; downloaded from Clash of Clans Wiki. Source hashes are locked before compression.",
+  "maxDimension": 144,
+  "totalBytes": 52708,
+  "assets": [
+    {
+      "input": "Town_Hall19.png",
+      "output": "town-hall/th-19.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/7/77/Town_Hall19.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "0328ecc11fd16e9991d89a59347657524371a7249dce019c50d620f5ed6f26d1",
+      "sourceBytes": 13464,
+      "bytes": 7090,
+      "sha256": "579b0546b78f36302875597115053074a0026a3e517ca831f2ea6546a608169d",
+      "dimensions": [
+        144,
+        137
+      ]
+    },
+    {
+      "input": "Spiky_Tower1.png",
+      "output": "zapquake/spiky-tower-1.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/7/74/Spiky_Tower1.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "1feca684a306caf7bb40bb767b1011a595bccd246a2dcb10b1a2e15b90ee8cb1",
+      "sourceBytes": 12380,
+      "bytes": 4966,
+      "sha256": "4c7414eb51a8c9b739fda8cdee87281c926fe76581e3545474be414692c9c40d",
+      "dimensions": [
+        106,
+        144
+      ]
+    },
+    {
+      "input": "Spiky_Tower2.png",
+      "output": "zapquake/spiky-tower-2.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/f/f6/Spiky_Tower2.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "37a224e56afc09d9c32834f31fcd38c31ab2317a4b9e21850984a3d10ea4cbf2",
+      "sourceBytes": 12838,
+      "bytes": 5058,
+      "sha256": "36abc06305faf39538bab9ca3bdf803190155005b2c9a41a86ea6d9e4b2dcf36",
+      "dimensions": [
+        106,
+        144
+      ]
+    },
+    {
+      "input": "Firecracker_Tower1.png",
+      "output": "zapquake/firecracker-tower-1.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/d/df/Firecracker_Tower1.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "382e52cb396b68f4f6a1d8b1330f519980c29baf578a5cef6c868415f430479c",
+      "sourceBytes": 19350,
+      "bytes": 6346,
+      "sha256": "ad327210f738dc6369fc13891a93ec76dc1d52eeb3ebeca1685d2849a50e0395",
+      "dimensions": [
+        93,
+        144
+      ]
+    },
+    {
+      "input": "Firecracker_Tower2.png",
+      "output": "zapquake/firecracker-tower-2.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/b/b3/Firecracker_Tower2.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "c9071c2205275165b264fb6e92d22a32650341eac3592fc592eb1955a2867a87",
+      "sourceBytes": 18714,
+      "bytes": 6366,
+      "sha256": "d73a3efb4434a6955cf99908a0aa3b4cd29115e029999639bc27eb92b334d6b4",
+      "dimensions": [
+        94,
+        144
+      ]
+    },
+    {
+      "input": "Guardian_Shrine.png",
+      "output": "th19/guardian-shrine.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/4/4d/Guardian_Shrine.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "ecdb85e4d8300061cd1dae3651d3e124812b7a846789a340501b48214a0a4a7b",
+      "sourceBytes": 13838,
+      "bytes": 7388,
+      "sha256": "1dfdc213c2ebbcdccc93b8c20406ff2912960b9242f810283ccfc5c870beef1f",
+      "dimensions": [
+        142,
+        144
+      ]
+    },
+    {
+      "input": "Squad_Barracks1.png",
+      "output": "th19/squad-barracks.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/0/0e/Squad_Barracks1.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "dea88ff1d65fe21fb2f306090ad27f677de7413ce4f69f5701734cc8cff34905",
+      "sourceBytes": 17438,
+      "bytes": 8238,
+      "sha256": "6276b069249fee5b008b52d23562addade5f987ba7ac7acebea00a8303bd9bc5",
+      "dimensions": [
+        132,
+        144
+      ]
+    },
+    {
+      "input": "Heroic_Spell_info.png",
+      "output": "th19/heroic-spell.webp",
+      "source": "https://static.wikia.nocookie.net/clashofclans/images/9/90/Heroic_Spell_info.png/revision/latest/scale-to-width-down/200",
+      "sourceSha256": "d1028973c6ad5a7c7ab206fab185781d57d8370dffab3a53c1674260da2f539d",
+      "sourceBytes": 14352,
+      "bytes": 7256,
+      "sha256": "00aca502b1165b9a5ae8c0ede05146690c3fb8ddf3efa83cb39a146e95813d2f",
+      "dimensions": [
+        137,
+        144
+      ]
+    }
+  ],
+  "pending": []
+}

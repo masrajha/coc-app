@@ -1,9 +1,20 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const model=require('../public/js/compare-overview-model.js');
+const armyModel=require('../public/js/compare-model.js');
 const profile=(tag,th=18)=>({player:{tag,townHallLevel:th},progress:{complete:true,tableVersion:'same',baselineSource:'api',score:{overall:90,categories:{heroes:{percent:80}}}}});
 const history=(stars,date='2026-10-20T00:00:00Z')=>({wars:[{id:'war',type:'CWL',startTime:date,state:'warEnded',quota:1,attacks:[{stars,destructionPercentage:90}]}],trend:[]});
 const context={profiles:{left:profile('#2GPP802UU'),right:profile('#28P08PG0G')},warPeriod:'30d',now:new Date('2026-10-29T00:00:00Z')};
+
+test('unknown TH19 caps allow actual-level comparisons but never percentage comparisons',()=>{
+  const left={name:'Archer Queen',level:115,maxLevel:115,progressMaxLevel:null,progressCapStatus:'unavailable'};
+  const right={...left,level:110};
+  assert.equal(armyModel.itemProgress(left),null);
+  assert.equal(armyModel.itemComparison(left,right,'progress').left,'none');
+  assert.equal(armyModel.itemComparison(left,right,'actual').left,'higher');
+  assert.equal(armyModel.itemProgress({...left,level:null,progressMaxLevel:115,progressCapStatus:'verified'}),null);
+  assert.equal(armyModel.itemProgress({...left,progressMaxLevel:115,progressCapStatus:'unavailable'}),null);
+});
 
 test('overview treats missing data as unknown, while preserving comparable progress and known zero',()=>{
   let result=model.build({});
